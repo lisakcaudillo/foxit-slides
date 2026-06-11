@@ -1,0 +1,20 @@
+{
+  "home.title": "Template Workflow Manager",
+  "home.hero.title": "Create Your Template",
+  "home.hero.subtitle": "Generate document templates with AI assistance in FXDA format, complete with positioned form fields and optional workflow configurations",
+  "home.method.ai.title": "Generate",
+  "home.method.ai.description": "Describe your needs and generate content with AI",
+  "home.method.paste.title": "Paste Text",
+  "home.method.paste.description": "Paste existing text content to use as template",
+  "home.method.upload.title": "Import File/URL",
+  "home.method.upload.description": "Upload a file or import from a URL",
+  "home.search.placeholder": "Search existing templates...",
+  "home.templates.recent.title": "Recent Templates",
+  "home.templates.all.title": "All Templates",
+  "create.title": "Create New Template",
+  "create.ai.prompt.label": "Describe your template",
+  "create.ai.prompt.placeholder": "Example: Create a standard NDA for vendors with 2 parties signing sequentially, including confidentiality clauses and a 1-year term",
+  "create.ai.button.generate": "Generate with AI",
+  "create.preview.title": "Preview Generated Template",
+  "create.workflow.title": "Select Workflow Configuration"
+}
