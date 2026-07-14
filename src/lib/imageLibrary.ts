@@ -36,6 +36,13 @@ export interface LibraryImage {
    *  those need no credit. Drives the small "Source: …" caption on the slide. */
   sourceUrl?: string;
   sourceLabel?: string;
+  /** Transient, in-memory only: a `data:` URL for an image that is USED in a deck
+   *  but deliberately NOT saved to the library — third-party web photos (Wikimedia,
+   *  stock) that we may render but must not persist or redistribute as a library
+   *  asset. When present, the deck embeds these bytes directly and `filename` is a
+   *  synthetic placeholder that is never written to disk. Never appears in
+   *  metadata.json (only generated images we own are persisted there). */
+  dataUrl?: string;
 }
 
 export interface LibraryMetadata {

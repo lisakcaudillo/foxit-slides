@@ -32,7 +32,6 @@ import {
   searchLibrary,
   genericLibraryImages,
   findLibraryImagesByIds,
-  findLibraryImageByPromptTag,
   saveImagesToLibrary,
   readLibraryImageDataUrl,
   type LibraryImage,
@@ -42,8 +41,12 @@ import { searchStockImages, stockImagesAvailable } from '@/lib/stockImages';
 import { fitCardText } from './text-fit';
 import { recordUsage } from './usage-meter';
 
-/** Library files are served statically by Next from /library/images/<filename>. */
+/** Resolve an image to a renderable src. Persisted library images are served
+ *  statically from /library/images/<filename>; a transient web-sourced image
+ *  (Wikimedia / stock — never saved to the library) carries its bytes inline as a
+ *  `data:` URL and is embedded directly in the deck. */
 function librarySrc(img: LibraryImage): string {
+  if (img.dataUrl) return img.dataUrl;
   return `/library/images/${img.filename}`;
 }
 
@@ -472,22 +475,15 @@ async function wikimediaPhotoCandidates(title: string): Promise<string[]> {
   }
 }
 
-/** Source a real PHOTOGRAPH of a known entity from Wikimedia and save it to the
- *  library. No auth needed. LIBRARY-FIRST: an entity it has already sourced is
- *  reused (matched by a canonical `[known:<title>]` tag) — no duplicate save
- *. Picks from the article's MEDIA LIST (not the summary lead,
- *  which is often a logo) and skips any candidate with baked-in text/lettering,
- * so posters, logos, and calligrams never slip through. */
+/** Source a real PHOTOGRAPH of a known entity from Wikimedia for use in THIS deck.
+ *  No auth needed. The photo is embedded in the deck as a transient `data:` URL and
+ *  is deliberately NOT saved to the library — a third-party web image must not be
+ *  persisted or redistributed as a library asset. Picks from the article's MEDIA
+ *  LIST (not the summary lead, which is often a logo) and skips any candidate with
+ *  baked-in text/lettering, so posters, logos, and calligrams never slip through.
+ *  A "Source: …" credit rides the image (Wikimedia requires attribution). */
 async function fetchKnownImage(subject: string, wikiTitle?: string): Promise<LibraryImage | undefined> {
   const title = (wikiTitle || subject).trim().replace(/\s+/g, '_');
-  const tag = `[known:${title}]`;
-  // Reuse a previously-saved known image of this same entity.
-  const existing = await findLibraryImageByPromptTag(tag);
-  if (existing) {
-    // eslint-disable-next-line no-console
-    console.log(`[known-image] reuse "${existing.filename}" for ${tag} (no re-fetch)`);
-    return existing;
-  }
   const apiKey = process.env.OPENAI_API_KEY;
   try {
     // The web page it credits (Wikipedia/Wikimedia images require attribution).
@@ -519,18 +515,9 @@ async function fetchKnownImage(subject: string, wikiTitle?: string): Promise<Lib
           continue;
         }
       }
-      const [saved] = await saveImagesToLibrary([{
-        dataUrl,
-        // The `[known:<title>]` tag is the dedup key the library-first lookup matches.
-        prompt: `${tag} ${subject}`.slice(0, 400),
-        type: 'photo',
-        quality: 'medium',
-        width: 800,
-        height: 600,
-        sourceUrl,
-        sourceLabel: 'Wikipedia',
-      }]);
-      if (saved) return saved;
+      // Used in the deck, never stored: a transient in-memory image carrying the
+      // bytes inline. `id`/`filename` are synthetic (nothing is written to disk).
+      return transientWebImage(dataUrl, `known-${title}`, { sourceUrl, sourceLabel: 'Wikipedia', width: 800, height: 600 });
     }
     return undefined;
   } catch {
@@ -538,12 +525,37 @@ async function fetchKnownImage(subject: string, wikiTitle?: string): Promise<Lib
   }
 }
 
-/** Source a free STOCK photo (Pexels → Pixabay) for a generic subject and save it
- *  to the library. Real photos, free for commercial use, no attribution required —
- *  so this is preferred over AI generation (no cost, no fake people / garbled text)
- *  for generic subjects. Rejects a candidate with baked-in TEXT (a real person is
- *  fine — unlike an AI-invented face). Orientation matches the slot. Returns
- *  undefined when no key is set or nothing clean matches (caller falls back to gen). */
+/** Build a transient, unsaved LibraryImage for a third-party web photo we may
+ *  render but must not persist. It carries its bytes as an inline `data:` URL; the
+ *  synthetic id/filename never touch the library or metadata.json. */
+function transientWebImage(
+  dataUrl: string,
+  idSeed: string,
+  meta: { sourceUrl?: string; sourceLabel?: string; width: number; height: number },
+): LibraryImage {
+  return {
+    id: `web:${idSeed}`,
+    filename: `web:${idSeed}`, // synthetic — never written to disk (dataUrl is the src)
+    prompt: '',
+    type: 'photo',
+    quality: 'medium',
+    width: meta.width,
+    height: meta.height,
+    createdAt: new Date().toISOString(),
+    dataUrl,
+    ...(meta.sourceUrl ? { sourceUrl: meta.sourceUrl } : {}),
+    ...(meta.sourceLabel ? { sourceLabel: meta.sourceLabel } : {}),
+  };
+}
+
+/** Source a free STOCK photo (Pexels → Pixabay) for a generic subject, for use in
+ *  THIS deck. Real photos, free for commercial use — preferred over AI generation
+ *  (no cost, no fake people / garbled text) for generic subjects. Like the known-
+ *  image path, the photo is embedded in the deck as a transient `data:` URL and is
+ *  NOT saved to the library (a third-party web image must not be persisted or
+ *  redistributed as a library asset). Rejects a candidate with baked-in TEXT (a
+ *  real person is fine — unlike an AI-invented face). Orientation matches the slot.
+ *  Returns undefined when no key is set or nothing clean matches. */
 async function fetchStockImage(query: string, orientation: 'portrait' | 'landscape'): Promise<LibraryImage | undefined> {
   if (!stockImagesAvailable()) return undefined;
   const apiKey = process.env.OPENAI_API_KEY;
@@ -565,21 +577,14 @@ async function fetchStockImage(query: string, orientation: 'portrait' | 'landsca
           continue;
         }
       }
-      const [saved] = await saveImagesToLibrary([{
-        dataUrl,
-        // Credit kept for provenance (Pexels/Pixabay need no on-slide attribution).
-        prompt: `[stock:${r.source}] ${query} — ${r.credit}`.slice(0, 400),
-        type: 'photo',
-        quality: 'medium',
+      // eslint-disable-next-line no-console
+      console.log(`[stock] ${r.source} photo for "${query}" (${r.credit})`);
+      // Used in the deck, never stored — a transient in-memory image.
+      return transientWebImage(dataUrl, `stock-${r.source}-${r.url.slice(-24)}`, {
+        sourceLabel: r.credit, // photographer credit for provenance
         width: r.width || 1200,
         height: r.height || 800,
-        sourceLabel: r.credit,
-      }]);
-      if (saved) {
-        // eslint-disable-next-line no-console
-        console.log(`[stock] ${r.source} photo for "${query}" (${r.credit})`);
-        return saved;
-      }
+      });
     }
     return undefined;
   } catch {
