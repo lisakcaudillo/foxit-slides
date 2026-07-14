@@ -154,10 +154,18 @@ interface InferRule {
   voice?: string;
 }
 const RULES: ReadonlyArray<InferRule> = [
-  { re: /\b(investor|pitch|series [a-d]|seed|vc|raise|funding|valuation)\b/i, type: 'pitch deck', audience: 'Investors', tone: 'Confident' },
-  { re: /\b(board|exec|leadership|c-suite|qbr|quarterly review)\b/i, type: 'business review', audience: 'Executives', tone: 'Authoritative' },
+  // ── general explainer / educational — kept FIRST (lowest priority) so a
+  //    specific business rule below still overrides for business topics. ──
+  { re: /\b(explain|explainer|overview of|introduction to|intro to|guide to|beginner'?s guide|primer|fundamentals|basics of|101|what (is|are)|how (it|they|this) works?|understanding|everything (you need to know )?about)\b/i,
+    type: 'explainer', tone: 'Educational', voice: 'Educational' },
+  { re: /\b(tutorial|how[- ]to|walk[- ]?through|step[- ]by[- ]step|hands[- ]on|getting started)\b/i,
+    type: 'walkthrough', tone: 'Educational', voice: 'Educational' },
+  { re: /\b(eli5|in plain (english|terms)|simply explained|for (beginners|dummies))\b/i,
+    tone: 'Friendly', voice: 'Simple', detail: 'Concise' },
+  { re: /\b(investor|pitch|series [a-d]|seed|vc|raise|funding|valuation)\b/i, type: 'pitch deck', audience: 'Investors', tone: 'Confident', voice: 'Persuasive' },
+  { re: /\b(board|exec|leadership|c-suite|qbr|quarterly review)\b/i, type: 'business review', audience: 'Executives', tone: 'Authoritative', voice: 'Executive' },
   { re: /\b(engineer|technical|architecture|api|infra|developer)\b/i, audience: 'Engineers', tone: 'Technical', voice: 'Technical' },
-  { re: /\b(customer|client|prospect|sales|demo)\b/i, type: 'sales deck', audience: 'Customers', tone: 'Persuasive' },
+  { re: /\b(customer|client|prospect|sales|demo)\b/i, type: 'sales deck', audience: 'Customers', tone: 'Persuasive', voice: 'Persuasive' },
   { re: /\b(student|class|course|lesson|teach|workshop|onboarding|new hire)\b/i, type: 'training deck', audience: 'Students', tone: 'Educational', voice: 'Educational', detail: 'Extensive' },
   { re: /\b(public|launch|announce|keynote|community)\b/i, type: 'product launch', audience: 'General public', tone: 'Inspirational' },
   { re: /\b(quick|brief|short|one-pager|tl;?dr|lightning|5[- ]?min)\b/i, detail: 'Concise' },
@@ -169,6 +177,20 @@ const RULES: ReadonlyArray<InferRule> = [
   { re: /\b(roadmap|strategy|vision|okrs?)\b/i, type: 'strategy deck' },
   { re: /\b(proposal|rfp|bid|statement of work|sow)\b/i, type: 'proposal' },
   { re: /\b(marketing|campaign|brand|go-to-market|gtm)\b/i, type: 'marketing strategy' },
+  // ── additional deck genres ──
+  { re: /\b(webinar|lunch (and|&) learn|tech talk)\b/i, type: 'webinar', tone: 'Educational' },
+  { re: /\b(case study|success story|customer story)\b/i, type: 'case study' },
+  { re: /\b(all[- ]hands|stand[- ]?up|team update|weekly update|status update|sprint review)\b/i,
+    type: 'team update', audience: 'The team', tone: 'Conversational' },
+  { re: /\b(retrospective|retro|post[- ]?mortem|lessons learned)\b/i, type: 'retrospective' },
+  { re: /\b(comparison|compare|versus|vs|pros and cons|trade[- ]?offs)\b/i, type: 'comparison' },
+  { re: /\b(faq|q&a|frequently asked)\b/i, type: 'FAQ' },
+  { re: /\b(nonprofit|non-profit|donor|fundraising|charity)\b/i,
+    type: 'fundraising deck', audience: 'Donors', tone: 'Inspirational' },
+  // ── audience / voice enrichers (surface voices otherwise unused: Simple, Government, HR) ──
+  { re: /\b(patient|clinical|diagnosis|treatment|symptoms)\b/i, audience: 'Patients', voice: 'Simple', tone: 'Friendly' },
+  { re: /\b(public policy|government|public sector|legislation|regulation|constituents)\b/i, voice: 'Government', tone: 'Authoritative' },
+  { re: /\b(hr|human resources|people team|employee handbook|open enrollment|payroll)\b/i, voice: 'HR', tone: 'Friendly' },
 ];
 
 interface Inferred {
@@ -273,6 +295,10 @@ export default function GenerationPrompt() {
   const [flashed, setFlashed] = useState<Set<FacetKey>>(new Set());
   const [inferring, setInferring] = useState(false);
   const inferTimer = useRef<number | null>(null);
+  // AI (semantic) inference — debounce timer + a sequence guard so a slow/stale
+  // response can't overwrite the facets after a newer edit.
+  const aiTimer = useRef<number | null>(null);
+  const aiSeq = useRef(0);
 
   // hide/show the intent line — persisted in localStorage. Default = shown.
   const [intentHidden, setIntentHidden] = useState(false);
@@ -354,6 +380,60 @@ export default function GenerationPrompt() {
 
   useEffect(() => () => {
     if (inferTimer.current) window.clearTimeout(inferTimer.current);
+  }, []);
+
+  // ── AI semantic inference (PRIMARY) ──
+  // The keyword pass above is instant but only fires on exact trigger words, so
+  // a general/educational topic (e.g. "a deck about black holes") reads as the
+  // bland default. This debounced call infers the facets from MEANING via
+  // /api/ai/infer-facets, and — unlike the keyword pass — also reacts to an
+  // attached file (by its name). It only overrides UN-pinned facets, and if it
+  // errors or is superseded, the keyword guess already applied stands (fallback).
+  useEffect(() => {
+    const prompt = text.trim();
+    const fileName = attachedFile?.name ?? '';
+    if (prompt.length < 8 && !fileName) return; // not enough signal yet
+    const seq = ++aiSeq.current;
+    const ctrl = new AbortController();
+    if (aiTimer.current) window.clearTimeout(aiTimer.current);
+    aiTimer.current = window.setTimeout(async () => {
+      try {
+        const res = await fetch('/api/ai/infer-facets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, fileName }),
+          signal: ctrl.signal,
+        });
+        if (!res.ok) return; // fallback: the keyword guess stands
+        const data = (await res.json()) as {
+          type?: string; audience?: string; tone?: string; detail?: string; voice?: string;
+        };
+        if (seq !== aiSeq.current) return; // a newer edit superseded this response
+        const changes = new Set<FacetKey>();
+        if (data.type && !pinned.type && data.type !== type) { setType(data.type); changes.add('type'); }
+        if (data.audience && !pinned.audience && data.audience !== audience) { setAudience(data.audience); changes.add('audience'); }
+        if (data.tone && !pinned.tone && data.tone !== tone) { setTone(data.tone); changes.add('tone'); }
+        if (data.detail && (DETAIL_OPTS as readonly string[]).includes(data.detail) && !pinned.detail && data.detail !== detail) { setDetail(data.detail as Detail); changes.add('detail'); }
+        if (data.voice && VOICE_OPTS.some((o) => o.v === data.voice) && !pinned.voice && data.voice !== voice) { setVoice(data.voice); changes.add('voice'); }
+        if (changes.size > 0) {
+          setFlashed(changes);
+          setInferring(true);
+          if (inferTimer.current) window.clearTimeout(inferTimer.current);
+          inferTimer.current = window.setTimeout(() => { setInferring(false); setFlashed(new Set()); }, 900);
+        }
+      } catch {
+        /* aborted or network error — the keyword inference already applied stands */
+      }
+    }, 550);
+    return () => {
+      if (aiTimer.current) window.clearTimeout(aiTimer.current);
+      ctrl.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reacts to text/file/pinned; facet values are read, not deps.
+  }, [text, attachedFile, pinned]);
+
+  useEffect(() => () => {
+    if (aiTimer.current) window.clearTimeout(aiTimer.current);
   }, []);
 
   // cycle the ghost example every 3.2s while empty + idle.
