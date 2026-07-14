@@ -63,6 +63,56 @@ const CSS_VAR_MAP: ReadonlyArray<readonly [keyof Theme, string]> = [
   ['secondaryBorder', '--theme-secondary-border'],
 ];
 
+/** Editor/viewer workspace backdrop for a theme: soft palette-derived glows over
+ *  a base that stays in the theme's color family but is shifted one step of
+ *  contrast off the deck ground (dark themes lifted noticeably lighter, light
+ *  themes tinted down) so the deck pops and the surface reads as one family. */
+function workspaceBackdrop(theme: Theme): string {
+  const hx = (s: string): string[] => s.match(/#(?:[0-9a-f]{6}|[0-9a-f]{3})/gi) ?? [];
+  const norm = (h: string): string => { h = h.replace('#', ''); return h.length === 3 ? h.split('').map((c) => c + c).join('') : h; };
+  const rgb = (h: string): [number, number, number] => { const n = norm(h); return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)]; };
+  const rgba = (h: string, a: number): string => { const [r, g, b] = rgb(h); return `rgba(${r},${g},${b},${a})`; };
+  const toHsl = (h: string): [number, number, number] => {
+    let [r, g, b] = rgb(h).map((v) => v / 255) as [number, number, number];
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b); let hh = 0, s = 0; const l = (mx + mn) / 2;
+    if (mx !== mn) { const d = mx - mn; s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn); hh = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; hh /= 6; }
+    return [hh * 360, s, l];
+  };
+  const toHex = (h: number, s: number, l: number): string => {
+    h = ((h % 360) + 360) % 360 / 360; let r: number, g: number, b: number;
+    if (s === 0) { r = g = b = l; } else { const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q; const hk = (t: number): number => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1 / 6) return p + (q - p) * 6 * t; if (t < 1 / 2) return q; if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6; return p; }; r = hk(h + 1 / 3); g = hk(h); b = hk(h - 1 / 3); }
+    const x = (v: number): string => Math.round(Math.max(0, Math.min(1, v)) * 255).toString(16).padStart(2, '0'); return '#' + x(r) + x(g) + x(b);
+  };
+  const mixHue = (a: number, b: number, t: number): number => { const d = ((b - a + 540) % 360) - 180; return (a + d * t + 360) % 360; };
+  const clamp = (v: number, a: number, b: number): number => Math.max(a, Math.min(b, v));
+  const dark = theme.tone === 'dark';
+  const grounds = hx(theme.pageBg);
+  const deck = grounds.length ? grounds[grounds.length - 1] : (dark ? '#0e0e14' : '#ffffff');
+  const pal = (theme.chartPalette ?? []).filter(Boolean);
+  const P = pal.length ? pal : [deck];
+  const c = (i: number): string => P[i % P.length];
+  // Base tilts toward the palette lead, held at a fixed lightness so it reads
+  // apart from the deck; the color comes from the multi-hue glows. Some palettes
+  // lead with a warm accent (velvet, obsidian, nocturne) that muddies the base —
+  // take those from the deck ground so they stay in the theme's own family.
+  const lead = toHsl(c(0));
+  let bh = lead[0], bs = lead[1];
+  if (theme.id === 'velvet' || theme.id === 'obsidian' || theme.id === 'nocturne') {
+    const d = toHsl(deck); bh = d[0]; bs = Math.max(d[1], 0.22);
+  }
+  const base = dark
+    ? toHex(bh, clamp(bs * 0.55, 0.10, 0.36), 0.12)
+    : toHex(bh, clamp(bs * 0.35, 0.04, 0.16), 0.945);
+  const op = dark ? [0.32, 0.24, 0.18, 0.13] : [0.15, 0.11, 0.09, 0.06];
+  return [
+    `radial-gradient(82% 122% at 100% 36%, ${rgba(c(0), op[0])} 0%, transparent 54%)`,
+    `radial-gradient(94% 92% at 2% 6%, ${rgba(c(1), op[1])} 0%, transparent 55%)`,
+    `radial-gradient(112% 82% at 42% 120%, ${rgba(c(2), op[2])} 0%, transparent 55%)`,
+    `radial-gradient(68% 74% at 74% 6%, ${rgba(c(3), op[3])} 0%, transparent 52%)`,
+    base,
+  ].join(', ');
+}
+
 /**
  * Wrap a solid color into a single-stop linear-gradient so the variable
  * always holds a value that's valid as `background-image`. Solid themes
@@ -105,6 +155,11 @@ function applyThemeToRoot(theme: Theme): void {
   const isVoltWorkspace = theme.id === 'volt';
   root.style.setProperty('--theme-workspace-base', theme.workspaceBg ?? (isVoltWorkspace ? '#1E2740' : '#E2E5E9'));
   root.style.setProperty('--theme-workspace-bg', isVoltWorkspace ? asBackgroundImage(theme.pageBg) : 'none');
+
+  // Themed ambient backdrop for the editor/viewer workspace (the area around the
+  // deck): soft palette-derived glows over the workspace base, so the surface
+  // behind the deck belongs to the same color family instead of a flat panel.
+  root.style.setProperty('--theme-workspace-ambient', workspaceBackdrop(theme));
 
   // Chrome (toolbar / sidebar / modal / nav) stays LIGHT for ALL themes — the
   // editor UI NEVER transitions to dark mode. A dark chrome on

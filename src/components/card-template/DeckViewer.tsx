@@ -34,6 +34,21 @@ interface DeckViewerProps {
   deckId?: string;
   /** In-deck slide links jump here. */
   onNavigateToSlide?: (index: number) => void;
+  /** Rename the deck — the name is editable in the top bar. */
+  onNameChange?: (name: string) => void;
+}
+
+/** Cover heading (first text block of the first card) — the deck's real title,
+ *  used as the auto-name when a deck has none saved yet. */
+function coverHeadingOf(template: CardTemplate): string {
+  for (const c of template.cards ?? []) {
+    for (const b of c.freeform ?? []) {
+      if (b.type === 'text' && typeof b.content === 'string' && b.content.trim()) {
+        return b.content.trim().slice(0, 80);
+      }
+    }
+  }
+  return '';
 }
 
 function safeName(template: CardTemplate): string {
@@ -52,9 +67,17 @@ export default function DeckViewer({
   revealOnMount = false,
   initialCard,
   onNavigateToSlide,
+  onNameChange,
 }: DeckViewerProps) {
   const cards = template.cards ?? [];
   const theme = template.theme;
+  const [name, setName] = useState(template.name || coverHeadingOf(template));
+  useEffect(() => { setName(template.name || coverHeadingOf(template)); }, [template.name, template.cards]);
+  // Deck saved with no name yet (older decks) → auto-name it from the cover heading and persist.
+  useEffect(() => {
+    if (!template.name) { const h = coverHeadingOf(template); if (h) onNameChange?.(h); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [active, setActive] = useState(
     Math.max(0, Math.min(initialCard ?? 0, Math.max(0, cards.length - 1))),
   );
@@ -149,7 +172,9 @@ export default function DeckViewer({
       <style>{`
         .deck-viewer {
           display: flex; flex-direction: column; height: 100%;
-          background: var(--theme-workspace-bg, #f4f5f8);
+          /* Themed ambient backdrop (palette-derived) behind the deck; falls back
+             to the workspace base color, then a neutral grey. */
+          background: var(--theme-workspace-ambient, var(--theme-workspace-base, #f4f5f8));
           color: var(--theme-ink, #1a1a2e);
         }
         .dv-topbar {
@@ -158,7 +183,19 @@ export default function DeckViewer({
           border-bottom: 1px solid rgba(0,0,0,0.08);
           background: #ffffff;
         }
-        .dv-title { font-weight: 650; font-size: 15px; letter-spacing: -0.01em; }
+        .dv-logo { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+        .dv-logo-mark { width: 26px; height: 26px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg,#4776E6,#A855F7); box-shadow: 0 2px 8px rgba(103,76,245,0.30); }
+        .dv-logo-text { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; background: linear-gradient(135deg,#4776E6,#A855F7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .dv-logo-div { width: 1px; height: 22px; background: rgba(0,0,0,0.10); margin: 0 2px; flex-shrink: 0; }
+        .dv-title {
+          font-weight: 650; font-size: 15px; letter-spacing: -0.01em; color: inherit;
+          font-family: inherit; background: transparent;
+          border: 1px solid transparent; border-radius: 7px;
+          padding: 4px 8px; margin: -4px -8px; max-width: 46ch;
+        }
+        .dv-title:hover { background: rgba(0,0,0,0.045); }
+        .dv-title:focus { outline: none; background: #ffffff; border-color: rgba(0,0,0,0.16); box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+        .dv-title::placeholder { color: #9aa0ad; font-weight: 500; }
         .dv-count { font-size: 12px; opacity: 0.55; }
         .dv-spacer { flex: 1; }
         .dv-btn {
@@ -168,8 +205,12 @@ export default function DeckViewer({
           transition: opacity 0.15s, background 0.15s;
         }
         .dv-btn:disabled { opacity: 0.55; cursor: wait; }
-        .dv-btn-ppt { background: #ff5f00; color: #fff; }
-        .dv-btn-ppt:hover:not(:disabled) { background: #e85600; }
+        .dv-btn-ppt {
+          background: linear-gradient(135deg, #4776E6, #A855F7);
+          color: #fff; border-color: rgba(255,255,255,0.28);
+          box-shadow: 0 6px 16px rgba(80,55,195,0.30), 0 1px 2px rgba(20,9,50,0.10);
+        }
+        .dv-btn-ppt:hover:not(:disabled) { filter: brightness(1.06); }
         .dv-btn-pdf { background: #ffffff; color: #1a1a2e; border-color: rgba(0,0,0,0.14); }
         .dv-btn-pdf:hover:not(:disabled) { background: #f4f5f8; }
         .dv-body { flex: 1; display: flex; min-height: 0; }
@@ -183,7 +224,13 @@ export default function DeckViewer({
           border: 2px solid transparent; cursor: pointer; background: #fff;
           box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .dv-thumb.is-active { border-color: #ff5f00; }
+        .dv-thumb.is-active {
+          border-color: transparent;
+          background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #C79BE8 0%, #8A56B8 100%);
+          background-origin: border-box;
+          background-clip: padding-box, border-box;
+          box-shadow: 0 2px 12px rgba(122,77,160,0.30);
+        }
         .dv-thumb-n {
           position: absolute; left: 4px; top: 4px; z-index: 2;
           font-size: 10px; font-weight: 600; color: #64748b;
@@ -197,7 +244,26 @@ export default function DeckViewer({
       `}</style>
 
       <div className="dv-topbar">
-        <span className="dv-title">{template.name || 'Untitled deck'}</span>
+        <a className="dv-logo" href="/" aria-label="Studio — Home">
+          <span className="dv-logo-mark">
+            <svg width="15" height="15" viewBox="0 0 1024 1024" fill="none" aria-hidden="true">
+              <path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/>
+              <path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/>
+              <path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/>
+            </svg>
+          </span>
+          <span className="dv-logo-text">STUDIO</span>
+        </a>
+        <span className="dv-logo-div" />
+        <input
+          className="dv-title"
+          value={name}
+          placeholder="Untitled deck"
+          aria-label="Deck name"
+          spellCheck={false}
+          size={Math.max((name || 'Untitled deck').length, 8)}
+          onChange={(e) => { setName(e.target.value); onNameChange?.(e.target.value); }}
+        />
         <span className="dv-count">
           {cards.length} slide{cards.length === 1 ? '' : 's'}
           {streaming ? ' · generating…' : ''}
@@ -218,10 +284,10 @@ export default function DeckViewer({
           disabled={pptStatus === 'working' || cards.length === 0}
         >
           {pptStatus === 'working'
-            ? 'Building PowerPoint…'
+            ? 'Exporting…'
             : pptStatus === 'error'
             ? 'Export failed — retry'
-            : 'Export as PPT (.pptx)'}
+            : 'Export'}
         </button>
       </div>
 
@@ -252,7 +318,7 @@ export default function DeckViewer({
                 width: W * scale,
                 height: H * scale,
                 opacity: revealed ? 1 : 0,
-                boxShadow: '0 8px 40px rgba(0,0,0,0.14)',
+                boxShadow: '0 4px 18px rgba(0,0,0,0.10)',
                 borderRadius: 8,
                 overflow: 'hidden',
               }}

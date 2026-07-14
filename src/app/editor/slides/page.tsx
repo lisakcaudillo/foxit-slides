@@ -123,6 +123,20 @@ function slugifyTopic(text: string): string {
   return (words.length ? words.slice(0, 6) : ['untitled']).join('-');
 }
 
+// Auto deck name = the cover heading (first text block of the first card), which
+// reads as a real, human title (e.g. "Mozart's Defining Classical Elegance").
+// The user can rename it from the editor.
+function coverHeading(cards: CardTemplate['cards'] | undefined): string {
+  for (const c of cards ?? []) {
+    for (const b of c.freeform ?? []) {
+      if (b.type === 'text' && typeof b.content === 'string' && b.content.trim()) {
+        return b.content.trim().slice(0, 80);
+      }
+    }
+  }
+  return '';
+}
+
 function getThemeFonts(themeId: string): string[] {
   const t = getThemeById(themeId);
   const stripStack = (s: string) => s.replace(/^['"]?([^,'"]+).*/, '$1').trim();
@@ -2452,10 +2466,10 @@ export default function CardEditorPage() {
                 // persist; reloaded decks render instantly.
                 const merged: CardTemplate = {
                   ...finalTemplate,
-                  // Untitled by default (Google-Docs style); the prompt lives in
-                  // `description` so it isn't lost. The deck suggests its title
-                  // (cover heading) when the user clicks to rename it.
-                  name: '',
+                  // Auto-named from the cover heading (a real, human title); the
+                  // user can rename it by clicking the name in the editor. The
+                  // prompt still lives in `description` so it isn't lost.
+                  name: coverHeading(finalTemplate.cards),
                   cards: finalTemplate.cards.map((card, i) => {
                     // PER-CARD delay chain. The sequential reveal queue gates
                     // WHEN each card mounts (one at a time); within a card the
@@ -2832,6 +2846,7 @@ export default function CardEditorPage() {
         initialCard={initialCard ?? undefined}
         deckId={deckId ?? undefined}
         revealOnMount={stagedReveal}
+        onNameChange={handleTitleChange}
       />
       {/* File ▸ Open — hidden picker for importing a .pptx as a new deck. */}
       <input
