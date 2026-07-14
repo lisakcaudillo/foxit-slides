@@ -288,9 +288,9 @@ export default function Sidebar() {
               aria-label="Account menu"
               style={ds.profile}
             >
-              <div style={ds.avatar}>LC</div>
+              <div style={ds.avatar}>DU</div>
               <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-                <span style={{ fontSize: 13, color: '#0f172a', fontWeight: 600 }}>Lisa Caudillo</span>
+                <span style={{ fontSize: 13, color: '#0f172a', fontWeight: 600 }}>Demo User</span>
                 <span style={{ fontSize: 11, color: '#94a3b8' }}>Foxit</span>
               </span>
               <ChevronDown
@@ -317,7 +317,7 @@ export default function Sidebar() {
                 }}
               >
                 <div style={{ padding: '6px 12px', fontSize: 11, color: '#94a3b8', borderBottom: '1px solid #f1f5f9' }}>
-                  lisa.caudillo@foxit.com
+                  demo@foxit.com
                 </div>
                 <button
                   type="button"

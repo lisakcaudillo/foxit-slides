@@ -317,9 +317,9 @@ export default function MobileNavDrawer() {
                   aria-label="Account menu"
                   style={ds.profile}
                 >
-                  <div style={ds.avatar}>LC</div>
+                  <div style={ds.avatar}>DU</div>
                   <span style={{ fontSize: 14, color: '#0f172a', fontWeight: 500 }}>
-                    Lisa Caudillo
+                    Demo User
                   </span>
                   <ChevronDown
                     size={14}
@@ -355,7 +355,7 @@ export default function MobileNavDrawer() {
                         borderBottom: '1px solid #f1f5f9',
                       }}
                     >
-                      lisa.caudillo@foxit.com
+                      demo@foxit.com
                     </div>
                     <button
                       type="button"
