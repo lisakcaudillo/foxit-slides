@@ -16,7 +16,7 @@ import {
   ImagePlus,
   Check,
 } from 'lucide-react';
-import CardEditor from '@/components/card-template/CardEditor';
+import DeckViewer from '@/components/card-template/DeckViewer';
 import SlideDeckPrint from '@/components/card-template/SlideDeckPrint';
 import GoogleFonts from '@/components/card-template/GoogleFonts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -2826,18 +2826,9 @@ export default function CardEditorPage() {
   if (template && revealReady) return (
     <>
       <GoogleFonts fonts={getThemeFonts(activeTheme.id)} />
-      <CardEditor
+      <DeckViewer
         template={template}
         streaming={generating}
-        autoImages={autoImages}
-        onCardsChange={handleCardsChange}
-        onTitleChange={handleTitleChange}
-        onThemeChange={handleThemeChange}
-        saveStatus={saveStatus}
-        onSave={handleSave}
-        onSaveAs={handleSaveAs}
-        onOpen={handleOpenPptx}
-        onSaveTemplate={handleSaveToLibrary}
         initialCard={initialCard ?? undefined}
         deckId={deckId ?? undefined}
         revealOnMount={stagedReveal}
