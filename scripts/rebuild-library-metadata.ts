@@ -6,16 +6,16 @@
  * with whatever PNG/JPG/WEBP files actually live in
  *   app/public/library/images/
  *
- * Workflow (per PM Lisa, 2026-05-24):
+ * Workflow:
  *   1. During dev/test, every AI-generated image auto-saves to the library.
- *   2. Before demo/launch, PM manually opens app/public/library/images/ in
+ *   2. Before demo/launch, the maintainer opens app/public/library/images/ in
  *      Explorer and deletes the unusable / inappropriate / duplicate files.
- *   3. PM runs this script. It:
+ *   3. the maintainer runs this script. It:
  *        - drops metadata entries whose file no longer exists on disk
  *        - keeps the rest in original order
  *        - leaves orphan files (on disk but missing from metadata) untouched
  *          and logs them so the curator can decide what to do
- *   4. PM commits the cleaned folder + rebuilt metadata.json. That snapshot
+ *   4. the maintainer commits the cleaned folder + rebuilt metadata.json. That snapshot
  *      ships with the product as the seed library end users browse.
  *
  * Run from repo root or app/:

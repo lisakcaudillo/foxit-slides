@@ -4,7 +4,7 @@ import path from "node:path";
 
 // Load .env.local from the PROJECT ROOT (one level up from app/).
 //
-// Lisa's canonical secrets file lives at:
+// the canonical secrets file lives at:
 //   C:\Users\lisak\ComposeApp\.env.local
 // (one level above the Next.js app). Next.js's built-in loadEnvConfig
 // only reads from the app/ directory, so without this hook the
@@ -15,9 +15,9 @@ import path from "node:path";
 // This config-time hook reads that file and injects each var into
 // process.env BEFORE any route handler runs. Project root is the
 // single source of truth — we always override what's in process.env
-// so the stale app/.env.local can't shadow Lisa's canonical secrets.
+// so the stale app/.env.local can't shadow the canonical secrets.
 //
-// Lisa chose this layout deliberately. We honor the choice in code
+// This env layout is intentional and honored in code
 // rather than asking her to maintain two copies.
 try {
   const projectRootEnv = path.join(__dirname, "..", ".env.local");

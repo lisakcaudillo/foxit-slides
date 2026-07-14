@@ -4,7 +4,7 @@
  * Reads app/public/library/metadata.json and emits a static contact-sheet
  * HTML (app/public/library/stock-contact-sheet.html) showing every Pexels
  * stock image just seeded, grouped by [category], with credit + a per-image
- * "cut" checkbox + a "copy cut list" button so Lisa can curate by eye and
+ * "cut" checkbox + a "copy cut list" button so it can be curated by eye and
  * hand back the ids to drop. Open the file directly from disk (file://) —
  * image paths are relative, no dev server needed.
  */

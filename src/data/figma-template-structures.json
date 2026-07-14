@@ -125,7 +125,7 @@
     "ledgerline": {
       "order": 10,
       "mapped": true,
-      "_note": "Cobalt — re-skinned from the former Ledgerline (Lisa 2026-06-24): bold high-contrast blue business skin. Work Sans, white ground, near-black ink, vivid cobalt accent. Flat text cover; interiors share the standard 02-12 geometry. id stays 'ledgerline' so saved decks resolve unchanged.",
+      "_note": "Cobalt — re-skinned from the former Ledgerline: bold high-contrast blue business skin. Work Sans, white ground, near-black ink, vivid cobalt accent. Flat text cover; interiors share the standard 02-12 geometry. id stays 'ledgerline' so saved decks resolve unchanged.",
       "label": "Cobalt",
       "character": "bold high-contrast blue, white ground, geometric sans",
       "fonts": { "display": "Work Sans", "body": "Work Sans" },

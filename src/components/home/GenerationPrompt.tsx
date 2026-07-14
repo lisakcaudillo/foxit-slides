@@ -3,7 +3,7 @@
 /**
  * GenerationPrompt — the prompt card from the approved prototype
  * (`app/public/design-table/deck-generation-v2/a-intent.html` — "Reads Your
- * Intent"). Faithful React port plus one PM addition: the intent line is
+ * Intent"). Faithful React port plus one addition: the intent line is
  * hideable (persisted in localStorage).
  *
  * Below the prompt the system shows back ONE confident, pre-filled natural-
@@ -255,7 +255,7 @@ export default function GenerationPrompt() {
   const [detail, setDetail] = useState<Detail>('Detailed');
   const [voice, setVoice] = useState('Default');
   const [treat, setTreat] = useState<TreatMode>('inspire');
-  // generation settings (mirror the creator). Images default OFF (opt-in) per PM.
+  // generation settings (mirror the creator). Images default OFF (opt-in).
   // Slide count: 0 = AUTO (the AI/plan agent picks an adaptive count from the
   // content). Auto is the DEFAULT — mirrors the Themes
   // "Auto" state next to it. Stepping below 1 lands on Auto; the route maps

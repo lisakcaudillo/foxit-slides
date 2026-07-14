@@ -3,7 +3,7 @@
 // ── Shared image-generation engine — LibraryBrowser (Editorial Feed / D2) ──
 //
 // The approved media-panel direction (design table 2026-06-03, D2 "Editorial
-// Feed", chosen by the PM over the Manager uniform-grid recommendation):
+// Feed", chosen over the uniform-grid recommendation):
 //
 //   • SUGGESTED band (violet wash) — a large 16:10 HERO (the top-ranked match,
 //     captioned with its category, a "drag onto slide" pill, violet border)

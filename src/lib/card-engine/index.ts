@@ -925,7 +925,7 @@ Do NOT wrap in markdown code fences. Output raw JSON only.`;
   //      (honest handoff) below. A final deterministic safety net runs after
   //      (an LLM fix can introduce overflow). Generation is NEVER hard-blocked.
   const MAX_GEN_ATTEMPTS = 4;     // structural re-rolls (deterministic tier)
-  const MAX_JUDGE_REVISIONS = 3;  // content-critic surgical fix rounds (PM: 3)
+  const MAX_JUDGE_REVISIONS = 3;  // content-critic surgical fix rounds (3)
   const judgeOn = (enforceJudge ?? true) && isJudgeEnabled();
   let judgeRevisionsUsed = 0;
   // Non-empty at the end ⇒ the card shipped with an unresolved content verdict,

@@ -1,13 +1,13 @@
 /**
  * generate-glass-renders.mjs
  *
- * Generates PREMIUM 3D glass-render art (the look Lisa confirmed 2026-06-08:
+ * Generates PREMIUM 3D glass-render art (the target look:
  * cinematic translucent glass ribbons / rings / spirals / droplets with
  * subsurface scattering, water-droplet specular, clean type negative-space) via
  * OpenAI gpt-image-1 — the SAME engine + params as /api/ai/generate-image.
  *
  * Source prompts: the surviving glass-centerpiece .prompt.txt files (the exact
- * recipes that produced Lisa's reference images) + new on-brand ribbon/glass
+ * recipes that produced the reference images) + new on-brand ribbon/glass
  * variants across the palette. Each prompt already reserves a typography
  * clean-zone, so we send it near-verbatim (just a hard no-text guard).
  *
@@ -54,7 +54,7 @@ async function loadKey() {
 const NO_TEXT = 'Absolutely no text, letters, words, numbers, or logos anywhere in the image.';
 
 // New on-brand ribbon/glass prompts (same craft register as the originals).
-// `cat` decides the library category tag: ribbons join Lisa's ribbons set.
+// `cat` decides the library category tag: ribbons join the ribbons set.
 const NEW_PROMPTS = [
   { name: 'ribbon-violet', cat: 'ribbons', text: 'Cinematic 3D render of flowing translucent glass ribbons curving through space, cool gradient palette of deep violet, periwinkle, lavender, and silver, subsurface scattering with soft specular highlights, water droplets on glossy surfaces catching light, shallow depth of field with bokeh, soft rim lighting, premium minimalist aesthetic, clean negative space at right of frame, Octane render quality, 4K' },
   { name: 'ribbon-azure', cat: 'ribbons', text: 'Cinematic 3D render of a continuous translucent glass ribbon flowing diagonally, cool gradient palette of midnight blue, electric cyan, azure, and pearl, subsurface scattering, water droplets catching light, caustic refraction through the glass, shallow depth of field, soft rim lighting, premium minimalist aesthetic, clean negative space upper-right for typography, Cinema 4D rendered, 4K' },
@@ -68,7 +68,7 @@ const NEW_PROMPTS = [
 // ── Theme SETS ────────────────────────────────────────────────────────────────
 // A cohesive family: ONE palette + ONE lighting/material base, varied only by
 // form, so the 6 images read as a matched set usable together across a deck's
-// cards (the Gamma "theme thumbnails" pattern, Lisa 2026-06-08). Square by
+// cards (the Gamma "theme thumbnails" pattern). Square by
 // default — they're card-accent images.
 const SET_STYLE = 'Cinematic 3D render, translucent glass material with subsurface scattering, soft pearl specular highlights, delicate water droplets catching light, shallow depth of field with gentle bokeh, soft studio rim lighting, consistent smooth gradient backdrop, premium minimalist aesthetic, generous clean negative space, Octane render quality, 4K';
 const SET_FORMS = [

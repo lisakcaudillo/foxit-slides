@@ -113,7 +113,7 @@ export const COVER_HARD_IDS_RESIDUAL = ['C5'] as const;
 export const INTERIOR_HARD_IDS_RESIDUAL = ['L5'] as const;
 
 /** HARD criteria — any one failing means the slide does NOT pass, regardless of
- *  the overall score. Legibility + premium-feel are non-negotiable (PM, 2026-06-08).
+ *  the overall score. Legibility + premium-feel are non-negotiable.
  *  Clean composition (C8/L7) added 2026-06-16 — the judge was passing slides with
  *  overlapping/buried text and empty stranded pills; this makes those a hard fail. */
 export const COVER_HARD_IDS = ['C5', 'C7', 'C8'] as const;

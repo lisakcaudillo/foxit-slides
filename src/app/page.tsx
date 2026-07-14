@@ -4,7 +4,7 @@
  * Home — the slide-generation surface. Faithful port of the approved
  * prototype (`app/public/design-table/home-generation/manager-v5.html`).
  *
- * This surface is prompt + recents only (per PM): the greeting + gradient-
+ * This surface is prompt + recents only: the greeting + gradient-
  * italic headline, a hero row (GenerationPrompt on the left, ShowcaseDeck
  * on the right), then RecentDecks below. CapabilityTiles and
  * QuickActionsGrid were removed from this surface.
@@ -117,7 +117,7 @@ export default function WorkspaceHome() {
       <div className="hg-content">
         {/* ① HERO — single column: greeting, headline, a small showcase-deck
             accent, then the prompt card. (Was a 2-col grid with a large deck on
-            the right; collapsed per PM so the card runs full width and Recent
+            the right; collapsed so the card runs full width and Recent
             rises into view without scrolling.) */}
         <section className="hg-hero">
           {/* Top row: heading text on the left, a small tilted deck accent to
