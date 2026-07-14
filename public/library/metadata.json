@@ -581,66 +581,6 @@
       "createdAt": "2026-06-24T12:39:19.927Z"
     },
     {
-      "id": "img_mqg76cqw_yc6ow",
-      "filename": "img_mqg76cqw_yc6ow.jpg",
-      "prompt": "[stock:pexels] Business A modern city skyline with sunrise, symbolizing growth and opportunity — Photo by Tom Fisk on Pexels",
-      "type": "photo",
-      "quality": "stock",
-      "width": 5339,
-      "height": 3535,
-      "createdAt": "2026-06-16T05:24:23.434Z"
-    },
-    {
-      "id": "img_mqg4ta3v_g8o2d",
-      "filename": "img_mqg4ta3v_g8o2d.jpg",
-      "prompt": "[stock:pexels] Business a ship navigating through rough seas — Photo by vasu jamwal on Pexels",
-      "type": "photo",
-      "quality": "stock",
-      "width": 4032,
-      "height": 3024,
-      "createdAt": "2026-06-16T04:18:14.252Z"
-    },
-    {
-      "id": "img_mqg2c7yl_1e7ao",
-      "filename": "img_mqg2c7yl_1e7ao.jpg",
-      "prompt": "[stock:pexels] Business a maze representing challenges — Photo by Hartono Creative Studio on Pexels",
-      "type": "photo",
-      "quality": "stock",
-      "width": 3750,
-      "height": 2500,
-      "createdAt": "2026-06-16T03:08:59.086Z"
-    },
-    {
-      "id": "img_mq6ycxi9_lgjai",
-      "filename": "img_mq6ycxi9_lgjai.jpg",
-      "prompt": "[stock:pexels] Partnership proposal for a fintech integration — Photo by Morthy Jameson on Pexels",
-      "type": "photo",
-      "quality": "stock",
-      "width": 6000,
-      "height": 3376,
-      "createdAt": "2026-06-09T18:07:38.146Z"
-    },
-    {
-      "id": "img_mq6ycxh8_mvxxn",
-      "filename": "img_mq6ycxh8_mvxxn.jpg",
-      "prompt": "[stock:pexels] abstract network of connected nodes with data flowing between them, digital blue and gold pathways — Photo by Brett Sayles on Pexels",
-      "type": "photo",
-      "quality": "stock",
-      "width": 5000,
-      "height": 3327,
-      "createdAt": "2026-06-09T18:07:38.109Z"
-    },
-    {
-      "id": "img_mq6ycm55_nfu61",
-      "filename": "img_mq6ycm55_nfu61.jpg",
-      "prompt": "[stock:pexels] Two interlocking puzzle pieces fitting together perfectly against a modern business backdrop — Photo by Ann H on Pexels",
-      "type": "photo",
-      "quality": "stock",
-      "width": 6000,
-      "height": 4000,
-      "createdAt": "2026-06-09T18:07:23.418Z"
-    },
-    {
       "id": "img_mqe1jovx_018zqf",
       "filename": "img_mqe1jovx_018zqf.png",
       "prompt": "[wallpaper-dark] A deep-space nebula scene: vast dark cosmos with soft luminous clouds of violet, magenta, deep blue and teal nebula gas, scattered bright and faint stars, a quiet sense of depth and wonder. Ultrawide desktop-wallpaper composition, the central area kept calm and uncluttered so an interface sits cleanly on top, interest gathered toward the edges. Premium, immersive, smooth gradients, soft volumetric depth, gentle grain, no text, no logos, 4K.",
