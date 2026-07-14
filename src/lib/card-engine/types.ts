@@ -3,7 +3,7 @@ import { z } from 'zod';
 // ── Classification ────────────────────────────────────────────────────────
 
 /** Block-template enum — what visual treatment each section gets. Replaces
- *  the older free-form `suggestedBlocks` field per Lisa 2026-05-21. Tightening
+ * the older free-form `suggestedBlocks` field. Tightening
  *  this to a closed enum forces the classifier to commit to a specific
  *  template per section, stopping the "everything defaults to paragraph-
  *  content" failure mode. */

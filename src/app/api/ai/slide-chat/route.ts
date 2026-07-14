@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const { prompt, deckContext, history } = parsed.data;
 
-    const systemPrompt = `You are a slide-deck editing assistant inside the Compose editor. The user is working on a slide deck and may ask you to rewrite, restructure, expand, or summarize their content.
+    const systemPrompt = `You are a slide-deck editing assistant inside the Foxit Slides editor. The user is working on a slide deck and may ask you to rewrite, restructure, expand, or summarize their content.
 
 Be direct and brief. Reply in 1-3 short paragraphs maximum. When suggesting edits, describe them concretely (which slide, what change). Don't repeat the user's prompt back.
 

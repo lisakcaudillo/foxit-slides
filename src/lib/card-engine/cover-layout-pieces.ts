@@ -23,7 +23,7 @@
  * lock-the-box `textBlock` (slide-typography.ts) — the box is fixed and real
  * titles shrink to fit. The approved mocks use a larger display size than the
  * role scale caps at; the GEOMETRY (the box) and the DECORATION are exact, the
- * type is role-sized inside the locked box (Lisa's approved lock:true decision).
+ * type is role-sized inside the locked box.
  */
 
 import type { Role } from './slide-typography';

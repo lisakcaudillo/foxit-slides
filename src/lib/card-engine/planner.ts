@@ -229,7 +229,7 @@ function imageValueForBlockTemplate(blockTemplate: string | undefined): number {
 }
 
 /**
- * DESIGN-OWNED IMAGE GATE (Lisa 2026-06-03; B2b re-keyed to blockTemplate). The
+ * DESIGN-OWNED IMAGE GATE. The
  * designer — not the generator — decides which slides earn an image, at PLAN
  * TIME, under a hard count budget.
  *

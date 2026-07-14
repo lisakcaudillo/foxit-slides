@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * /editor/generate — the dedicated new-deck (create) surface (Lisa 2026-06-16),
+ * /editor/generate — the dedicated new-deck (create) surface,
  * replacing the global new-deck MODAL. Reached only from +New / +Create.
  *
  * Two tabs: GENERATE (the verbatim landing-page prompt card → on Generate it

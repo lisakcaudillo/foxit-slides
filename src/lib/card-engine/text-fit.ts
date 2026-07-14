@@ -324,7 +324,7 @@ export function fitCardText(card: Card): SlotFitNote[] {
 }
 
 /** Fit one peer group together: equal box height + one uniform font size per
- *  type (Lisa 2026-06-22 — "if you grow one box, grow the others; each text type
+ * type (— "if you grow one box, grow the others; each text type
  *  keeps the same size in every box"). A singleton group is just a normal box. */
 function fitGroup(card: Card, group: FitBlock[], notes: SlotFitNote[]): void {
   const items = group.map((b) => {

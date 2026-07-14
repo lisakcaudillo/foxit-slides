@@ -2,7 +2,7 @@
  * Contrast utilities — WCAG relative-luminance math for the text-contrast
  * guarantee in the slide renderer.
  *
- * Lisa's requirement (2026-06-03): text must always be legible against
+ * requirement (2026-06-03): text must always be legible against
  * whatever is actually behind it — "you wouldn't have white text on a white
  * background." These pure helpers let the renderer pick a text color that
  * clears the WCAG AA 4.5:1 floor against its EFFECTIVE background (a scrim

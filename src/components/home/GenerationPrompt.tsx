@@ -257,7 +257,7 @@ export default function GenerationPrompt() {
   const [treat, setTreat] = useState<TreatMode>('inspire');
   // generation settings (mirror the creator). Images default OFF (opt-in) per PM.
   // Slide count: 0 = AUTO (the AI/plan agent picks an adaptive count from the
-  // content). Auto is the DEFAULT (Lisa 2026-06-30) — mirrors the Themes
+  // content). Auto is the DEFAULT — mirrors the Themes
   // "Auto" state next to it. Stepping below 1 lands on Auto; the route maps
   // 0 → undefined → adaptive.
   const [cardCount, setCardCount] = useState(0);

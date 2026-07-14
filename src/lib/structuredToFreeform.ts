@@ -46,7 +46,7 @@ import { DESIGN_STANDARD } from '@/lib/card-engine/slide-standard';
 // ── Layout constants — sourced from the calibrated DESIGN_STANDARD ───────────
 // The layout stage reads the design system DIRECTLY (design-system-wiring-spec.md):
 // the safe-area inset is `DESIGN_STANDARD.padding.insetPx` (64px on 960×540,
-// calibrated from Lisa's votes — padding, especially TOP and LEFT, is the #1
+// calibrated from votes — padding, especially TOP and LEFT, is the #1
 // recurring defect, so 64 is a FLOOR). Converted px → % per axis. Replaces the
 // old hardcoded 8/92/7 constants so the slots honor the calibration, not a guess.
 const CARD_W_PX = DESIGN_STANDARD.canvas.w; // 960
@@ -72,7 +72,7 @@ interface ContentBounds {
  *  `imageAwareBounds`. The legacy `split-left` / `split-right` accent zone
  *  (a theme-gradient half-panel set by the card-engine on every split layout)
  *  is no longer rendered — it read as an empty "placeholder image" when no
- *  image filled it (Issue #1, Lisa 2026-06-03). So split layouts no longer
+ * image filled it (Issue #1,. So split layouts no longer
  *  reserve a half here; content reflows to full width and the DIL decides if
  *  and where an image goes. */
 function boundsForLayout(_layout: string | undefined): ContentBounds {
@@ -109,7 +109,7 @@ function heroBoundsForTemplate(template: LayoutTemplate): ContentBounds | null {
 // ── Image-aware text bounds (Design Intelligence Layer) ──────────────────────
 // When the deck planner assigned a region-occupying `imageRole`, the image
 // claims part of the card. Text must flow into the COMPLEMENTARY region so it
-// never runs over the image (the overlap bug Lisa flagged 2026-06-03: a
+// never runs over the image (the overlap bug flagged 2026-06-03: a
 // split-image / imageRole:'column' slide placed the image left 0–46% but the
 // text rendered full-width and ran straight across it).
 //
@@ -149,7 +149,7 @@ function imageAwareBounds(card: Card): ContentBounds | null {
   // band / column reserve a region for the image and flow text into the
   // complementary area — but ONLY when an image is ACTUALLY present. The
   // planner's role is a proposal the async auto-image flow may never fulfill;
-  // reserving for a phantom image is what crammed the content (Lisa 2026-06-10).
+  // reserving for a phantom image is what crammed the content.
   // No real image → null → the caller uses the full content area.
   if (!cardHasImage(card)) return null;
 
@@ -190,7 +190,7 @@ function imageAwareBounds(card: Card): ContentBounds | null {
 // Per-block-type vertical footprint FLOORS, in % of card height. These are
 // the minimum h a block reserves when its content is short; contentAwareHeight
 // (below) overrides upward when wrapped content needs more room. Lowered
-// substantially 2026-05-22 per Lisa — the previous floors (paragraph 26%,
+// substantially 2026-05-22,
 // bullet 28%, callout 18%) reserved 100-140px on a 540px card even for
 // one-line bodies, which pushed trailing content past the card boundary on
 // dense slides (heading + 3-cell smart-layout + trailing callout). Now the
@@ -373,7 +373,7 @@ type LayoutTemplate =
  *  Used to GATE split templates: the gradient accent panel was removed
  *  (Issue #1, 2026-06-03), so a split with no image leaves an empty half. */
 function cardHasImage(card: Card): boolean {
-  // ADAPT TO REALITY (Lisa 2026-06-10): an image counts only when it is ACTUALLY
+  // ADAPT TO REALITY: an image counts only when it is ACTUALLY
   // on the slide — a real image block with a src. The planner's `imageRole`
   // (column/band) is a PROPOSAL; the auto-image flow that fulfills it is async +
   // best-effort, so a column/band role frequently has NO image behind it. Keying
@@ -461,7 +461,7 @@ function structuredItemCount(card: Card): number {
  *  present and valid (with safe image-gating); otherwise we fall back to the
  *  card.layout + structured-block-shape detection (today's behavior). */
 // Full-canvas compositions place content across the WHOLE slide and reserve no
-// region for an image. PER LISA (2026-06-11, P3a lock-the-box): a slide is EITHER
+// region for an image., P3a lock-the-box): a slide is EITHER
 // a full-canvas composition OR an image+content split — never both. A composition
 // slide gets NO image (the composition IS the visual). This Set + predicate is the
 // SINGLE source both the converter (strips any image) and the editor's async
@@ -567,7 +567,7 @@ function nextFreeformId(): string {
 // renderer is plain-text (no markdown pass), so those markers render as
 // literal characters on the slide — e.g. `**Product Team/Week 2**` shows
 // up verbatim. Strip the markers at conversion time so the slide reads
-// cleanly. Lisa flagged this 2026-05-22.
+// cleanly. flagged this 2026-05-22.
 //
 // Conservative regexes: `**...**` and `__...__` for bold (any non-greedy
 // content between matched pairs); `*...*` and `_..._` only when the marker
@@ -583,7 +583,7 @@ function stripMarkdown(s: string): string {
 }
 
 // ── Settle pass: enforce no AABB overlap among CONVERTER-generated blocks ────
-// Per Lisa 2026-05-22 — the no-overlap rule applies to AI/converter output
+//
 // only. Once a user has placed a freeform block, the system never moves it.
 // User blocks count as FIXED OBSTACLES so the converter doesn't blast over
 // them, but their positions are never adjusted.
@@ -664,7 +664,7 @@ function settleOverlaps(
       // Settle pushed b past the card bottom while clearing obstacles
       // above. Pulling y back up to (bounds.bottom - b.h) would re-collide
       // with those obstacles — that's the exact text-on-text overlap
-      // Lisa flagged 2026-05-24 (last subheading+paragraph pair on dense
+      // flagged 2026-05-24 (last subheading+paragraph pair on dense
       // slides). Try shrinking in place first; if the result still overlaps
       // or falls below the minH floor, drop the block. Better absent than
       // overlapping.
@@ -853,7 +853,7 @@ export function cardToUnified(card: Card, theme?: TemplateTheme): Card {
     b.type === 'shape' || b.type === 'icon' ? 3 : 6;
   // When the loop drops a block, the section heading right above it may
   // already be in `clamped`. Pop trailing subheadings so we don't leave
-  // an orphan "Section Title" with no body underneath — Lisa 2026-05-25
+  // an orphan "Section Title" with no body underneath —
   // flagged a slide where Block 4's subheading rendered but its
   // paragraph had been dropped, producing a heading hanging at the
   // bottom of the card with nothing below it. Slide-title `heading`
@@ -871,12 +871,12 @@ export function cardToUnified(card: Card, theme?: TemplateTheme): Card {
   };
   const clamped: FreeformBlock[] = [];
   for (const b of converted) {
-    // Stage 0 — strip empty-src image blocks. Lisa 2026-05-25 flagged
+    // Stage 0 — strip empty-src image blocks. flagged
     // recurring "Image placeholder" rectangles on generated slides. The
     // AI's GeneratedBlockSchema doesn't include 'image' so the AI itself
     // never emits these — but defensively, if ANY converter path produces
     // an image block with no src and it wasn't placed by the user, drop
-    // it. Compose has integrated image generation; an empty placeholder
+    // it. Foxit Slides has integrated image generation; an empty placeholder
     // is friction, not affordance. User can still add an image
     // intentionally from the Elements (frame) or Media (generate/upload)
     // panels.
@@ -902,7 +902,7 @@ export function cardToUnified(card: Card, theme?: TemplateTheme): Card {
       // Previously this pulled y UP so the block landed at (bounds.bottom -
       // floor, floor) — but on dense slides where the prior block ends near
       // bounds.bottom, the pull-up landed on top of it, producing the
-      // text-on-text overlap Lisa flagged on 2026-05-24 (slide 1 with
+      // text-on-text overlap flagged on 2026-05-24 (slide 1 with
       // 4 subheading+paragraph pairs: last paragraph touched / overlapped
       // its heading). Visible overlap reads as broken; a missing trailing
       // block reads as "AI generated too much for one slide" which is
@@ -922,7 +922,7 @@ export function cardToUnified(card: Card, theme?: TemplateTheme): Card {
   // No-overlap settle pass — applies to CONVERTER output only. User blocks
   // act as fixed obstacles so the converter doesn't blast over content the
   // user placed deliberately, but their positions are never adjusted by
-  // the system. Per Lisa 2026-05-22: the user owns the position of every
+  // the system.: the user owns the position of every
   // block they place; the no-overlap rule is for AI-generated content.
   const settledConverted = settleOverlaps(clamped, userBlocks, bounds);
 
@@ -960,7 +960,7 @@ function layoutCover(blocks: CardBlock[], bounds: ContentBounds): FreeformBlock[
     // Build the title FIRST so we use its REAL autofit-resolved height — textBlock
     // grows the box past the `h` estimate for a long wrapped title, and placing
     // the subtitle at `startY + h` (the estimate) drops it INTO the grown title
-    // (the cover overlap Lisa flagged). Position everything off the real height.
+    // (the cover overlap flagged). Position everything off the real height.
     const titleBlock = textBlock({
       variant, content: heading.content,
       x: contentLeft, y: bounds.top, w: contentWidth, h, z: z++,
@@ -1318,7 +1318,7 @@ function blocksToFreeform(blocks: CardBlock[], bounds: ContentBounds): FreeformB
       }
       case 'smart-layout': {
         // Decompose: each cell produces its own group of freeform blocks
-        // (optional icon, heading, body). Per Lisa: every icon and text
+        // (optional icon, heading, body).: every icon and text
         // inside a smart-layout should be its own object.
         const decomposed = decomposeSmartLayout(block, cursorY, z, CONTENT_LEFT, CONTENT_WIDTH);
         out.push(...decomposed.blocks);
@@ -1381,7 +1381,7 @@ function decomposeSmartLayout(
   // doesn't overflow into the next cell's icon + heading. The previous
   // fixed `rowH = 12` was too small when AI generated multi-line bodies,
   // and the FreeformLayer auto-layout pass didn't reliably catch the
-  // overlap between decomposed cell blocks (per Lisa 2026-05-22).
+  // overlap between decomposed cell blocks.
   const cellGap = 3;             // % between rows
   const minCellH = 12;           // floor so empty cells still take visual space
   let cursor = startY;

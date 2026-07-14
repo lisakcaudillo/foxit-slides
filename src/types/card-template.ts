@@ -205,7 +205,7 @@ interface FreeformPositioned {
   /**
    * Set by the streaming handler when a card arrives mid-generation. Tells
    * the renderer to play a typewriter reveal on first mount. Cleared at
-   * persist time so reloading a saved deck doesn't re-animate. Lisa
+   * persist time so reloading a saved deck doesn't re-animate.
    * 2026-05-25: typewriter reveal was lost after the unified-format
    * rewrite — this flag rewires it.
    */
@@ -215,7 +215,7 @@ interface FreeformPositioned {
    * stripped at persist time (alongside __animateOnMount). Used to chain cards
    * so the deck reveals one card at a time — card 1's text types out, then
    * card 2's, then card 3's — instead of every tagged block animating at once.
-   * Lisa 2026-06-03: sequential reveal buys visual time and reads better.
+   * sequential reveal buys visual time and reads better.
    */
   __animateDelay?: number;
 }
@@ -380,7 +380,7 @@ export interface FreeformImageBlock extends FreeformPositioned {
    * photo reads as a faint wash and the theme's normal text stays legible on
    * top with no scrim. Honored by ImageContent in FreeformLayer. Rich-photo
    * roles (`duotone`/`full-bleed`) leave this undefined (full strength) and rely
-   * on the scrim + forced light text instead. (Lisa 2026-06-03 legibility pass.)
+   * on the scrim + forced light text instead.
    */
   opacity?: number;
   /**
@@ -606,7 +606,7 @@ export interface Card {
    * to a generation skeleton that happens to share the empty heading+paragraph
    * shape. When true the renderer must NOT paint the loading shimmer and NOT
    * render the cover motif (CoverArt) — a blank slide is genuinely empty so the
-   * user can type/place content. No AI runs. (Lisa 2026-06-16.)
+   * user can type/place content. No AI runs.
    */
   blank?: boolean;
   /**
@@ -614,7 +614,7 @@ export interface Card {
    * theme's real, Figma-faithful cover, so the editor must honor it as-is: do
    * NOT overlay the legacy per-theme CoverArt motif (counsel's seal, ledger's
    * ledger-lines, etc.) — that art is not in the Figma cover. Persisted so a
-   * reopened structured deck stays faithful. (Lisa 2026-06-17.)
+   * reopened structured deck stays faithful.
    */
   structuredCover?: boolean;
   background?: {

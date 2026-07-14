@@ -1,4 +1,4 @@
-// Native PPTX export for slide decks — powered by Compose's in-house OOXML engine.
+// Native PPTX export for slide decks — powered by Foxit Slides's in-house OOXML engine.
 //
 // Authors a real, editable PowerPoint from the CardTemplate model — text boxes,
 // shapes, images, tables, and charts as first-class PPTX objects (NOT a flattened
@@ -191,7 +191,7 @@ function sideToAngle(s: string): number {
   return 180;
 }
 
-/** Compose a CSS linear-gradient as a vector SVG data URL, for a faithful slide-bg. */
+/** Foxit Slides a CSS linear-gradient as a vector SVG data URL, for a faithful slide-bg. */
 function gradientToSvgDataUrl(css: string): string | null {
   const m = css.match(/linear-gradient\(\s*([\s\S]*)\)\s*$/i);
   if (!m) return null;
@@ -535,7 +535,7 @@ function chartKind(t: FreeformChartBlock['chartType']): 'bar' | 'column' | 'line
     case 'pie': return 'pie';
     case 'donut': return 'doughnut';
     case 'scatter': return 'scatter';
-    // Compose's chart model carries no per-point SIZE, so a true bubble chart
+    // Foxit Slides's chart model carries no per-point SIZE, so a true bubble chart
     // isn't expressible — the closest faithful native form is a scatter (X,Y
     // points). Funnel has no native OOXML equivalent in the c: chart schema (it's
     // an Office-2016 cx: "chartex" type) — a horizontal bar reads funnel-adjacent
@@ -632,7 +632,7 @@ function addList(slide: Slide, b: FreeformListBlock, card: Card, theme: Template
 /** Build a deck into a finished .pptx Blob (native gradient text/shape fills — no
  *  post-pass). Separated from the download so it can be tested/inspected headlessly. */
 export async function buildDeckPptxBlob(template: CardTemplate): Promise<Blob> {
-  const deck = createDeck({ title: template.name || 'Presentation', author: 'Compose' });
+  const deck = createDeck({ title: template.name || 'Presentation', author: 'Foxit Slides' });
   const theme = template.theme;
   const slideIndexById = new Map(template.cards.map((c, i) => [c.id, i + 1]));
 

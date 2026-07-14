@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       model: getModel(),
       max_tokens: 2048,
       system: [
-        'You are a content planning engine for Compose, a professional document workspace.',
+        'You are a content planning engine for Foxit Slides, a professional document workspace.',
         'Given a user\'s prompt and normalized intent, create a content blueprint — a structured plan that will guide document generation.',
         '',
         'BLUEPRINT RULES:',

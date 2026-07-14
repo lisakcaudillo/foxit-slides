@@ -65,7 +65,7 @@ export const SKIN_PANEL: Record<string, SkinPanel> = { glacier: GLACIER_PANEL, v
 // Fixed skins with hand-authored per-category maps.
 export const CATEGORY_BACKGROUNDS: Record<string, Partial<Record<LayoutCategory, CategoryBg>>> = {
   'mono-light': {
-    // Cover/quote stay on the plain white ground (Lisa 2026-07-13 — no warm
+    // Cover/quote stay on the plain white ground (— no warm
     // paper). Data on a soft grey; the divider is the one bold dark moment.
     data: { bg: { color: '#F2F2F2' } },
     divider: { bg: { color: '#111111' }, invert: true },

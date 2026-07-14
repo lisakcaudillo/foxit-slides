@@ -3,7 +3,7 @@
 /* eslint-disable react/no-array-index-key -- ports SVG keying patterns from kit */
 
 /**
- * CapabilityTiles — 4-tile grid demonstrating Compose's actual mechanics.
+ * CapabilityTiles — 4-tile grid demonstrating Foxit Slides's actual mechanics.
  * Verbatim visual port of CapabilityTiles.jsx from the kit, animations
  * included.
  *
@@ -37,7 +37,7 @@ const TILES: Tile[] = [
   {
     id: 'chat',
     title: 'Chat to artifact',
-    desc: 'Describe a doc — Compose drafts a full version.',
+    desc: 'Describe a doc — Foxit Slides drafts a full version.',
     tryItRoute: '/editor/slides',
     StillFrame: ChatToArtifactStill,
     Preview: ChatToArtifactAnim,
@@ -61,7 +61,7 @@ const TILES: Tile[] = [
   {
     id: 'refine',
     title: 'Refine by conversation',
-    desc: 'Ask for changes in plain words. Compose edits in place.',
+    desc: 'Ask for changes in plain words. Foxit Slides edits in place.',
     tryItRoute: '/editor/slides',
     StillFrame: RefineByChatStill,
     Preview: RefineByChatAnim,
@@ -73,7 +73,7 @@ export default function CapabilityTiles() {
   return (
     <div style={{ marginTop: 48 }}>
       <h2 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#334155', marginBottom: 14 }}>
-        How Compose works
+        How Foxit Slides works
       </h2>
       <div className="home-grid-capabilities" style={{ display: 'grid', gap: 14 }}>
         {TILES.map((t) => (

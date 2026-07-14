@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       fields,
       metadata: {
         createdAt: new Date().toISOString(),
-        createdBy: 'Compose AI',
+        createdBy: 'Foxit Slides AI',
         templateType: detectCategory(prompt).toLowerCase(),
         version: 1,
       },

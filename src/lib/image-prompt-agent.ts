@@ -8,7 +8,7 @@
 //   • the auto-image-at-creation path, whose card-engine "presentation
 //     designer" emits only a short subject phrase.
 //
-// Policy (confirmed with Lisa 2026-05-31):
+// Policy (confirmed with
 //   • ENHANCE ONLY WHEN SPARSE. A rich prompt is sent through untouched so
 //     power users and already-detailed AI subjects aren't second-guessed.
 //   • The ~1-2s Claude call is acceptable — better prompts mean fewer

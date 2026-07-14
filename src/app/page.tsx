@@ -94,9 +94,9 @@ function loadRecents(): RecentDoc[] {
 }
 
 const GREETING_LABEL: Record<GreetingPart, string> = {
-  morning: 'Good morning, Lisa',
-  afternoon: 'Good afternoon, Lisa',
-  evening: 'Good evening, Lisa',
+  morning: 'Good morning, ',
+  afternoon: 'Good afternoon, ',
+  evening: 'Good evening, ',
 };
 
 export default function WorkspaceHome() {

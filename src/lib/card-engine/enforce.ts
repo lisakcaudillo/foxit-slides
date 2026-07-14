@@ -1,7 +1,7 @@
 /**
  * Design Intelligence Layer — Enforcement (the quality gate).
  *
- * Lisa 2026-06-03: "this must be added to the design intelligence. it doesn't
+ * "this must be added to the design intelligence. it doesn't
  * exist without enforcement." Rules in the generation prompt are only an ASK;
  * this is where the output is actually MEASURED against them and sent back when
  * it misses. The core inversion: instead of "generate → truncate → accept,"

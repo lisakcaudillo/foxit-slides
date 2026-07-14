@@ -1,6 +1,6 @@
 /**
  * New-deck entry point. The create surface is the dedicated `/editor/generate`
- * page (Lisa 2026-06-16) — reached ONLY from +New / +Create. The old global
+ * page — reached ONLY from +New / +Create. The old global
  * modal over the editor is retired; this helper now just navigates there.
  *
  * Kept in a NON-component module so callers (Sidebar, home Recents) import a

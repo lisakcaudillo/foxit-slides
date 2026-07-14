@@ -1,7 +1,7 @@
 /**
  * Gemini provider adapter (Google AI / generativelanguage REST).
  *
- * Purpose: give Compose a CROSS-VENDOR model so the eval judge is genuinely
+ * Purpose: give Foxit Slides a CROSS-VENDOR model so the eval judge is genuinely
  * independent of the OpenAI generator (see the eval-judge route + docs). It is
  * used for JUDGING, not generation — so the adapter is scoped to what a grader
  * needs: system + text + VISION images + a low temperature + a SINGLE forced

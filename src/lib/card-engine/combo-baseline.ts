@@ -6,7 +6,7 @@
  * (body · cards(N) · …). All box geometry + per-density char budgets DERIVE from
  * the house grid (docs/architecture/layout-convergence-plan.md Part 0) given the
  * spec — so the same rule produces cards(2) / cards(3) / cards(4) and every
- * density, and it is source-independent (Compose + imports share it).
+ * density, and it is source-independent (Foxit Slides + imports share it).
  *
  * `generateComboLayouts()` resolves the approved variants to concrete geometry
  * that is SAVED to app/src/data/combo-layouts.json (the persisted record every

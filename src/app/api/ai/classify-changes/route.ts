@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       .join('\n\n---\n\n');
 
     const systemPrompt = [
-      'You are a legal document analysis engine for Compose, a professional document workspace.',
+      'You are a legal document analysis engine for Foxit Slides, a professional document workspace.',
       'Classify each document change into exactly one clause category and write a plain-language summary.',
       'Categories: fee/payment (pricing, fees, payment terms), termination (termination rights, notice periods),',
       'indemnification (indemnity, hold harmless), liability (limitation of liability, damages caps),',

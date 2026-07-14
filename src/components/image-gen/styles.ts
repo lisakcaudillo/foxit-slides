@@ -1,6 +1,6 @@
 // ── Shared image-generation engine — canonical styles ──────────────────────
 //
-// The 8 canonical art-direction styles per Lisa 2026-05-24, matching the
+// The 8 canonical art-direction styles, matching the
 // `/api/ai/generate-image` route enum and the slides Media panel's `AiStyle`
 // union. This REPLACES the divergent /editor/graphics set (flat / anime / pixel
 // / oil). See docs/uiux/prototypes/image-prompt-flow-PLAN.md §3–§4.

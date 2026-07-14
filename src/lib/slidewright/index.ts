@@ -1,6 +1,6 @@
 // Foxit Slidewright — public API + package assembly.
 //
-// Foxit's own in-house OpenXML PowerPoint writer (Compose's exporter runs on it).
+// Foxit's own in-house OpenXML PowerPoint writer (Foxit Slides's exporter runs on it).
 // No pptxgenjs, no third-party PPTX code: we emit the OOXML parts directly
 // (informed by the format structure + real PowerPoint output) and zip them with
 // jszip (a general compression lib). The API mirrors the shape of a slide builder —
@@ -118,7 +118,7 @@ export interface TextBoxOpts {
   rtl?: boolean; // right-to-left paragraph direction
 }
 
-/** A named OOXML preset geometry. The four Compose uses are first-class; any other
+/** A named OOXML preset geometry. The four Foxit Slides uses are first-class; any other
  *  valid preset name (the full DrawingML catalogue) also passes through. */
 export type PresetGeom = 'rect' | 'roundRect' | 'ellipse' | 'line' | (string & {});
 
@@ -690,7 +690,7 @@ export class Deck {
 
   constructor(opts: DeckOpts = {}) {
     this.title = opts.title || 'Presentation';
-    this.author = opts.author || 'Compose';
+    this.author = opts.author || 'Foxit Slides';
     // Deterministic default: engine code must not call Date.now(); the exporter
     // may pass a real timestamp. Fixed epoch keeps test output byte-stable.
     this.isoDate = opts.isoDate || '2020-01-01T00:00:00Z';

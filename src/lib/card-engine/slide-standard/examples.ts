@@ -5,7 +5,7 @@
  * (docs/requirements/artistic-content-intelligence-system.md). Where
  * `design-standard.ts` holds the NUMBERS (hard rules), this holds the
  * JUDGMENT: labeled gold / anti / revise slides + the generalizable principles,
- * authored from Lisa's votes in the Slide Standard Program
+ * authored from votes in the Slide Standard Program
  * (docs/requirements/slide-standard-program.md).
  *
  * Consumers (later, reviewed step): injected as few-shot into the writer prompt
@@ -31,7 +31,7 @@ export interface SlideExample {
   verdict: Verdict;
   /** What the slide is, concretely. */
   description: string;
-  /** Lisa's reasoning — the rule the model should learn from this example. */
+  /** reasoning — the rule the model should learn from this example. */
   rationale: string;
 }
 
@@ -55,7 +55,7 @@ export const SLIDE_EXAMPLES: SlideExample[] = [
   {
     id: 'cover-2', type: 'cover', theme: 'obsidian', verdict: 'gold',
     description: 'Editorial cover, dark (obsidian) theme, large title (same title text as the CUT cover-1).',
-    rationale: 'CONFIRMED by Lisa: "the color combo works." The SAME large title that fails on the light counsel theme (cover-1) succeeds here purely on the dark obsidian palette pairing. Rule: a strong theme/palette pairing can carry a borderline-large title that a weak pairing cannot.',
+    rationale: 'CONFIRMED by "the color combo works." The SAME large title that fails on the light counsel theme (cover-1) succeeds here purely on the dark obsidian palette pairing. Rule: a strong theme/palette pairing can carry a borderline-large title that a weak pairing cannot.',
   },
 
   // ── ANTI ──────────────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ export const SLIDE_EXAMPLES: SlideExample[] = [
 /**
  * Batch 2 — full layout coverage (Composition Vote, 2026-06-09, 35 slides).
  * Verdicts: 4 love (gold) + ~6 enthusiastic, 11 keep (simple-but-works), 20 cut (anti).
- * Rationales condensed from Lisa's transcripts; the rule is preserved, not the prose.
+ * Rationales condensed from transcripts; the rule is preserved, not the prose.
  */
 export const SLIDE_EXAMPLES_BATCH2: SlideExample[] = [
   // ── GOLD (loved — these define "beautiful") ──
@@ -206,7 +206,7 @@ export const SLIDE_EXAMPLES_BATCH2: SlideExample[] = [
     description: 'Central "Source doc" node with four output spokes (PDF/Slides/eSign/Web).',
     rationale: '"Looks homemade." Unclear goal; the hub label is unclear; padding/title. Poor overall.' },
   { id: 'diagram-hierarchy', type: 'diagram', theme: 'counsel', verdict: 'anti',
-    description: 'Orchestrator over three child boxes (Plan/Compose/Gate).',
+    description: 'Orchestrator over three child boxes (Plan/Foxit Slides/Gate).',
     rationale: '"How it\'s organized" isn\'t the takeaway. Needs ARROWS to show flow/handover + light body text under each node; without arrows the relationship is unclear; a pyramid might fit better. Cut.' },
   { id: 'diagram-quadrant', type: 'diagram', theme: 'verdant', verdict: 'anti',
     description: '2×2 positioning quadrant (Us vs Legacy/DIY/Other).',
@@ -264,11 +264,11 @@ export const SLIDE_EXAMPLES_BATCH3: SlideExample[] = [
     description: '2×2 positioning quadrant with labeled axes + plotted points.',
     rationale: '"How is this measured?" A graph implies a numerical value — name the metric on each axis (edit features? custom branding?). Needs competitors as reference. Add light gridlines so near-equal points are distinguishable.' },
   { id: 'dia-hierarchy-v2', type: 'diagram', theme: 'cobalt', verdict: 'anti',
-    description: 'Orchestrator over Plan/Compose/Gate with arrows + sublabels.',
+    description: 'Orchestrator over Plan/Foxit Slides/Gate with arrows + sublabels.',
     rationale: '"Is this a flowchart?" Likes the per-node body text, but as an ownership diagram it is INCOMPLETE — missing the human input (the prompt) and the writer. A flow/ownership diagram must be complete.' },
   { id: 'timeline-v2', type: 'timeline', theme: 'aurora', verdict: 'anti',
     description: 'Q1–Q4 dot timeline with a "we are here" marker + target date.',
-    rationale: 'Likes the highlighted dot, but purple+magenta clash; lowercase title; padding; "we are here" says nothing without milestone detail; "what is Beta?" unclear. BETTER (Lisa): quarter BULLETS with checkmarks + status ("Q3: Testing & GTM — in progress, due 6/29") + "Target launch Nov". Reframe a thin-data roadmap as status bullets.' },
+    rationale: 'Likes the highlighted dot, but purple+magenta clash; lowercase title; padding; "we are here" says nothing without milestone detail; "what is Beta?" unclear. BETTER: quarter BULLETS with checkmarks + status ("Q3: Testing & GTM — in progress, due 6/29") + "Target launch Nov". Reframe a thin-data roadmap as status bullets.' },
   { id: 'stat-story', type: 'stat', theme: 'cobalt', verdict: 'anti',
     description: 'Three metrics, each with a delta line, under title "Performance".',
     rationale: '"11 days" wraps to TWO LINES — not acceptable (recurring). The metric is unclear — "42% faster sales cycle" reads cleaner than a raw "11 days". Pick the clearest unit (percent vs absolute).' },
@@ -315,7 +315,7 @@ export const SLIDE_EXAMPLES_BATCH5: SlideExample[] = [
     rationale: 'Image unrelated. "The shift in one line" reads as a subtitle, not a title, and 2 bullets is thin. Relevance + thinness.' },
   { id: 't-split-photo', type: 'cover', theme: 'cobalt', verdict: 'anti',
     description: 'Split editorial: color panel + real nature photo. Title "American West National Parks Adventure, eight days".',
-    rationale: 'Rename — the comma + "eight days" is awkward. Lisa: "8 days in the American West". Title wording, not the layout.' },
+    rationale: 'Rename — the comma + "eight days" is awkward. "8 days in the American West". Title wording, not the layout.' },
   { id: 't-photo-arch', type: 'cover', theme: 'counsel', verdict: 'anti',
     description: 'Photo full-bleed architecture + "Prepared for the Board of Directors" in the subtitle.',
     rationale: 'Drop "Prepared for the Board of Directors" — should not be called out on the cover.' },
@@ -450,8 +450,8 @@ export const SLIDE_EXAMPLES_BATCH10: SlideExample[] = [
  * cites the example(s) it came from so the source reasoning is traceable.
  */
 export const SLIDE_PRINCIPLES = [
-  { id: 'curved-divide', rule: 'A CURVED boundary between the visual zone and the title zone reads as intentionally DESIGNED — not a flat straight split. The title sits in a clean zone separated from the image/pattern by a smooth curve (a curved dune edge below the visual, or a curved/circular crop of the visual beside the title). "It looks designed. The curve." (Lisa refs: Root Cause Analysis — curved white panel under a blue gradient; Project Timeline — curved-cropped chrome render beside the title.)', from: [] },
-  { id: 'lone-shape-needs-intent', rule: 'A single decorative shape dropped in alone "looks strange — no thought behind it". Compose shapes INTENTIONALLY (e.g. a small circle overlapping a big one), never one element placed at random.', from: ['a-cover', 'a-section'] },
+  { id: 'curved-divide', rule: 'A CURVED boundary between the visual zone and the title zone reads as intentionally DESIGNED — not a flat straight split. The title sits in a clean zone separated from the image/pattern by a smooth curve (a curved dune edge below the visual, or a curved/circular crop of the visual beside the title). "It looks designed. The curve."', from: [] },
+  { id: 'lone-shape-needs-intent', rule: 'A single decorative shape dropped in alone "looks strange — no thought behind it". Foxit Slides shapes INTENTIONALLY (e.g. a small circle overlapping a big one), never one element placed at random.', from: ['a-cover', 'a-section'] },
   { id: 'busy-content-simple-background', rule: 'When a slide is element-rich (cards + chart + stats), keep the BACKGROUND simple — never stack a busy pattern behind busy content. Calm where the content is busy; pattern only where the content is sparse.', from: ['a-section', 'a-performance'] },
   { id: 'restraint-on-effects', rule: 'Go light on blur and shadow — subtle, not heavy. Effects support, they don\'t announce themselves.', from: ['a-cover', 'a-section'] },
   { id: 'chart-visualizes-real-data', rule: 'A chart must VISUALIZE the actual numbers on the slide — the bars/line/donut ARE the real stats, with their values labeled. A generic decorative chart not tied to the data reads as "nice but unrelated" and is a fail (the chart equivalent of image-must-relate). The loved chart was the donut (clean proportion); a bare bar chart with no value labels was cut.', from: ['chart-stat-combo', 'kpi-sparklines', 'bar-chart', 'donut-mix'] },
@@ -460,8 +460,8 @@ export const SLIDE_PRINCIPLES = [
   { id: 'specific-labels', rule: 'Labels and category names must be SPECIFIC, not generic — "Product health" not "Health"; a real category name not "Mix". Don\'t make the viewer guess what a label refers to.', from: ['kpi-sparklines', 'donut-mix'] },
   { id: 'charts-respect-padding', rule: 'A chart never bleeds to the slide edge — it sits inside the slide padding like any other element.', from: ['bar-chart'] },
   { id: 'hierarchy-key-element-stands-out', rule: 'Don\'t style every element the same — when everything is gradient (or all equal weight), nothing stands out and the key element "disappears". The number/element you want remembered needs distinct emphasis.', from: ['stat-deltas'] },
-  { id: 'top-tier-styling', rule: 'The top-tier LOOK (Lisa\'s Aurora exemplar) = THREE ingredients applied together: (1) SUBTLE ABSTRACT SHAPES — soft, blurred, LAYERED organic curves/blobs that bleed off the edges and integrate into the composition (NOT hard-edged shapes pasted in a corner — that\'s the difference between this and the cut brand-wave); (2) GRADIENT TEXT on titles/accents — makes it more interesting and premium; (3) GLASS COLUMNS — frosted translucent panels/cards (CSS glassmorphism: translucent fill + blur + a soft light border) for supporting-point cards and chart panels. NB "glass columns" = CSS frosted panels, distinct from the 3D glass RENDER images. Apply all three to the element-rich layouts.', from: [] },
-  { id: 'top-tier-element-vocabulary', rule: 'TOP-TIER layouts compose a RICHER element palette than title+bullets: data CHARTS (bar, line, bar+line combo, donut/proportion), STAT LISTS with colored deltas (LABEL / big value / +12.4%), CHART+STAT combos, supporting-POINT CARD pairs, KPI rows with mini-sparklines, primary/secondary BUTTONS, inline LINKS, avatar/image blocks, and 2×2 grids — presented as a cohesive themed SET (cover → section → performance). Top-tier SHOWS data (charts), it does not just list it. These are first-class elements, not decoration. (Lisa refs: the Volt document-theme showcase + the Budget/Legal/Compliance template thumbnails; maps to the DIL "visual generation / charts" gap.)', from: [] },
+  { id: 'top-tier-styling', rule: 'The top-tier LOOK = THREE ingredients applied together: (1) SUBTLE ABSTRACT SHAPES — soft, blurred, LAYERED organic curves/blobs that bleed off the edges and integrate into the composition (NOT hard-edged shapes pasted in a corner — that\'s the difference between this and the cut brand-wave); (2) GRADIENT TEXT on titles/accents — makes it more interesting and premium; (3) GLASS COLUMNS — frosted translucent panels/cards (CSS glassmorphism: translucent fill + blur + a soft light border) for supporting-point cards and chart panels. NB "glass columns" = CSS frosted panels, distinct from the 3D glass RENDER images. Apply all three to the element-rich layouts.', from: [] },
+  { id: 'top-tier-element-vocabulary', rule: 'TOP-TIER layouts compose a RICHER element palette than title+bullets: data CHARTS (bar, line, bar+line combo, donut/proportion), STAT LISTS with colored deltas (LABEL / big value / +12.4%), CHART+STAT combos, supporting-POINT CARD pairs, KPI rows with mini-sparklines, primary/secondary BUTTONS, inline LINKS, avatar/image blocks, and 2×2 grids — presented as a cohesive themed SET (cover → section → performance). Top-tier SHOWS data (charts), it does not just list it. These are first-class elements, not decoration.', from: [] },
   { id: 'pattern-subtle', rule: 'Decorative patterns must be SUBTLE — they elevate, they never take over. Low opacity/density, concentrated to one side (away from the content), so the slide reads calm. A pattern that "takes over the whole slide" is a cut.', from: ['art-flowlines', 'art-rays-left', 'art-glow'] },
   { id: 'pattern-clear-of-title', rule: 'Keep the pattern AND any strong light bloom OUT of the title zone. The title sits in a clean, low-pattern, higher-contrast area (e.g. title left, pattern sweeping the right) so it stays legible. A strong area behind the title kills its contrast.', from: ['art-glow', 'art-geometric', 'art-rays-left'] },
   { id: 'no-page-number-on-title', rule: 'A title / cover slide carries NO page number.', from: ['art-rays', 'art-glow', 'art-spectrum'] },
@@ -470,12 +470,12 @@ export const SLIDE_PRINCIPLES = [
   { id: 'crops-must-be-distinct', rule: 'When reusing ONE asset as multiple crops, the crops must look VISIBLY DIFFERENT (genuinely different regions/angles). Near-identical crops defeat the cohesion — they just look like the same image twice.', from: ['g-cards'] },
   { id: 'no-repetitive-filler', rule: 'Every card/grid item needs distinct REAL content — never the same body text repeated under each. Identical placeholder text across items reads as unfinished.', from: ['g-cards'] },
   { id: 'title-slide-one-focus', rule: 'A title slide has ONE focal point and minimal chrome. Do not add competing elements (a bright bio card next to the hero visual), unnecessary badges ("Featured Expert"), or filler words ("Meet"). Two focal points fighting = cut.', from: ['g-expert'] },
-  { id: 'pattern-elevates', rule: 'THE GOAL of the decoration layer: a subtle abstract pattern over a rich gradient ELEVATES an otherwise plain slide — it adds atmosphere + brand, it does not illustrate. Lisa\'s reference: the Foxit title slides where flowing contour lines sweep across a navy→purple→orange gradient and glow where they meet the orange. A plain title becomes premium purely from the pattern + gradient + glow. (Lisa: "do you see how the pattern elevates the slide? that\'s the goal." 2026-06-09.)', from: ['t-glass-crystal'] },
-  { id: 'signature-asset-reuse', rule: 'IT DEPENDS ON THE ASSET TYPE. For ABSTRACT/decorative visuals (a glass render, a brand-wave motif, light-art), cohesion comes from reusing ONE asset across the deck in varied crops/angles/scales/washes — like Foxit\'s brand-wave or a single glass render used full on the cover + cropped into the feature thumbnails + as a side accent. BUT for LITERAL/CORPORATE photos — real humans, teams, products — use DIFFERENT, content-relevant images per slide (reusing one human photo cropped reads cheap, not cohesive). Abstract → reuse one; literal/human → distinct per slide (see image-must-relate). (Lisa, 2026-06-09.)', from: ['t-glass-crystal', 'a-glass-panel'] },
+  { id: 'pattern-elevates', rule: 'THE GOAL of the decoration layer: a subtle abstract pattern over a rich gradient ELEVATES an otherwise plain slide — it adds atmosphere + brand, it does not illustrate. \'s reference: the Foxit title slides where flowing contour lines sweep across a navy→purple→orange gradient and glow where they meet the orange. A plain title becomes premium purely from the pattern + gradient + glow.', from: ['t-glass-crystal'] },
+  { id: 'signature-asset-reuse', rule: 'IT DEPENDS ON THE ASSET TYPE. For ABSTRACT/decorative visuals (a glass render, a brand-wave motif, light-art), cohesion comes from reusing ONE asset across the deck in varied crops/angles/scales/washes — like Foxit\'s brand-wave or a single glass render used full on the cover + cropped into the feature thumbnails + as a side accent. BUT for LITERAL/CORPORATE photos — real humans, teams, products — use DIFFERENT, content-relevant images per slide (reusing one human photo cropped reads cheap, not cohesive). Abstract → reuse one; literal/human → distinct per slide (see image-must-relate).', from: ['t-glass-crystal', 'a-glass-panel'] },
   { id: 'image-must-relate', rule: 'A literal photo must be CONTENT-RELEVANT — part of the story. An unrelated/decorative stock photo is a CUT, no matter how nice it looks. (The #1 finding of the image round — said 5 times.)', from: ['c-twocol-image', 'c-image-left', 't-photo-volt', 'c-stat-image', 'a-photo-corner'] },
   { id: 'pattern-not-random-photo', rule: 'When there is no content-relevant image, use a SUBTLE abstract pattern/texture (e.g. a faded glass render) instead of forcing a literal photo. Decorate, don\'t illustrate-with-something-random.', from: ['c-stat-image'] },
   { id: 'glass-is-premium-accessory', rule: 'Abstract 3D glass renders are the winning PREMIUM accessory — full-bleed (title in negative space), split, or a faded side panel. Unlike photos they carry MOOD, not a claim, so they need no content-relevance. (All 3 glass treatments loved.)', from: ['t-glass-crystal', 't-glass-amber', 'a-glass-panel'] },
-  { id: 'gradient-title-divider-premium', rule: 'A gradient-clipped serif title + a gradient accent divider reads premium (the format Lisa loved on the photo full-bleed).', from: ['t-photo-volt'] },
+  { id: 'gradient-title-divider-premium', rule: 'A gradient-clipped serif title + a gradient accent divider reads premium (the format loved on the photo full-bleed).', from: ['t-photo-volt'] },
   { id: 'columns-pair-with-structure', rule: 'Designed column/card layouts work — pair them with structure, icons, or glass, NOT a random literal photo. The column is fine; an unrelated image in it is what fails.', from: ['c-compare-visual', 'c-three-cards', 'c-twocol-image'] },
   { id: 'no-leading-article', rule: 'Drop leading articles from titles — "Shifts", not "The shifts". Short, but still meaningful and matched to the subtitle.', from: ['win-content-sub'] },
   { id: 'title-subtitle-harmony', rule: 'Title and subtitle colors must harmonize — a clashing title color reads off. The title may borrow the body/accent color. The title must RELATE to the subtitle, not contradict or under-describe it.', from: ['win-content-sub', 'cover-done'] },

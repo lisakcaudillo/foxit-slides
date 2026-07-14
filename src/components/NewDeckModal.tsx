@@ -3,7 +3,7 @@
 /**
  * NewDeckModal — the tabbed new-deck dialog for /editor/slides, replacing the
  * old `?new=true` create-wizard entry. Designed in Figma (file
- * CxmUXLX76JZdbNk0IincVl) and approved by Lisa 2026-06-15.
+ * CxmUXLX76JZdbNk0IincVl) and approved by.
  *
  * Structure:
  *   • A dark scrim (semi-opacity) highlights the modal over whatever page
@@ -17,7 +17,7 @@
  * is mounted once globally in the root layout.
  *
  * The Images slide-in panel + search bar from the Figma are a deliberate
- * follow-up (Lisa chose "ship modal now, keep the card's existing popover").
+ * follow-up.
  */
 
 import { useCallback, useEffect, useState } from 'react';

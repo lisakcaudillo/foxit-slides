@@ -11,7 +11,7 @@
 
 import type { AspectId } from './types';
 
-// Two shapes only (Lisa 2026-05-31): medium Square + medium Landscape.
+// Two shapes only: medium Square + medium Landscape.
 // Portrait (9:16) retired — slides and most assets are landscape or square,
 // and limiting shapes keeps the cost profile predictable. The route still
 // accepts 9:16 for back-compat (collapses to square), but the UI doesn't

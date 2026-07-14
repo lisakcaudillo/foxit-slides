@@ -4,7 +4,7 @@
  * ComposePanel — secondary nav shown on /compose/* routes.
  *
  * NavBar.tsx routes to this component instead of Sidebar when the user is
- * inside Compose. Same 264px width and visual idioms as Sidebar so the
+ * inside Foxit Slides. Same 264px width and visual idioms as Sidebar so the
  * left-edge geometry stays constant when the user crosses the boundary.
  *
  * Two states (only the default shipped in Phase 1):
@@ -15,7 +15,7 @@
  * Top: Foxit logo + explicit Back button → returns to / (the primary
  * Sidebar reappears). Bottom: Help/Settings/Profile dock — duplicated
  * from Sidebar.tsx verbatim so users keep access to those when in
- * Compose. Marked as a follow-up to extract into a shared footer.
+ * Foxit Slides. Marked as a follow-up to extract into a shared footer.
  */
 
 import { useState, useEffect, useRef, type CSSProperties } from 'react';
@@ -106,7 +106,7 @@ const LIBRARY: NavLink[] = [
 // Brand-kit-context nav. When user is on /compose/brand-kit*, the
 // RECENT FILES / LIBRARY content above is hidden and these sections
 // take its place. Mirrors the brand-kit-compose.html mockup that
-// Lisa approved.
+// approved.
 
 const BRAND_ASSETS: NavLink[] = [
   {
@@ -339,7 +339,7 @@ export default function ComposePanel() {
       <aside style={ds.panel}>
         {/* Wordmark — pixel-matched to the home Sidebar (Sidebar.tsx): same
             logo mark, SLIDES / divider / WORKSPACE font sizes + letter
-            spacing, and the same 30/20/16 padding (per Lisa 2026-06-14). */}
+            spacing, and the same 30/20/16 padding. */}
         <div style={{ padding: '30px 20px 16px' }}>
           <Link href="/" aria-label="Slides Workspace — Home" style={{ display: 'inline-flex', alignItems: 'center', gap: 11, textDecoration: 'none' }}>
             <span style={{ width: 30, height: 30, borderRadius: 9, flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg,#4776E6,#A855F7)', boxShadow: '0 2px 8px rgba(103,76,245,0.30)' }}>

@@ -15,7 +15,7 @@
  * The mapping comment on each WRITER_RULES entry names the rubric dimension(s)
  * it satisfies so the two never silently diverge.
  *
- * The GOLD STANDARD rubric (Lisa: "I dont want to have to READ the slides" +
+ * The GOLD STANDARD rubric ("I dont want to have to READ the slides" +
  * "the judge must also review the format of the slides"). Each dimension is a
  * hard bar a strong slide clears. These strings are injected verbatim into the
  * judge prompt AND form the enum the judge tags failures with, so prompt and
@@ -84,7 +84,7 @@ export const PRESENTATION_VOICE = `PRESENTATION VOICE — THIS IS A SLIDE, NOT A
 export const GROUNDING = `GROUNDING (CRITICAL — failure to follow this disqualifies the output):
 - Use ONLY facts, numbers, names, statistics, and details that appear in the user's TOPIC prompt above, OR are general knowledge that any informed reader would already know about the subject area.
 - DO NOT invent: forecasts, projections, growth rates, percentages, dollar amounts, market sizes, customer counts, retention rates, ARR figures, ACV values, case studies (e.g. "Fortune 500 firm achieved X"), customer testimonials, team backgrounds, technical architectures, product feature lists, contract values, timelines, or specific company / product names.
-- When a slot needs a value you don't have, do NOT output bracketed tokens like "[stat]", "[customer example]", "[YoY growth]". Brackets render as broken UI on the slide and look unprofessional (Lisa flagged this 2026-05-25 — a title slide showed "[leads generated]", "[pipeline value]", "[revenue attributed]" as visible content).
+- When a slot needs a value you don't have, do NOT output bracketed tokens like "[stat]", "[customer example]", "[YoY growth]". Brackets render as broken UI on the slide and look unprofessional.
 - Instead, write a one-line PROSE description of what should be filled in there, phrased as a polite prompt to the user. Examples:
   - Instead of \`[leads generated]\` → "Your Q1 marketing-qualified-lead total"
   - Instead of \`[stat]\` → "Add the specific number from your team's report"

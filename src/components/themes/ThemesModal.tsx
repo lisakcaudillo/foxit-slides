@@ -23,7 +23,7 @@ interface ThemesModalProps {
   onApply: (theme: Theme) => void;
   /** Which themes to offer. Defaults to the 3 mapped/selectable themes (used by
    *  the GENERATION pickers). The editor's RE-SKIN button passes the full THEMES
-   *  set so a generated deck can be restyled with any theme (Lisa 2026-06-16). */
+   * set so a generated deck can be restyled with any theme. */
   themes?: ReadonlyArray<Theme>;
 }
 

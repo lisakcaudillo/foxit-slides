@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = [
       skillContext,
-      'You are a contract clause analysis engine for Compose, a professional document workspace.',
+      'You are a contract clause analysis engine for Foxit Slides, a professional document workspace.',
       'Your task is to produce a balanced alternative clause that addresses the flagged risk while preserving the counterparty\'s likely intent.',
       'The suggested clause should be written as it would appear in the agreement — professional, precise legal language.',
       'The rationale must explain: (1) what risk the counterparty\'s change creates, (2) what the suggestion preserves from their intent, (3) what protection the suggestion restores.',

@@ -1,7 +1,7 @@
 // ── DataAvailabilityNotice — in-editor data-availability ask (DORMANT) ────────
 //
 // SCAFFOLD — NOT an active feature, NOT mounted anywhere yet.
-// Created 2026-06-10 (Lisa: "move it to the editor, but not as an active
+// Created 2026-06-10 ("move it to the editor, but not as an active
 // feature"). This is the relocation target for Clarify's one durable job: when
 // a slide's plan wants real figures the prompt didn't supply, ask — in context,
 // on the slide — instead of blocking generation with an upfront modal (now off,

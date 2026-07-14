@@ -11,7 +11,7 @@
  * plus UNKNOWNS → plan-gap clarify questions.
  *
  * Industry is a REASONING INPUT to the hand-authored per-template expert, not a
- * template×industry matrix (locked decision, Lisa 2026-06-03).
+ * template×industry matrix (locked decision,.
  *
  * `ExpertPlan` crosses the AI boundary, so it carries a Zod schema. Additive —
  * forks no existing contract.

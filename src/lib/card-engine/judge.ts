@@ -3,7 +3,7 @@
  *
  * `enforce.ts` is the cheap DETERMINISTIC floor — it measures what a regex can
  * see (paragraph density, bracket placeholders, evaluative-adjective headings).
- * This module is the SUBJECTIVE tier Lisa asked for (2026-06-03: "deepen the
+ * This module is the SUBJECTIVE tier asked for (2026-06-03: "deepen the
  * gate"): a fast LLM editor that scores ONE generated card against the deck
  * "gold standard" rubric and catches what regex can't — "is this punchy? one
  * idea? concrete, not corporate filler? does it earn its slot?".

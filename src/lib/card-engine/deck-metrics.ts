@@ -6,7 +6,7 @@
  * Writes are best-effort and fully guarded: a failure here (read-only FS in
  * serverless, permissions, a concurrent write) NEVER affects generation — the
  * deck is already built by the time this runs. Intended for the LOCAL dev/bench
- * workflow (Lisa's machine), where docs/metrics is writable; in a read-only
+ * workflow, where docs/metrics is writable; in a read-only
  * deploy it silently no-ops.
  *
  * The companion `deck-cost-log.csv` (the June-2026 benchmark) tracks COST but no

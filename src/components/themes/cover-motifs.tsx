@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Cover motifs — the vetted title-decor pool Lisa approved in
+ * Cover motifs — the vetted title-decor pool approved in
  * app/public/design-table/title-decor/manager.html ("The Curated Title-Decor
  * Pool", 10 motifs). Ported faithfully (not CSS approximations):
  *   ORGANIC (1600×900, tint + tint2): ribbons · contours · aurora · bokeh ·

@@ -11,7 +11,7 @@
  *
  * Differences from a strict verbatim port (intentional):
  *  - Buttons → `<Link href>` for client-side routing.
- *  - Active rule for "Compose" highlights on /compose AND /editor/* so the
+ *  - Active rule for "Foxit Slides" highlights on /compose AND /editor/* so the
  *    user always sees where they are when editing (set up earlier in the
  *    NavBar refactor).
  *  - Create CTA opens the existing CreateModal (artifact-type picker)
@@ -20,12 +20,12 @@
  *  - Help / Settings / Profile dock retain the existing app behaviors
  *    (open Foxit support, route to /settings, profile dropdown with
  *    Account Settings + Sign Out) wrapped in the kit's visual frame.
- *  - Profile identity is hardcoded to "Lisa Caudillo / LC" per the brief.
+ * - Profile identity is a neutral demo persona ("Demo User / DU").
  *
  * Out of scope (NavBar.tsx still owns):
  *  - EditorIconRail (slim 56px rail on /editor/*) — left intact.
  *  - Search dropdown — kit has no search; the previous main NavBar feature
- *    is dropped here. Add back later if Lisa wants it surfaced again.
+ * is dropped here. Add back later if wants it surfaced again.
  */
 
 import { useState, useEffect, useRef, type CSSProperties } from 'react';
@@ -65,10 +65,10 @@ interface NavLink {
   activeWhen?: (pathname: string) => boolean;
 }
 
-// Templates moved out of the top-level nav in Phase 1 of the Compose
-// workspace restructure — it now lives under Compose (rendered by
+// Templates moved out of the top-level nav in Phase 1 of the Foxit Slides
+// workspace restructure — it now lives under Foxit Slides (rendered by
 // ComposePanel.tsx as a child of the LIBRARY section). Old /templates URL
-// still works; redirect lands inside the Compose panel.
+// still works; redirect lands inside the Foxit Slides panel.
 const NAV: NavLink[] = [
   { href: '/', label: 'Home', Icon: Home, activeWhen: (p) => p === '/' },
   {
@@ -85,7 +85,7 @@ const NAV: NavLink[] = [
     Icon: Presentation,
     activeWhen: (p) => p.startsWith('/editor/slides'),
   },
-  // Compare is hidden from the sidebar per Lisa 2026-05-21 — code, routes,
+  // Compare is hidden from the sidebar, routes,
   // and the /compare page stay intact so we can bring it back without
   // rewiring anything. Just commented out of the nav list.
   // { href: '/compare', label: 'Compare', Icon: CompareIcon, activeWhen: (p) => p.startsWith('/compare') },
@@ -192,7 +192,7 @@ export default function Sidebar() {
         </div>
 
         {/* Create CTA — kit pastel gradient via .btn-create.
-            Per Lisa (2026-05-16): the artifact-type modal is removed from
+): the artifact-type modal is removed from
             this entry point. Clicking Create routes straight to the slides
             creation wizard at /editor/slides?new=true. Template selection
             there is voluntary (the right-column gallery is always visible

@@ -3,7 +3,7 @@ import { forwardRef, type SVGProps } from 'react';
 /**
  * CompareIcon — custom SVG icon for the Compare nav item.
  *
- * Path supplied verbatim by Lisa (2026-04-30) from the kit's design
+ * Path supplied verbatim by from the kit's design
  * preview. Lucide-react doesn't ship this exact icon, so we render
  * it inline. Drawn at the same 24×24 viewBox as Lucide icons with
  * `stroke="currentColor"` so consumers can color it via the parent's

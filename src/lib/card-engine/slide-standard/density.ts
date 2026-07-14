@@ -7,7 +7,7 @@
  * of the per-recipe base budget — so a stat slide stays tighter than a text
  * slide at the same level (the recipe sets the base; detail lifts the curve).
  *
- * Calibrated 2026-06-10 with Lisa. Before this, the engine hardcoded the
+ * Calibrated 2026-06-10 with. Before this, the engine hardcoded the
  * per-recipe bases (≈8–28 body words) and IGNORED the Detail control entirely
  * (`generateCardTemplate` accepted `density` and never read it) — freezing an
  * ultra-concise preference as the universal rule. Now:
@@ -20,7 +20,7 @@ export type Density = 'concise' | 'detailed' | 'extensive';
 
 export const DEFAULT_DENSITY: Density = 'detailed';
 
-/** Word-budget multiplier per detail level (Lisa-approved 2026-06-10). */
+/** Word-budget multiplier per detail level. */
 export const DENSITY_MULTIPLIER: Record<Density, number> = {
   concise: 1.0,
   detailed: 1.75,

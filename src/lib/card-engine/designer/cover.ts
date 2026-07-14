@@ -66,7 +66,7 @@ export interface CoverDesignResult {
   reasoning: string;
 }
 
-/** Anchor varies — never ALWAYS left (Lisa). Cinematic centers; others lean left
+/** Anchor varies — never ALWAYS left. Cinematic centers; others lean left
  *  with a periodic center for a non-stamped feel. Deterministic per rotationIndex. */
 function chooseAnchor(archetype: ThemeArchetype, rotationIndex: number): CoverAnchor {
   if (archetype === 'cinematic') return 'center';

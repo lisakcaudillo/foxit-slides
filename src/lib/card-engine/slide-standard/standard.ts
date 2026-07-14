@@ -3,7 +3,7 @@
  *
  * This is the keystone of the Standard & Judgment spine
  * (docs/requirements/artistic-content-intelligence-system.md). Numbers here are
- * CALIBRATED FROM LISA'S TASTE via the Slide Standard Program
+ * CALIBRATED FROM TASTE via the Slide Standard Program
  * (docs/requirements/slide-standard-program.md), not guessed.
  *
  * Provisional values carry a `// TODO calibrate` until a vote confirms them.
@@ -25,11 +25,11 @@ export const DESIGN_STANDARD = {
 
   /**
    * Safe-area inset inside the card edge (px on 960×540).
-   * Lisa v1: 64 works for left / top / bottom.
+   * v1: 64 works for left / top / bottom.
    */
   padding: {
     /**
-     * Lisa v1 calibrated 64px. Batch-2 vote (35 slides): padding — especially
+     * v1 calibrated 64px. Batch-2 vote (35 slides): padding — especially
      * TOP and LEFT — is the #1 recurring defect; content reads tight on ~20/35.
      * Treat 64 as a FLOOR; top/left often want more.
      */
@@ -37,7 +37,7 @@ export const DESIGN_STANDARD = {
     topLeftEmphasis: true, // top + left need the most breathing room
     /**
      * Supporting bullets sit DIRECTLY under the title with a tight, controlled
-     * gap — NEVER pushed to the opposite edge of the card (Lisa flagged the
+     * gap — NEVER pushed to the opposite edge of the card (flagged the
      * auto-spaced gap as "not acceptable"). And the bullet block aligns to the
      * title's left edge.
      */
@@ -88,7 +88,7 @@ export const DESIGN_STANDARD = {
 
   /**
    * Type scale = title font size ÷ body font size.
-   * CONTEXT-DEPENDENT (Lisa): an announcement / product launch wants a heavier
+   * CONTEXT-DEPENDENT: an announcement / product launch wants a heavier
    * title; a dense informational slide wants less. 3.1 is too much, 2.6 too
    * little — the default lands between.
    */
@@ -103,7 +103,7 @@ export const DESIGN_STANDARD = {
 
   /**
    * Content fill = number of supporting points on a content slide.
-   * Lisa v1: 4 is right.
+   * v1: 4 is right.
    */
   fill: {
     default: 4,
@@ -123,7 +123,7 @@ export const DESIGN_STANDARD = {
   stat: {
     /**
      * Hero font ÷ caption font. Too high drowns the context line. Batch-3:
-     * Lisa CUT win-stat-single for "too large text for 127%" — the hero number
+     * CUT win-stat-single for "too large text for 127%" — the hero number
      * has a SIZE CEILING; oversized reads as imbalance, not impact.
      */
     heroToCaptionRatioMax: 2.0, // lowered from 2.6 after the batch-3 cut
@@ -159,7 +159,7 @@ export const DESIGN_STANDARD = {
     /** Abstract 3D glass renders = premium accessory, no relevance required. */
     glassRenderIsPremiumAccessory: true,
     /**
-     * IT DEPENDS ON ASSET TYPE (Lisa, Batch 6):
+     * IT DEPENDS ON ASSET TYPE:
      * - ABSTRACT/decorative (glass render, brand-wave motif, light-art): reuse
      *   ONE signature asset across the deck in varied crops/angles/scales/washes
      *   for cohesion. Foxit's brand-wave or a single glass render, not a new one
@@ -177,7 +177,7 @@ export const DESIGN_STANDARD = {
   },
 
   /**
-   * Top-tier LOOK (Lisa's Aurora + curve exemplars, 2026-06-10). The recipe that
+   * Top-tier LOOK. The recipe that
    * reads "a designer made this on purpose":
    */
   style: {
@@ -192,7 +192,7 @@ export const DESIGN_STANDARD = {
   },
 
   /**
-   * Global composition geometry (Lisa's design-system spec 2026-06-10 —
+   * Global composition geometry (design-system spec 2026-06-10 —
    * docs/requirements/foxit-slides-design-system.html §8 "global rules every
    * type inherits"). Consolidated here as the single source for the numbers;
    * inert like the rest of DESIGN_STANDARD until enforce.ts / the renderer
@@ -239,7 +239,7 @@ export const DESIGN_STANDARD = {
 } as const;
 
 /**
- * Lisa's verbatim rationale, kept beside the numbers so the *why* is never lost
+ * verbatim rationale, kept beside the numbers so the *why* is never lost
  * (Slide Standard Program rule). Source: value-calibration export 2026-06-09.
  */
 export const STANDARD_NOTES = {

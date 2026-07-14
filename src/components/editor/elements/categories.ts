@@ -40,7 +40,7 @@ import type { ElementCategory, ElementCategoryId, ElementItem } from './types';
 /**
  * Categories shown in the Elements Panel.
  * Source of truth: approved prototypes (elements-panel-desktop.html, image-panel-f.html).
- * Mockups REMOVED per Lisa (unauthorized in earlier task).
+ * Mockups REMOVED).
  * Surface tints are slate-only — no off-palette colors.
  */
 export const ELEMENT_CATEGORIES: ElementCategory[] = [

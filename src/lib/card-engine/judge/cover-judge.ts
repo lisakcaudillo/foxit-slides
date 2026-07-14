@@ -77,7 +77,7 @@ export function judgeCover(input: CoverJudgeInput): CoverJudgeResult {
   }
 
   // A cover is NOT approved as a bare title — it must carry the editorial
-  // treatment (eyebrow + subtitle). (Lisa 2026-06-11; COVER_TREATMENT.coverRequires.)
+  // treatment (eyebrow + subtitle).
   const hasEyebrow = text.some((b) => b.id === 'cv-eyebrow');
   const hasSub = text.some((b) => b.id === 'cv-sub');
   if (title && (!hasEyebrow || !hasSub)) {

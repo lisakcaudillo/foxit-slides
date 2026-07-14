@@ -107,7 +107,7 @@ function themeToTemplate(t: Theme): import('@/types/card-template').TemplateThem
 // Google Fonts to load for the active theme.
 // Auto-generated deck name = the deck title, lowercase-hyphenated,
 // e.g. "sustainable-meal-kit-startup". The format signals "this was
-// auto-generated, rename me" (Lisa 2026-06-03). Editable by the user.
+// auto-generated, rename me". Editable by the user.
 // Light filler-stripping keeps it reading like a title rather than the raw prompt.
 const _SLUG_FILLER = new Set([
   'a', 'an', 'the', 'for', 'of', 'to', 'our', 'my', 'new', 'about', 'on', 'with',
@@ -229,7 +229,7 @@ function imageRoleBox(role: ImageRole, placement: CardImageIntent['placement']):
   }
 }
 
-// Per-role image opacity (Lisa 2026-06-03 legibility pass). Two distinct
+// Per-role image opacity. Two distinct
 // treatments for behind-text images:
 //   • texture / background → FAINT WASH (~0.18). The photo recedes to a subtle
 //     texture so the theme's normal (dark-on-light) text stays legible on top
@@ -279,7 +279,7 @@ function coverImageBox(tier: CoverTier): AutoImageBox {
 
 // Clean a raw deck title / prompt into a short topic phrase safe to use as an
 // image subject. The cover deckTitle is the raw user prompt sliced to 90 chars
-// (see call sites), which produced broken image prompts (Lisa 2026-06-06):
+// (see call sites), which produced broken image prompts:
 // "Prompt: Create a 7-slide…Includ" (instruction prefix + mid-word truncation)
 // and one-word names rendered literally ("Volt" → a lightning bolt). This
 // strips instruction scaffolding, de-slugs, and caps
@@ -406,7 +406,7 @@ function composeGeneratedCover(
 ): { template: CardTemplate; coverResult: CompositionResult } {
   const cover = finalTemplate.cards[0];
   const ffRaw = cover?.freeform ?? [];
-  // INVARIANT (Lisa 2026-06-10, "title slide is not allowed to have that
+  // INVARIANT ("title slide is not allowed to have that
   // layout"): the cover renders as a clean, title-only slide — one dominant
   // title (+ an optional cover image), NEVER the writer's multi-section body.
   // A card-0 whose content came back as a smart-layout / sections with no
@@ -433,7 +433,7 @@ function composeGeneratedCover(
   // auto-images toggle. The toggle is an intent; the cover image lands async and
   // often never arrives — selecting a split form (image one side, title the
   // other) on that intent jammed the title into a half with an empty image
-  // region beside it (Lisa 2026-06-10, "looks like there's supposed to be an
+  // region beside it ("looks like there's supposed to be an
   // image; placement not approved"). No real image → a full-width / centered
   // title form. (When a cover image actually lands, the split form is correct;
   // wiring that reflow is the production follow-up.)
@@ -696,7 +696,7 @@ function CustomizeRow({
   icon: React.ReactNode;
   /** Background gradient for the icon's rounded-square badge. Each row gets
    *  a different accent so the popover scans visually instead of reading as
-   *  three identical rows. Per Lisa 2026-05-21 — more colors, more
+   * three identical rows., more
    *  distinctive. */
   iconBadgeColor: string;
   label: string;
@@ -770,7 +770,7 @@ function PresetGrid({
   // Minimalistic field: text input is the primary affordance. A faint
   // "Try …" row below offers up to 5 one-tap shortcuts that fill the
   // input. Chips have no "selected" state — the input value is the
-  // single source of truth. Replaces the busy chip grid Lisa flagged
+  // single source of truth. Replaces the busy chip grid flagged
   // 2026-05-21 as messy.
   const suggestions = presets.slice(0, 5);
   return (
@@ -824,7 +824,7 @@ function PresetGrid({
 // Slide-shaped icon used in the Detail-level picker. The page outline plus
 // N evenly-spaced text bars reads as "a slide with this much content" —
 // far closer to the slide metaphor than Lucide's Rows2/3/4 which read as
-// tables. Lisa 2026-05-21.
+// tables..
 function DocumentDensityIcon({ lines, size = 22 }: { lines: number; size?: number }) {
   const pageX = 3;
   const pageY = 5;
@@ -915,7 +915,7 @@ export default function CardEditorPage() {
   useEffect(() => { setGalleryPage(1); }, [galleryFilter]);
   // Customize popover state — single dropdown that surfaces Audience /
   // Tone / Detail level as expandable rows. Replaces the old "Advanced
-  // settings" multi-card accordion (Lisa 2026-05-16). `customizeOpen`
+  // settings" multi-card accordion. `customizeOpen`
   // controls the whole popover. `customizeExpanded` tracks which inner
   // row is currently expanded (only one open at a time).
   const [customizeOpen, setCustomizeOpen] = useState(false);
@@ -953,17 +953,17 @@ export default function CardEditorPage() {
   // True once the user explicitly picks a theme (via ThemesModal) or a saved
   // deck restores one. While false, generation rolls a random theme so a fresh
   // deck isn't always the default — but the empty create-wizard stays on the
-  // light default so the nav rail + content don't mismatch (Lisa 2026-06-05).
+  // light default so the nav rail + content don't mismatch.
   const [userPickedTheme, setUserPickedTheme] = useState(false);
   // Slide count: 0 = AUTO (the plan agent picks an adaptive count from the
-  // content). Auto is the DEFAULT (Lisa 2026-06-30) — a fixed default forced
+  // content). Auto is the DEFAULT — a fixed default forced
   // a length onto every deck. 0 flows to the route as `cardCount: 0` → mapped
   // to undefined → adaptive.
   const [cardCount, setCardCount] = useState(0);
-  // Auto-image-at-creation opt-in. Default OFF (Lisa 2026-05-30) — flipping it
+  // Auto-image-at-creation opt-in. Default OFF — flipping it
   // on lets each slide that earns an image get one at creation time. Now sourced
   // from FREE stock (Pexels/Pixabay), so it defaults ON — pure upside, no AI cost
-  // (Lisa 2026-06-06). Degrades to "no image" when no stock key is set. AI image
+  //. Degrades to "no image" when no stock key is set. AI image
   // generation remains the explicit opt-in on the manual Media-panel surface.
   const [autoImages, setAutoImages] = useState(true);
   // Image subject/domain category from the home generator (''=none). Forwarded
@@ -995,7 +995,7 @@ export default function CardEditorPage() {
   const [stagedReveal, setStagedReveal] = useState(false);
   const [template, setTemplate] = useState<CardTemplate | null>(null);
   const [streamProgress, setStreamProgress] = useState<{ cardIndex: number; total: number } | null>(null);
-  // Completion gate (Lisa 2026-06-05): the editor + thumbnails must NOT appear
+  // Completion gate: the editor + thumbnails must NOT appear
   // until the WHOLE deck is assembled — all cards generated AND all images
   // landed — then reveal once so the per-slide typewriter plays one slide at a
   // time. Default true (loaded/empty decks show immediately); set false at the
@@ -1123,7 +1123,7 @@ export default function CardEditorPage() {
     // Fresh generation page (no deck in URL) — DO NOT apply a random theme on
     // mount. Half the themes are dark; a dark theme darkens the nav rail while
     // the empty create-wizard content stays light, which reads as broken
-    // (Lisa 2026-06-05). The wizard stays on the light default theme; the
+    //. The wizard stays on the light default theme; the
     // "random theme when none chosen" behavior is deferred to generation time
     // (see handleGenerate), so the generated DECK still gets a random theme.
 
@@ -1371,7 +1371,7 @@ export default function CardEditorPage() {
       // Previously this bailed when deckId was null, so "Add card" on a fresh
       // blank deck mutated CardEditor's local state but never bumped
       // template.cards.length → the reveal queue (visibleCards) never advanced
-      // and the new card was sliced off, invisible (Lisa 2026-06-16).
+      // and the new card was sliced off, invisible.
       setTemplate((prev) => {
         if (!prev) return prev;
         const updated = { ...prev, cards: nextCards };
@@ -1434,7 +1434,7 @@ export default function CardEditorPage() {
   );
 
   // File ▸ Save — force an immediate persist (auto-save already runs on edits;
-  // this is the explicit affordance users expect in a menu). Per Lisa 2026-06-14.
+  // this is the explicit affordance users expect in a menu)..
   const handleSave = useCallback(() => {
     if (!deckId || !template) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
@@ -1512,7 +1512,7 @@ export default function CardEditorPage() {
   // Keep the tab/document title in sync with the deck name so Print / Save-as-PDF
   // suggests a meaningful filename (browsers default the PDF name to
   // document.title). Untitled decks get a general default instead of the
-  // generic app title "Compose" (Lisa 2026-06-03: untitled artifacts should get
+  // generic app title "Foxit Slides" (untitled artifacts should get
   // a sensible name).
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -1533,7 +1533,7 @@ export default function CardEditorPage() {
     const resolved = explicit || firstHeading || 'Presentation';
     document.title = resolved;
     return () => {
-      document.title = 'Compose';
+      document.title = 'Foxit Slides';
     };
   }, [template?.name, template?.cards]);
 
@@ -1627,7 +1627,7 @@ export default function CardEditorPage() {
   }, [customizeOpen]);
 
   // When the user picks a framework for the FIRST TIME (going from null →
-  // Framework no longer overrides cardCount — per Lisa 2026-05-21, the user
+  // Framework no longer overrides cardCount, the user
   // owns the slide-count selection exclusively. Picking a framework provides
   // structural flavour (what kinds of cards to make), but the user's
   // explicit count is always honoured. The card-engine's expansion /
@@ -1637,7 +1637,7 @@ export default function CardEditorPage() {
   /** Multi-select layout picker — user picks which specific layout TYPES to
    *  include in the generated deck. Each picked layout appears exactly once.
    *  cardCount auto-bumps if the number of picked layouts exceeds it. Per
-   *  Lisa 2026-05-21 / task #20 (refined from the earlier 3-flavor variant
+   * / task #20 (refined from the earlier 3-flavor variant
    *  approach which she replaced with this more granular picker). */
   const [selectedLayouts, setSelectedLayouts] = useState<string[]>([]);
   // Keep cardCount in sync: if user picks more layouts than current count,
@@ -1652,7 +1652,7 @@ export default function CardEditorPage() {
   // Which framework's layout-customize modal is open (null = closed).
   const [customizeLayoutsFor, setCustomizeLayoutsFor] = useState<Framework | null>(null);
 
-  // Typewriter animation for inspire-text → prompt textarea. Per Lisa
+  // Typewriter animation for inspire-text → prompt textarea.
   // 2026-05-21: clicking any inspire affordance should type the suggestion
   // into the prompt rather than appearing instantly. After typing completes,
   // briefly flag the Generate button for the attention-pulse animation so
@@ -1750,7 +1750,7 @@ export default function CardEditorPage() {
     });
   }, [maybeReveal]);
 
-  // No-image reflow (Lisa 2026-06-10): when a slide's planned image never
+  // No-image reflow: when a slide's planned image never
   // arrives (no key, no stock match, no good library match), the layout must
   // NOT leave the reserved image region empty — that's the "title shoved to one
   // side, blank half" bug. These two helpers reflow the affected card to a clean
@@ -1866,7 +1866,7 @@ export default function CardEditorPage() {
     const slideHeading = (freeformHeading?.content || columnsHeading?.content || '').trim();
     const subject = (intent.subject || slideHeading).trim();
     if (!subject) return;
-    // PRIMARY IMAGE SOURCE = FREE STOCK (Lisa 2026-06-06). The slide's visual
+    // PRIMARY IMAGE SOURCE = FREE STOCK. The slide's visual
     // concept becomes a stock SEARCH QUERY (Pexels/Pixabay) — free, instant, and
     // reliably relevant, vs AI gen ($/slow/prone to literal/dark output). The
     // route returns the same shape as /api/ai/generate-image. If no stock match
@@ -1905,7 +1905,7 @@ export default function CardEditorPage() {
       const box = imageRole
         ? imageRoleBox(imageRole, intent.placement)
         : autoImageBox(intent.placement);
-      // Per-role opacity (Lisa 2026-06-03 legibility pass). texture/background
+      // Per-role opacity. texture/background
       // are FAINT WASHES (~0.18) so the theme's normal text reads on top with
       // no scrim. duotone/full-bleed stay full strength (undefined) — they get
       // the assertive scrim + forced light text in FreeformLayer instead.
@@ -1975,7 +1975,7 @@ export default function CardEditorPage() {
     const subject = coverImageSubject(deckTitle, theme);
     const themePalette = theme.chartPalette?.join(', ') ?? '';
     try {
-      // Cover image = free stock too (Lisa 2026-06-06). The cleaned deck topic
+      // Cover image = free stock too. The cleaned deck topic
       // is the stock search query. Skip silently if no match / no key.
       const res = await fetch('/api/images/stock', {
         method: 'POST',
@@ -2071,7 +2071,7 @@ export default function CardEditorPage() {
     setOverlayUp(true); // overlay covers the editor until the judge verifies (Decision A)
     setStagedReveal(true); // reveal one slide at a time when the overlay lifts (item 3)
     // Close the completion gate — hide the editor + thumbnails until the whole
-    // deck (cards + images) is assembled, then reveal once (Lisa 2026-06-05).
+    // deck (cards + images) is assembled, then reveal once.
     setRevealReady(false);
     generationDoneRef.current = false;
     designCriticRanRef.current = false;
@@ -2081,7 +2081,7 @@ export default function CardEditorPage() {
       revealTimerRef.current = null;
     }
 
-    // ── Auto-image budget (Lisa 2026-06-03) ──────────────────────────────
+    // ── Auto-image budget ──────────────────────────────
     // Generated images NEVER happen unless the user opted in via the toggle.
     // Even then, cap fresh OpenAI image calls at MAX_AUTO_IMAGES_PER_DECK for
     // the initial generation, so a big deck can't quietly fan out 15 images.
@@ -2130,7 +2130,7 @@ export default function CardEditorPage() {
       }
     }
 
-    // Default theme when none is picked (Lisa 2026-06-16): Mono Light. Only the
+    // Default theme when none is picked: Mono Light. Only the
     // three mapped themes are selectable now, so an unpicked deck generates in
     // the default (Mono Light) rather than a content-derived pick across the old
     // library. `setActiveTheme` is async so we keep the choice in a local —
@@ -2322,7 +2322,7 @@ export default function CardEditorPage() {
               // that lets each card render through FreeformLayer as soon as
               // it arrives. Also tag every freeform text block with
               // __animateOnMount so the renderer plays a typewriter reveal
-              // on first paint. Lisa 2026-05-25 — restores the per-slide
+              // on first paint. — restores the per-slide
               // typewriter that was lost when the unified-format rewrite
               // moved generation output to freeform without rewiring the
               // animation hook.
@@ -2350,7 +2350,7 @@ export default function CardEditorPage() {
               // when it resolves — never blocks the stream. The title slide
               // (cardIndex 0) is always protected — it never receives an
               // auto-image (text-over-photo on the cover looked bad).
-              // DESIGN-OWNED GATE (Lisa 2026-06-03): generate an image only where
+              // DESIGN-OWNED GATE: generate an image only where
               // the DESIGNER marked the slide (slideDesign.imageRole !== 'none'),
               // not on the generator's raw imageIntent. The engine already ranked
               // + capped the selection at plan time; the budget counter below is
@@ -2512,7 +2512,7 @@ export default function CardEditorPage() {
               // actually sees, not this pre-image template.)
               // Cover image (photo / split tiers only). Fire-and-forget; the
               // typographic tier needs no image and the cover already renders.
-              // Gated on the auto-images toggle (Lisa 2026-06-03 — covers must
+              // Gated on the auto-images toggle (— covers must
               // NOT auto-generate when the user hasn't opted in) and on the
               // per-deck budget.
               if (
@@ -2716,7 +2716,7 @@ export default function CardEditorPage() {
               }
               deckIdRef.current = idForSave;
               // Source path: cover image also gated on the auto-images toggle
-              // (Lisa 2026-06-03 — no generated images unless opted in).
+              //.
               if (autoImages && coverCard0 && compositionWantsImage(coverResult.form)) {
                 trackImage(placeCoverImage(
                   coverCard0.id,
@@ -2896,7 +2896,7 @@ export default function CardEditorPage() {
 
       {/* Two-column shell — prompt column stays at 600px, the inline
           template gallery is widened to ~660px so a 3-column tile grid
-          fits (Lisa 2026-05-16). Shell maxWidth bumped to 1320px to
+          fits. Shell maxWidth bumped to 1320px to
           accommodate. On screens narrower than the total the gallery
           wraps below so the wizard remains usable on a laptop. */}
       <div style={{
@@ -2916,7 +2916,7 @@ export default function CardEditorPage() {
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
-          {/* Inspire affordance — floats ABOVE the prompt card per Lisa
+          {/* Inspire affordance — floats ABOVE the prompt card
               2026-05-21. The "Inspire Me" button is ALWAYS visible; when a
               framework is also picked, the framework name + slides-picked
               indicator sit alongside it so the user sees both at once.
@@ -2943,7 +2943,7 @@ export default function CardEditorPage() {
             {framework && (
               <>
                 {/* Selected-template chip — moved up next to Inspire Me per
-                    Lisa 2026-05-22 so the user sees their selection alongside
+                     so the user sees their selection alongside
                     the action. Replaces the prior plain caps label here AND
                     the duplicate full-width chip that used to live below the
                     Customize popover (deleted at the same time). */}
@@ -2980,7 +2980,7 @@ export default function CardEditorPage() {
               the fold. The card itself is the customizeRef anchor — the
               Customize popover positions absolutely below the card. */}
           {/* Framework inspire-topic suggestion cards — rendered ABOVE the
-              prompt card per Lisa 2026-05-22. Replaces the prior chip/button
+              prompt card. Replaces the prior chip/button
               row (rejected as poor UX). Up to 3 cards, equal width, lighter
               explanatory text. Clicking a card types its scenario into the
               prompt textarea via the existing typewriter animation. */}
@@ -3129,7 +3129,7 @@ export default function CardEditorPage() {
               <div style={{ flex: 1 }} />
 
               {/* Slides stepper — only when no framework is selected.
-                  Slide count stepper — ALWAYS visible per Lisa 2026-05-21
+                  Slide count stepper — ALWAYS visible
                   so the user can adjust the count whether or not a framework
                   is picked. The framework chip below no longer carries a
                   duplicate count control. */}
@@ -3161,7 +3161,7 @@ export default function CardEditorPage() {
               </div>
 
               {/* Auto-images toggle — opt-in (default OFF). Design spec
-                  2026-05-30: a peer pill (Lisa wanted it visible in the
+                  2026-05-30: a peer pill (wanted it visible in the
                   generation stage, not buried in Customize). OFF reads calm
                   (slate badge, glass pill) per P-UX10; ON gains the violet AI
                   accent + "· On" text + a check so the state never relies on
@@ -3269,7 +3269,7 @@ export default function CardEditorPage() {
               </button>
 
               {/* Theme button — opens the full ThemesModal popup. Palette
-                  icon in a multi-color badge per Lisa 2026-05-21 — "paint
+                  icon in a multi-color badge
                   board with colors" reads more obviously as a look-and-
                   feel control than the previous swatch. */}
               <button
@@ -3315,7 +3315,7 @@ export default function CardEditorPage() {
             </div>
 
             {/* Customize popover — anchored to the prompt card, drops below.
-                Solid white surface (no glass blur) per Lisa 2026-05-21 — the
+                Solid white surface (no glass blur)
                 see-through look made the row labels hard to read against the
                 lavender wash. */}
             {customizeOpen && (
@@ -3563,7 +3563,7 @@ export default function CardEditorPage() {
               card's bottom toolbar above (Slides stepper, Customize
               popover, Theme button). The Theme button now opens the
               existing ThemesModal so users get the big theme preview
-              Lisa liked rather than the cramped inline tiles. */}
+               liked rather than the cramped inline tiles. */}
         </div>
 
         {/* Generate */}
@@ -3597,7 +3597,7 @@ export default function CardEditorPage() {
 
       {/* ── Right column — inline image-tile template gallery ──────────────
           Tile sizing/styling matches the home CreateModal verbatim per
-          Lisa (2026-05-16): same padding (16px), border radius (14px),
+           same padding (16px), border radius (14px),
           thumbnail radius (10px), label/description/cardCount font sizes.
           Same data source (FRAMEWORKS) and same Slides sub-filter chips.
           Sticky so it stays in view while the left column scrolls. */}
@@ -3849,7 +3849,7 @@ export default function CardEditorPage() {
       {/* Layout customization modal — opens when the user clicks the pencil
           on a template tile. Shows the generic-shape layout picker for that
           template. Selections persist to selectedLayouts state and drive
-          the next generation. Per Lisa 2026-05-21 / task #20 refinement. */}
+          the next generation.. */}
       {customizeLayoutsFor && (
         <div
           role="dialog"

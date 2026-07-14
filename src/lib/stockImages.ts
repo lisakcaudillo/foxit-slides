@@ -3,7 +3,7 @@
  * (fallback). Used as the PRIMARY image source at slide generation: a real,
  * relevant photo is free, instant, and reliably good — vs AI generation which
  * is ~$0.04–0.06/image, ~20s each, and prone to literal/dark/garbage output
- * (Lisa 2026-06-06). AI generation is demoted to an explicit opt-in upgrade.
+ *. AI generation is demoted to an explicit opt-in upgrade.
  *
  * Graceful degradation: no API key → returns []. The caller then skips the
  * image (never silently falls back to a paid AI call).

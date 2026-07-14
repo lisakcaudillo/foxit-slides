@@ -4,7 +4,7 @@
  * When the expert can't confidently place a request in an industry/topic
  * (`industryConfidence` low, or no template expert exists), the system should
  * ASK what the user wants rather than silently fall back to a generic deck
- * (Lisa 2026-06-03: "if the slide doesn't fit into an industry or topic — that's
+ * ("if the slide doesn't fit into an industry or topic — that's
  * okay. ask what they would like — images, infographics, a one-pager for X,
  * what the goal is").
  *

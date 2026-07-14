@@ -1,7 +1,7 @@
 /**
  * source-facts.ts — the SHARED per-metric fact-grounding primitives.
  *
- * Reference implementation drafted by Compose; the adaptive engine adopts it
+ * Reference implementation drafted by Foxit Slides; the adaptive engine adopts it
  * behind a thin DOM adapter (ownership call, 2026-07-10). Pure TS, ZERO engine
  * dependencies, so it can be lifted verbatim into either codebase.
  *

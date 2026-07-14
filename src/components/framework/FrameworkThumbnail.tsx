@@ -3,7 +3,7 @@
 /**
  * FrameworkThumbnail — inline SVG preview rendered inside framework tiles
  * (cards gallery and home Create modal). Replaces the prior random nature
- * photos with topic-relevant infographic-style schematics per Lisa's spec
+ * photos with topic-relevant infographic-style schematics
  * (2026-05-16): "for the templates images, think infographics, diagrams,
  * image and text simplified."
  *

@@ -20,7 +20,7 @@ import type { ElementCategoryId, ElementsPanelCommonProps } from './types';
  * Elements Panel — Desktop variant.
  * 56px icon rail (Home + categories) + 320px content panel.
  *
- * Per Lisa's approved modifications:
+ *:
  *   - Home icon at TOP of rail (navigates to /).
  *   - When this panel is open, the editor route hides the main NavBar — only ONE left rail at a time.
  *   - Mockups category removed.

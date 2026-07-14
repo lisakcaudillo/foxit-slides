@@ -112,8 +112,8 @@ export function groundNumericFill(
     const nums = v.match(/\d+(?:\.\d+)?/g) || [];
     return nums.every((n) => topicNums.has(n));
   };
-  // A DELTA is a change-claim (↑ 12%, −3pts). FR11 / Path-B (Lisa 2026-06-23):
-  // Compose must NOT DERIVE a numeric delta from two stated values — that
+  // A DELTA is a change-claim (↑ 12%, −3pts). FR11 / Path-B:
+  // Foxit Slides must NOT DERIVE a numeric delta from two stated values — that
   // derivation path is exactly what fabricated "↑2pts YoY" on a metric whose
   // prior the source never gave. A source states LEVELS ("78%"); a stated CHANGE
   // reads "3 pts", "2 points", "5 bps". So a numeric delta is grounded ONLY when
@@ -151,7 +151,7 @@ export function groundNumericFill(
     // level like "66%" does not license a delta. Catches a delta that borrows a
     // real source % onto the wrong metric ("↑ From 66%" on the 78% tile). pts/bps
     // are unambiguous change units and are exempt. NOTE: cosmetic — true metric
-    // attribution needs upstream per-metric facts (Lisa 2026-06-23).
+    // attribution needs upstream per-metric facts.
     if (unit === '%' && sd === 0) return false;
     return true;
   };
@@ -172,7 +172,7 @@ export function groundNumericFill(
     // strip ONLY when the extractor CAPTURED this number but on a different metric
     // (factsWithNumber non-empty + no match). If the number isn't in the facts at
     // all, the extractor may be incomplete → fall back to the verbatim check, so an
-    // incomplete extractor can't over-strip. subject is null (Compose doesn't thread
+    // incomplete extractor can't over-strip. subject is null (Foxit Slides doesn't thread
     // a per-slide subject yet) → this closes wrong-METRIC; wrong-SUBJECT activates
     // once a slide subject is threaded. See docs/architecture/per-metric-fact-contract.md.
     if (spec.role === 'metric-value' && facts.length) {
@@ -277,7 +277,7 @@ function stripUngroundedIdentity(
 }
 
 // How much source/prompt text feeds the planner + each slide fill. Raised from
-// 6000 (Lisa 2026-06-17 — "remove the limit for now") so a long pasted prompt or
+// 6000 so a long pasted prompt or
 // attached file isn't silently truncated. Kept to a generous ceiling rather than
 // unbounded so a pathological paste can't overflow the model context and throw.
 const SOURCE_CHAR_BUDGET = 60000;
@@ -300,7 +300,7 @@ const LAYOUT_ENUM = layoutCatalogue().map((l) => l.key);
 const SELECTABLE_LAYOUT_ENUM = layoutCatalogue().filter((l) => l.selectable).map((l) => l.key);
 // Structured planner skins = the Figma-validated skins only. Captured templates
 // (Compass) have their OWN generation path (native-template.ts) and are NOT
-// offered to the structured planner or the theme picker (Lisa 2026-07-11).
+// offered to the structured planner or the theme picker.
 const SKIN_ENUM = [...STRUCTURE_SKIN_IDS];
 
 const NARRATIVE_ROLES = ['hook', 'setup', 'evidence', 'cause', 'consequence', 'response', 'close'] as const;
@@ -397,15 +397,15 @@ export async function planStructureDeck(
     // attribution (name/company), and the engine can't tell a real quote from a
     // fabricated one — so it invented both (e.g. "Moons: Guardians of Planets"
     // — GenerationGenius). Never use a quote layout without a real quote
-    // (Lisa 2026-06-22, FR11). It stays in the catalogue for manual/preview use.
+    //. It stays in the catalogue for manual/preview use.
     // Imported layouts flagged not-selectable (chart/diagram/intros/media overlay).
     if (l.selectable === false) return false;
-    // Quote layouts (Compose's 06-quote + imported) ONLY when the source has a real
-    // quote — never fabricate one (FR11, Lisa 2026-07-11). No quote → not offered.
+    // Quote layouts (Foxit Slides's 06-quote + imported) ONLY when the source has a real
+    // quote — never fabricate one (FR11,. No quote → not offered.
     if ((l.key === '06-quote' || l.needsQuote) && !hasQuote) return false;
     // Image layouts render an empty image region without the deck-image pipeline.
     if (l.hasImage && !withImages) return false;
-    // Number-gate: Compose's own numeric layouts OR an imported layout's minNumbers.
+    // Number-gate: Foxit Slides's own numeric layouts OR an imported layout's minNumbers.
     const need = NUMERIC_LAYOUTS[l.key] ?? l.minNumbers;
     return !need || numbers >= need;
   });
@@ -505,7 +505,7 @@ Return via the report_structure_plan tool.`;
   if (skinHint && SKIN_ENUM.includes(skinHint)) skinId = skinHint;
   const validKeys = new Set(LAYOUT_ENUM);
   const gateByKey = new Map(layoutCatalogue().map((l) => [l.key, l]));
-  // ── Structure-usage gates (Lisa 2026-07-11) ────────────────────────────────
+  // ── Structure-usage gates ────────────────────────────────
   // Data/specialized layouts (table, timeline, metrics, stat) get over-picked for
   // VARIETY on narrative topics — a forced comparison table, an empty timeline, a
   // fabricated metric all read as broken. A layout of this class is allowed ONLY
@@ -897,7 +897,7 @@ export async function fillStructureSlots(
   // FROZEN BUDGET (imported document-studio layouts): a slot carrying an explicit
   // per-mode budget uses budget[mode] as its char cap for the active density —
   // overriding the geometry-derived cap. This is the imported density contract
-  // (a "concise" body is genuinely shorter, not just a smaller box). Compose's own
+  // (a "concise" body is genuinely shorter, not just a smaller box). Foxit Slides's own
   // 12 layouts have no budget → unchanged (derived cap).
   {
     const mode = ctx.density === 'concise' ? 'concise' : ctx.density === 'extensive' ? 'extensive' : 'detailed';
@@ -911,13 +911,13 @@ export async function fillStructureSlots(
   // write to the brim, overflow the fixed box, and the fit then trimmed it to
   // an incomplete fragment ("…and may even"). Extensive's EXTRA depth comes from
   // MORE SLIDES (the planner prefers breadth), not crammed boxes — so keep a
-  // comfortable margin under every cap (Lisa 2026-06-22).
+  // comfortable margin under every cap.
   const fillFraction = ctx.density === 'extensive' ? 0.88 : ctx.density === 'concise' ? 0.45 : 0.72;
   // MULTI-INSTANCE body slots (item grids: comparison cells, infographic /
   // process item descriptions) are the smaller, repeated boxes — aim them a
   // touch lower so each holds ONE complete, self-contained sentence rather than
   // a run-on that trails off; the single lead paragraph keeps the high floor.
-  // (Lisa 2026-06-22: grow the box where there's room, write to fit where there
+  // (grow the box where there's room, write to fit where there
   // isn't — and ALWAYS a finished thought, never a dangling fragment.)
   const itemFillFraction = ctx.density === 'concise' ? 0.45 : 0.7;
   const slotFloor = (s: LayoutSlotSpec) =>
@@ -1340,7 +1340,7 @@ export async function generateStructuredDeck(
   // duplicate the topic. A real attached file is still passed as source.
   const planSource = opts.standalone ? undefined : opts.sourceText;
   // Heavier storyline on SHORT decks: floor the density so the few content slides are
-  // DENSE, not thin (Lisa 2026-07-11: "higher density on low slide counts"). ≤6 slides
+  // DENSE, not thin. ≤6 slides
   // → extensive; otherwise honor the requested density.
   const effectiveDensity = opts.cardCount && opts.cardCount > 0 && opts.cardCount <= 6 ? 'extensive' : opts.density;
   // Phase-D (2026-07-10): a writer-authored brief runs BEFORE the planner so layout
@@ -1367,7 +1367,7 @@ export async function generateStructuredDeck(
   // The planner picks image-bearing layouts (combo-body-image) where a visual
   // helps the story; we source a content-matched image for each, add a full-bleed
   // cover for non-faithful themes, and top up prose slides so a deck reads with a
-  // modest set of supporting images — AT MOST 3 total (Lisa 2026-07-11). Each
+  // modest set of supporting images — AT MOST 3 total. Each
   // image is DERIVED from the slide's own focus (per-slide relevance); an
   // off-topic or ungeneratable pick is SKIPPED, never forced. A slide left without
   // an image is never a combo-body-image (no blank image column) — it falls back
@@ -1517,7 +1517,7 @@ export async function generateStructuredDeck(
       //     TAKEAWAY (the slide's one point) is shown in the layout's POINT slot
       //     instead — the hero statement if it has one, else the lead/subhead line
       //     under the title. So the slide reads "Topic label" + "the point it makes"
-      //     — a label AND a takeaway, per Lisa 2026-07-12 (both have their place;
+      // a label AND a takeaway,;
       //     don't force the point into the heading). Scaffold slides keep their title.
       if (!SCAFFOLD_LAYOUTS.has(slide.layoutKey) && slide.title) {
         const titleSpec = stampSpecs.find((s) => s.role === 'title' && !s.group);

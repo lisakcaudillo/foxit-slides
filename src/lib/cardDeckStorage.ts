@@ -8,7 +8,7 @@
  * cards themselves AND the active document theme that was applied when the
  * deck was last edited.
  *
- * Theme persistence rationale (per Lisa, 2026-04-29):
+ * Theme persistence rationale:
  *   "if I open content with dark mode set, it should be in dark mode"
  * The themeId on CardTemplate is read on load and passed to ThemeProvider
  * via setTheme(). New decks default to the default theme — picking a dark

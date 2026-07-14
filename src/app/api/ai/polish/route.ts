@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       model: getModel(),
       max_tokens: 8192,
       system: [
-        'You are a document polish engine for Compose.',
+        'You are a document polish engine for Foxit Slides.',
         'Your job is to clean up a structured document output according to strict quality rules.',
         'Return the FULL document with all sections and blocks — do not omit anything.',
         '',

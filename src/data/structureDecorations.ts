@@ -133,7 +133,7 @@ export const DECORATIONS: Record<string, Record<string, Decoration[]>> = {
   '02-stat': {
     // No delta/change-indicator: it wasn't in the Figma frame (a hand-authored
     // slot that read as misplaced), so the stat is value + label only and the
-    // old hero delta-pill is gone (Lisa 2026-06-25). PILL = eyebrow; rule =
+    // old hero delta-pill is gone. PILL = eyebrow; rule =
     // the row divider on the 4-up grid.
     shared: [
       PILL,
@@ -144,7 +144,7 @@ export const DECORATIONS: Record<string, Record<string, Decoration[]>> = {
   // Comparison is NEUTRAL by default — two equal columns. We deliberately do NOT
   // paint the right column as a "recommended" card or stamp a RECOMMENDED badge:
   // most comparisons (esp. source-derived "X vs Y") have no winner, so crowning
-  // the right side is wrong (Lisa 2026-06-22 — e.g. "Lily vs Lucy"). The
+  // the right side is wrong. The
   // RECOMMENDED text slot is likewise suppressed in the builder. (A future
   // evaluative-comparison signal could re-introduce a one-sided highlight.)
   // Criterion label-chips are generated PER-INSTANCE in the builder.
@@ -206,7 +206,7 @@ export const DECORATIONS: Record<string, Record<string, Decoration[]>> = {
 
   '08-divider': {
     shared: [
-      // (Figma has a 56px hairline above the eyebrow at y200; removed per Lisa
+      // (Figma has a 56px hairline above the eyebrow at y200; removed
       // 2026-06-17 — it read disconnected floating above the pill.)
       PILL,
       { role: 'title-accent', shape: 'rectangle', x: 74, y: 438, w: 150, h: 6, radius: 3, fillToken: 'ink', fillOpacity: 1 },
@@ -272,7 +272,7 @@ export const DECORATIONS: Record<string, Record<string, Decoration[]>> = {
 // manifest), so it needs its own structural shapes too. Dark skin: translucent
 // white cards, magenta (accent) bars + chips, teal nodes. Merged into
 // DECORATIONS below so the builder's `DECORATIONS[layout].volt` lookup resolves.
-// Black-glass content panel (Figma Volt design, Lisa 2026-06-24). The previous
+// Black-glass content panel (Figma Volt design,. The previous
 // treatment was #ffffff @ 6% — a near-invisible white frost that read as
 // "missing" on the dark glow ground. Volt's panels are DARK glass: a deep
 // translucent fill that sits a touch darker than the slide ground, a faint

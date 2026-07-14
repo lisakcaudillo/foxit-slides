@@ -94,7 +94,7 @@ export const INTERIOR_HARD_IDS_PARTIAL = ['L5', 'L6'] as const;
 // and premium feel (C7/L6). See docs/architecture/design-standard mapping.
 const pickLines = (block: string, ids: readonly string[]): string =>
   block.split('\n').filter((l) => ids.some((id) => l.trimStart().startsWith(id))).join('\n');
-// Recalibrated 2026-07-12 (Lisa): the residual was OVER-failing clean, restrained
+// Recalibrated 2026-07-12: the residual was OVER-failing clean, restrained
 // combo slides — L2 read intentional card/section grids as "competing blocks", and
 // "premium feel" (L6/C7) was a HARD auto-fail on a subjective taste call, so a
 // correct informational slide hard-failed as "generic". These reframe focal as
@@ -120,7 +120,7 @@ export const COVER_HARD_IDS = ['C5', 'C7', 'C8'] as const;
 export const INTERIOR_HARD_IDS = ['L5', 'L6', 'L7'] as const;
 
 /** overall < this OR any HARD criterion fail ⇒ the slide does not pass.
- *  Lowered 4 → 3 (Lisa 2026-07-12): a clean, legible, consistent slide is "good"
+ * Lowered 4 → 3: a clean, legible, consistent slide is "good"
  *  (a 3) and should PASS; only a genuinely broken/sloppy slide (1–2) fails. The
  *  old 4 bar demanded "impressive" on every slide, which over-failed restrained
  *  informational decks. Real defects are still caught by the HARD contrast gate +

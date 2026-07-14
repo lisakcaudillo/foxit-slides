@@ -5,7 +5,7 @@ import type { FrameShape } from '@/types/card-template';
 import { getDeviceFrame } from '@/data/figmaAssets';
 
 // ── Frame definitions ─────────────────────────────────────────────────────
-// Canva-style frames per Lisa 2026-05-22. A frame has a SHAPE outline that
+// Canva-style frames. A frame has a SHAPE outline that
 // the user's image clips to. Geometric shapes use CSS clip-path; device
 // shapes (laptop, ...) render decorative SVG chrome with the image clipped
 // to a content area inside.

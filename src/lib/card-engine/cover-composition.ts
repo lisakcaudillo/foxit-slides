@@ -24,7 +24,7 @@
  *                      decides WHERE the title goes (opposite the image); the
  *                      TitleTreatment decides how the type is set inside it.
  *
- * Multi-select + override (Lisa's emphasis): callers may pass an allowed SET of
+ * Multi-select + override: callers may pass an allowed SET of
  * forms (the multi-select "Title layout" picker) — the engine rotates only
  * among those for variety; an empty/absent set lets it use any. A single
  * forced form is just an allowed set of length 1.

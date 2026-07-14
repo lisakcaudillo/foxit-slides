@@ -5,7 +5,7 @@
  * Quartz/Editorial cover designs (Design Table, 2026-06-13), rendered as
  * SVG VECTOR + PNG DECAL.
  *
- * ARCHITECTURE (Lisa's governing decision):
+ * ARCHITECTURE:
  *   Per ELEMENT — render as SVG vector if representable; render the frost /
  *   blend-mode / heavy-blur elements as a transparent-background PNG decal
  *   layered via <image>. One <svg viewBox="0 0 960 540"> per treatment scales

@@ -22,7 +22,7 @@ export default function MainContent({ children }: { children: React.ReactNode })
   // wrapper is a known iOS Safari trap (touch events on child elements
   // get eaten by the inner scroll container after the dynamic address
   // bar adjusts, so onClick / <a href> stop firing while native form
-  // submission still works — i.e., the bug Lisa saw on iPad where only
+  // submission still works — i.e., the bug saw on iPad where only
   // the Create form-submit button responded).
   if (isEditorPage) {
     // Slides editor + the generate page have no fixed global rail, so they

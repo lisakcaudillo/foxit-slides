@@ -95,10 +95,10 @@ function applyThemeToRoot(theme: Theme): void {
   root.style.setProperty('--theme-btn-radius', `${theme.btnRadius}px`);
 
   // Workspace canvas. Light themes float the deck on ONE calm neutral grey
-  // (Lisa 2026-06-16). Volt instead uses its OWN designed complementary backdrop
+  //. Volt instead uses its OWN designed complementary backdrop
   // (theme.pageBg = the lighter #232E44 + faint on-palette corner glows) so the
   // dark, glow-lit slides POP against a subtle themed surface, the way the assets
-  // editor's workspace does — not a flat grey (Lisa 2026-06-24). Scoped to Volt
+  // editor's workspace does — not a flat grey. Scoped to Volt
   // so every other theme's workspace is unchanged.
   // A skin can declare a dedicated workspace backdrop (theme.workspaceBg); it wins.
   // Volt keeps its glow-image workspace; everything else defaults to neutral grey.
@@ -107,7 +107,7 @@ function applyThemeToRoot(theme: Theme): void {
   root.style.setProperty('--theme-workspace-bg', isVoltWorkspace ? asBackgroundImage(theme.pageBg) : 'none');
 
   // Chrome (toolbar / sidebar / modal / nav) stays LIGHT for ALL themes — the
-  // editor UI NEVER transitions to dark mode (Lisa 2026-06-06). A dark chrome on
+  // editor UI NEVER transitions to dark mode. A dark chrome on
   // dark themes caused the recurring "dark nav bar" problem; now only the DECK
   // reflects the theme, the surrounding app chrome + workspace stay light.
   // Variables consumed by SlideTopToolbar, ThumbnailSidebar, SlideInspectorPanel,

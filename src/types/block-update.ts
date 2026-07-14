@@ -1,7 +1,7 @@
 /**
  * BlockUpdate — unified type for all canvas update operations.
  *
- * Both entry points (text selection → "Edit with Compose" and agent chat → interpret intent)
+ * Both entry points (text selection → "Edit with Foxit Slides" and agent chat → interpret intent)
  * produce BlockUpdate[] instructions that the canvas applies.
  */
 

@@ -8,7 +8,7 @@ import { enhanceImagePrompt } from '@/lib/image-prompt-agent';
 //
 // Rewritten 2026-05-25 (Firefly surface, second iteration). Previous shape
 // returned a single image at quality='high' with literal slide-body context
-// dumped into the prompt — Lisa flagged three failure modes on a sales-deck
+// dumped into the prompt — flagged three failure modes on a sales-deck
 // generation:
 //   (a) 15-40s per call (high quality), single image — no perceived value
 //   (b) The literal slide text ("SaaS Sales / New Hire") appeared INSIDE
@@ -36,7 +36,7 @@ import { enhanceImagePrompt } from '@/lib/image-prompt-agent';
 // OpenAI when their gpt-image-1 deployment is provisioned.
 
 // ── Style catalog ────────────────────────────────────────────────────────
-// 8 styles per Lisa 2026-05-24. Each maps to a prompt fragment + a default
+// 8 styles. Each maps to a prompt fragment + a default
 // quality tier (user-overridable via the `quality` field).
 
 const STYLE_FRAGMENTS = {
@@ -66,7 +66,7 @@ const STYLE_QUALITY_DEFAULT: Record<StyleId, 'medium' | 'high'> = {
 const ASPECT_TO_SIZE = {
   '1:1': '1024x1024',
   '16:9': '1536x1024',
-  // Portrait retired (Lisa 2026-05-31) — collapses to square for any
+  // Portrait retired — collapses to square for any
   // back-compat caller still sending 9:16. UI offers square + landscape only.
   '9:16': '1024x1024',
 } as const;
@@ -80,7 +80,7 @@ const RequestSchema = z.object({
     'photographic', 'illustration', '3d-render', 'watercolor',
     'sketch', 'minimal', 'cinematic', 'abstract',
   ]).optional(),
-  // Aspect picker. Two shapes only (Lisa 2026-05-31): square + landscape,
+  // Aspect picker. Two shapes only: square + landscape,
   // both medium. Portrait (9:16) retired. 16:9 default (slides are 16:9).
   // 9:16 still accepted for back-compat and collapses to square downstream.
   aspect: z.enum(['1:1', '16:9', '9:16']).optional(),
@@ -98,7 +98,7 @@ const RequestSchema = z.object({
   // Forward-compat reference fields (no native vision input for image gen).
   styleRef: z.string().optional(),
   compositionRef: z.string().optional(),
-  // Auto-context (Lisa 2026-05-24). Slide BODY is intentionally NOT in this
+  // Auto-context. Slide BODY is intentionally NOT in this
   // schema anymore — sending it caused literal slide text to appear inside
   // the generated photo. Heading is allowed as a conceptual hint only and
   // gets passed under a strict "no text in image" preamble.
@@ -134,7 +134,7 @@ function resolveQuality(
   q: 'standard' | 'high' | undefined,
   styleId: StyleId,
 ): 'medium' | 'high' {
-  // Default to MEDIUM for every style (Lisa 2026-05-31). Medium square is
+  // Default to MEDIUM for every style. Medium square is
   // ~$0.04 and medium landscape ~$0.06, versus $0.17-0.25 at high — the
   // economics that make the feature viable at a $4.99 price point. 'high'
   // stays an explicit opt-in; the per-style high defaults are retired.
@@ -168,7 +168,7 @@ function resolveSize(
  *    [user's prompt verbatim — last so it stays load-bearing]
  *
  *  The slide BODY is no longer included — it was the source of the
- *  literal-text-in-image regression Lisa flagged (a slide whose body
+ * literal-text-in-image regression flagged (a slide whose body
  *  read "SaaS Sales / New Hire" produced a photo with those exact words
  *  inside the image). Heading is permitted as a conceptual hint. */
 function buildPrompt(
@@ -319,7 +319,7 @@ export async function POST(request: Request) {
 
     // Save each variant to the library so they ALL bootstrap the stock
     // pool. Client picks one to insert via the Firefly result panel; the
-    // others stay browsable later via the Library row. Lisa's curation
+    // others stay browsable later via the Library row. curation
     // workflow (manual folder cleanup pre-launch) decides what ships.
     //
     // Batch save: PNGs parallelise (unique filenames), but metadata.json

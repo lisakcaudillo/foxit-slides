@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { prompt, docType, audience, tone, density, theme, fileContent, framework, cardCount, stream, layoutVariant, selectedLayouts, skillIdOverride, rewriteIntensity, structured, skinHint, judge, images, coverImageId, contentImageId, structureHint, priorDecks } = body;
     const origin = new URL(request.url).origin;
-    // Visual critic ON BY DEFAULT for all structured generation (Lisa 2026-06-25).
+    // Visual critic ON BY DEFAULT for all structured generation.
     // The capped auto-revise loop (one pass, hard-fails only) is wired in
     // structure-fill, so the judge earns its per-slide render+VLM cost. Callers
     // can still opt out with an explicit `judge: false`.
@@ -184,12 +184,12 @@ export async function POST(request: Request) {
                 audience: audienceStr,
                 tone: toneStr,
                 voice: resolvedVoice,
-                // Auto-fill images on every structured deck (Lisa 2026-07-01);
+                // Auto-fill images on every structured deck;
                 // opt out by sending `images: false` explicitly.
                 withImages: images !== false,
                 coverImageId: typeof coverImageId === 'string' ? coverImageId : undefined,
                 contentImageId: typeof contentImageId === 'string' ? contentImageId : undefined,
-                // Visual critic ON BY DEFAULT (Lisa 2026-06-25) — the capped
+                // Visual critic ON BY DEFAULT — the capped
                 // auto-revise loop now earns the per-slide render+VLM cost; opt
                 // out with judge:false. Non-fatal wrapped; verdict events stream.
                 judge: judgeEnabled,
@@ -237,7 +237,7 @@ export async function POST(request: Request) {
         audience: audienceStr,
         tone: toneStr,
         voice: resolvedVoice,
-        // Auto-fill images on every structured deck (Lisa 2026-07-01);
+        // Auto-fill images on every structured deck;
         // opt out by sending `images: false` explicitly.
         withImages: images !== false,
         coverImageId: typeof coverImageId === 'string' ? coverImageId : undefined,

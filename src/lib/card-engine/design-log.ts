@@ -2,7 +2,7 @@
  * design-log.ts — observe-only review log of Designer + Judge decisions (P1).
  *
  * Writes one CSV row per slide to app/docs/design-decisions.csv (GITIGNORED) for
- * Lisa to review. The Designer logs its decision + reasoning; the observe-only
+ * to review. The Designer logs its decision + reasoning; the observe-only
  * Judge appends its verdict + reasoning + recommendation. There is NO feedback
  * loop — this is purely a window into how both brains reason, so their judgment
  * can be reviewed BEFORE they are ever wired to act on each other.

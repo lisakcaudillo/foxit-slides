@@ -93,7 +93,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
   const zip = await JSZip.loadAsync(buffer);
   const warnings: string[] = [];
   // OUR accent for generated decorations (not the source's). Defaults to the
-  // Compose accent; the caller can pass the active theme's accent.
+  // Foxit Slides accent; the caller can pass the active theme's accent.
   const accent = opts?.accent ?? '#6B3FA0';
   const readXml = async (p: string): Promise<any | null> => {
     const f = zip.file(p);
@@ -318,7 +318,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
       // slide can show it.
       if (ph.role === 'date' && ph.text && !deckDate) deckDate = ph.text;
       // The date + deck-name footer is title-slide furniture — drop it on every other
-      // slide (Lisa: only the title slide should carry the date and name).
+      // slide.
       if (!isCover && (ph.role === 'date' || ph.role === 'footer')) continue;
       const g = geom(ph.xfrm) || geom(inheritXfrm(ph.type, ph.idx));
       if (!g) { warnings.push(`${base}: ${ph.role} idx=${ph.idx} no geometry — skipped`); continue; }
@@ -694,7 +694,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
       }
     }
 
-    // TABLES. Compose each source <a:tbl> as a clean grid below the title — header row
+    // TABLES. Foxit Slides each source <a:tbl> as a clean grid below the title — header row
     // (bold + accent rule) then body rows with light hairline separators, OUR styling.
     if (tables.length) {
       // The table is the slide's content — drop the source's stray body labels (table /

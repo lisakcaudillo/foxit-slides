@@ -1,7 +1,7 @@
 /**
  * brandKitStorage — localStorage CRUD for the user's brand kit.
  *
- * Phase 5 of the Compose workspace restructure introduces brand kits.
+ * Phase 5 of the Foxit Slides workspace restructure introduces brand kits.
  * This module is the single source of truth for kit metadata (colors,
  * fonts, voice settings) and references to uploaded assets (logos,
  * icons, kit-specific templates).
@@ -80,7 +80,7 @@ export interface BrandKit {
 
 // ─── Defaults ─────────────────────────────────────────────────────────────────
 // Seed values that match the brand-kit-compose.html prototype palette so a
-// fresh user starts with a kit matching the design Lisa approved. Each
+// fresh user starts with a kit matching the design approved. Each
 // item is editable.
 
 function defaultKit(): BrandKit {

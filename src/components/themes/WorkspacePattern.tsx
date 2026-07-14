@@ -2,7 +2,7 @@
 
 /**
  * Workspace pattern — renders the active theme's curated cover art behind
- * the editor card stack as a subtle, low-opacity background. Lisa wanted
+ * the editor card stack as a subtle, low-opacity background. wanted
  * the same visual identity she sees in the theme picker preview, just
  * dialed *way* down so it reads as breathing room rather than wallpaper.
  *

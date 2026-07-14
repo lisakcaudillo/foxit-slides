@@ -45,7 +45,7 @@ export const THEMES: ReadonlyArray<Theme> = [
     bodyFont: "'Inter', -apple-system, system-ui, sans-serif",
     // Figma "Blue": the glass-wave artwork lives in the per-category background
     // source (skin-backgrounds) — cover/quote/closing only. pageBg is the
-    // near-white content/fallback ground (kept close to white per Lisa).
+    // near-white content/fallback ground (kept close to white).
     pageBg: '#F5FAFE',
     workspaceBg: '#CBDFF2',
     titleColor: '#0B2A54',
@@ -288,7 +288,7 @@ export const THEMES: ReadonlyArray<Theme> = [
     chartPalette: ['#1A2B4A', '#A8852E', '#7A3030', '#3D6B4A', '#5E5E78'],
   },
   {
-    // Cobalt — re-skinned from the former "Ledgerline" (Lisa 2026-06-24). Keeps
+    // Cobalt — re-skinned from the former "Ledgerline". Keeps
     // the clean-financial structure; new bold high-contrast blue palette so it is
     // visually distinct from Ledger (navy+gold). id stays 'ledgerline' so saved
     // decks resolve unchanged; only the name + colors changed.
@@ -741,7 +741,7 @@ export function getThemeById(id: string): Theme {
  * skins whose covers are FAITHFUL to Figma (figma-template-structures.json
  * cover.fidelity === 'faithful'), in manifest order.
  *
- * HIDDEN-until-faithful gate (Lisa 2026-06-17): Chroma-fold + Quill were
+ * HIDDEN-until-faithful gate: Chroma-fold + Quill were
  * RE-GATED out — their glass/photo covers currently fall back to flat, so they
  * are not faithful yet. They return here the moment their real cover assets
  * land. The themes still exist in THEMES, so saved decks using them render fine
@@ -757,13 +757,13 @@ export const SELECTABLE_THEMES: ReadonlyArray<Theme> = SELECTABLE_THEME_IDS
   .filter((t): t is Theme => !!t);
 
 /** Default theme id used when no preference has been persisted, and the theme a
- *  deck is generated with when the user hasn't picked one (Lisa 2026-06-16:
+ * deck is generated with when the user hasn't picked one (
  *  Mono Light is the default). Must be a selectable theme. */
 export const DEFAULT_THEME_ID = 'mono-light';
 
 // ── Designer-driven theme selection ─────────────────────────────────────────
 // When the user does NOT pick a theme, the deck's theme is *chosen by the
-// design layer from the content* — NOT rolled at random (Lisa 2026-06-09: the
+// design layer from the content* — NOT rolled at random (the
 // old `THEMES[random]` roll kept landing on the library's many dark/warm
 // "cinematic" themes, so every deck came out brown/muddy).
 //

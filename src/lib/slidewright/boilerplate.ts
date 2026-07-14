@@ -36,8 +36,8 @@ export function themeXml(): string {
     `<a:ln w="${w}" cap="flat" cmpd="sng" algn="ctr">${phFill}<a:prstDash val="solid"/><a:miter lim="800000"/></a:ln>`;
   return (
     XML_DECL +
-    `<a:theme ${A_NS} name="Compose Theme"><a:themeElements>` +
-    `<a:clrScheme name="Compose">` +
+    `<a:theme ${A_NS} name="Foxit Slides Theme"><a:themeElements>` +
+    `<a:clrScheme name="Foxit Slides">` +
     `<a:dk1><a:sysClr val="windowText" lastClr="000000"/></a:dk1>` +
     `<a:lt1><a:sysClr val="window" lastClr="FFFFFF"/></a:lt1>` +
     `<a:dk2><a:srgbClr val="44546A"/></a:dk2>` +
@@ -51,11 +51,11 @@ export function themeXml(): string {
     `<a:hlink><a:srgbClr val="0563C1"/></a:hlink>` +
     `<a:folHlink><a:srgbClr val="954F72"/></a:folHlink>` +
     `</a:clrScheme>` +
-    `<a:fontScheme name="Compose">` +
+    `<a:fontScheme name="Foxit Slides">` +
     `<a:majorFont><a:latin typeface="Calibri Light" panose="020F0302020204030204"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont>` +
     `<a:minorFont><a:latin typeface="Calibri" panose="020F0502020204030204"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont>` +
     `</a:fontScheme>` +
-    `<a:fmtScheme name="Compose">` +
+    `<a:fmtScheme name="Foxit Slides">` +
     `<a:fillStyleLst>${phFill}${phFill}${phFill}</a:fillStyleLst>` +
     `<a:lnStyleLst>${ln(6350)}${ln(12700)}${ln(19050)}</a:lnStyleLst>` +
     `<a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle>` +

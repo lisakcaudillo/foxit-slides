@@ -69,7 +69,7 @@ export default function CardRenderer({ card }: { card: Card }) {
 
   if (card.layout === 'split-left' || card.layout === 'split-right') {
     // No accent half-panel. The legacy split accent zone (a theme-gradient
-    // half) read as an empty "placeholder image" (Issue #1, Lisa 2026-06-03).
+    // half) read as an empty "placeholder image" (Issue #1,.
     // Imagery is owned by the Design Intelligence Layer (slideDesign.imageRole /
     // imageIntent), so split layouts render as a full-width single column.
     return (

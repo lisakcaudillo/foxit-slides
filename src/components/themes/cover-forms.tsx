@@ -3,7 +3,7 @@
 /**
  * Cover forms — title-slide compositions for the template gallery.
  *
- * Raised to the quality bar Lisa set with two references:
+ * Raised to the quality bar set with two references:
  *   · round2-expressive cover  — immersive GLASSMORPHISM: theme-tinted blurred
  *     color blobs + a frosted overlay + the title on a FROSTED GLASS PANEL.
  *   · designer-2-organic       — subtle ATMOSPHERIC motifs behind the title
@@ -58,7 +58,7 @@ function imageFor(theme: Theme): string {
   return `/library/images/${IMAGES[idx % IMAGES.length]}.png`;
 }
 
-// Title TREATMENTS — characterful display/serif headline faces (per Lisa's
+// Title TREATMENTS — characterful display/serif headline faces (
 // curated favorites: editorial Source Serif 4 / Fraunces). Assigned by theme
 // index so the title TYPOGRAPHY varies template-to-template, not just the
 // backdrop. `null` keeps the theme's own face, for variety.
@@ -137,7 +137,7 @@ function Headline({ v, color, accent, size }: { v: Vars; color: string; accent: 
 
 function Foot({ theme, color, onDark }: { theme: Theme; color: string; onDark?: boolean }) {
   const txt = onDark ? 'rgba(255,255,255,0.82)' : color;
-  // Foxit Slides badge removed per Lisa — covers carry no product watermark.
+  // Foxit Slides badge removed.
   return (
     <div style={{ position: 'absolute', left: 34, right: 34, bottom: 22, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', zIndex: 3 }}>
       <span style={{ fontFamily: theme.titleFont, fontSize: 9.5, letterSpacing: '0.06em', color: txt }}>01 / 12</span>
@@ -187,7 +187,7 @@ type Form =
   | 'glassImmersive' | 'auroraMesh' | 'bokehField' | 'darkGlow'
   | 'arcSplit' | 'fullBleedPill' | 'diagonalSplit' | 'soloType';
 
-// Explicit per-theme cover form — locked to Lisa's curation picks. Favorites/
+// Explicit per-theme cover form — locked to curation picks. Favorites/
 // keeps stay on the form she loved; patternPanel was dropped (Volt → darkGlow);
 // the 6 "cut" themes keep the theme but are restyled to a favorited form.
 const FORM_BY_ID: Record<string, Form> = {

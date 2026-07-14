@@ -8,7 +8,7 @@
  * all navigation (home-004 in backlog). This component is that replacement:
  *   - Fixed hamburger button top-right of the viewport (only visible <md)
  *   - Tap opens a slide-in drawer from the left with the same nav content
- *     as Sidebar (Foxit logo, Create CTA, Home/Compose/Compare, Help,
+ *     as Sidebar (Foxit logo, Create CTA, Home/Foxit Slides/Compare, Help,
  *     Settings, Profile)
  *   - Backdrop dims the rest; click backdrop / Esc / X / nav item all close
  *
@@ -19,7 +19,7 @@
  * (3-item nav, 3 dock entries) and keeps Sidebar fidelity intact.
  *
  * Mounted by Sidebar.tsx so it only renders on Sidebar routes. Editor +
- * Compose surfaces will need their own mobile patterns later.
+ * Foxit Slides surfaces will need their own mobile patterns later.
  */
 
 import { useState, useEffect, useRef, type CSSProperties } from 'react';
@@ -208,7 +208,7 @@ export default function MobileNavDrawer() {
             >
               <Link
                 href="/"
-                aria-label="Foxit Compose — Home"
+                aria-label="Foxit Slides — Home"
                 onClick={closeAll}
                 style={{ display: 'inline-block' }}
               >

@@ -5,7 +5,7 @@
  * Visual port of `QuickActionsGrid` from
  * ComposeDesignSystem/ui_kits/compose_desktop/HomeParts.jsx.
  *
- * Per Lisa's brief approval (2026-04-30):
+ *):
  *  - Kit icons for each action (git-compare-arrows, presentation,
  *    pen-line, wand-2, layout-template, workflow).
  *  - Existing ComposeApp wording for titles + descriptions — the kit
@@ -34,13 +34,13 @@ interface QuickAction {
   Icon: LucideIcon;
 }
 
-// Description copy is kit-verbatim per Lisa (2026-04-30).
+// Description copy is kit-verbatim).
 // Workflow Builder dropped 2026-04-30 — Workflows is out-of-MVP scope
-// per Lisa's earlier nav-trim call, and surfacing it in Quick Actions
+//, and surfacing it in Quick Actions
 // sent users to a feature that won't ship for the demo. Five tiles
 // remain in the 3-col grid (3 + 2 layout, the trailing empty cell on
 // row 2 reads naturally with the kit's gap and spacing).
-// "Compare Documents" tile hidden from Quick Actions per Lisa 2026-05-21 —
+// "Compare Documents" tile hidden from Quick Actions
 // /compare route + page stay intact for future revival. Commented out so
 // the diff stays minimal when we bring it back.
 const QUICK_ACTIONS: QuickAction[] = [

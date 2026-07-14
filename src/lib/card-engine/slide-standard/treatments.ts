@@ -6,7 +6,7 @@
  * generated cover fell back to a plain title-on-card. This file makes the
  * treatment a SPEC the server-side Designer (designer/cover.ts) can read.
  *
- * THIS IS A GRAMMAR, NOT A STATIC LAYOUT. (Lisa 2026-06-11: "it shouldn't always
+ * THIS IS A GRAMMAR, NOT A STATIC LAYOUT. ("it shouldn't always
  * be left-aligned — that sets a static design.") It encodes what's INVARIANT —
  * the elements, their order, the constraints, the allowed forms — and leaves the
  * COMPOSITION DECISIONS (anchor left/center/right, which side the visual takes,
@@ -33,7 +33,7 @@
  *         Eyebrow + title + 1-line subtitle + divider + author + date."
  *   - §10 Cover: "Largest type in the deck, generous whitespace, no body/bullets.
  *         Editorial (type-led) + fullbleed (image + scrim) variants."
- *   - Lisa's editorial title-slide spec (2026-06-10): eyebrow → oversized headline
+ * - editorial title-slide spec (2026-06-10): eyebrow → oversized headline
  *         with ONE accent word → hairline rule → 1-line subtitle; a slim accent
  *         column (CoverArt / hero photo); one cinematic entrance then static.
  *         NOTE: the LEFT anchor in that sketch was ONE instance, not a rule.
@@ -72,7 +72,7 @@ export interface TreatmentElement {
   /**
    * The title MAY emphasize ONE word with the accent/gradient (§1 gradient-title).
    * This only PERMITS it — the Designer decides whether to, and which word, per
-   * slide (Lisa: "up to the designer").
+   * slide.
    */
   accentWordAllowed?: boolean;
 }
@@ -101,7 +101,7 @@ export interface CoverForm {
     /**
      * When NO real image is present, the Designer decides the visual zone from
      * these options — use CoverArt, or drop the zone (pure type-led). It KNOWS
-     * whether an image exists and designs accordingly (Lisa). NOT a fixed default.
+     * whether an image exists and designs accordingly. NOT a fixed default.
      */
     whenNoImage: ('coverart' | 'none')[];
   };
@@ -119,7 +119,7 @@ export const COVER_TREATMENT = {
   noBodyOrBullets: true,
 
   /**
-   * A cover is NOT approved as a bare title (Lisa 2026-06-11). A complete cover
+   * A cover is NOT approved as a bare title. A complete cover
    * carries the editorial treatment — an eyebrow + a one-line subtitle alongside
    * the title. The Judge FAILS a title-only cover; the Designer supplies the
    * eyebrow (derived from deck metadata when the writer gives none) and uses the
@@ -151,7 +151,7 @@ export const COVER_TREATMENT = {
 
   /**
    * Element order is a Designer CHOICE with a recommendation + guidelines here
-   * (Lisa: "designer choice but we should have recommendations/guidelines in the
+   * ("designer choice but we should have recommendations/guidelines in the
    * design system"). The Designer follows the recommended order unless a
    * guideline says otherwise; deviation rules are CALIBRATED from real cases
    * (Loop 2), not invented up front.
@@ -165,7 +165,7 @@ export const COVER_TREATMENT = {
   ],
 
   /**
-   * Byline (author · date) — optional, OFF by default. Proposed trigger (Lisa
+   * Byline (author · date) — optional, OFF by default. Proposed trigger (
    * asked "what turns it on?"): ON when the deck actually HAS author/date content,
    * OR when the artifact is a formal document type (report / proposal / whitepaper)
    * whose title-page convention includes it. Provisional — easy to retune.

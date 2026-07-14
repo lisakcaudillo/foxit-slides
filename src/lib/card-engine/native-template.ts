@@ -107,7 +107,7 @@ import type { SlotFillResult, DataSlotSpec, ChartFill, TableFill } from './struc
 import { getProvider, getModel, type ToolUseBlock, type Tool } from '@/lib/ai-provider';
 import { z } from 'zod';
 
-// ── Agentic planning (Step 2, Lisa 2026-06-30) ──────────────────────────────
+// ── Agentic planning (Step 2, ──────────────────────────────
 //
 // The template FIXES the shape (20 designed slides). Planning is agentic
 // SELECTION: given the prompt/source, an LLM picks WHICH captured slides to
@@ -117,7 +117,7 @@ import { z } from 'zod';
 // sourcers) is deterministic matching.
 
 /** One planned slide: which captured slide to use here + an editorial brief
- *  (Phase B, Lisa 2026-06-30) that the writer uses to place content editorially. */
+ * (Phase B, that the writer uses to place content editorially. */
 export interface SlidePlan {
   /** Index into template.slides (0..N-1). */
   capturedIndex: number;
@@ -157,7 +157,7 @@ export interface DeckPlan {
   /** DECK GOAL — one sentence stating what this deck must ACHIEVE for its
    *  audience. Named explicitly by Phase 0 (holistic view) so every slide
    *  choice can be justified against it. This is the "what do we want to
-   *  present?" question Lisa asked. */
+   * present?" question asked. */
   deckGoal: string;
   /** DECK ARC — the ordered narrative-role sequence the plan agent designed
    *  BEFORE picking any slide. Each slide's narrativeRole must map to a
@@ -649,7 +649,7 @@ Return via the report_deck_plan tool.`;
 // NO heuristic fallback — if the LLM errors or picks invalid, we THROW. The
 // caller (slide-gates → swapLayoutForNative) catches, logs, and lets the
 // writer-rebuild path handle it. No silent heuristic picks — everything must
-// be reasoned or the swap doesn't happen. (Lisa 2026-07-01.)
+// be reasoned or the swap doesn't happen.
 
 const SwapLayoutSchema = z.object({
   capturedIndex: z.number().int().min(0).max(19),
@@ -1051,7 +1051,7 @@ export function buildCapturedCard(
       continue;
     }
 
-    // 2) Slide numbers — DISABLED on generation (Lisa 2026-06-30). The
+    // 2) Slide numbers — DISABLED on generation. The
     //    captured template carries slide-number slots on 16/20 slides, but
     //    page numbers are suppressed at generation time. Skip the slot
     //    entirely (renders nothing). Re-enable by restoring the block below.
@@ -1262,7 +1262,7 @@ interface DeckImageState {
    *  pass doesn't re-run library search / re-generate / re-pick an icon for
    *  the same slot. */
   perSlideCache: Map<string, SlotPick>;
-  /** FEATURE FLAG — used to gate generation off by default (Lisa 2026-06-30)
+  /** FEATURE FLAG — used to gate generation off by default
    *  because gpt-image-1 base64 data URLs (~1MB) bloated localStorage past its
    *  practical limit. Retained for now so callers can force library-only, but
    *  the DEFAULT is TRUE: the swapped-in picker (`pickForSlot`) saves generated
@@ -1475,7 +1475,7 @@ async function pickImageForCapturedSlot(
     };
   }
 
-  // Photo path failed (Lisa: fall back to an icon as decoration).
+  // Photo path failed.
   const icon = await pickIconForSlot(query, state.used);
   if (icon) {
     state.used.add(`icon:${icon.id}`);

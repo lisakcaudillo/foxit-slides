@@ -341,7 +341,7 @@ export default function AgentChatPanel({
           >
             <div className="flex items-center gap-2">
               <Sparkles className="size-4 text-white opacity-80" />
-              <span className="text-white font-semibold" style={{ fontSize: 15 }}>Compose AI</span>
+              <span className="text-white font-semibold" style={{ fontSize: 15 }}>Foxit Slides AI</span>
             </div>
             <div className="flex items-center">
               <button
@@ -499,7 +499,7 @@ export default function AgentChatPanel({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask Compose AI..."
+                placeholder="Ask Foxit Slides AI..."
                 rows={1}
                 className="flex-1 resize-none text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
                 style={{

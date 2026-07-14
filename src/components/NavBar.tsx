@@ -13,10 +13,10 @@
  *   everything else    → <Sidebar>         (kit-port 264px primary nav)
  *
  * The MainNavBar that previously lived inline here was replaced by the
- * Compose Design System sidebar port (see `Sidebar.tsx`). EditorIconRail
+ * Foxit Slides Design System sidebar port (see `Sidebar.tsx`). EditorIconRail
  * stays here because it's not part of the kit and continues to be the
  * editor's chrome rail. ComposePanel is the contextual nav for the
- * Compose workspace.
+ * Foxit Slides workspace.
  */
 
 import { useState, useEffect } from 'react';
@@ -41,7 +41,7 @@ function EditorIconRail() {
   const pathname = usePathname();
   const [createOpen, setCreateOpen] = useState(false);
   // When the Elements Panel is mounted on the editor route, hide this rail —
-  // only ONE left rail visible at a time per Lisa's approved modifications.
+  // only ONE left rail visible at a time.
   const [elementsPanelOpen, setElementsPanelOpen] = useState(false);
 
   useEffect(() => {
@@ -57,9 +57,9 @@ function EditorIconRail() {
   // Re-add once those features ship. Routes still resolve if linked
   // directly, but they're hidden from the in-editor nav.
   //
-  // Compose appears here too so the user always sees where they are
+  // Foxit Slides appears here too so the user always sees where they are
   // while editing. Active state rule (below) treats both /compose and
-  // /editor/* as "in Compose" so the highlight doesn't disappear the
+  // /editor/* as "in Foxit Slides" so the highlight doesn't disappear the
   // moment you click into a deck.
   // Icon union accepts stock Lucide icons + our custom CompareIcon
   // (same prop surface). Mirrors the type pattern in Sidebar.tsx.
@@ -145,15 +145,15 @@ export default function NavBar() {
   if (pathname.startsWith('/internal')) return null;
 
   // Slides editor: no separate global-nav rail — the SlideToolRail carries a
-  // logo→home at its top and is the sole left nav (per Lisa 2026-06-14).
+  // logo→home at its top and is the sole left nav.
   if (pathname.startsWith('/editor/slides')) return null;
 
   // Generate (create) page: no global nav rail — it carries its own brand mark
-  // + Back-to-home button (Lisa 2026-06-16).
+  // + Back-to-home button.
   if (pathname.startsWith('/editor/generate')) return null;
 
   // Asset/Graphics editor: full-bleed like the slides editor — its own
-  // SlideToolRail (now GRAPHICS) is the sole left nav (Lisa 2026-06-23).
+  // SlideToolRail (now GRAPHICS) is the sole left nav.
   if (pathname.startsWith('/editor/asset')) return null;
 
   // Other editor routes + the workflow builder still use the slim icon rail.
@@ -161,7 +161,7 @@ export default function NavBar() {
     return <EditorIconRail />;
   }
 
-  // Compose workspace gets its own contextual nav. Sidebar hides; ComposePanel
+  // Foxit Slides workspace gets its own contextual nav. Sidebar hides; ComposePanel
   // takes over with Recent Files / Library sections (and Assets / Content
   // when on /compose/brand-kit*, wired in Phase 5).
   if (pathname.startsWith('/studio')) {

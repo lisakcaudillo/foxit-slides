@@ -87,7 +87,7 @@ export async function planWithExpertise(ctx: ExpertContext): Promise<ExpertPlan>
 const CONFIDENCE_THRESHOLD = 0.6;
 
 /**
- * Confidence-gated clarify (spec §4, Lisa 2026-06-03). Decides what to ask
+ * Confidence-gated clarify (spec §4,. Decides what to ask
  * BEFORE generation, scaled to how confidently the deck was placed:
  *   - CONFIDENT (a matched expert with industryConfidence ≥ threshold) → ask the
  *     expert's targeted CONTENT-GAP questions (e.g. "which compliance certs?").

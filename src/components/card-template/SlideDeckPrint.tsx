@@ -2,7 +2,7 @@
 
 /**
  * Faithful print/export view for a slide deck → clean PDF via the browser's
- * Print / Save-as-PDF (Lisa 2026-06-03: "PDF is sufficient for now").
+ * Print / Save-as-PDF.
  *
  * Why this approach: the editor renders slides through `FreeformLayer`. To
  * export faithfully we render the SAME component at full 960×540 — one card per

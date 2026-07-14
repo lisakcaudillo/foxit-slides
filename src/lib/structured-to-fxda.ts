@@ -54,7 +54,7 @@ export function structuredOutputToFXDA(
     fields,
     metadata: {
       createdAt: new Date().toISOString(),
-      createdBy: 'Compose AI',
+      createdBy: 'Foxit Slides AI',
       templateType: output.artifactMetadata.artifactType,
       version: 1,
     },

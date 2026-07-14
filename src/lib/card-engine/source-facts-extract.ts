@@ -1,6 +1,6 @@
 /**
  * source-facts-extract.ts — the LLM extraction pass for the per-metric fact
- * contract (Compose side; the adaptive engine wires its own provider around the
+ * contract (Foxit Slides side; the adaptive engine wires its own provider around the
  * same prompt + schema).
  *
  * Turns source text into metric-bound facts (see source-facts.ts / the contract

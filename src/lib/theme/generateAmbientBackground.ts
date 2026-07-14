@@ -107,7 +107,7 @@ function findAmbientBase(palette: string[], cardLightness: number): string {
   if (cardLightness >= 0.5) {
     // Light theme — near-white with the faintest hint of palette hue.
     // Earlier tuning (L 0.84–0.93, chroma 0.06–0.10) produced a SATURATED
-    // wash that read as a content choice rather than a backdrop. Lisa:
+    // wash that read as a content choice rather than a backdrop.
     // "the background colors (the one BEHIND the slides) are too bold to
     // work as backgrounds... its supposed to be airy." Lift L close to
     // pure white and crush chroma so the base reads as cream/off-white,

@@ -53,7 +53,7 @@ function buildFXDATemplate(
     fields: fields ?? [],
     metadata: {
       createdAt: new Date().toISOString(),
-      createdBy: 'Compose',
+      createdBy: 'Foxit Slides',
       templateType: workflow ? 'workflow-attached' : 'standalone',
       version: 1,
     },
@@ -81,7 +81,7 @@ function blocksToHtml(blocks: Block[]): string {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compose Export</title>
+  <title>Foxit Slides Export</title>
   <style>
     body {
       font-family: Inter, system-ui, sans-serif;
@@ -107,7 +107,7 @@ function blocksToHtml(blocks: Block[]): string {
 <body>
     ${blockMarkup}
     <div class="export-notice">
-      Exported from Compose.
+      Exported from Foxit Slides.
     </div>
 </body>
 </html>`;
@@ -219,7 +219,7 @@ export default function ExportButton({
             >
               <JsonIcon />
               <div>
-                <div className="font-medium">Compose Template (.json)</div>
+                <div className="font-medium">Foxit Slides Template (.json)</div>
                 <div className="text-xs text-slate-500">
                   For eSign &amp; Editor
                 </div>

@@ -213,7 +213,7 @@ export interface LibraryMatch {
  * it without shipping the whole index to the client. No embeddings, no infra.
  *
  * `minScore` gates quality: below it, the match is considered too loose and the
- * caller gets nothing rather than a tonally-wrong photo (Lisa 2026-06-10 — a
+ * caller gets nothing rather than a tonally-wrong photo (— a
  * weak match is worse than no image; the layout reflows to a clean no-image
  * form instead). Returns matches sorted best-first, capped at `n`.
  */
@@ -256,7 +256,7 @@ export async function searchLibrary(
 /**
  * Generic "suits-all" library images — abstract art, gradients, fluid/ribbon
  * shapes, minimal textures, glass renders. Topic-agnostic visuals that look
- * intentional on any slide. This is the SECOND fallback tier (Lisa 2026-06-10):
+ * intentional on any slide. This is the SECOND fallback tier:
  * when no library image matches the slide topic, a slide should still get a
  * sensible generic visual rather than an empty region — only truly last-resort
  * (empty library) does the layout reflow to no-image.

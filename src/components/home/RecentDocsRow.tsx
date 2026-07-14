@@ -167,7 +167,7 @@ function RecentTile({ doc }: { doc: RecentDoc }) {
   // alpha trick — `14` is ~8% opacity, `99` is ~60%. Preserved verbatim
   // so the thumbnail tone matches the kit pixel-for-pixel.
   // Scaled down from the kit's original (90px thumb, 28 icon, 13/11 text)
-  // per Lisa's call to make the row more compact so the page above the
+  //
   // fold breathes better.
   const content = (
     <div

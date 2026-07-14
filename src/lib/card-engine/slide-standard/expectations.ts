@@ -2,7 +2,7 @@
  * expectations.ts — the calibrated design-system EXPECTATIONS, rendered for the
  * writer prompt and the judge rubric.
  *
- * `SLIDE_PRINCIPLES` (examples.ts) is the full corpus of Lisa's votes — content,
+ * `SLIDE_PRINCIPLES` (examples.ts) is the full corpus of votes — content,
  * layout, AND pure-visual rules. The writer and the text judge can only act on
  * the CONTENT/WRITING-relevant ones (a text model can't place a glass panel or
  * draw a curved divide — those are renderer concerns). This module selects that

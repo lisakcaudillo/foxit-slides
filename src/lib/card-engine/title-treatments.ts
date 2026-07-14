@@ -39,7 +39,7 @@ import { TITLE_TREATMENTS, type CoverTier, type TitleTreatment } from './design-
 // The treatment enum + type are the single source in design-types.ts (so the
 // type contract carries no cross-module import); re-exported here for
 // convenience so consumers can import everything title-treatment from one file.
-// Full d1 ∪ d3 union (de-duplicated). "Full now, curate later" — Lisa reviews
+// Full d1 ∪ d3 union (de-duplicated). "Full now, curate later" — reviews
 // these live, then we cut the weak ones. `TITLE_TREATMENTS` order = swap cycle:
 //   anchor            d1·01 / d3·1 — bookish flagship (eyebrow+rule+italic accent+byline)
 //   drop-cap          d1·03        — oversized serif initial sets the headline

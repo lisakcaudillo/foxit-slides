@@ -214,7 +214,7 @@ export async function composeSlide(
     // Visual few-shot: when references are supplied, show the model the top-tier
     // exemplars FIRST, then ask it to compose in the same spirit.
     const refIntro =
-      'The image(s) above are TOP-TIER reference slides. Study their composition — the dominant title, the editorial eyebrow, the structured panels/cards, the rules, the generous whitespace, the restraint and hierarchy. Compose THIS slide to that same standard (your own content, not theirs):\n\n';
+      'The image(s) above are TOP-TIER reference slides. Study their composition — the dominant title, the editorial eyebrow, the structured panels/cards, the rules, the generous whitespace, the restraint and hierarchy. Foxit Slides THIS slide to that same standard (your own content, not theirs):\n\n';
     const messages = input.references?.length
       ? [visionUserMessage(input.references, refIntro + userPrompt(input))]
       : [{ role: 'user' as const, content: userPrompt(input) }];

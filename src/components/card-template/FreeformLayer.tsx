@@ -117,7 +117,7 @@ const RESIZE_CURSORS: Record<ResizeHandle, string> = {
   w: 'ew-resize',
 };
 
-// ── Text-contrast guarantee (Lisa 2026-06-03) ───────────────────────────────
+// ── Text-contrast guarantee ───────────────────────────────
 // THREE distinct treatments, so text is never illegible against whatever is
 // behind it — keyed off the slide's imageRole:
 //
@@ -152,7 +152,7 @@ const RESIZE_CURSORS: Record<ResizeHandle, string> = {
 // texture / background are deliberately NOT in this set: the auto-placement
 // fades those images to a ~0.18 wash (see page.tsx imageRoleOpacity), so the
 // theme's normal dark-on-light text reads on top with no scrim. Painting a
-// scrim there would darken a card that's already legible. (Lisa 2026-06-03 —
+// scrim there would darken a card that's already legible. (—
 // the previous pass scrimmed all four roles AND used a theme-tinted veil,
 // which produced a white veil + dark text over a mid-tone duotone photo —
 // illegible. This split is the fix.)
@@ -227,7 +227,7 @@ interface ScrimContext {
    *  role, so it's correct even when auto-placement used a different provisional
    *  role at streaming time (the persisted block.opacity may be missing). The
    *  image render opacity is derived from this, NOT from block.opacity, for
-   *  these roles. (Lisa 2026-06-03 — fixes texture slides rendering at full
+   * these roles. (— fixes texture slides rendering at full
    *  strength.) */
   behindTextWash: boolean;
   /** Preferred theme colors — kept when they already clear AA. */
@@ -452,7 +452,7 @@ export function FreeformLayer({
   // async; if we measure text height before the real font is laid out we read
   // the FALLBACK font's metrics, mark the block done, and then the web font
   // swaps in (usually taller) — leaving the baked box too short forever, which
-  // is the overlap + cut-off Lisa keeps seeing. Wait for document.fonts.ready
+  // is the overlap + cut-off keeps seeing. Wait for document.fonts.ready
   // (resolves immediately if already loaded or the API is absent), then run.
   const [fontsReady, setFontsReady] = useState(false);
   useEffect(() => {
@@ -470,7 +470,7 @@ export function FreeformLayer({
     // Bail BEFORE marking anything done if the layer hasn't sized yet —
     // otherwise we poison the ref with blocks that never actually got
     // measured, and they're permanently skipped on subsequent runs (the
-    // bug Lisa saw 2026-05-21: text overflowing on hero slides after the
+    // bug saw 2026-05-21: text overflowing on hero slides after the
     // streaming→final render swap).
     const layerRect = layer.getBoundingClientRect();
     const cardH = layerRect.height;
@@ -530,7 +530,7 @@ export function FreeformLayer({
         let fontSize: number | undefined;
         // Overflow guard + autofit-down: if the measured text would extend past
         // the card's bottom safe edge, shrink the font so it fits the space left
-        // rather than bleeding off the slide (the cut-off Lisa flagged). Text
+        // rather than bleeding off the slide (the cut-off flagged). Text
         // height is ~linear in font size at a fixed width, so scale by the
         // height ratio — floored at 60% / 11px so we never shrink into
         // illegibility. Anything that STILL won't fit is one slide's worth too
@@ -580,7 +580,7 @@ export function FreeformLayer({
   }, [blocks, onChange, fontsReady]);
 
   // Keyboard: delete + arrow-key nudge + escape + z-order + duplicate.
-  // Per Lisa P1 #7 — Cmd/Ctrl + ] / [ for forward/backward, Cmd/Ctrl + D
+  //, Cmd/Ctrl + D
   // for duplicate, Shift + arrow nudge bumped from 5% to 10% for big moves.
   useEffect(() => {
     // Attached whenever this layer is active (not gated on a selection) so
@@ -635,7 +635,7 @@ export function FreeformLayer({
           /* sessionStorage can throw in private mode; silently no-op */
         }
         // Copy-image-out: a single selected image also goes to the OS clipboard
-        // so it can be pasted into other apps (best-effort). (Lisa 2026-06-16.)
+        // so it can be pasted into other apps (best-effort).
         if (selected.length === 1 && selected[0].type === 'image' && selected[0].src) {
           void imageSrcToOSClipboard(selected[0].src);
         }
@@ -721,7 +721,7 @@ export function FreeformLayer({
         return;
       }
       // Arrow-key nudge — 1% default, 10% with Shift (bumped from 5%
-      // per Lisa P1 #7 — Shift = "big move" parity with most editors).
+      //).
       const nudge = e.shiftKey ? 10 : 1;
       let dx = 0, dy = 0;
       if (e.key === 'ArrowLeft') dx = -nudge;
@@ -967,7 +967,7 @@ export function FreeformLayer({
     e.preventDefault();
     // Resize default depends on the block:
     //  • STANDALONE (whole-image / contain) images resize ASPECT-LOCKED so the
-    //    frame always hugs the image — no letterbox/pillarbox (Lisa 2026-06-22:
+    // frame always hugs the image — no letterbox/pillarbox (
     //    "display whole image should be default… dynamically adjusted to the box
     //    size"). With the onLoad auto-hug giving the block the image's pixel
     //    aspect, locking w%/h% on every handle keeps that aspect → the whole
@@ -1391,7 +1391,7 @@ export function FreeformLayer({
   }, [blocks, onChange]);
 
   // ── Clipboard: OS-image paste, image copy-out, right-click paste ──────────
-  // (Lisa 2026-06-16.) Block copy/cut live in the keyboard effect above
+  // Block copy/cut live in the keyboard effect above
   // (sessionStorage); these add OS-clipboard image support + menu affordances.
 
   // Insert an image (data URL) as a freeform block CENTERED on the card, sized
@@ -2221,14 +2221,14 @@ function resolveScrimContext(
     behindTextWash,
   };
 
-  // Structural fallback (Lisa 2026-06-05): a full-card, full-strength image
+  // Structural fallback: a full-card, full-strength image
   // behind the text must get the scrim + forced-light treatment EVEN when
   // slideDesign.imageRole isn't 'full-bleed' (content slides whose role wasn't
   // stamped, or is stale). Without this the text color is measured against the
   // light region bg instead of the dark image → dark-on-dark, invisible. Only
   // matches a near-full-card image at full strength (NOT column/band images,
   // which sit beside the text, and NOT faded texture/background washes).
-  // Detection broadened 2026-06-06 (Lisa: text invisible over full-bleed images
+  // Detection broadened 2026-06-06 (text invisible over full-bleed images
   // in the editor). The old thresholds (opacity===undefined, w/h≥90, x/y≤5)
   // missed real full-bleed slides — e.g. an image with ANY opacity set, or one
   // a few % off the origin — so no scrim fired and text was measured against the
@@ -2623,7 +2623,7 @@ function FreeformBlockView({
   // and commit a correct height back to state. After that effect runs,
   // __autoLayout is cleared and the wrapper uses the fixed block.h%.
   const isAutoLayout = !!block.__autoLayout;
-  // Text blocks must NEVER hard-clip their content (Lisa 2026-06-09: "text
+  // Text blocks must NEVER hard-clip their content ("text
   // still gets cut off in half"). The auto-layout pass bakes a measured height
   // into each block, but if the measurement ran before the web font loaded —
   // or the block was never auto-laid-out (user text, certain converter blocks)
@@ -3183,7 +3183,7 @@ function TextContent({
 
 // ── Inline toolbar ───────────────────────────────────────────────────────────
 
-// Six-swatch starter palette. Includes the Compose violet + theme-friendly
+// Six-swatch starter palette. Includes the Foxit Slides violet + theme-friendly
 // neutrals + a soft accent. Phase B will swap this for the active theme's
 // palette so per-deck colors propagate automatically.
 const COLOR_SWATCHES: { label: string; value: string }[] = [
@@ -3696,7 +3696,7 @@ function hexToHsv(hex: string): [number, number, number] {
 
 /** Inline HSV color wheel — hue around the circle, saturation from center to
  *  edge, with a brightness slider beneath. Click/drag to pick; emits hex.
- *  Per Lisa 2026-06-14 (wanted a visual wheel, not the OS dialog). */
+ *, not the OS dialog). */
 function ColorWheel({ value, onChange }: { value: string; onChange: (hex: string) => void }) {
   const SIZE = 140;
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -3750,7 +3750,7 @@ function ColorWheel({ value, onChange }: { value: string; onChange: (hex: string
         }}
       >
         {/* Wheel stays full-brightness (no value veil) — hue/saturation here,
-            brightness on the slider below. Per Lisa 2026-06-14. The marker
+            brightness on the slider below.. The marker
             shows the final color (incl. brightness) so darkness still reads. */}
         <div aria-hidden style={{ position: 'absolute', left: mx, top: my, width: 12, height: 12, transform: 'translate(-50%, -50%)', borderRadius: '50%', border: '2px solid #fff', boxShadow: '0 0 0 1px rgba(0,0,0,0.45)', background: value, pointerEvents: 'none' }} />
       </div>
@@ -3790,12 +3790,12 @@ function ColorPickerButton({
   /** Apply + close the popover (swatch clicks). */
   onSelect: (color: string) => void;
   /** Apply WITHOUT closing — used by the wheel/slider/eyedropper so the user
-   *  can keep dragging/adjusting. Per Lisa 2026-06-14 (clicking the wheel was
+   * can keep dragging/adjusting.
    *  dismissing the popover). */
   onApply: (color: string) => void;
 }) {
   // Persisted quick-select palette of colors the user has added (via the
-  // wheel or eyedropper). Per Lisa 2026-06-14.
+  // wheel or eyedropper)..
   const [customColors, setCustomColors] = useState<string[]>([]);
   useEffect(() => {
     try {
@@ -4315,7 +4315,7 @@ function ImageContent({
         // the theme's normal text — correct even when the placement-time role
         // was provisional and block.opacity is missing. Other cases fall back
         // to block.opacity (column/band/manual; undefined = fully opaque, the
-        // duotone/full-bleed rich-photo default). Lisa 2026-06-03.
+        // duotone/full-bleed rich-photo default)..
         opacity: effectiveOpacity,
       }}
       draggable={false}
@@ -4347,7 +4347,7 @@ function ShapeContent({
   const stroke = block.stroke ?? 'transparent';
   const strokeWidth = block.strokeWidth ?? 0;
 
-  // Inline text overlay for rectangle/circle. Per Lisa P1 #4 — double-click
+  // Inline text overlay for rectangle/circle.
   // a shape to wrap text inside; the text centers vertically + horizontally
   // and contrasts the fill by default. Only applies to closed shapes
   // (rectangle, circle); line + arrow stay text-free.

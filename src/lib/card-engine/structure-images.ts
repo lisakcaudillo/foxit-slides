@@ -314,7 +314,7 @@ async function generateImageForQuery(query: string, orientation: 'portrait' | 'l
   if (!apiKey) return undefined;
   const openai = new OpenAI({ apiKey });
   // The body+image column is a tall full-bleed slot; a landscape photo crops to an
-  // awkward strip (Lisa 2026-07-11 chose portrait-sourced). Match the generation
+  // awkward strip. Match the generation
   // aspect to the slot: portrait for the side column, landscape for a cover.
   const size = orientation === 'portrait' ? '1024x1536' : '1536x1024';
   const [genW, genH] = orientation === 'portrait' ? [1024, 1536] : [1536, 1024];
@@ -344,7 +344,7 @@ async function generateImageForQuery(query: string, orientation: 'portrait' | 'l
         const offSubject = defects.subjectMatch < SUBJECT_MATCH_THRESHOLD;
         // Generation runs only for GENERIC subjects (real entities are sourced as
         // KNOWN photos upstream), so any person here is an AI-invented face — reject
-        // it (Lisa 2026-07-11). Also reject readable WORDS and off-subject images.
+        // it. Also reject readable WORDS and off-subject images.
         if (defects.hasText || defects.hasPerson || offSubject) {
           const flags: string[] = [];
           if (defects.hasText) flags.push('text');
@@ -389,7 +389,7 @@ async function generateImageForQuery(query: string, orientation: 'portrait' | 'l
 /** Derive the single best PHOTOGRAPHIC image subject for a slide's content, and
  *  whether it names a SPECIFIC real/historical entity (person, place, building,
  *  artwork) whose true appearance matters — those must use a KNOWN image, never a
- *  fabricated AI likeness (Lisa 2026-07-11). */
+ * fabricated AI likeness. */
 async function deriveImageBrief(
   query: string,
   apiKey: string,
@@ -408,7 +408,7 @@ async function deriveImageBrief(
           role: 'system',
           content:
             'Given a slide topic, name the single best PHOTOGRAPHIC image subject for it. Return {subject, kind, wikiTitle}.\n' +
-            'kind="real" when the subject is a SPECIFIC real/historical named person, place, building, or artwork whose actual appearance matters (Mozart, the Eiffel Tower, the Mona Lisa) — it should use a KNOWN image, not a generated one. Set wikiTitle to the exact Wikipedia article title for it.\n' +
+            'kind="real" when the subject is a SPECIFIC real/historical named person, place, building, or artwork whose actual appearance matters (Mozart, the Eiffel Tower, the Mona) — it should use a KNOWN image, not a generated one. Set wikiTitle to the exact Wikipedia article title for it.\n' +
             'kind="generic" when it is a concept/object/scene that can be freely illustrated (a grand piano, a candlelit music room, a laboratory, autumn light). Leave wikiTitle empty.\n' +
             'Prefer a concrete, evocative, photograph-able subject. The image will contain NO readable words.' +
             avoidLine,
@@ -442,7 +442,7 @@ async function deriveImageBrief(
   }
 }
 
-const WIKI_UA = 'Compose/1.0 (slide image sourcing; contact via app)';
+const WIKI_UA = 'Foxit Slides/1.0 (slide image sourcing; contact via app)';
 
 /** Non-photo Wikimedia media we never want as an entity's image: logos, icons,
  *  SVG line-art, maps, flags, seals, and drawn caricatures/calligrams (the last
@@ -475,9 +475,9 @@ async function wikimediaPhotoCandidates(title: string): Promise<string[]> {
 /** Source a real PHOTOGRAPH of a known entity from Wikimedia and save it to the
  *  library. No auth needed. LIBRARY-FIRST: an entity we've already sourced is
  *  reused (matched by a canonical `[known:<title>]` tag) — no duplicate save
- *  (Lisa 2026-07-11). Picks from the article's MEDIA LIST (not the summary lead,
+ *. Picks from the article's MEDIA LIST (not the summary lead,
  *  which is often a logo) and skips any candidate with baked-in text/lettering,
- *  so posters, logos, and calligrams never slip through (Lisa 2026-07-12). */
+ * so posters, logos, and calligrams never slip through. */
 async function fetchKnownImage(subject: string, wikiTitle?: string): Promise<LibraryImage | undefined> {
   const title = (wikiTitle || subject).trim().replace(/\s+/g, '_');
   const tag = `[known:${title}]`;
@@ -617,7 +617,7 @@ export async function pickForSlot(
   const best = rated[0];
   if (best && best.rating >= RATING_THRESHOLD) {
     // Quality gate for OLDER library images (AI-generated batches / imports) that
-    // may carry uncanny faces or garbled words (Lisa 2026-07-11). Already-vetted
+    // may carry uncanny faces or garbled words. Already-vetted
     // real photos — stock / known — are exempt: their people are REAL, not fake.
     const vetted = /^\[(stock|known)/.test(best.image.prompt || '');
     let libClean = true;

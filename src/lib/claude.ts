@@ -141,7 +141,7 @@ export async function generateBlocks(
   request: GenerateBlocksRequest
 ): Promise<GenerateBlocksResponse> {
   const systemPrompt = [
-    'You are a professional document template generator for Compose, an intelligent document workspace.',
+    'You are a professional document template generator for Foxit Slides, an intelligent document workspace.',
     'Generate complete, realistic document content based on the user\'s description.',
     'Each block should have a type: heading for titles/sections, clause for numbered legal provisions,',
     'definition for defined terms, paragraph for body text, list for enumerated items,',
@@ -230,7 +230,7 @@ export async function inferFields(
   request: InferFieldsRequest
 ): Promise<InferFieldsResponse> {
   const systemPrompt = [
-    'You are a document field inference engine for Compose, a professional document workspace.',
+    'You are a document field inference engine for Foxit Slides, a professional document workspace.',
     'Analyze the document content and identify all parties involved, then infer the form fields that should be placed on the document.',
     'Build a role map that assigns a numeric party identifier (as a string key) to a human-readable role label (e.g. "Employer", "Employee", "Landlord", "Tenant").',
     'For each field, assign a unique id (e.g. "field-1"), choose the appropriate type, provide a descriptive name, estimate placement coordinates, and assign the correct party.',
@@ -319,7 +319,7 @@ export async function rewriteBlock(
   request: RewriteBlockRequest
 ): Promise<RewriteBlockResponse> {
   const systemPrompt = [
-    'You are a document editing assistant for Compose, a professional document workspace.',
+    'You are a document editing assistant for Foxit Slides, a professional document workspace.',
     'You rewrite document blocks according to the user\'s instructions.',
     'Always use the rewrite_result tool to return your output.',
     'Set diff.original to the exact original content provided, and diff.modified to your rewritten version.',
@@ -408,7 +408,7 @@ export async function generateMetadata(
   request: GenerateMetadataRequest
 ): Promise<GenerateMetadataResponse> {
   const systemPrompt = [
-    'You are a document metadata engine for Compose, a professional document workspace.',
+    'You are a document metadata engine for Foxit Slides, a professional document workspace.',
     'Analyze the document content and generate structured metadata.',
     'Classify the document type (e.g. "NDA", "Employment Agreement", "Vendor Contract").',
     'Assess sensitivity: "critical" if PII, financial data, or trade secrets are present; "high" for binding legal agreements; "medium" for internal business documents; "low" for general informational documents.',
@@ -532,7 +532,7 @@ export async function generateFromSpec(
     .join('\n');
 
   const systemPrompt = [
-    'You are a structured document generator for Compose, a professional document workspace.',
+    'You are a structured document generator for Foxit Slides, a professional document workspace.',
     'You generate documents by following a content blueprint exactly.',
     '',
     'RULES:',
@@ -679,7 +679,7 @@ export async function interpretIntent(request: {
   conversationHistory?: { role: 'user' | 'assistant'; content: string }[];
 }): Promise<InterpretIntentResponse> {
   const systemPrompt = [
-    'You are the Compose document editing assistant.',
+    'You are the Foxit Slides document editing assistant.',
     'The user has a document made of blocks (paragraphs, headings, etc.).',
     'They will give you a natural language instruction about how to modify the document.',
     'You must interpret their intent and return precise block update operations.',
@@ -829,7 +829,7 @@ export async function regenerateCard(
   if (context?.theme) contextParts.push(`Theme: ${context.theme}`);
 
   const systemPrompt = [
-    'You are regenerating a single card in a presentation deck for Compose, an intelligent document workspace.',
+    'You are regenerating a single card in a presentation deck for Foxit Slides, an intelligent document workspace.',
     'Preserve the card\'s block structure and variety. Generate new content that improves quality and clarity.',
     'Use diverse block types — do not collapse everything into headings and paragraphs.',
     'Keep the same approximate number of blocks unless the instruction implies otherwise.',

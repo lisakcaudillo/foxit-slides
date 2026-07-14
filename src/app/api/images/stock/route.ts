@@ -5,7 +5,7 @@ import { saveImagesToLibrary, searchLibrary, genericLibraryImages, type LibraryI
 
 // ── /api/images/stock ──────────────────────────────────────────────────────
 //
-// Primary image source at slide generation (Lisa 2026-06-06): free stock
+// Primary image source at slide generation: free stock
 // photos from Pexels/Pixabay. Free, instant, reliably relevant — vs AI gen
 // ($0.04–0.06/image, ~20s, prone to literal/dark output). AI gen stays an
 // explicit opt-in upgrade on the manual image surface, not the auto path.
@@ -86,12 +86,12 @@ function toResultImages(images: LibraryImage[]): ResultImage[] {
     width: image.width,
     height: image.height,
     libraryId: image.id,
-    credit: 'Compose library',
+    credit: 'Foxit Slides library',
     source: 'library' as const,
   }));
 }
 
-/** Keyless fallback over the local pre-seeded library, two tiers (Lisa
+/** Keyless fallback over the local pre-seeded library, two tiers (
  *  2026-06-10): (1) keyword-match the slide topic; (2) if nothing matches, a
  *  generic "suits-all" abstract/shape image so the slide STILL gets a sensible
  *  visual instead of an empty region. Only an empty library returns nothing

@@ -34,7 +34,7 @@ import type {
 import manifestJson from './figma-template-structures.json';
 // Layouts imported from document-studio (converter: scripts/import-ds-layouts.mjs).
 // Merged into the manifest at load so they're first-class selectable layouts, kept
-// in a SEPARATE file so Compose's own figma-template-structures.json stays untouched
+// in a SEPARATE file so Foxit Slides's own figma-template-structures.json stays untouched
 // and the import is fully regenerable. Keys are prefixed `ds-`.
 import dsImportedJson from './ds-imported-layouts.json';
 import comboLayoutsJson from './combo-layouts.json';
@@ -53,7 +53,7 @@ interface ManifestSkin {
    *  (flat = renders truthfully today; gradient/glass/photo may fall back).
    *  `fidelity` = whether the cover we actually render matches Figma. Only
    *  `faithful` covers are offered for generation + the picker (HIDDEN-until-
-   *  faithful gate, Lisa 2026-06-17); `approximation` covers still render in
+   * faithful gate,; `approximation` covers still render in
    *  /internal/structure-preview for QA but never reach a user, because slide 1
    *  is too prominent to ship unfaithful. An approximation returns to the
    *  selectable set once its real (glass/photo/gradient) cover asset lands. */
@@ -104,7 +104,7 @@ interface ManifestLayout {
   /** Imported kind (content|stat|…) for provenance/logging. */
   importedKind?: string;
   /** false → present in the manifest but NOT offered to the planner (quote=FR11,
-   *  media=image-dependent). Undefined on Compose's own layouts = selectable. */
+   *  media=image-dependent). Undefined on Foxit Slides's own layouts = selectable. */
   selectable?: boolean;
   /** Minimum grounded numbers required before this layout may be picked (numeric
    *  imported layouts: stat/chart/diagram). Mirrors NUMERIC_LAYOUTS. */
@@ -129,7 +129,7 @@ interface Manifest {
 }
 
 const manifest = manifestJson as unknown as Manifest;
-// Merge the document-studio imports into the layout set. Compose's own layouts win
+// Merge the document-studio imports into the layout set. Foxit Slides's own layouts win
 // on any key collision (imported keys are `ds-`-prefixed, so there are none).
 Object.assign(manifest.layouts, dsImportedJson as unknown as Record<string, ManifestLayout>);
 // Merge the combo layouts (generateComboLayouts() → combo-layouts.json). Each entry
@@ -147,13 +147,13 @@ for (const [key, combo] of Object.entries(
   };
   DECORATIONS[key] = { shared: combo.decorations };
 }
-// Combos REPLACE the overlapping Figma content layouts (Lisa 2026-07-11): the planner
+// Combos REPLACE the overlapping Figma content layouts: the planner
 // picks combo FAMILIES for content; these legacy layouts are gated OUT of selection
 // (kept in the manifest for back-compat + the 05-content fallback swap).
 for (const k of ['05-content', '03-comparison', '07-timeline', '02-stat', '11-infographic', '04-process', '12-diagram']) {
   if (manifest.layouts[k]) manifest.layouts[k].selectable = false;
 }
-// Gate ALL document-studio (ds-*) layouts out of selection (Lisa 2026-07-11): the
+// Gate ALL document-studio (ds-*) layouts out of selection: the
 // combos are the content system now; the ds-* layouts carry old rough edges (cut-off
 // titles, undifferentiated leads). They stay in the manifest for back-compat + saved
 // decks, and come back as combos, one shape at a time, replace them.
@@ -198,7 +198,7 @@ if (manifest.layouts['combo-quote']) {
 if (manifest.layouts['06-quote']) manifest.layouts['06-quote'].selectable = false;
 // Chrome combos: ALIAS the structural scaffold keys to the house-grid combo geometry
 // so every theme renders the combo LAYOUT — the theme still supplies its own
-// background/gradient/colors/fonts (the combo is the sections, not the design; Lisa
+// background/gradient/colors/fonts (the combo is the sections, not the design;
 // 2026-07-11). Keeps ALL planner structural + stamping logic on the existing keys, so
 // the cover stays force-first, the closing/divider keep their handling, and the agenda
 // still seeds its items from the deck's section titles.
@@ -287,7 +287,7 @@ function voltGradientFor(skinId: string, role: string, group: string | undefined
   return undefined;
 }
 
-// Badge roles render as SQUARE tags, not rounded pills (Lisa 2026-06-17 — "square
+// Badge roles render as SQUARE tags, not rounded pills (— "square
 // tags, no pill"). Radius is dropped at build time regardless of where the
 // decoration is defined (the PILL constant or inline per-skin), so it's uniform
 // across every template. Other rounded shapes (content cards, the CTA button,
@@ -492,7 +492,7 @@ function hexLuminance(hex: string): number {
 
 function styleForSlot(role: string, group: string | undefined, skin: ManifestSkin): SlotStyle {
   // On a DARK-ground theme the muted `sub` color reads as low-contrast for the
-  // cover/closing subtitle (Lisa 2026-07-11: cover text "not seen on the dark
+  // cover/closing subtitle (cover text "not seen on the dark
   // background — it should be lighter"). Brighten the subtitle (`lead`) to the
   // theme's bright ink on dark grounds; light themes keep the muted sub.
   const groundDark = hexLuminance(skin.ground) < 0.25;
@@ -737,7 +737,7 @@ const FIT_WIDTH_RG = new Set(['metric-label:attribution', 'body:attribution-role
 // left. Comparison is a fully-centered two-column layout.
 const CENTERED_BY_LAYOUT: Record<string, Set<string>> = {
   '03-comparison': new Set([
-    // Title + eyebrow are LEFT-aligned like every other interior page (Lisa
+    // Title + eyebrow are LEFT-aligned like every other interior page (
     // 2026-06-17 — "keep it self aligned as the other pages"). The table cells
     // (column headers, criterion, values) stay centered within their columns.
     'RECOMMENDED:', 'metric-label:column-header', 'metric-label:criterion',
@@ -750,7 +750,7 @@ const CENTERED_BY_LAYOUT: Record<string, Set<string>> = {
     'metric-label:milestone-label', 'metric-value:milestone-date', 'body:milestone-desc',
   ]),
   '11-infographic': new Set([
-    // Slide title is LEFT-aligned like every other layout (Lisa 2026-07-13 —
+    // Slide title is LEFT-aligned like every other layout (—
     // the true designs are left-aligned, not centered). Card title/body stay
     // centered under their icon badge.
     'metric-label:card-title', 'body:card-body',
@@ -760,7 +760,7 @@ const CENTERED_BY_LAYOUT: Record<string, Set<string>> = {
   ]),
 };
 
-// Volt's reworked skeletons are LEFT-aligned everywhere (Lisa) — it does NOT use
+// Volt's reworked skeletons are LEFT-aligned everywhere — it does NOT use
 // the centered table/process/diagram treatments above. Only the process step
 // number + rail arrow stay centered (they sit on/in a node). Keyed like
 // CENTERED_BY_LAYOUT but consulted only for skinId === 'volt'.
@@ -791,7 +791,7 @@ const STAT_EYEBROW: ManifestSlot = { role: 'eyebrow-label', x: 72, y: 57, w: 271
 /** One metric cell = value + label, stacked. `group` keeps the fill mapping
  *  ('hero' → scalar fill, 'sub' → array fill) and the per-group styling. No
  *  delta — the change-indicator was a hand-authored slot (not in the Figma
- *  frame) that read as misplaced, so 02-stat is value + label only (Lisa
+ * frame) that read as misplaced, so 02-stat is value + label only (
  *  2026-06-25). The label gap scales with the value size. */
 function statCellSlots(
   group: 'hero' | 'sub',
@@ -883,7 +883,7 @@ export function buildStructureTemplate(
   // (e.g. Volt's reworked skeletons) under perTemplate[skinId]. Prefer it; other
   // skins fall back to the canonical `shared` interior geometry (unchanged).
   // Volt is retired from bespoke per-layout geometry — it now runs on the SHARED
-  // (combo) interior geometry like every offered skin (Lisa 2026-07-13). Its old
+  // (combo) interior geometry like every offered skin. Its old
   // perTemplate skeletons stay in the manifest for back-compat but aren't selected.
   let slots = (skinId === 'volt' ? undefined : layout.perTemplate?.[skinId]) ?? layout.shared ?? [];
   let activeFill = fill;
@@ -965,7 +965,7 @@ export function buildStructureTemplate(
           fontWeight: st.fontWeight,
           ...(gradient ? { gradient } : { color }),
           // An explicit slot.align (imported layouts) wins; otherwise fall back to
-          // Compose's per-layout centered/right maps (its own 12 set no slot.align).
+          // Foxit Slides's per-layout centered/right maps (its own 12 set no slot.align).
           textAlign: slot.align === 'center' || slot.align === 'right' || slot.align === 'left' ? slot.align
             : CENTERED_BY_LAYOUT[layoutKey]?.has(`${slot.role}:${slot.group ?? ''}`) ? 'center'
             : RIGHT_ALIGNED[`${layoutKey}:${skinId}`]?.has(`${slot.role}:${slot.group ?? ''}`) ? 'right' : 'left',
@@ -1052,7 +1052,7 @@ export function buildStructureTemplate(
   // chip's width tracks its label — "DO" is narrow, "IPSUM DOLOR SIT" is wide).
   // Per-instance, so it can't be a static decoration. Painted above the divider
   // (z=dz++) and below the text (z≥100).
-  // Volt keeps its criterion labels FAR-LEFT (Lisa 2026-06-24): its two value
+  // Volt keeps its criterion labels FAR-LEFT: its two value
   // columns sit at x320/x612 with only a ~42px gap, so the shared centered-on-the-
   // divider treatment below would drop each label on top of the left value column.
   // Volt's skeleton already places criterion at x≈84 (a left-margin row header),
@@ -1062,7 +1062,7 @@ export function buildStructureTemplate(
     // The chip + label MUST stay inside the column gap — between the left values
     // (right edge ~392) and the recommended card (left edge 568). A long
     // criterion otherwise widens its chip past 568 and overlaps the card on the
-    // right (Lisa 2026-06-17). Cap the chip half-width to the gap (~78px) and
+    // right. Cap the chip half-width to the gap (~78px) and
     // WRAP a long label onto a second line within that width instead of letting
     // it grow rightward into the card.
     const MAX_CHIP_W = 168; // half-width 84 → spans 396..564, ~4px clear of the
@@ -1091,7 +1091,7 @@ export function buildStructureTemplate(
       tb.y = (chipTopPx / FRAME_H) * 100;
       tb.h = (chipH / FRAME_H) * 100;
       tb.style = { ...tb.style, textAlign: 'center', verticalAlign: 'center' };
-      // NO chip shape behind the criterion label (Lisa 2026-06-17): the chip was
+      // NO chip shape behind the criterion label: the chip was
       // a rounded `rectangle`, but PPTX export flattens it to a hard rectangle —
       // so the pill never survives export. We keep only the centered label (the
       // vertical divider it used to mask is removed in structureDecorations, so
@@ -1108,7 +1108,7 @@ export function buildStructureTemplate(
   // badges stay empty (today's behavior) — never a broken glyph.
   // Generator-chosen icons when filling; otherwise a neutral default set so the
   // icon-badge layouts (e.g. infographic) render WITH pictograms in the blank
-  // preview + any deck the generator didn't supply icons for (Lisa: the
+  // preview + any deck the generator didn't supply icons for (the
   // pictogram library should be utilized, not left as empty badges).
   const iconNames = fill?.['icon:card-badge']
     ?? (decos.some((d) => d.role === 'icon-badge') ? ['target', 'lightbulb', 'rocket'] : undefined);
@@ -1367,7 +1367,7 @@ export interface LayoutSlotSpec {
  *  ends ragged (a word that won't fit wraps early), so usable capacity is a bit
  *  lower — apply a mild realism haircut. The fit's grow-to-fit pass absorbs any
  *  remaining overflow (a box grows DOWN into empty space rather than the text
- *  shrinking/trimming), so the haircut stays gentle (Lisa 2026-06-22). */
+ * shrinking/trimming), so the haircut stays gentle. */
 const WRAP_EFFICIENCY = 0.92;
 export function slotCharCap(w: number, h: number, size: number): number {
   if (!size || size <= 0) return 80;
@@ -1387,7 +1387,7 @@ export function registerRuntimeLayout(key: string, layout: ManifestLayout, decos
 }
 
 /** Image-slot geometry (960-px design points) for an imported image layout, in
- *  manifest order. Empty for layouts with no image slot (Compose's own 12 — their
+ *  manifest order. Empty for layouts with no image slot (Foxit Slides's own 12 — their
  *  images come from the deck-image pipeline, not manifest slots). The deck pipeline
  *  sources one image per slot and places it here (theme paints everything else). */
 export function imageSlotsFor(layoutKey: string, skinId: string): { x: number; y: number; w: number; h: number }[] {
@@ -1455,14 +1455,14 @@ export function describeLayoutSlots(layoutKey: string, skinId: string): LayoutSl
 
 /** The skins offered for GENERATION, manifest order. A skin must be both
  *  `mapped` (Figma-validated interiors) AND have a `faithful` cover — the
- *  HIDDEN-until-faithful gate (Lisa 2026-06-17). An `approximation` cover
+ * HIDDEN-until-faithful gate. An `approximation` cover
  *  (glass/photo/gradient that currently falls back to flat, e.g. Quill /
  *  Chroma-fold / Vellum) is withheld until its real cover asset lands, because
  *  slide 1 is too prominent to ship unfaithful. Approximations still render in
  *  /internal/structure-preview (buildStructureTemplate doesn't filter), so QA
  *  keeps full coverage; they're simply never auto-selected for a generated deck.
  *  An unmapped palette (e.g. Blue) is never offered regardless. */
-// The ONLY skins offered from prompt generation + the theme selection (Lisa
+// The ONLY skins offered from prompt generation + the theme selection (
 // 2026-07-13). Others stay in the manifest for saved-deck back-compat but are not
 // offered. Keep in sync with SELECTABLE_THEME_IDS (themes.ts).
 const OFFERED_SKIN_IDS = new Set(['mono-light', 'volt', 'mono-dark', 'obsidian', 'aperture', 'mubi', 'cosmos', 'cobalt', 'prism', 'velvet', 'solstice', 'nocturne', 'tide', 'mist', 'strata', 'riot', 'verdant', 'midnight-index', 'aurora', 'nebulae', 'northern-lights', 'glasshouse']);
@@ -1474,7 +1474,7 @@ export const STRUCTURE_SKIN_IDS = Object.entries(manifest.templates)
 /** Whether a skin's COVER may receive a full-bleed library image. FALSE for
  *  faithful covers — they are typographic by design (their Figma cover carries
  *  no image), so their cover image-role is effectively 'none' and a photo would
- *  clobber the very design the fidelity gate protects (Lisa 2026-06-17). Only a
+ * clobber the very design the fidelity gate protects. Only a
  *  non-faithful cover (an approximation standing in until its real asset lands)
  *  accepts a library image. Content-slide images (05-content split) are
  *  unaffected — they're safe on every skin. */
@@ -1491,7 +1491,7 @@ export function skinSummary(skinId: string): { id: string; label: string; charac
 
 /** The layout catalogue (key, purpose) for the planner prompt. */
 export function layoutCatalogue(): { key: string; label: string; purpose: string; selectable: boolean; minNumbers?: number; hasImage?: boolean; needsQuote?: boolean }[] {
-  // Compose's own 12 first (fixed order), then any imported `ds-` layouts (label +
+  // Foxit Slides's own 12 first (fixed order), then any imported `ds-` layouts (label +
   // purpose come from the imported entry). Order is cosmetic — the planner picks by
   // purpose; cover-first is enforced separately. `selectable`/`minNumbers` let the
   // planner gate imported layouts (quote/media not offered; stat/chart number-gated).
@@ -1502,7 +1502,7 @@ export function layoutCatalogue(): { key: string; label: string; purpose: string
       key,
       label: l?.label ?? LAYOUT_LABEL[key] ?? key,
       purpose: l?.purpose ?? '',
-      selectable: l?.selectable !== false, // undefined (Compose's own) = selectable
+      selectable: l?.selectable !== false, // undefined (Foxit Slides's own) = selectable
       ...(l?.minNumbers ? { minNumbers: l.minNumbers } : {}),
       ...(l?.hasImage ? { hasImage: true } : {}),
       ...(l?.needsQuote ? { needsQuote: true } : {}),

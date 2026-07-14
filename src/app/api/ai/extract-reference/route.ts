@@ -6,7 +6,7 @@
  * route detects the format, runs the file through Foxit text extraction
  * (Conversion SDK for Office → PDF, then PDF text extraction), and feeds the
  * extracted text to Claude. A second tool call now produces theme tokens
- * (palette + fonts) modelled after Lisa's theme-from-inspiration skill so the
+ * (palette + fonts) modelled after theme-from-inspiration skill so the
  * generated deck can adopt the reference's visual character.
  *
  * Request shapes

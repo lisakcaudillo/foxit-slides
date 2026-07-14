@@ -158,7 +158,7 @@ export async function GET(req: Request) {
     if (s.group === 'closing-title') { fill[s.key] = 'Let’s put it into practice'; continue; }
     if (s.group === 'quote') { fill[s.key] = 'The best retrospectives turn a finished sprint into one concrete change the whole team owns.'; continue; }
     if (s.group === 'cta-label') { fill[s.key] = 'Run your next retro this week'; continue; }
-    if (s.group === 'footer') { fill[s.key] = 'Confidential · Compose 2025'; continue; }
+    if (s.group === 'footer') { fill[s.key] = 'Confidential · Foxit Slides 2025'; continue; }
     if (s.group === 'attribution') { fill[s.key] = 'Alex Rivera'; continue; }
     if (s.group === 'attribution-role') { fill[s.key] = 'VP Product, Contoso'; continue; }
     if (s.group === 'milestone-date') { fill[s.key] = pick(['Discovery', 'Design', 'Build', 'Launch', 'Scale'], s.count); continue; }

@@ -5,7 +5,7 @@
 //
 // The grounding gate (index.ts guards + enforce.ts + the judge `grounded`
 // dimension) keeps emitting fill-in prompts ("Your team's bug-rate data here")
-// because the topic supplied no numbers. Lisa's insight (2026-06-10): those
+// because the topic supplied no numbers. insight (2026-06-10): those
 // fill-in prompts are EXACTLY the questionnaire — they should be collected up
 // front, not rendered as holes. This function reads the planned slides and
 // lists the figures the deck wants, so Clarify can ASK for them.
@@ -13,7 +13,7 @@
 // Pure + defensive: no AI calls, never throws on a malformed plan. Output is
 // ORDERED by priority (the recipes that force fabrication hardest come first)
 // so a magic-first caller can take just the top few — the upfront form must
-// stay light (Lisa's standing rule), so this lists candidates, it does not
+// stay light, so this lists candidates, it does not
 // mandate a heavy questionnaire.
 
 import type { DeckPlan } from './design-types';
@@ -25,7 +25,7 @@ import type { CardBlueprint } from './types';
 export interface DataNeed {
   /** Stable id, unique within the deck (`${slideId}-{kind}-{n}`). */
   id: string;
-  /** Conversational question label (Lisa's microcopy rule — human, not
+  /** Conversational question label (microcopy rule — human, not
    *  corporate). */
   label: string;
   /** Example/hint for the field — what a good answer looks like. */

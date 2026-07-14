@@ -42,9 +42,9 @@ export interface RawSlideGeometry {
 }
 
 /** Tunable thresholds. Defaults from DS + the taste-score spec; per-density and
- *  the exact font/word minimums are Lisa's open decisions (kept parameterized). */
+ * the exact font/word minimums are open decisions (kept parameterized). */
 export interface GeometryThresholds {
-  // NOTE on "ink": Compose freeform blocks are CONTENT-SIZED (the box hugs the
+  // NOTE on "ink": Foxit Slides freeform blocks are CONTENT-SIZED (the box hugs the
   // text → scrollH == clientH), so per-block "coverage vs own box" is always ~1.0
   // and useless here (unlike DS's fixed-height slots). "Ink" is therefore a
   // SLIDE-LEVEL density: Σ block areas ÷ slide area. Advisory only until calibrated.
@@ -55,7 +55,7 @@ export interface GeometryThresholds {
   contrastBody: number;      // WCAG AA normal text
   contrastLarge: number;     // WCAG AA large text (≥ largePx)
   largePx: number;           // font size at/above which "large text" contrast applies
-  fontMinPx: number;         // below → too small (ADVISORY until Lisa fixes the number)
+  fontMinPx: number; // below → too small (ADVISORY until fixes the number)
 }
 
 export const DEFAULT_THRESHOLDS: GeometryThresholds = {
@@ -66,7 +66,7 @@ export const DEFAULT_THRESHOLDS: GeometryThresholds = {
   contrastBody: 4.5,
   contrastLarge: 3.0,
   largePx: 24,
-  fontMinPx: 12, // conservative (Compose text-fit floor). Spec suggests 18 — Lisa's call.
+  fontMinPx: 12, // conservative (Foxit Slides text-fit floor). Spec suggests 18 — call.
 };
 
 export type GeometryCheck =
@@ -190,7 +190,7 @@ export function runDomGeometryGate(
         fix: `${label(b)} runs off the slide edge — reflow it inward to the safe area.`,
       });
     }
-    // font size (ADVISORY until Lisa fixes the minimum)
+    // font size (ADVISORY until fixes the minimum)
     if (b.fontPx > 0 && b.fontPx < t.fontMinPx) {
       f.push({
         check: 'font-size', severity: 'advisory', target: label(b),
@@ -236,7 +236,7 @@ export function runDomGeometryGate(
   }
 
   // slide-level ink density — Σ block areas ÷ slide area (advisory; the per-block
-  // "coverage vs own box" is useless here because Compose blocks are content-sized).
+  // "coverage vs own box" is useless here because Foxit Slides blocks are content-sized).
   const slideArea = Math.max(1, g.slideW * g.slideH);
   const inked = g.blocks.reduce((s, b) => s + Math.max(0, b.w) * Math.max(0, b.h), 0);
   const inkDensity = round2(inked / slideArea);

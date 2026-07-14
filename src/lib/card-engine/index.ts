@@ -1300,7 +1300,7 @@ function frameworkToBlueprint(
     cards: steps.map((step, i) => {
       // SLIDE 0 IS SACROSANCT — always a cover layout, regardless of what
       // the user picked in the layout picker or what the framework's first
-      // step said. Lisa 2026-05-25 generated a deck and saw the title slide
+      // step said. generated a deck and saw the title slide
       // rendered as a `key-metric-quad` with bracketed placeholder tokens
       // ([leads generated], [pipeline value]...) because the layout-picker
       // override fired on index 0. A title slide is a title slide; the
@@ -1330,7 +1330,7 @@ function frameworkToBlueprint(
         blockPlan: [
           {
             type: tpl,
-            // SLIDE 0 IS A CLEAN COVER (Lisa 2026-06-03: data on the title slide
+            // SLIDE 0 IS A CLEAN COVER (data on the title slide
             // is unacceptable unless asked). Force a title + one-line tagline
             // only — no bullets, stats, numbers, or body. Content starts slide 2.
             instruction: isFirst
@@ -1404,13 +1404,13 @@ export async function generateCardTemplate(options: {
 
   if (framework) {
     // Fast path: framework defines the structure, skip classification.
-    // Expertise phase removed (Lisa 2026-06-10): always build from the baseline
+    // Expertise phase removed: always build from the baseline
     // framework blueprint. The domain-skills module is retained on disk but no
     // longer called — the quality lever is layout/visual, not content tailoring.
     blueprint = frameworkToBlueprint(framework, cardCount, layoutVariant, selectedLayouts);
   } else {
     // Organic path (no explicit template): classify then structure.
-    // Expertise phase removed (Lisa 2026-06-10) — always use the flexible
+    // Expertise phase removed — always use the flexible
     // classify→structure path. cardCount flows into both so the classifier is
     // told the target up front AND structureCards enforces it post-hoc (UAT
     // 2026-05-24: Claude overshoots even with the explicit instruction, so the
@@ -1427,7 +1427,7 @@ export async function generateCardTemplate(options: {
   // Metric/stat layouts (key-metric-trio/quad) demand a real number per cell.
   // When the user's TOPIC contains no numbers at all, those layouts force the
   // writer to invent figures ("73%", "240% ROI") — the named anti-pattern in
-  // ai-output-standard.md and Lisa's #1 grounding concern. Downgrade them to the
+  // ai-output-standard.md and #1 grounding concern. Downgrade them to the
   // qualitative icon-grid equivalent so the SAME content renders as real points
   // (force names + descriptions) instead of fabricated percentages. Runs BEFORE
   // planDeck so the recipe/budget the planner assigns stays coherent with the
@@ -1499,7 +1499,7 @@ export async function generateCardTemplate(options: {
     // now only assigns role + provisional imageRole.
     const plan = planDeck(blueprint, '', archetype, []);
     if (plan && plan.slides.length === blueprint.cards.length) {
-      // DESIGN-OWNED IMAGE GATE (Lisa 2026-06-03): the designer decides which
+      // DESIGN-OWNED IMAGE GATE: the designer decides which
       // slides earn an image at plan time, ranked by recipe, under a hard
       // per-deck cap of MAX_DECK_IMAGES (cover + content). One slot is reserved
       // for the cover (the client owns the cover image via its theme's cover
@@ -1620,7 +1620,7 @@ export async function generateCardTemplate(options: {
       // Carry the AI designer's image recommendation through to the client so
       // the auto-image-at-creation flow can use its subject/style hints.
       if (generatedCard?.imageIntent) card.imageIntent = generatedCard.imageIntent;
-      // DESIGN-OWNED IMAGE GATE (Lisa 2026-06-03): the plan ALREADY decided which
+      // DESIGN-OWNED IMAGE GATE: the plan ALREADY decided which
       // slides bear an image (selectImageBudget, ranked + capped at plan time).
       // Use that decision verbatim — do NOT recompute the role from the per-card
       // generator intent here. The client gates image generation on this
@@ -1655,7 +1655,7 @@ export async function generateCardTemplate(options: {
     }).catch((err: unknown) => {
       // Per-card failure: log to console for debugging, build a minimal
       // placeholder card the user can fill in. CRITICAL: never put the
-      // raw error message in user-visible content — Lisa hit a Zod
+      // raw error message in user-visible content — hit a Zod
       // validation error 2026-05-25 that surfaced as `(Generation failed
       // — [{"code":"invalid_value","values":[...]}])` rendered AS THE
       // SLIDE CONTENT. Embarrassing and unactionable. Now the user gets
@@ -1687,7 +1687,7 @@ export async function generateCardTemplate(options: {
   const generatedCards = await Promise.all(generationPromises);
   pipelineLog('generate-done', `${Date.now() - tGen}ms`);
 
-  // DESIGN-OWNED IMAGE GATE (Lisa 2026-06-03): image roles were finalized at
+  // DESIGN-OWNED IMAGE GATE: image roles were finalized at
   // plan time by selectImageBudget (ranked + capped, cover slot reserved). We no
   // longer re-derive them post-generation from the per-card generator intent —
   // that path had no count cap and let the generator over-flag images. The

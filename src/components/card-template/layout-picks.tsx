@@ -4,7 +4,7 @@
  *   1. /editor/slides generation flow (pencil affordance on template tiles)
  *   2. ThumbnailSidebar right-click → "Try different layout" (P1 #6).
  *
- * Per Lisa 2026-05-21 — labels stay GENERIC SHAPE names (Header, Table,
+ *, Table,
  * Bullets, Two columns), not role-specific ones (Quote, Agenda, Takeaways).
  * Each entry maps a user-facing label + preview kind to the underlying
  * card-engine blockTemplate id.
