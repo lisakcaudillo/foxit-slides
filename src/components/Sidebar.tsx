@@ -71,12 +71,14 @@ interface NavLink {
 // still works; redirect lands inside the Foxit Slides panel.
 const NAV: NavLink[] = [
   { href: '/', label: 'Home', Icon: Home, activeWhen: (p) => p === '/' },
-  {
-    href: '/studio',
-    label: 'Studio',
-    Icon: LayoutGrid,
-    activeWhen: (p) => p.startsWith('/studio'),
-  },
+  // Studio is hidden from the nav (unused; its route was removed). Kept here,
+  // commented, so it can be restored without rewiring.
+  // {
+  //   href: '/studio',
+  //   label: 'Studio',
+  //   Icon: LayoutGrid,
+  //   activeWhen: (p) => p.startsWith('/studio'),
+  // },
   {
     // "Slides" opens the Editor itself (a blank slide). The create surface
     // lives at /editor/generate, reached only via +New / +Create.

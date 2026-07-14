@@ -50,12 +50,13 @@ interface NavLink {
 
 const NAV: NavLink[] = [
   { href: '/', label: 'Home', Icon: Home, activeWhen: (p) => p === '/' },
-  {
-    href: '/studio',
-    label: 'Studio',
-    Icon: PencilLine,
-    activeWhen: (p) => p.startsWith('/studio') || p.startsWith('/editor'),
-  },
+  // Studio hidden from the nav (unused; route removed) — mirrors Sidebar.tsx.
+  // {
+  //   href: '/studio',
+  //   label: 'Studio',
+  //   Icon: PencilLine,
+  //   activeWhen: (p) => p.startsWith('/studio') || p.startsWith('/editor'),
+  // },
   // Compare hidden 2026-05-21 — mirrors Sidebar.tsx. Keep code intact.
   // { href: '/compare', label: 'Compare', Icon: CompareIcon, activeWhen: (p) => p.startsWith('/compare') },
 ];
