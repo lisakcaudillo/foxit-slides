@@ -479,4 +479,21 @@ function fill(id,dash){
 fill('m6',false);
 fill('mR',false);
 fill('m7',true);
+
+// Even card heights per row (collapsed) without letting an expanded How? stretch its siblings.
+// align-items:start keeps expansion local; this floors every card in a row to that row's tallest collapsed card.
+function equalizeRows(){
+  document.querySelectorAll('.flow').forEach(function(flow){
+    var cards=[].slice.call(flow.querySelectorAll(':scope > .stage'));
+    if(cards.length<2) return;
+    // measure with all How? closed, remembering which were open
+    var reopen=[];
+    cards.forEach(function(c){var d=c.querySelector('.how');if(d&&d.open){reopen.push(d);d.open=false;} c.style.minHeight='';});
+    var tallest=cards.reduce(function(m,c){return Math.max(m,c.getBoundingClientRect().height);},0);
+    cards.forEach(function(c){c.style.minHeight=Math.ceil(tallest)+'px';});
+    reopen.forEach(function(d){d.open=true;});
+  });
+}
+equalizeRows();
+var eqT;window.addEventListener('resize',function(){clearTimeout(eqT);eqT=setTimeout(equalizeRows,120);});
 </script>
