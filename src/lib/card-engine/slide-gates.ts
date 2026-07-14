@@ -217,7 +217,7 @@ export async function runJudgeAndReviseStage(opts: RunGatesOpts): Promise<GatesR
         };
       };
       // Prose-number FR11: the fact store (cached — the fill pass already
-      // extracted it for this source, so this is a free cache hit) lets us flag
+      // extracted it for this source, so this is a free cache hit) can flag
       // fabricated figures buried in body sentences, which groundNumericFill
       // (metric-value/delta slots only) can't see. Fail-open to [].
       const factSource = `${opts.topic}\n${opts.sourceText ?? ''}`;

@@ -5,9 +5,9 @@
  *
  *   R-4  recolor  → swap the text color to a safe pair based on the block's
  *                   underlying background. If a colored shape sits beneath
- *                   the text at lower z, we pick white on dark fills / dark
+ *                   the text at lower z, it picks white on dark fills / dark
  *                   ink on light fills (WCAG-safe contrast). If no shape is
- *                   underneath, we assume the theme ground and choose the
+ *                   underneath, it assumes the theme ground and choose the
  *                   opposite polarity to the current color.
  *   R-9  restyle  → bump the font weight one step (400 → 500 → 700). Meant
  *                   for L6 (premium feel) where the block reads as too
@@ -16,7 +16,7 @@
  *   R-10 align    → set style.textAlign to `center`. Meant for L4 (structural
  *                   consistency) when a block sits alone in a row and center
  *                   reads more intentional than left. If the block is already
- *                   centered, we leave it (nothing to do).
+ *                   centered, it leaves it (nothing to do).
  *
  * All three run AFTER applyGeometryFixes in slide-gates so they don't fight
  * shrink/remove decisions. All three are pure edits to existing blocks —
@@ -180,7 +180,7 @@ export function applyTextStyleFixes(card: Card, directives: TextStyleDirective[]
         nextColor = safeTextColorFor(beneath.fill);
       } else if (parseHex(style.color)) {
         // No shape beneath and an explicit hex color: flip polarity. Only when
-        // we know what "flip" means — never manufacture a color from thin air.
+        // it knows what "flip" means — never manufacture a color from thin air.
         nextColor = flipTextColor(style.color);
       } else {
         // Unknown current color OR undefined — skip. The renderer probably

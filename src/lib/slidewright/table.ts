@@ -3,7 +3,7 @@
 // A PowerPoint table is a graphicFrame carrying an <a:tbl>: a <a:tblGrid> of
 // column widths, then one <a:tr> per row, each holding exactly gridCols <a:tc>.
 // Merges are expressed by a gridSpan/rowSpan on the anchor cell plus hMerge/vMerge
-// placeholder cells for the covered positions — we compute those from a merge list
+// placeholder cells for the covered positions — it computes those from a merge list
 // so the caller just passes a full text grid + which rectangles are merged.
 
 import { escapeText, escapeAttr } from './xml';

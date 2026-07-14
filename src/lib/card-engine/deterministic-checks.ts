@@ -161,7 +161,7 @@ function isContainerAffordance(s: FreeformBlock & Box): boolean {
  *  the deterministic version of the "empty floating shape" clause in the VLM's
  *  L7/C8 (clean composition). Only rectangle/circle count (line/arrow can't hold
  *  text); shapes without a container affordance (sharp-cornered filled bars,
- *  panels, accent lines) are excluded so we don't fight legitimate decoration
+ *  panels, accent lines) are excluded so it doesn't fight legitimate decoration
  *  like Gantt timeline bars; very small shapes and full-bleed backgrounds are
  *  also excluded. */
 export function checkEmptyShape(card: Card): string[] {

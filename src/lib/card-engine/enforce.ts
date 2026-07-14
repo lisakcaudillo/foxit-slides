@@ -250,7 +250,7 @@ export function stripUngroundedStats<T extends unknown[]>(blocks: T, topic: stri
 }
 
 /**
- * Deterministic quality check for one generated card. Catches the failures we
+ * Deterministic quality check for one generated card. Catches the failures it
  * can measure: paragraph-density (the "make me read" problem), bracket
  * placeholders, evaluative-adjective headings, and fabricated (ungrounded)
  * figures. Returns feedback the regeneration loop appends to the prompt.

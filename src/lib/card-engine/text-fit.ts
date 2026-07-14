@@ -77,7 +77,7 @@ function wrapLines(text: string, fontStack: string, fontSize: number, maxW: numb
 
 // ── Per-role legible floors (INTERIM — flag for design to confirm as tokens) ──
 // floor = max(0.6 × design size, role's minimum legible size). Below the floor
-// we SHORTEN rather than shrink into illegibility.
+// it SHORTEN rather than shrink into illegibility.
 const ROLE_MIN_LEGIBLE: Record<string, number> = {
   title: 26,
   'metric-value': 40,
@@ -96,7 +96,7 @@ export function roleFloor(role: string, designSize: number): number {
   // Floor = the higher of (0.6× design, role legible min) — but NEVER above the
   // design size (the fit only ever shrinks or shortens; it must not grow font).
   // If the legible min EXCEEDS the design size, the slot's own design size is
-  // already below the proposed legible token → flagged for design; here we clamp
+  // already below the proposed legible token → flagged for design; here it clamps
   // to design so the fit doesn't make it worse.
   return Math.min(designSize, Math.max(Math.round(designSize * 0.6), absMin));
 }

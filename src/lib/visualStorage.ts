@@ -10,7 +10,7 @@
  * rendered image alongside.
  *
  * The image itself is stored as a URL — either a remote CDN url returned
- * by the generation backend, or a `data:` URL for local results. We never
+ * by the generation backend, or a `data:` URL for local results. It nevers
  * store raw image bytes (binary in localStorage is wasteful and base64
  * blows up the 5–10 MB quota fast).
  *

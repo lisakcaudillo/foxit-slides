@@ -129,7 +129,7 @@ function heroBoundsForTemplate(template: LayoutTemplate): ContentBounds | null {
 // RIGHT (covers right/hero/background/top/undefined). The recipe's
 // `textSafeZone` is NOT trusted here because it can disagree with the actual
 // placed image side (e.g. split-image's safe-zone says 'left' while the
-// product archetype anchors the image left); we trust the image box instead.
+// product archetype anchors the image left); it trusts the image box instead.
 const REGION_GUTTER = 4; // % breathing room between text and image edge.
 
 type CardImageRole =
@@ -141,7 +141,7 @@ function imageAwareBounds(card: Card): ContentBounds | null {
 
   // Behind-text roles: image fills the card at z=0; text stays full-area.
   // Legibility is a scrim/contrast concern, not a geometry one — leave text
-  // bounds to the caller (null) so we don't constrain a full-card image.
+  // bounds to the caller (null) so it doesn't constrain a full-card image.
   if (role === 'full-bleed' || role === 'duotone' || role === 'texture' || role === 'background') {
     return null;
   }
@@ -218,7 +218,7 @@ const BLOCK_HEIGHT_DEFAULTS: Record<string, number> = {
 // rendered text. Keeping these tied to the TextContent variant styles in
 // FreeformLayer.tsx: heading = 2.4rem/1.15, subheading = 1.4rem/1.3,
 // paragraph = 1rem/1.6. Char-width estimates are conservative (Inter is
-// fairly compact; we err on the side of overestimating line count).
+// fairly compact; it errs on the side of overestimating line count).
 const TEXT_METRICS = {
   heading:    { fontPx: 38, lineHeightPx: 44, charWidthPx: 21 },
   subheading: { fontPx: 22, lineHeightPx: 29, charWidthPx: 12 },
@@ -237,7 +237,7 @@ const TEXT_METRICS = {
  * Predict the vertical footprint a text block needs based on its content
  * length and container width. Heading wrap in hero/split-layout columns
  * (narrower than full-width) was causing overlap because the previous
- * char-only estimator didn't know the container was half-width. Now we
+ * char-only estimator didn't know the container was half-width. Now it
  * estimate chars-per-line from the actual width and multiply by line height.
  */
 function contentAwareHeight(
@@ -458,7 +458,7 @@ function structuredItemCount(card: Card): number {
 // (each former `return null` becomes a fall-through to the shape-detection tail).
 
 /** Pick the best template. The Design Intelligence Layer recipe wins when
- *  present and valid (with safe image-gating); otherwise we fall back to the
+ *  present and valid (with safe image-gating); otherwise it falls back to the
  *  card.layout + structured-block-shape detection (today's behavior). */
 // Full-canvas compositions place content across the WHOLE slide and reserve no
 // region for an image., P3a lock-the-box): a slide is EITHER
@@ -737,7 +737,7 @@ export function cardToUnified(card: Card, theme?: TemplateTheme): Card {
   // a light/dark text color against the scrim's known tone (WCAG ≥ 4.5:1 via
   // lib/contrast.ts → pickTextColor). The converter deliberately keeps text
   // full-area for these roles — constraining geometry here would fight the
-  // scrim. We can't cheaply sample real image pixels client-side, which is
+  // scrim. it can't cheaply sample real image pixels client-side, which is
   // exactly why the scrim (a controlled, known background) is the mechanism
   // rather than per-pixel image analysis. The `slideDesign` field is preserved
   // verbatim on the returned card (see the spread below) so the renderer can
@@ -852,7 +852,7 @@ export function cardToUnified(card: Card, theme?: TemplateTheme): Card {
   const minH = (b: FreeformBlock) =>
     b.type === 'shape' || b.type === 'icon' ? 3 : 6;
   // When the loop drops a block, the section heading right above it may
-  // already be in `clamped`. Pop trailing subheadings so we don't leave
+  // already be in `clamped`. Pop trailing subheadings so it doesn't leave
   // an orphan "Section Title" with no body underneath —
   // flagged a slide where Block 4's subheading rendered but its
   // paragraph had been dropped, producing a heading hanging at the
@@ -1165,7 +1165,7 @@ function layoutFromPiece(
   );
   const cells = smart?.cells ?? [];
   if (cells.length === 0) {
-    // Nothing to grid — fall back to the standard stack so we never render
+    // Nothing to grid — fall back to the standard stack so it never renders
     // an empty grid (or throw).
     return blocksToFreeform(blocks, bounds);
   }

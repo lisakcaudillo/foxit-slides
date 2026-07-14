@@ -39,7 +39,7 @@ const DEFAULT_FRAMEWORK_ID = 'product-launch';
  *  Never throws, never returns null — falls back to a sensible default so the
  *  planner always has a category vocabulary to work from. */
 export function resolveFramework(opts: { frameworkId?: string; prompt?: string }): ResolvedFramework {
-  // 1. Explicit wizard pick wins (the user told us the domain).
+  // 1. Explicit wizard pick wins (the user specified the domain).
   if (opts.frameworkId) {
     const explicit = FRAMEWORKS.find((f) => f.id === opts.frameworkId);
     if (explicit) return { framework: explicit, source: 'explicit' };

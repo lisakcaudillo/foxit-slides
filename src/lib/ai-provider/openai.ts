@@ -134,7 +134,7 @@ export class OpenAIProvider implements AIProvider {
 
   constructor(apiKey?: string) {
     // Endpoint / auth / deployment behind env so Azure OpenAI is a config flip,
-    // not a second implementation. When AZURE_OPENAI_ENDPOINT is set we use the
+    // not a second implementation. When AZURE_OPENAI_ENDPOINT is set it uses the
     // AzureOpenAI client (api-key header + api-version + deployment name);
     // otherwise the standard OpenAI client (optionally pointed at a custom
     // base URL). No code change is needed to move OpenAI-direct → Azure.

@@ -168,7 +168,7 @@ export async function judgeSlideImage(
       required: ['criteria', 'overall', 'verdict'],
     };
     // Vision via image_url with a base64 data URL at detail:'high' — low's 512²
-    // would miss the very defects we care about (overlap, clipped/illegible text).
+    // would miss the very defects it cares about (overlap, clipped/illegible text).
     const openai = new OpenAI({ apiKey });
     const completion = await openai.chat.completions.create({
       model: process.env.OPENAI_VISION_MODEL || 'gpt-4o',

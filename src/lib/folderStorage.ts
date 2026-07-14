@@ -125,7 +125,7 @@ export function moveFolder(folderId: string, newParentId: string | null): boolea
   const idx = folders.findIndex((f) => f.folderId === folderId);
   if (idx < 0) return false;
 
-  // Cycle check — walk up from newParentId and refuse if we ever land on folderId.
+  // Cycle check — walk up from newParentId and refuse if it evers land on folderId.
   if (newParentId) {
     const byId = new Map(folders.map((f) => [f.folderId, f]));
     let cursor = byId.get(newParentId);

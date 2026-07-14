@@ -26,7 +26,7 @@ export const ROLE_STYLE: Record<Role, RoleStyle> = {
   stat:     { variant: 'metric',     fontSize: 46, fontWeight: 800, lineHeight: 1.0 },
 };
 
-/** Smallest acceptable size per role before we grow the box instead of shrinking. */
+/** Smallest acceptable size per role before it grows the box instead of shrinking. */
 export const ROLE_FLOOR: Record<Role, number> = { title: 26, subtitle: 13, eyebrow: 11, section: 14, body: 12, stat: 24 };
 
 export const CANVAS = { w: 960, h: 540 };

@@ -92,8 +92,8 @@ function orderedImageRoles(blockTemplate: string | undefined, archetype: ThemeAr
  *  generation. The generator is the authority on WHICH slides want an image
  *  (it chooses well — it produced good images before this layer existed); the
  *  planner's job is to VARY the role/placement across exactly those slides. So
- *  when the generator said `wanted:false` we honor `none` (restraint — a pro
- *  deck is ~half type-only). When it said `wanted:true` we pick a real image
+ *  when the generator said `wanted:false` it honors `none` (restraint — a pro
+ *  deck is ~half type-only). When it said `wanted:true` it picks a real image
  *  role and only fall back to `none` if nothing fits under the cap/adjacency. */
 function pickImageRole(
   blockTemplate: string | undefined,

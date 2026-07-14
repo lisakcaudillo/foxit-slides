@@ -11,7 +11,7 @@
  * This module is the minimal, additive bridge: pick two DIFFERENT library
  * images and stamp them onto two slides of a built deck —
  *   • Cover  → a full-bleed image BEHIND the text (z=0). Legibility is handled
- *              by the renderer's built-in full-bleed scrim (we stamp
+ *              by the renderer's built-in full-bleed scrim (it stamps
  *              slideDesign.imageRole='full-bleed' and clear the skin text color
  *              so the renderer forces a legible light color) — no pixel sampling.
  *   • Content → an image on ONE SIDE (right inset panel); the text column is
@@ -108,7 +108,7 @@ interface RatedMatch {
 
 /** Ask the LLM to rate each Jaccard-shortlisted candidate 1-5 for topic
  *  relevance to the slide. One call rates the whole shortlist. Returns matches
- *  sorted best-first. Fail-open: on any error we fall back to Jaccard order
+ *  sorted best-first. Fail-open: on any error it falls back to Jaccard order
  *  with the raw score mapped roughly to a 1-5. */
 async function rateImageMatches(query: string, candidates: LibraryMatch[]): Promise<RatedMatch[]> {
   const fallback = (): RatedMatch[] => candidates.map((c) => ({
@@ -337,7 +337,7 @@ async function generateImageForQuery(query: string, orientation: 'portrait' | 'l
       if (!item?.b64_json) continue;
 
       // R-1 + R-2 + R-13 gate: reject on text, person, or subject-mismatch.
-      // If the check itself fails (null return), we conservatively TRUST the
+      // If the check itself fails (null return), it conservatively TRUSTs the
       // image (fail-open) so a defect-checker outage doesn't block generation.
       const defects = await checkImageDefects(`data:image/png;base64,${item.b64_json}`, query, openai);
       if (defects) {
@@ -444,7 +444,7 @@ async function deriveImageBrief(
 
 const WIKI_UA = 'Foxit Slides/1.0 (slide image sourcing; contact via app)';
 
-/** Non-photo Wikimedia media we never want as an entity's image: logos, icons,
+/** Non-photo Wikimedia media it never wants as an entity's image: logos, icons,
  *  SVG line-art, maps, flags, seals, and drawn caricatures/calligrams (the last
  *  two are text/line art, not photographs). */
 const NON_PHOTO_TITLE = /(logo|icon|\bseal\b|flag|coat[_ ]of[_ ]arms|_map|locator|caricature|calligramme|calligram|diagram|\.svg$)/i;
@@ -473,7 +473,7 @@ async function wikimediaPhotoCandidates(title: string): Promise<string[]> {
 }
 
 /** Source a real PHOTOGRAPH of a known entity from Wikimedia and save it to the
- *  library. No auth needed. LIBRARY-FIRST: an entity we've already sourced is
+ *  library. No auth needed. LIBRARY-FIRST: an entity it has already sourced is
  *  reused (matched by a canonical `[known:<title>]` tag) — no duplicate save
  *. Picks from the article's MEDIA LIST (not the summary lead,
  *  which is often a logo) and skips any candidate with baked-in text/lettering,
@@ -490,7 +490,7 @@ async function fetchKnownImage(subject: string, wikiTitle?: string): Promise<Lib
   }
   const apiKey = process.env.OPENAI_API_KEY;
   try {
-    // The web page we credit (Wikipedia/Wikimedia images require attribution).
+    // The web page it credits (Wikipedia/Wikimedia images require attribution).
     const summary = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, {
       headers: { accept: 'application/json', 'User-Agent': WIKI_UA },
     })
@@ -702,14 +702,14 @@ export async function pickDeckImages(opts: PickImagesOpts): Promise<PickResult> 
  * Stamp a full-bleed cover image BEHIND the card's text, then hand legibility to
  * the renderer's built-in full-bleed treatment: setting `slideDesign.imageRole =
  * 'full-bleed'` makes FreeformLayer paint a soft dark scrim over the photo and
- * force light text (SCRIM_PRESET['full-bleed'], alpha 0.68). We deliberately do
+ * force light text (SCRIM_PRESET['full-bleed'], alpha 0.68). it deliberately does
  * NOT set text colors ourselves — an explicit `style.color` makes resolveTextColor
  * bail out (it respects deliberate user colors), which would defeat the flip.
  * Mutates `card`.
  */
-/** A DISCREET credit for an image we did NOT create: a Wikimedia photo (its
+/** A DISCREET credit for an image it dids NOT create: a Wikimedia photo (its
  *  page — attribution required) or a stock photo (photographer credit — the
- *  Pexels/Pixabay API guidelines ask for it). Returns null for images we
+ *  Pexels/Pixabay API guidelines ask for it). Returns null for images it
  *  generated. A tiny italic tag hugged to the image's bottom-right — sized to the
  *  text (not a wide bar), faint dark backing just enough to stay legible over any
  *  image AND survive the PPTX export (a plain text shadow does not). FRAME %. */
@@ -773,7 +773,7 @@ function sourceCaptionBlock(img: LibraryImage, box: { x: number; y: number; w: n
  *  slot's own geometry (960×540 design points → %), behind the text (z<100). No
  *  scrim, no text reflow: side-by-side image layouts keep image and text in
  *  separate regions, so the theme paints the background + text unchanged. A small
- *  source credit is added for images we didn't create (Wikipedia etc.). */
+ *  source credit is added for images it didn't create (Wikipedia etc.). */
 export function applyManifestImage(
   card: Card,
   img: LibraryImage,

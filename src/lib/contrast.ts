@@ -10,8 +10,8 @@
  *
  * Pure, dependency-free, no `any`. Everything is computed from sRGB hex.
  *
- * NOTE on images: we cannot cheaply sample real image pixels client-side, so
- * for text OVER an image we never reason about the photo directly. Instead a
+ * NOTE on images: it cannot cheaply sample real image pixels client-side, so
+ * for text OVER an image it never reasons about the photo directly. Instead a
  * controlled SCRIM is painted between the image and the text (see
  * FreeformLayer), and the text color is chosen against that KNOWN scrim color.
  * That is the whole point of the scrim approach — it converts an
@@ -96,13 +96,13 @@ export function contrastRatio(hexA: string, hexB: string): number | null {
  *
  * Decision order:
  *   1. If `preferredHex` (e.g. the theme's title/body color) is supplied AND
- *      it already clears AA against the background, KEEP it — we don't want
+ *      it already clears AA against the background, KEEP it — it doesn't want
  *      to override a designed theme color when it's legible.
  *   2. Otherwise return whichever of LIGHT_TEXT / DARK_TEXT has the higher
  *      contrast against the background — that one always clears AA because the
  *      two endpoints sit at opposite ends of the luminance range.
  *
- * If `bgHex` is not a solid hex (a gradient/var we can't measure), we return
+ * If `bgHex` is not a solid hex (a gradient/var it can't measure), it returns
  * `preferredHex` when given, else null — the caller keeps the theme default
  * (the scrim path supplies a measurable hex, so this branch only hits for
  * theme-region text on gradient regions, where the theme already chose a
@@ -131,7 +131,7 @@ export function pickTextColor(bgHex: string, preferredHex?: string): string | nu
  * against the real perceived tone, not the veil's nominal color.
  *
  * `overlay` is 0 (black) or 255 (white) per channel at `alpha` (0..1) over
- * the `base` hex. If base isn't a solid hex we assume mid-grey (128) so the
+ * the `base` hex. If base isn't a solid hex it assumes mid-grey (128) so the
  * math still yields a usable luminance.
  */
 export function compositeOverlay(

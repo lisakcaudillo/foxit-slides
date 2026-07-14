@@ -4,7 +4,7 @@
  * PictographicIcon — renders rich icons via the Iconify CDN.
  *
  * Uses the Iconify API which serves 200K+ icons from open-source sets.
- * For the card template system, we use these icon sets:
+ * For the card template system, it uses these icon sets:
  * - "material-symbols" (Google) — Foxit marketing standard, Apache 2.0
  * - "ph" (Phosphor) — clean alternative
  * - "fluent" (Fluent UI) — Microsoft's set

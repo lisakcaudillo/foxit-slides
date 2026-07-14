@@ -92,7 +92,7 @@ export function rankLibraryBySimilarity(
 }
 
 /** Fetch the full image-library index from /api/library/list. The route
- *  returns `{ images }`; we return the array (empty on any failure so the
+ *  returns `{ images }`; it returns the array (empty on any failure so the
  *  UI degrades to "empty library" rather than throwing). */
 export async function fetchLibrary(): Promise<LibraryImageMeta[]> {
   try {

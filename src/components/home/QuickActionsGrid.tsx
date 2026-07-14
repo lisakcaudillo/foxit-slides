@@ -42,7 +42,7 @@ interface QuickAction {
 // row 2 reads naturally with the kit's gap and spacing).
 // "Compare Documents" tile hidden from Quick Actions
 // /compare route + page stay intact for future revival. Commented out so
-// the diff stays minimal when we bring it back.
+// the diff stays minimal when it brings it back.
 const QUICK_ACTIONS: QuickAction[] = [
   // {
   //   title: 'Compare Documents',

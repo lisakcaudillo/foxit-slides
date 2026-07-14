@@ -44,7 +44,7 @@ function relativeTime(iso: string): string {
 }
 
 function deckCategory(deck: StoredCardDeck): string {
-  // Mirrors the home Recent tiles' muted line: category · when. We only have a
+  // Mirrors the home Recent tiles' muted line: category · when. it only has a
   // loose category signal; fall back to "Deck".
   const c = (deck.template as { category?: string }).category;
   return (typeof c === 'string' && c.trim()) || 'Deck';

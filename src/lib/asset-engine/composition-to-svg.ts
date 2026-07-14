@@ -84,7 +84,7 @@ function opacityAttr(opacity: number | undefined): string {
 }
 
 // ── Gradient parsing ──────────────────────────────────────────────────────────
-// A shape `fill` may be a CSS linear-gradient string. We parse it into an SVG
+// A shape `fill` may be a CSS linear-gradient string. It parses it into an SVG
 // <linearGradient> placed in <defs> and reference it by id. Mirrors the parser
 // in lib/pptxExport.ts (kept independent — no cross-module coupling).
 
@@ -174,7 +174,7 @@ function extractColor(fragment: string): string | null {
 
 // ── Defs accumulator ──────────────────────────────────────────────────────────
 // Gradients, clip paths, drop-shadow filters, and arrowhead markers all live in
-// <defs>. We accumulate them with stable, collision-free ids per render.
+// <defs>. It accumulates them with stable, collision-free ids per render.
 
 class Defs {
   private items: string[] = [];
@@ -471,7 +471,7 @@ function renderShape(
 
 /** Render a `callout` shape kind is not in the union; callouts come through the
  *  CalloutBlock at the card level, but in the freeform/asset model a callout is
- *  represented as a shape variant. We treat a shape whose content is set and
+ *  represented as a shape variant. It treats a shape whose content is set and
  *  whose kind is rectangle as a candidate bubble — but per spec the asset editor
  *  also surfaces a dedicated callout. Provide a helper for an explicit callout
  *  bubble (rounded-rect + optional tail) so the serializer can render one when a
@@ -515,7 +515,7 @@ function renderCalloutBubble(
 
 const FIGMA_PICTOGRAM_PREFIX = 'figma:';
 
-/** A drawable SVG element opening tag we recolor (everything else passes through). */
+/** A drawable SVG element opening tag it recolors (everything else passes through). */
 const DRAW_EL_RE = /<(path|rect|circle|ellipse|line|polyline|polygon)\b[^>]*?>/gi;
 
 /** Does this element opening tag paint with a non-`none` fill? */
@@ -624,7 +624,7 @@ function renderIcon(block: FreeformIconBlock, rect: PxRect): string {
   if (figmaIcon) {
     // Inline the manifest body inside its own viewBox, scaled+centered into the
     // block rect via a nested <svg> (which maps the icon's viewBox onto the
-    // rect for us). Ink recolored to the block color (whole-icon = single).
+    // rect for the caller). Ink recolored to the block color (whole-icon = single).
     const { svg: recolored } = recolorPictogramSvg(figmaIcon.body, 'single', {
       primary: color,
     });

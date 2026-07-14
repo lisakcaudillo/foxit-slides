@@ -51,7 +51,7 @@ interface ManifestSkin {
   mapped?: boolean;
   /** Cover-fidelity tag. `treatment` = the cover's intended visual treatment
    *  (flat = renders truthfully today; gradient/glass/photo may fall back).
-   *  `fidelity` = whether the cover we actually render matches Figma. Only
+   *  `fidelity` = whether the cover it actually renders matches Figma. Only
    *  `faithful` covers are offered for generation + the picker (HIDDEN-until-
    * faithful gate,; `approximation` covers still render in
    *  /internal/structure-preview for QA but never reach a user, because slide 1
@@ -1093,7 +1093,7 @@ export function buildStructureTemplate(
       tb.style = { ...tb.style, textAlign: 'center', verticalAlign: 'center' };
       // NO chip shape behind the criterion label: the chip was
       // a rounded `rectangle`, but PPTX export flattens it to a hard rectangle —
-      // so the pill never survives export. We keep only the centered label (the
+      // so the pill never survives export. It keeps only the centered label (the
       // vertical divider it used to mask is removed in structureDecorations, so
       // nothing crosses the text). `chipW`/`chipH`/`chipTopPx` above still size +
       // center the LABEL box in its row.

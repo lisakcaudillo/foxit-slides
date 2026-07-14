@@ -14,7 +14,7 @@
 import type { Card, TemplateTheme } from '@/types/card-template';
 import { extractDomGeometryInBrowser, runDomGeometryGate, type GeometryReport, type GeometryThresholds } from './dom-geometry';
 
-// puppeteer has no bundled types we import here; treat the dynamic module loosely.
+// puppeteer has no bundled types it imports here; treat the dynamic module loosely.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type AnyBrowser = any;
 

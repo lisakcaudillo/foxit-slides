@@ -244,7 +244,7 @@ async function buildBlueprint(
   if (!parsed.success) {
     return { error: `Blueprint output failed schema validation: ${parsed.error.message}` };
   }
-  // Hard-cap to an explicit user target if the model overshot. We never pad
+  // Hard-cap to an explicit user target if the model overshot. it never pads
   // when it returns fewer — fabricating grounded slides would violate FR11.
   if (explicit && parsed.data.slides.length > target) {
     return { ...parsed.data, slides: parsed.data.slides.slice(0, target) };

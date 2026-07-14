@@ -181,7 +181,7 @@ const glassCard: React.CSSProperties = {
 
 // Reusable +/- stepper button style (used by the Slides stepper inside the
 // prompt-card bottom toolbar). Hover background is applied via onMouseEnter
-// rather than CSS :hover so we don't have to ship another keyframe.
+// rather than CSS :hover so it doesn't have to ship another keyframe.
 const stepperBtn: React.CSSProperties = {
   width: '22px', height: '22px', borderRadius: '6px',
   border: 'none', background: 'transparent',
@@ -292,7 +292,7 @@ function cleanCoverTopic(raw: string): string {
   t = t.replace(/^\s*(create|generate|make|build|design|write|draft)\b[^.]*?\b(on|about|for|covering|regarding)\s+/i, '');
   // De-slug kebab-cased names ("q1-marketing-results" → "q1 marketing results").
   if (/^[a-z0-9]+(-[a-z0-9]+)+$/.test(t)) t = t.replace(/-/g, ' ');
-  // Cap to a short clause so the art-director sparse-check fires and we never
+  // Cap to a short clause so the art-director sparse-check fires and it nevers
   // feed a truncated paragraph as a subject.
   if (t.length > 70) {
     const cut = t.slice(0, 70);
@@ -1041,8 +1041,8 @@ export default function CardEditorPage() {
   const committedRef = useRef(false);
   const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Deck identity for persistence. Set when:
-  //   (a) URL contains ?deck=<id> on mount and we successfully load that deck
-  //   (b) generation completes and we mint a new id for the fresh deck
+  //   (a) URL contains ?deck=<id> on mount and it successfully loads that deck
+  //   (b) generation completes and it mints a new id for the fresh deck
   // Once set, theme changes auto-resave so reopening the URL restores it.
   const [deckId, setDeckId] = useState<string | null>(null);
   // Mirror of deckId for use inside the fire-and-forget auto-image callback,
@@ -1086,7 +1086,7 @@ export default function CardEditorPage() {
 
   // Load existing deck from ?deck=<id> URL param. Hydrates both the cards
   // and the saved theme. Runs once on mount; if the id is unknown (deck
-  // was deleted, or shared from another browser) we silently fall through
+  // was deleted, or shared from another browser) it silently falls through
   // to the wizard. Theme application on the editor route is handled by
   // ThemeProvider — calling setActiveTheme here flows through to the same
   // CSS-var injection path as the in-editor ThemeButton.
@@ -1295,7 +1295,7 @@ export default function CardEditorPage() {
 
   // Auto-generate trigger for the "Use" hover action. Fires handleGenerate
   // once when framework + prompt are both populated by the mount effect.
-  // Ref ensures we never re-fire on subsequent state changes.
+  // Ref ensures it never re-fires on subsequent state changes.
   const autoGenRef = useRef(false);
   useEffect(() => {
     if (!autoGenRef.current) return;
@@ -1314,7 +1314,7 @@ export default function CardEditorPage() {
   }, [framework, prompt, generating, fileHandoffPending]);
 
   // Clear the pending-generation flag once generation starts (generating flips
-  // true) or a deck exists. Safety timeout covers an empty/invalid handoff so we
+  // true) or a deck exists. Safety timeout covers an empty/invalid handoff so it
   // never hang on the overlay with nothing generating.
   useEffect(() => {
     if (template || generating) {
@@ -1332,7 +1332,7 @@ export default function CardEditorPage() {
   // the first save below. Bails if the persisted themeId already matches so
   // the effect doesn't loop on its own state writes.
   //
-  // We regenerate template.theme alongside themeId on every switch. The
+  // It regenerates template.theme alongside themeId on every switch. The
   // CSS-variable layer (var(--theme-page-bg), var(--theme-title-color),
   // var(--theme-link-color), etc.) updates reactively via ThemeProvider —
   // but the legacy `template.theme.accentColors[i]` array (used by
@@ -1361,7 +1361,7 @@ export default function CardEditorPage() {
 
   // Debounced content auto-save. CardEditor calls this whenever the user
   // edits a block, changes a layout, duplicates, deletes, or regenerates
-  // a card. We update the template cache and persist 600ms after the last
+  // a card. It updates the template cache and persist 600ms after the last
   // edit so a burst of typing collapses into one localStorage write.
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleCardsChange = useCallback(
@@ -1453,7 +1453,7 @@ export default function CardEditorPage() {
   }, [template]);
 
   // File ▸ Open — import a .pptx as a NEW deck (role-mapped editor cards) and open
-  // it. Triggers the hidden file input below; on a chosen file we POST it to
+  // it. Triggers the hidden file input below; on a chosen file it POST it to
   // /api/pptx/import, wrap the returned cards in a deck under the active theme,
   // persist, and navigate to it.
   const pptxInputRef = useRef<HTMLInputElement>(null);
@@ -1577,7 +1577,7 @@ export default function CardEditorPage() {
   const suggested = prompt.trim().length > 5 ? suggestFramework(prompt) : null;
 
   // Audience + tone chips: live LLM-backed suggestions tailored to the
-  // current prompt. Debounced so we don't fire on every keystroke; aborts
+  // current prompt. Debounced so it doesn't fire on every keystroke; aborts
   // any in-flight call when the prompt changes again. Empty prompts clear
   // the chips so a stale Try-Me suggestion never sticks around.
   useEffect(() => {
@@ -1870,7 +1870,7 @@ export default function CardEditorPage() {
     // concept becomes a stock SEARCH QUERY (Pexels/Pixabay) — free, instant, and
     // reliably relevant, vs AI gen ($/slow/prone to literal/dark output). The
     // route returns the same shape as /api/ai/generate-image. If no stock match
-    // (or no API key), we SKIP the image rather than silently spend on AI — AI
+    // (or no API key), it SKIP the image rather than silently spend on AI — AI
     // generation stays an explicit opt-in on the manual image surface.
     try {
       const res = await fetch('/api/images/stock', {
@@ -1891,7 +1891,7 @@ export default function CardEditorPage() {
 
       // Preload/decode the image so it only appears on the card once it's ready
       // to paint — no pop-in. Resolve on error too so a failed load never hangs;
-      // the !img.src guard above already ensures we have a src to attempt.
+      // the !img.src guard above already ensures it has a src to attempt.
       await new Promise<void>((resolve) => {
         const im = new window.Image();
         im.onload = () => resolve();
@@ -2207,7 +2207,7 @@ export default function CardEditorPage() {
       // Source-mode binary docs were already extracted ONCE above through the
       // native-OOXML path (`/api/source-grounded/extract`), which preserves the
       // document's heading/list/table structure. `effectiveFileContent` (declared
-      // before this try) carries that structured text into the body below. We do
+      // before this try) carries that structured text into the body below. it does
       // NOT re-extract here: a second pass through the PDF-flattening route used to
       // shadow and discard the OOXML result, grounding decks on the worse copy.
       const res = await fetch('/api/ai/generate-cards', {
@@ -2395,7 +2395,7 @@ export default function CardEditorPage() {
               // refresh hydrates from storage.
               //
               // Unified-format adapter (Phase A, 2026-05-21): the generator
-              // still emits structured `columns[].blocks`; we convert each
+              // still emits structured `columns[].blocks`; it converts each
               // card to the unified freeform model here at the seam so the
               // editor sees ONE block format end-to-end.
               const themedSource: CardTemplate = { ...event.template, themeId: themeForGeneration.id };
@@ -2663,7 +2663,7 @@ export default function CardEditorPage() {
             const event = JSON.parse(dataMatch[1]);
             if (event.type === 'pipeline' && event.stage === 'blueprint-ready') {
               // Skeleton: title from deckTitle, one shell per slide with the
-              // brief title (we don't have brief titles yet, just slide count).
+              // brief title (it doesn't have brief titles yet, just slide count).
               const skeletons = Array.from({ length: event.slideCount }, (_, i) => ({
                 id: `card-shell-${i}`,
                 layout: 'single' as const,
@@ -2809,7 +2809,7 @@ export default function CardEditorPage() {
 
   // Reveal gate (Decision A + typewriter). While `overlayUp` (from generate-start
   // until the judge's verified `done`) show ONLY the loading screen. The deck is
-  // SAVED at fill-complete underneath for safety, but we do NOT render it here, so
+  // SAVED at fill-complete underneath for safety, but it does NOT render it here, so
   // the end user never sees the unverified deck AND the per-slide typewriter plays
   // FRESH the moment the overlay lifts (rather than uselessly under the overlay).
   // `pendingGen` covers the pre-generation mount before `overlayUp` is set.

@@ -156,7 +156,7 @@ export interface DeckPlan {
   deckTitle: string;
   /** DECK GOAL — one sentence stating what this deck must ACHIEVE for its
    *  audience. Named explicitly by Phase 0 (holistic view) so every slide
-   *  choice can be justified against it. This is the "what do we want to
+   *  choice can be justified against it. This is the "what do it wants to
    * present?" question asked. */
   deckGoal: string;
   /** DECK ARC — the ordered narrative-role sequence the plan agent designed
@@ -639,14 +639,14 @@ Return via the report_deck_plan tool.`;
 }
 
 // ─── Swap-layout fixer ──────────────────────────────────────────────────────
-// When the judge flags a slide as too empty (or wrong-layout), we hand the
+// When the judge flags a slide as too empty (or wrong-layout), it hands the
 // case BACK to the plan agent — the single owner of "which layout fits what
 // content."
 //   1. It uses the same SLIDE_AFFORDANCES catalogue the plan agent uses.
 //   2. It re-reads the ACTUAL text produced (word count + hero + callouts).
 //   3. It excludes the current layout from candidates (never picks itself).
 // The LLM chooses among the candidates using content-fit reasoning. There is
-// NO heuristic fallback — if the LLM errors or picks invalid, we THROW. The
+// NO heuristic fallback — if the LLM errors or picks invalid, it THROW. The
 // caller (slide-gates → swapLayoutForNative) catches, logs, and lets the
 // writer-rebuild path handle it. No silent heuristic picks — everything must
 // be reasoned or the swap doesn't happen.
@@ -681,7 +681,7 @@ function capacityBand(words: number): 'thin' | 'small' | 'med' | 'large' | 'xlar
 export interface SwapLayoutInput {
   /** Deck prompt — same one the original plan agent saw. */
   prompt: string;
-  /** The plan entry we are re-planning (its focus, hero, callouts, angle). */
+  /** The plan entry it is re-planning (its focus, hero, callouts, angle). */
   planEntry: SlidePlan;
   /** Actual text the writer produced, joined by spaces. Used for word-count
    *  and to give the picker something concrete to reason about. */
@@ -978,7 +978,7 @@ function variantForRole(role: string): FreeformTextVariant {
 
 /** Fill-key lookup. Prefers the slot's exact key `role:group:idx`; falls back
  *  to `role:group` for a writer that emitted the bare form (kept lenient
- *  because the writer prompt exposes the full key but we don't want a
+ *  because the writer prompt exposes the full key but it doesn't want a
  *  key-format bump to blank a slide). */
 function contentFor(fill: StructureFill, key: string, role: string, group?: string): string {
   const v = fill[key];
@@ -1241,11 +1241,11 @@ function librarySrc(img: LibraryImage): string {
   return `/library/images/${img.filename}`;
 }
 
-/** Deck-level state: image ids already placed on prior slides, so we don't
+/** Deck-level state: image ids already placed on prior slides, so it doesn't
  *  reuse the same library image across the deck. */
 interface DeckImageState {
   used: Set<string>;
-  /** Cost gate: cap fresh gpt-image-1 calls per deck. Beyond this, we hide
+  /** Cost gate: cap fresh gpt-image-1 calls per deck. Beyond this, it hides
    *  unfilled image slots rather than run up the bill. */
   genBudget: number;
   /** Rolling generation-cost tally in dollars (for logging). Medium quality
@@ -1691,7 +1691,7 @@ export async function generateNativeDeck(opts: {
   // (per-generation state, no reset needed).
   const rejectedBriefByPos = new Map<number, string>();
   // Track the LAST brief actually used per slide (needed so imageReject knows
-  // what to reject when we rebuild). Populated inside buildOneSlide right
+  // what to reject when it rebuilds). Populated inside buildOneSlide right
   // after the brief is computed.
   const lastBriefByPos = new Map<number, string>();
 
@@ -1835,7 +1835,7 @@ export async function generateNativeDeck(opts: {
     console.log(`[native-deck] slide ${deckPos}/${total - 1} · captured=#${planEntry.capturedIndex} · specs=${specs.length} filled=${filledKeys} blocks=${card.freeform?.length ?? 0} · charts=${fillResult.charts.length}/${dataSpecs.charts.length} tables=${fillResult.tables.length}/${dataSpecs.tables.length} · fit shrunk=${shrunk} trimmed=${trimmed} overflow=${overflow}${feedback?.length ? ' (revised)' : ''}`);
 
     // ── SEARCH METADATA (backend-only, not rendered on the slide) ────────
-    // Stamped from what we already know at this point: the plan agent's
+    // Stamped from what it already knows at this point: the plan agent's
     // narrative role + angle + audience + tone, the layout id, and simple
     // keyword/entity extraction from the slide's actual text. Powers the
     // cross-deck slide-search UX and the plan agent's silent prior-decks
@@ -1874,9 +1874,9 @@ export async function generateNativeDeck(opts: {
 
     // ── SWAP-LAYOUT CALLBACK ────────────────────────────────────────────
     // Owned by the plan agent. When the judge flags a slide as too empty (or
-    // wrong shape), we ask the plan agent — the single owner of "which
+    // wrong shape), it asks the plan agent — the single owner of "which
     // layout fits what content" — to re-pick a layout for THIS one slide
-    // given the ACTUAL text we produced. Then rebuild the slide against the
+    // given the ACTUAL text it produceds. Then rebuild the slide against the
     // new layout via the existing buildOneSlide.
     const swapLayoutForNative = async (deckPos: number, judgeReason: string): Promise<Card | null> => {
       const planEntry = plan[deckPos];
@@ -1944,7 +1944,7 @@ export async function generateNativeDeck(opts: {
         // Block ids emitted by applyCapturedImage:
         //   photo: `ff-native-img-${role}-${group ?? 'x'}`
         //   icon:  `ff-native-icon-${role}-${group ?? 'x'}`
-        // We only reject photos (icons are LLM-picked already).
+        // it only rejects photos (icons are LLM-picked already).
         const m = blockId.match(/^ff-native-img-([^-]+)-(.+)$/);
         if (!m) continue;
         const [_full, role, groupOrX] = m;

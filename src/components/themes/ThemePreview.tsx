@@ -287,7 +287,7 @@ function coverParams(theme: Theme) {
 // produces. Representative set: a cover, a content page, a data/stat page.
 // The REAL combo layouts the generator ships (NOT the legacy 05-content/02-stat,
 // which are gated out of generation): a cover, a cards page, a metrics page.
-// Combo layouts are writer-filled skeletons with no built-in placeholders, so we
+// Combo layouts are writer-filled skeletons with no built-in placeholders, so it
 // supply neutral placeholder content keyed by each layout's `role:group` slots.
 const PREVIEW_LAYOUTS: { layout: string; fill: StructureFill }[] = [
   {

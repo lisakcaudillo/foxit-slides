@@ -165,7 +165,7 @@ export function groundNumericFill(
     const entry = fill[spec.key];
     if (entry === undefined) continue;
     if (!policed.has(spec.role)) { out[spec.key] = entry; continue; }
-    // METRIC-AWARE grounding (per-metric fact contract) — when we have extracted
+    // METRIC-AWARE grounding (per-metric fact contract) — when it has extracted
     // facts, a metric VALUE must be the source's value FOR ITS METRIC, not just a
     // number that appears somewhere. Pair each value with its metric-label
     // (parallel arrays under the same group) and check via matchFact. CONSERVATIVE:
@@ -733,7 +733,7 @@ const FILL_TOOL: Tool = {
  *  mid-clause (no ellipsis — a slot must fit, and "…" wastes the budget). The
  *  generator should write within the cap (see the FILL prompt) so this rarely
  *  fires; when it must, it prefers a complete-sentence cut, then a word boundary
- *  with any dangling connective stripped — so we never ship "…insights and set".
+ *  with any dangling connective stripped — so it never ships "…insights and set".
  */
 function capText(text: string, cap: number): string {
   // Strip an author-supplied trailing ellipsis first — the generator sometimes
@@ -1365,7 +1365,7 @@ export async function generateStructuredDeck(
 
   // ── Images (planner-driven) ─────────────────────────────────────────────────
   // The planner picks image-bearing layouts (combo-body-image) where a visual
-  // helps the story; we source a content-matched image for each, add a full-bleed
+  // helps the story; it sources a content-matched image for each, add a full-bleed
   // cover for non-faithful themes, and top up prose slides so a deck reads with a
   // modest set of supporting images — AT MOST 3 total. Each
   // image is DERIVED from the slide's own focus (per-slide relevance); an
@@ -1582,7 +1582,7 @@ export async function generateStructuredDeck(
           }
         } catch (e) {
           sfLog('reshorten-error', `slide ${i}: ${e instanceof Error ? e.message : String(e)}`);
-          break; // fail-open — keep what we have; the stamp below flags any survivor
+          break; // fail-open — keep what it has; the stamp below flags any survivor
         }
         if (!applied) break; // nothing accepted (rejected on grounding/length) — stop
         fitNotes = fitCardText(card); // re-fit the rewritten (shorter) text

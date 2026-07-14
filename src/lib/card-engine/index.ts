@@ -622,7 +622,7 @@ export interface DeckContext {
  * "the state of remote work in 2026" read as numeric: the planner then chose a
  * stat layout and the writer was forced to fabricate figures the topic never
  * supplied (the JUDGE rejected them on `grounded`, the loop exhausted, and the
- * slide shipped broken). We strip those incidental forms first, then require a
+ * slide shipped broken). It strips those incidental forms first, then require a
  * remaining digit OR an explicit quantity word.
  *
  * Single source of truth: the per-card grounding signal AND the planner's
@@ -1054,7 +1054,7 @@ function applyDesign(card: Card, design: SlideDesign | undefined, blockTemplate?
   }
 
   // Real image role from the planner — but an image is only EARNED when the
-  // generator actually emitted a visual concept for this slide. We deliberately
+  // generator actually emitted a visual concept for this slide. It deliberatelies
   // do NOT fall back to the slide heading: depicting the title literally
   // produced clip-art (a slide "Norwegian Text Recognition Accuracy" became a
   // literal magnifier-on-Norwegian-text image). The planner proposes which
@@ -1188,9 +1188,9 @@ function validateBlockStructure(
 
   // B2b — LOOSENED. Layout is now content-led: the converter composes the slide
   // from whatever structured content exists (smart-layout cells OR bullet items),
-  // gated by count, with a graceful fallback. So we no longer re-roll on an exact
+  // gated by count, with a graceful fallback. So it no longer re-rolls on an exact
   // block-shape mismatch (that fought the content-led decision). For the templates
-  // that imply MULTIPLE items, we only insist the writer produced SOME structured
+  // that imply MULTIPLE items, it only insists the writer produced SOME structured
   // multi-item block — smart-layout, bullet-list, or toggle, interchangeably (any
   // of them composes). Everything else passes.
   switch (expectedTemplate) {
@@ -1683,12 +1683,12 @@ export async function generateCardTemplate(options: {
   });
 
   // allSettled is no longer needed because every promise above resolves
-  // (failures are caught into a fallback card). We still await to assemble.
+  // (failures are caught into a fallback card). it still awaits to assemble.
   const generatedCards = await Promise.all(generationPromises);
   pipelineLog('generate-done', `${Date.now() - tGen}ms`);
 
   // DESIGN-OWNED IMAGE GATE: image roles were finalized at
-  // plan time by selectImageBudget (ranked + capped, cover slot reserved). We no
+  // plan time by selectImageBudget (ranked + capped, cover slot reserved). It nos
   // longer re-derive them post-generation from the per-card generator intent —
   // that path had no count cap and let the generator over-flag images. The
   // plan's selection is authoritative; assembly just uses it.

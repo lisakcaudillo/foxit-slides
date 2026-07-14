@@ -4,7 +4,7 @@
  * Implements §8 of `docs/requirements/design-intelligence-layer-spec.md` and
  * the LOCKED decisions in §13:
  *
- *   1. SILENT auto-fix + a subtle, non-blocking review dot. No "we fixed N"
+ *   1. SILENT auto-fix + a subtle, non-blocking review dot. No "it fixeds N"
  *      summary modal.
  *   2. Tier B (VLM) is OPT-IN — a "Polish deck" action + auto only on
  *      low-confidence slides. NOT always-on.
@@ -86,7 +86,7 @@ export const VlmCritiqueSchema = z.object({
 export type VlmCritique = z.infer<typeof VlmCritiqueSchema>;
 
 // ── Loop control ───────────────────────────────────────────────────────────
-/** Max deterministic fix iterations per slide before we stop and flag. The
+/** Max deterministic fix iterations per slide before it stops and flag. The
  *  Tier-A checks are idempotent fixed-points (a fix never re-creates the issue
  *  it resolved), so in practice one pass settles; the cap is a hard guarantee
  *  the loop can NEVER spin. */
@@ -144,7 +144,7 @@ function blockHasContent(block: CardBlock): boolean {
 /** Whether the fixing checks may safely rewrite this card's blocks. The
  *  generated path always emits a single column (`columns: [{ blocks }]`), and
  *  `writeBlocks` collapses to one column — so writing back is lossless ONLY for
- *  single-column cards. For the rare multi-column card we keep the FLAG but skip
+ *  single-column cards. For the rare multi-column card it keeps the FLAG but skip
  *  the mutation (never silently drop columns 2+). */
 function canRewriteBlocks(card: Card): boolean {
   return (card.columns?.length ?? 0) <= 1;
@@ -165,7 +165,7 @@ function structuredBlocks(card: Card): CardBlock[] {
 /** Approximate the rendered "word load" of a card — body words across
  *  paragraphs + smart-layout bodies + bullets. Heading/label words excluded
  *  (they're short and high-priority). Used by the density + overflow proxies.
- *  Server-side we cannot measure pixels, so this is an honest text-length proxy
+ *  Server-side it cannot measure pixels, so this is an honest text-length proxy
  *  against the recipe budget — flag-leaning, not a real geometric overflow. */
 function bodyWordLoad(blocks: CardBlock[]): number {
   let n = 0;
@@ -192,7 +192,7 @@ function bodyWordLoad(blocks: CardBlock[]): number {
 }
 
 /** A loose "budget ceiling" in body words derived from the recipe budget.
- *  bodyMaxWords applies per text region; we scale by the number of body-bearing
+ *  bodyMaxWords applies per text region; it scales by the number of body-bearing
  *  regions (paragraphs + cells + bullets) so multi-cell layouts get headroom. */
 function budgetCeiling(budget: ContentBudget | undefined, blocks: CardBlock[]): number | null {
   if (!budget || typeof budget.bodyMaxWords !== 'number') return null;
@@ -219,8 +219,8 @@ interface CheckResult {
 
 /** placeholder leakage — `[bracketed]` tokens, or an image block with empty
  *  src. AUTO-FIX: strip obvious bracket tokens from text blocks (regeneration
- *  is heavy — for MVP we clean + flag rather than re-run the realizer). Empty
- *  image src is FLAG-only (the user-placeholder image path is legitimate and we
+ *  is heavy — for MVP it cleans + flag rather than re-run the realizer). Empty
+ *  image src is FLAG-only (the user-placeholder image path is legitimate and it
  *  must not nuke a user's empty frame). */
 function checkPlaceholder(card: Card): CheckResult {
   const blocks = structuredBlocks(card);
@@ -271,7 +271,7 @@ function checkPlaceholder(card: Card): CheckResult {
 
   const canFix = foundBracket && canRewriteBlocks(card);
   const nextCard: Card = canFix ? writeBlocks(card, fixedBlocks) : card;
-  // Bracket leakage is auto-cleaned when we can safely rewrite (resolved).
+  // Bracket leakage is auto-cleaned when it can safely rewrite (resolved).
   // Empty image src is always flag-only.
   const resolved = canFix && !foundEmptyImage;
   return {
@@ -290,7 +290,7 @@ function checkPlaceholder(card: Card): CheckResult {
 
 /** hierarchy — no heading, or multiple level-1 headings on a card. AUTO-FIX:
  *  demote extra H1s to H2 (keeps the first as the slide title). A missing
- *  heading is FLAG-only (we won't fabricate a title). */
+ *  heading is FLAG-only (it won't fabricate a title). */
 function checkHierarchy(card: Card): CheckResult {
   const blocks = structuredBlocks(card);
   const headings = blocks.filter((b): b is Extract<CardBlock, { type: 'heading' }> => b.type === 'heading');
@@ -352,7 +352,7 @@ function checkHierarchy(card: Card): CheckResult {
 }
 
 /** empty / degenerate slide — a card with no real content blocks at all.
- *  FLAG-only (high) — we never fabricate content. */
+ *  FLAG-only (high) — it never fabricates content. */
 function checkEmpty(card: Card): CheckResult {
   const blocks = structuredBlocks(card);
   const hasContent = blocks.some(blockHasContent);
@@ -369,10 +369,10 @@ function checkEmpty(card: Card): CheckResult {
 }
 
 /** density imbalance — body word load far over/under the recipe budget.
- *  AUTO-FIX (over): only when SAFE — we already truncate at the budget during
+ *  AUTO-FIX (over): only when SAFE — it already truncates at the budget during
  *  generation (enforceContentBudgets), so by critique time content is at/under
  *  budget; an over-budget reading here means the budget regions disagree with
- *  the actual layout. We FLAG rather than truncate again (double-truncation
+ *  the actual layout. It FLAG rather than truncate again (double-truncation
  *  risks cutting meaning). Under-budget is FLAG-only (med) — never invent. */
 function checkDensity(card: Card): CheckResult {
   const blocks = structuredBlocks(card);
@@ -408,7 +408,7 @@ function checkDensity(card: Card): CheckResult {
   return { card, issue: null };
 }
 
-/** overflow — server-side we cannot measure rendered pixels, so this is a
+/** overflow — server-side it cannot measure rendered pixels, so this is a
  *  text-length proxy: a single body region that blows far past its per-region
  *  budget. FLAG-only and honest about being best-effort (the real overflow
  *  reflow lives in the client renderer). */
@@ -438,7 +438,7 @@ function checkOverflow(card: Card): CheckResult {
 }
 
 /** widow/orphan — a lone single-word trailing bullet, or a one-word last
- *  paragraph. Genuinely render-dependent; server-side we approximate by
+ *  paragraph. Genuinely render-dependent; server-side it approximates by
  *  flagging a single-word bullet/list item. FLAG-only (low). */
 function checkWidow(card: Card): CheckResult {
   const blocks = structuredBlocks(card);
@@ -463,7 +463,7 @@ function checkWidow(card: Card): CheckResult {
 
 /** contrast — for text rendered OVER a behind-text image/region, verify the
  *  resolved text color clears WCAG AA. The renderer already forces light text
- *  on a scrim over behind-text imagery, so this is mostly a VERIFY: we confirm
+ *  on a scrim over behind-text imagery, so this is mostly a VERIFY: it confirms
  *  the scrim-forced LIGHT_TEXT clears AA against a dark scrim, and FLAG only the
  *  rare case where a theme region (no scrim) can't reach AA with either text
  *  endpoint. Reuses contrast.ts. */

@@ -35,7 +35,7 @@ const STYLE_GROUP = (role: string): 'title' | 'body' | 'other' =>
   role === 'title' ? 'title' : role === 'body' || role === 'subtitle' ? 'body' : 'other';
 
 /** Canonical section-title size (px on the 960×540 canvas). Source decks carry a
- *  per-slide author size on every title; for a CONSISTENT deck we ignore those and
+ *  per-slide author size on every title; for a CONSISTENT deck it ignores those and
  *  give every title this one size. Autofit still shrinks a genuinely over-long title.
  *  ONLY title-role placeholders are affected — body/other text keeps its source size. */
 const TITLE_PX = 36;
@@ -217,7 +217,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
   const toAlign = (a?: string): 'left' | 'center' | 'right' | undefined =>
     a === 'ctr' ? 'center' : a === 'r' ? 'right' : a === 'l' ? 'left' : undefined;
 
-  // ── colors: we deliberately do NOT reproduce the source's theme colors/shades.
+  // ── colors: it deliberately does NOT reproduce the source's theme colors/shades.
   //    Keep only AUTHOR-literal colors (srgbClr); theme refs (schemeClr) are left
   //    undefined so OUR theme colors the text — never the source's exact palette. ──
   const literalColor = (solidFill: any): string | undefined => {
@@ -227,7 +227,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
 
   // ── OUR decoration system: the Quartz "Editorial" accent family (the approved
   //    pilot — accent/editorial/*, bound to ink + accent tokens, recolors across
-  //    modes). Geometry from the Figma tiles (480×270 = half of 960×540). We apply
+  //    modes). Geometry from the Figma tiles (480×270 = half of 960×540). It applies
   //    the accent roles relative to the imported content slots; the source's own
   //    decorations are NOT reproduced. Accent-colored bits use the `accent`. ──
   const ourDecorations = (blocks: FreeformBlock[], zBase: number): FreeformShapeBlock[] => {
@@ -301,7 +301,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
     const blocks: FreeformBlock[] = [];
     const counters: Record<string, number> = {};
     // NOTE: the source's decorative shapes/bars/fills are intentionally NOT imported
-    // (we don't reproduce their skin). We keep only the content role slots, then add
+    // (it doesn't reproduce their skin). It keeps only the content role slots, then add
     // OUR own decorations below.
     const phs = collectPH(slideDoc);
     const tables = collectTables(slideDoc);
@@ -312,9 +312,9 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
       (p) => !p.isPic && !['image', 'table', 'date', 'footer', 'slide-number'].includes(p.role) && (p.text?.length ?? 0) > 0,
     ).length;
     if (isCover && coverIdx < 0) coverIdx = cards.length;
-    let droppedFullBleed = false; // a full-bleed image we skipped — may belong in a side band
+    let droppedFullBleed = false; // a full-bleed image it skippeds — may belong in a side band
     for (const ph of phs) {
-      // Capture the deck date even on slides where we drop the footer, so the title
+      // Capture the deck date even on slides where it drops the footer, so the title
       // slide can show it.
       if (ph.role === 'date' && ph.text && !deckDate) deckDate = ph.text;
       // The date + deck-name footer is title-slide furniture — drop it on every other

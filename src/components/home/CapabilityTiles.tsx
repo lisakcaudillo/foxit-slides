@@ -8,7 +8,7 @@
  * included.
  *
  * Each tile pairs a static first-frame (`*Still`) shown at rest with a
- * SMIL-animated preview (`*Anim`) that runs on hover/focus. We remount
+ * SMIL-animated preview (`*Anim`) that runs on hover/focus. It remounts
  * the animated SVG on each activation via `key="play"` so SMIL restarts
  * from frame 0 — same trick the kit uses.
  *

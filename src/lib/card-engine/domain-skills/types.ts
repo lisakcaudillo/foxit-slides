@@ -24,7 +24,7 @@ import type { DeckCategoryPlan } from '../deck-planning';
 // A question the expert needs answered to plan well. Becomes the clarify
 // "plan-gap" lens. `suggestionKind` controls how AI suggestions render under the
 // field: 'starter' = real example answers; 'format-hint' = format only (used for
-// data/number questions so we never propose fabricated figures — FR11).
+// data/number questions so it never proposes fabricated figures — FR11).
 export const PlanGapSchema = z.object({
   question: z.string(),
   type: z.enum(['text', 'select']),

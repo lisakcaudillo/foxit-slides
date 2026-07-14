@@ -18,7 +18,7 @@
  *
  * These patch the EXISTING card (no re-fill). All are safe on the FIXED
  * skeleton: font size stays within a ceiling; position moves stay within a
- * small window; and we abort rather than push things into overlap.
+ * small window; and it aborts rather than push things into overlap.
  */
 import type { Card, FreeformBlock } from '@/types/card-template';
 import { fitCardText } from './text-fit';
@@ -125,7 +125,7 @@ export function applyGeometryFixes(card: Card, directives: FixDirective[]): bool
       }
     } else if (d.change === 'rebalance' || d.change === 'move') {
       // R-6. Constrained position nudge. Direction inferred from the VLM's
-      // reason text; abort if we can't tell what direction (never guess).
+      // reason text; abort if it can't tell what direction (never guess).
       // Move ≤ 8% horizontally / 6% vertically per pass. Clamp to slide
       // bounds. Abort if the target position would overlap another text
       // block (shapes/images ignored — they're usually background).

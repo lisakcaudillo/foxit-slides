@@ -2,7 +2,7 @@
 //
 // A slide master defines reusable, named placeholders (title/body/pic/…) each with
 // a position, size, and default text format. A slide binds content to a placeholder
-// by name and inherits that geometry + format. We emit a matching <p:ph type idx>
+// by name and inherits that geometry + format. It emits a matching <p:ph type idx>
 // on the master, the layout, and the slide so PowerPoint links them (idx must be
 // identical across all three — the one real correctness rule, per the PRD).
 //
@@ -19,7 +19,7 @@ const A_NS = 'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"';
 const R_NS = 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
 const P_NS = 'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"';
 
-/** The placeholder kinds we support (a subset of ST_PlaceholderType). */
+/** The placeholder kinds it supports (a subset of ST_PlaceholderType). */
 export type PlaceholderType = 'title' | 'ctrTitle' | 'subTitle' | 'body' | 'pic' | 'tbl' | 'chart' | 'media';
 
 /** A named placeholder on a master: geometry (inches) + default text format. */

@@ -2,7 +2,7 @@
  * /api/internal/geometry-gate — run the DETERMINISTIC DOM-geometry gate over a
  * POSTed deck and return the per-slide reports (overflow / overlap / off-canvas /
  * contrast / font / ink-density + deterministic fix instructions). Internal only.
- * No LLM — pure measurement of the real headless render. Lets us prove the gate
+ * No LLM — pure measurement of the real headless render. Can prove the gate
  * on an existing deck without regenerating.
  */
 import { NextResponse } from 'next/server';

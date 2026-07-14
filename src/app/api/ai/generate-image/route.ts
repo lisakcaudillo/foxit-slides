@@ -128,7 +128,7 @@ function resolveStyle(style: StyleId | undefined, type: 'diagram' | 'photo' | un
 
 /** Resolve quality — explicit wins; otherwise the style's default tier.
  *  'standard' maps to gpt-image-1's 'medium' (the API doesn't have a tier
- *  literally named "standard"; we use the term in the schema so users see
+ *  literally named "standard"; it uses the term in the schema so users see
  *  Standard / High in the UI instead of Medium / High). */
 function resolveQuality(
   q: 'standard' | 'high' | undefined,

@@ -13,7 +13,7 @@
  * mode and returned as a synthesized tool_use block). Multi-tool / tool-result
  * round-trips are intentionally unsupported — the generator stays on OpenAI.
  *
- * Canonical wire format is Anthropic-shaped (see types.ts). We translate:
+ * Canonical wire format is Anthropic-shaped (see types.ts). It translates:
  *   system            → systemInstruction.parts[].text
  *   messages[].role   → 'user' | 'model'   (assistant → model)
  *   text block        → { text }
@@ -34,7 +34,7 @@ import type {
 
 /** Default judge model — a STABLE, GA, PINNED, vision-capable tier. Pinned (not
  *  a `-latest` alias) and GA (not a Preview) so the calibrated judge doesn't
- *  drift or 404 under us. gemini-2.5-pro / -flash are closed to new API keys, and
+ *  drift or 404. gemini-2.5-pro / -flash are closed to new API keys, and
  *  the 3.x Pro tier is Preview-only (Google retires those) — so current-gen GA
  *  Flash is the right stable pick for a reproducible grader. Override with
  *  GEMINI_JUDGE_MODEL (e.g. gemini-3.1-pro-preview for a sharper eye + recalibrate). */

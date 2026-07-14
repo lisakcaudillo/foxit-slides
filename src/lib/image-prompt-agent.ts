@@ -12,7 +12,7 @@
 //   • ENHANCE ONLY WHEN SPARSE. A rich prompt is sent through untouched so
 //     power users and already-detailed AI subjects aren't second-guessed.
 //   • The ~1-2s Claude call is acceptable — better prompts mean fewer
-//     regenerations, which also lets us run cheaper quality tiers.
+//     regenerations, which also can run cheaper quality tiers.
 //   • Graceful degradation: any failure (no API key, timeout, bad JSON)
 //     falls back to the original prompt. The image call never blocks on it.
 //

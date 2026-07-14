@@ -6,14 +6,14 @@
  * the same visual identity she sees in the theme picker preview, just
  * dialed *way* down so it reads as breathing room rather than wallpaper.
  *
- * No opt-in field on Theme. We just delegate to CoverArt — every theme
+ * No opt-in field on Theme. it just delegates to CoverArt — every theme
  * that defines its own art gets one in the workspace, themes whose
  * CoverArt returns null (none currently, but the door is open) just
  * render no overlay.
  *
  * Opacity tuning: ~35-40% of the cover-slide strength. CoverArt's
  * internal opacities were authored for a small slide-preview card at
- * full strength; behind a full-size card stack we want them barely
+ * full strength; behind a full-size card stack it wants them barely
  * perceptible so the cards stay the focal point. The wrapper opacity
  * multiplies through to all child SVG fills/strokes uniformly.
  */

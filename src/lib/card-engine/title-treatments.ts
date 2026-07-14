@@ -40,7 +40,7 @@ import { TITLE_TREATMENTS, type CoverTier, type TitleTreatment } from './design-
 // type contract carries no cross-module import); re-exported here for
 // convenience so consumers can import everything title-treatment from one file.
 // Full d1 ∪ d3 union (de-duplicated). "Full now, curate later" — reviews
-// these live, then we cut the weak ones. `TITLE_TREATMENTS` order = swap cycle:
+// these live, then it cuts the weak ones. `TITLE_TREATMENTS` order = swap cycle:
 //   anchor            d1·01 / d3·1 — bookish flagship (eyebrow+rule+italic accent+byline)
 //   drop-cap          d1·03        — oversized serif initial sets the headline
 //   chapter-divider   d1·05        — big numeral + "Chapter Three" kicker + hairline

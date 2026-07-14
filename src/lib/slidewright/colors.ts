@@ -1,7 +1,7 @@
 // Foxit Slidewright — color + fill XML.
 //
 // OOXML colors are bare 6-digit hex (no '#') inside <a:srgbClr val="..."/>. A '#'
-// makes PowerPoint drop the color. Fills come in three flavors we support: solid,
+// makes PowerPoint drop the color. Fills come in three flavors it supports: solid,
 // none, and a linear gradient (<a:gradFill>). Alpha maps to <a:alpha> (per-mille).
 
 import { fracToPerMille } from './emu';

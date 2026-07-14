@@ -32,7 +32,7 @@ export interface LibraryImage {
   height: number;
   createdAt: string;
   /** Attribution for images NOT created by us (e.g. a Wikipedia photo): the web
-   *  page we sourced it from + a short label. Absent on images we generated —
+   *  page it sourceds it from + a short label. Absent on images it generateds —
    *  those need no credit. Drives the small "Source: …" caption on the slide. */
   sourceUrl?: string;
   sourceLabel?: string;

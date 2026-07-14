@@ -444,7 +444,7 @@ export default function EditorToolPanel({
 
   if (!isOpen) return null;
 
-  // Filter out the old esign tier — we render the interactive one instead
+  // Filter out the old esign tier — it renders the interactive one instead
 
   return (
     <>

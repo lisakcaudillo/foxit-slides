@@ -5,7 +5,7 @@
  *
  * Foxit Slides is a read-only viewer: the interactive link EDITOR popover and
  * hover bubble are never shown (FreeformLayer runs with interactive=false).
- * We keep only the pure helpers the renderer needs — file-name inference and
+ * It keeps only the pure helpers the renderer needs — file-name inference and
  * the slide-reference type — and expose no-op components so the render layer
  * compiles without the full editing panel.
  */

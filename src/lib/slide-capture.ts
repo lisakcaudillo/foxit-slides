@@ -1,7 +1,7 @@
 /**
  * slide-capture — turn a rendered slide DOM node into a PNG.
  *
- * This is the bitmap source for the VLM quality gate. We capture the SAME
+ * This is the bitmap source for the VLM quality gate. It captures the SAME
  * FreeformLayer the editor renders (via SlideStage), so the judge grades the
  * real pixels the user will see — not a server-rebuilt approximation. The
  * standard doc names this the cost-effective path ("client html-to-image …
@@ -68,7 +68,7 @@ export async function captureElementToPng(
     // skipFonts: html-to-image otherwise tries to read `cssRules` off every
     // stylesheet to inline @font-face — which THROWS a SecurityError on
     // cross-origin sheets (Google Fonts <link>), aborting the whole capture and
-    // leaving image-bearing slides unjudged. We don't need embedded webfonts for
+    // leaving image-bearing slides unjudged. it doesn't need embedded webfonts for
     // a visual-quality judgement (layout/overlap/legibility read fine in the
     // fallback face); skipping them makes the capture reliable on every slide.
     skipFonts: true,

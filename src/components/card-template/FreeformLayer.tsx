@@ -128,7 +128,7 @@ const RESIZE_CURSORS: Record<ResizeHandle, string> = {
 //      edge so the photo still breathes — the editorial "darkened lower-third"
 //      look. Text is then FORCED to near-white (always — independent of theme)
 //      because the veil is dark and a rich photo is most reliably tamed that
-//      way. We can't sample the real photo pixels client-side, so the dark
+//      way. it can't sample the real photo pixels client-side, so the dark
 //      veil converts an unpredictable background into a known dark one and the
 //      forced light text clears WCAG AA against it.
 //   2. WASH ROLES (texture / background) → NO SCRIM. The auto-placement fades
@@ -167,7 +167,7 @@ type SlideDesign = NonNullable<Card['slideDesign']>;
  *  lower-third / side is darkened enough that near-white text clears WCAG AA,
  *  while the far edge stays light so the photo still breathes. The veil is
  *  ALWAYS dark (slate-950) and the text ALWAYS light for these roles —
- *  independent of theme — because we can't sample the photo and a rich photo
+ *  independent of theme — because it can't sample the photo and a rich photo
  *  is most reliably tamed by a dark veil + light type. */
 const SCRIM_PRESET: Record<ScrimRole, { alpha: number }> = {
   'full-bleed': { alpha: 0.68 },
@@ -449,7 +449,7 @@ export function FreeformLayer({
   // ONCE per layer-mount, regardless of how the parent ping-pongs state.
   const autoLayoutDoneRef = useRef<Set<string>>(new Set());
   // Gate the measure pass on web-font readiness. The themes load Google Fonts
-  // async; if we measure text height before the real font is laid out we read
+  // async; if it measures text height before the real font is laid out it reads
   // the FALLBACK font's metrics, mark the block done, and then the web font
   // swaps in (usually taller) — leaving the baked box too short forever, which
   // is the overlap + cut-off keeps seeing. Wait for document.fonts.ready
@@ -468,7 +468,7 @@ export function FreeformLayer({
     const layer = layerRef.current;
     if (!layer) return;
     // Bail BEFORE marking anything done if the layer hasn't sized yet —
-    // otherwise we poison the ref with blocks that never actually got
+    // otherwise it poisons the ref with blocks that never actually got
     // measured, and they're permanently skipped on subsequent runs (the
     // bug saw 2026-05-21: text overflowing on hero slides after the
     // streaming→final render swap).
@@ -480,7 +480,7 @@ export function FreeformLayer({
       (b) => b.__autoLayout && !autoLayoutDoneRef.current.has(b.id),
     );
     if (autoBlocks.length === 0) return;
-    // Mark them done BEFORE processing — even if processing errors out, we
+    // Mark them done BEFORE processing — even if processing errors out, it
     // never re-attempt the same block (avoids loop on partial failure).
     for (const b of autoBlocks) autoLayoutDoneRef.current.add(b.id);
 
@@ -498,7 +498,7 @@ export function FreeformLayer({
     // the measured height + push it down ONLY if a horizontally-overlapping
     // block above it would otherwise overlap. A simple "stack everything
     // top-down" approach broke grids — three cells at the same y but
-    // different x got stacked because they shared a cursor. We now track
+    // different x got stacked because they shared a cursor. it now tracks
     // each placed block's x-range so blocks side-by-side don't push each
     // other down.
     const minGap = 2;            // % between vertically-adjacent blocks
@@ -532,7 +532,7 @@ export function FreeformLayer({
         // the card's bottom safe edge, shrink the font so it fits the space left
         // rather than bleeding off the slide (the cut-off flagged). Text
         // height is ~linear in font size at a fixed width, so scale by the
-        // height ratio — floored at 60% / 11px so we never shrink into
+        // height ratio — floored at 60% / 11px so it never shrinks into
         // illegibility. Anything that STILL won't fit is one slide's worth too
         // much content (a generation problem, not a layout one); overflow:visible
         // then spills a hair instead of slicing a line. Text blocks only.
@@ -620,7 +620,7 @@ export function FreeformLayer({
         setSelectedIds(new Set());
         return;
       }
-      // Cmd/Ctrl + C — copy every selected block to sessionStorage. We
+      // Cmd/Ctrl + C — copy every selected block to sessionStorage. It
       // intentionally don't write to the system clipboard (navigator.clipboard
       // is async + would require a permissions prompt on some setups).
       // sessionStorage scopes the clipboard to the editor tab, which is the
@@ -1121,7 +1121,7 @@ export function FreeformLayer({
     }
     updateBlock(block.id, delta as Partial<FreeformBlock>);
     // If editing (collapsed caret), keep the live DOM in sync. When runs exist
-    // we refill from them; when they don't, the container's cascading style
+    // it refills from them; when they don't, the container's cascading style
     // (block.style) already updates the plain text — no DOM surgery needed.
     if (editingThis && root && nextRuns) {
       const at = offs ? offs.start : 0;
@@ -1532,7 +1532,7 @@ export function FreeformLayer({
   }, [interactive, editingId, insertImageBlob, readBlockClipboard, pasteBlocksFromData]);
 
   // Right-click on EMPTY card area → a Paste-only menu. The layer is
-  // pointer-events:none (clicks fall through to structured content), so we
+  // pointer-events:none (clicks fall through to structured content), so it
   // listen on the parent card element. Right-clicks landing on a freeform
   // block are owned by that block's own onContextMenu (the native listener
   // fires first on bubble, to bail when the target is inside a block).
@@ -2278,7 +2278,7 @@ function resolveScrimContext(
   // pass tinted the veil by theme tone, so a LIGHT theme produced a WHITE veil
   // at 0.5 over a mid-tone photo — and pickTextColor then chose DARK text,
   // which was unreadable. A dark veil + light type is the reliable editorial
-  // treatment when we can't sample the actual photo pixels.
+  // treatment when it can't sample the actual photo pixels.
   const overlayRgb = '2,6,23'; // slate-950
   const gradientCss = scrimGradient(slideDesign?.textSafeZone ?? 'full', overlayRgb, preset.alpha);
 
@@ -2315,7 +2315,7 @@ function resolveScrimContext(
  *    own body/title color when it already clears AA.
  *
  * Returns the color only when a flip is actually needed (or when over a scrim,
- * where we always pin a known-legible color) so theme gradients on headings
+ * where it always pins a known-legible color) so theme gradients on headings
  * are preserved on plain slides.
  */
 function resolveTextColor(
@@ -2342,7 +2342,7 @@ function resolveTextColor(
   const resolved = pickTextColor(ctx.regionBgHex, preferred);
   // Only emit when the resolved color actually differs from the theme default
   // (avoid stomping heading gradients that are already fine). When preferred
-  // is undefined we can't compare, so emit the safe endpoint only if it's the
+  // is undefined it can't compare, so emit the safe endpoint only if it's the
   // dark/light flip (never on a normal light region where theme defaults work).
   if (!resolved) return undefined;
   if (preferred && resolved === preferred) return undefined; // theme color kept
@@ -2628,7 +2628,7 @@ function FreeformBlockView({
   // into each block, but if the measurement ran before the web font loaded —
   // or the block was never auto-laid-out (user text, certain converter blocks)
   // — the baked box can end up shorter than the painted glyphs, and the inner
-  // overflow:hidden then slices a line in half. We let text overflow visibly
+  // overflow:hidden then slices a line in half. It lets text overflow visibly
   // (it spills down at most a line, almost always nothing because auto-layout
   // already sized neighbours) instead of clipping. Frames (image/shape/icon)
   // still clip — that's intentional cropping.
@@ -2971,7 +2971,7 @@ function TextContent({
       : { fontSize: '1rem', fontWeight: 400, lineHeight: 1.6, ...themeColorStyle, ...themeFontStyle };
   // User overrides — applied AFTER variant defaults so an explicit color
   // wins over the theme gradient. If the user sets a solid color on a
-  // heading, we also reset the gradient-text properties so the new color
+  // heading, it also resets the gradient-text properties so the new color
   // actually shows.
   const overrides: CSSProperties = block.style
     ? {

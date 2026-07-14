@@ -4,7 +4,7 @@
  * /internal/layout-gallery — a labeled gallery of EVERY slide layout category
  * (cover / content / data / quote / divider / closing + the content variants),
  * each rendered through the REAL engine (buildStructureTemplate → SlideStage) so
- * we can decide the background treatment per category.
+ * it can decide the background treatment per category.
  *
  * Query: ?skin=mono-light (default). Internal only — not linked from the product.
  */

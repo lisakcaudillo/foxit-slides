@@ -151,7 +151,7 @@ export const COVER_TREATMENT = {
 
   /**
    * Element order is a Designer CHOICE with a recommendation + guidelines here
-   * ("designer choice but we should have recommendations/guidelines in the
+   * ("designer choice but it should have recommendations/guidelines in the
    * design system"). The Designer follows the recommended order unless a
    * guideline says otherwise; deviation rules are CALIBRATED from real cases
    * (Loop 2), not invented up front.

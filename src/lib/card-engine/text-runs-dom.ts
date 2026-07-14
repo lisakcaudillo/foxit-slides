@@ -53,7 +53,7 @@ export function runMarkStyle(m?: TextRunMarks): Record<string, string> {
   return out;
 }
 
-/** Read the marks off an element — prefers the data-m attribute we emit; infers
+/** Read the marks off an element — prefers the data-m attribute it emits; infers
  *  from tag/inline style for any node the browser created during typing. */
 export function parseMarksFromEl(el: HTMLElement): TextRunMarks | undefined {
   const raw = el.dataset.m;

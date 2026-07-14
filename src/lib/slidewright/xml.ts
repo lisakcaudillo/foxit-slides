@@ -1,6 +1,6 @@
 // Foxit Slidewright — XML helpers.
 //
-// A tiny, dependency-free XML string layer. OOXML parts are plain text we build
+// A tiny, dependency-free XML string layer. OOXML parts are plain text it builds
 // by concatenation; the only correctness-critical parts are (a) escaping text and
 // attribute values, and (b) the standalone XML declaration every part needs.
 

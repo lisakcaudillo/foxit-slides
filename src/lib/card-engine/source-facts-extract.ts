@@ -25,7 +25,7 @@ const FactSchema = z.object({
 });
 const FactsSchema = z.object({
   facts: z.array(FactSchema),
-  // The single entity the source is primarily ABOUT (the "we/the" company, or the
+  // The single entity the source is primarily ABOUT (the "it/the" company, or the
   // named subject). Used as the deck subject so a stat slide showing a COMPETITOR's
   // number (tagged with a different subject) can be caught. null when the source
   // isn't about a specific entity.

@@ -158,7 +158,7 @@ export interface PDFBookmark {
 /**
  * A structure element detected by Foxit Layout Recognition (Phase 1b Layer 2).
  * Foxit's LR module runs on untagged PDFs and produces a PDF/UA-aligned
- * tag tree heuristically. We map its element types to FXDA block types.
+ * tag tree heuristically. It maps its element types to FXDA block types.
  */
 export interface PDFLayoutElement {
   type: 'heading' | 'paragraph' | 'list' | 'table' | 'figure';
@@ -451,7 +451,7 @@ let ocrEngineInitialized = false;
 let ocrEngineError: string | null = null;
 
 /**
- * Lazy init for the OCR engine. Caches success/failure so we don't retry.
+ * Lazy init for the OCR engine. Caches success/failure so it doesn't retry.
  * Required env var: FOXIT_OCR_RESOURCE_PATH (path to Res_OCR_V*_win/ folder).
  * License must include "OCR" module (per Foxit license).
  */

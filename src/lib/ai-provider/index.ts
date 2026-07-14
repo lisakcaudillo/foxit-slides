@@ -29,7 +29,7 @@ import { AnthropicProvider } from './anthropic';
 import { OpenAIProvider } from './openai';
 import { GeminiProvider } from './gemini';
 
-// Singleton cache so we don't create a new client on every call.
+// Singleton cache so it doesn't create a new client on every call.
 let cachedProvider: AIProvider | null = null;
 let cachedProviderName: string | null = null;
 

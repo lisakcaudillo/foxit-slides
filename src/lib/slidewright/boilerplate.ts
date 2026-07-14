@@ -3,7 +3,7 @@
 // Every .pptx needs a theme, a slide master, at least one slide layout, and the
 // presentation-level property parts. Their content is standard Office boilerplate
 // (the canonical color/font/format scheme + an empty master/layout) — not specific
-// to any deck. We author minimal-but-valid versions here so PowerPoint accepts the
+// to any deck. It authors minimal-but-valid versions here so PowerPoint accepts the
 // package. Per-deck content lives in the slides, generated elsewhere.
 
 import { XML_DECL } from './xml';

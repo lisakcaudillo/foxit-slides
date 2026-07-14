@@ -141,7 +141,7 @@ export const DECORATIONS: Record<string, Record<string, Decoration[]>> = {
     ],
   },
 
-  // Comparison is NEUTRAL by default — two equal columns. We deliberately do NOT
+  // Comparison is NEUTRAL by default — two equal columns. it deliberately does NOT
   // paint the right column as a "recommended" card or stamp a RECOMMENDED badge:
   // most comparisons (esp. source-derived "X vs Y") have no winner, so crowning
   // the right side is wrong. The

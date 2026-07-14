@@ -9,7 +9,7 @@
  * image (never silently falls back to a paid AI call).
  *
  * Licensing: Pexels and Pixabay are both free for commercial use with no
- * attribution required. We still capture a credit string for provenance.
+ * attribution required. it still captures a credit string for provenance.
  *
  * No new npm dependency — native fetch only. Keys via env:
  *   PEXELS_API_KEY   (https://www.pexels.com/api/)

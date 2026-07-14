@@ -4,7 +4,7 @@
  * "Does the content fit the box" is math, not taste: every structured block is
  * placed at a template slot with a known character budget (`charCap`, derived
  * from the slot's width × height × font size) and a known intended font size.
- * Comparing the generated block against its slot tells us — in milliseconds,
+ * Comparing the generated block against its slot shows — in milliseconds,
  * reliably — what the visual judge sees slowly and unreliably:
  *
  *   - overBudget : content exceeds the box's character budget (would overflow)

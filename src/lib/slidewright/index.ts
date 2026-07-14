@@ -1,7 +1,7 @@
 // Foxit Slidewright — public API + package assembly.
 //
 // Foxit's own in-house OpenXML PowerPoint writer (Foxit Slides's exporter runs on it).
-// No pptxgenjs, no third-party PPTX code: we emit the OOXML parts directly
+// No pptxgenjs, no third-party PPTX code: it emits the OOXML parts directly
 // (informed by the format structure + real PowerPoint output) and zip them with
 // jszip (a general compression lib). The API mirrors the shape of a slide builder —
 // createDeck() → slide.addText/addShape/addImage/addTable/addChart → deck.write() —
@@ -653,7 +653,7 @@ export class Slide {
   }
 
   /** The slide's .rels part (layout rel is always rId... appended last so body
-   *  rels keep their ids). We prepend the layout rel with a fresh id. */
+   *  rels keep their ids). It prepends the layout rel with a fresh id. */
   renderRels(): string {
     const layoutRid = this.nextRid();
     const all: Rel[] = [

@@ -1,6 +1,6 @@
 /**
  * /api/internal/judge-deck — run the wired visual judge over a POSTed deck and
- * return the per-slide verdict trace. Internal only. Lets us re-judge an
+ * return the per-slide verdict trace. Internal only. Can re-judge an
  * existing deck (e.g. to prove a rubric change flips a verdict) without
  * regenerating content.
  */

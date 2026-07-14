@@ -5,7 +5,7 @@
  * Print / Save-as-PDF.
  *
  * Why this approach: the editor renders slides through `FreeformLayer`. To
- * export faithfully we render the SAME component at full 960×540 — one card per
+ * export faithfully it renders the SAME component at full 960×540 — one card per
  * printed page — and use print CSS to hide all editor chrome. The PDF therefore
  * matches what the user sees (a hand-written HTML serializer would risk
  * diverging; SlidePresentation uses a different, non-faithful renderer).

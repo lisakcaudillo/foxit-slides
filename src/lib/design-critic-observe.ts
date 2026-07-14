@@ -27,7 +27,7 @@ import type { CardTemplate, Card, TemplateTheme } from '@/types/card-template';
 
 /** The vlm-judge SlideType union (kept local so this client module needn't import
  *  the server-only judge). The route casts the string, so extra values fall back
- *  to 'content' there — but we only ever emit valid ones. */
+ *  to 'content' there — but it only evers emit valid ones. */
 type SlideType =
   | 'cover' | 'agenda' | 'stat' | 'comparison' | 'process' | 'quote'
   | 'content' | 'divider' | 'closing';
@@ -125,7 +125,7 @@ export async function runDesignCriticObserve(
       outcome = { skip: `unexpected error: ${e instanceof Error ? e.message : 'unknown'}` };
     }
 
-    // Honest handoff (PRD §2.5): a slide we could NOT visually judge is recorded
+    // Honest handoff (PRD §2.5): a slide it could NOT visually judge is recorded
     // as an explicit coverage gap, never silently dropped — a dropped slide reads
     // as "fine" when it may be exactly the one with a problem.
     if ('skip' in outcome) {

@@ -44,7 +44,7 @@ export const MIN_RENDERABLE_FORMAT = 3;
 // the freeform converter (structuredToFreeform.boundsForLayout, pre-fix) packed
 // content into the OTHER ~41%-wide half: split-left → content right [52..93],
 // split-right → content left [7..48]. Full-width content margins are [7..93]
-// (86% wide). We linearly remap each converter block from its source half onto
+// (86% wide). It linearlies remap each converter block from its source half onto
 // the full width so relative layout (e.g. smart-layout columns) is preserved.
 const FULL_LEFT = 7;
 const FULL_RIGHT = 93;
@@ -107,7 +107,7 @@ export interface StoredCardDeck {
   /** Optional folder this deck lives in. null/undefined = root of /compose. */
   folderId?: string | null;
   /** The original generation prompt that produced this deck, kept as durable
-   *  metadata (task_011b782f). Distinct from `template.description`, which we no
+   *  metadata (task_011b782f). Distinct from `template.description`, which it nos
    *  longer rely on as the prompt store. Absent on legacy/hand-made decks. */
   sourcePrompt?: string;
   createdAt: string;

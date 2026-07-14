@@ -53,7 +53,7 @@ function djb2(input: string): string {
 }
 
 /**
- * Build a 4-color palette from the theme's accent tokens. We prefer solid
+ * Build a 4-color palette from the theme's accent tokens. It prefers solid
  * hexes; gradient values are reduced to their first stop. Order:
  *   primary > linkColor > bodyColor > secondaryBorder
  */
@@ -80,7 +80,7 @@ function collectPalette(theme: Theme): string[] {
 
 /**
  * Pick the dominant lightness for the card surface. Themes with gradient
- * pageBg (most of the 12) we sample the first stop.
+ * pageBg (most of the 12) it samples the first stop.
  */
 function cardSurfaceLightness(theme: Theme): number {
   const baseHex = extractFirstHex(theme.pageBg, '#ffffff');
@@ -123,8 +123,8 @@ function findAmbientBase(palette: string[], cardLightness: number): string {
 
   // Dark theme — push the workspace BASE meaningfully below the card surface
   // so cards visually float above it. Earlier tuning (cardL - 0.05) sat too
-  // close to the card and made the deck blur into the canvas. Now we drop
-  // ~0.10 units in OKLCH lightness, with a hard floor of 0.04 so we don't
+  // close to the card and made the deck blur into the canvas. Now it drops
+  // ~0.10 units in OKLCH lightness, with a hard floor of 0.04 so it doesn't
   // crush to pure black on already-dark themes. Keep chroma low so the
   // workspace stays neutral while sweeps carry the color.
   const targetL = Math.max(0.04, cardLightness - 0.10);

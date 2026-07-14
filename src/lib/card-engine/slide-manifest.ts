@@ -3,7 +3,7 @@
  * return ELEMENT-ADDRESSED verdicts.
  *
  * The VLM sees a flat PNG; it cannot know that "the big text up top" is the
- * `title` vs. a `metric-value`. So at judge time we hand it the slide's
+ * `title` vs. a `metric-value`. So at judge time it hands it the slide's
  * element→content map (built from the freeform blocks the judge already has) and
  * a CLOSED LIST of role names. The VLM then names which element each criterion is
  * about (`element`) + a `change` type, and the fixer maps role→block

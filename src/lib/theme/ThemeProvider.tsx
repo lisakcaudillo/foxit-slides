@@ -215,7 +215,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => getThemeById(DEFAULT_THEME_ID));
 
   // Apply the theme to <html> before the first browser paint, but ONLY on
-  // themed routes. Outside the editor we strip any previously-applied
+  // themed routes. Outside the editor it strips any previously-applied
   // theme so the app shell stays neutral. useLayoutEffect runs after DOM
   // mutations but before paint, so route changes don't flash a stale
   // chrome color.
@@ -229,7 +229,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [themed]);
 
   // Reapply whenever the theme changes (e.g. user picks a new theme in the
-  // ThemesModal) — but only while we're on a themed route.
+  // ThemesModal) — but only while it is on a themed route.
   useEffect(() => {
     if (themed) applyThemeToRoot(theme);
   }, [theme, themed]);

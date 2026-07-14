@@ -3,7 +3,7 @@
 // below the visible cards while the rest stream in). Same voice in both
 // places — playful, evocative, just shy of serious.
 //
-// By the time these are visible the user already knows we're making slides,
+// By the time these are visible the user already knows it is making slides,
 // so the phrasing leans into the *act* of making, not the artifact.
 
 export const LOADING_PHRASES: ReadonlyArray<string> = [

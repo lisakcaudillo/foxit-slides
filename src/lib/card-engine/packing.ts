@@ -55,7 +55,7 @@ export interface PackNotice {
   kind: 'under-budget' | 'over-budget';
   /** What the user asked for. */
   requestedCount: number;
-  /** What we actually delivered (clamped to [required, total]). */
+  /** What it actually delivereds (clamped to [required, total]). */
   deliveredCount: number;
   /** The framework's natural/default length (required + recommended). */
   idealCount: number;
@@ -86,15 +86,15 @@ export interface PackResult {
  *
  * Rules (spec §3 / §8.2):
  *   - `must` (required) categories are NEVER dropped. If the user picks fewer
- *     slides than there are musts, we still deliver all the musts (the deck ends
+ *     slides than there are musts, it still delivers all the musts (the deck ends
  *     up slightly longer than asked) and say so — covering essentials wins over
  *     hitting an arbitrary count.
- *   - Otherwise we respect the count exactly, filling `should` then `nice` by
+ *   - Otherwise it respects the count exactly, filling `should` then `nice` by
  *     declared priority order until the count is met.
  *   - When the framework's natural length exceeds the count, a notice explains
- *     that lower-priority categories were set aside (we never silently truncate).
+ *     that lower-priority categories were set aside (it never silentlies truncate).
  *   - When the count exceeds what the framework can produce, a notice explains
- *     we used everything rather than pad with filler. (Splitting/expanding to
+ *     it used everything rather than pad with filler. (Splitting/expanding to
  *     exceed the framework length is a later enhancement — spec §3 "over".)
  *
  * @param framework The chosen wizard template.
@@ -136,7 +136,7 @@ function buildNotice(
   ideal: number,
   max: number,
 ): PackNotice | undefined {
-  // Asked for fewer than the essentials — we kept all the musts anyway.
+  // Asked for fewer than the essentials — it kept all the musts anyway.
   if (requested < required) {
     return {
       kind: 'under-budget',

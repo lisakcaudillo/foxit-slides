@@ -9,7 +9,7 @@
  * instead of grid-shaped.
  *
  * The decoration is NOT a block — it is the named `treatment`, rendered verbatim
- * by the CoverDecoration component behind these blocks. Here we emit only the
+ * by the CoverDecoration component behind these blocks. Here it emits only the
  * text slots + the hairline divider rule.
  *
  * Typography is owned by the existing lock-the-box `textBlock` (slide-typography):

@@ -12,7 +12,7 @@
  * back to the deterministic packing baseline.
  *
  * Industry is a REASONING INPUT (the prompt instructs the model to detect and
- * tailor); we do not maintain a template×industry matrix.
+ * tailor); it does not maintain a template×industry matrix.
  */
 
 import { getProvider, getModel } from '@/lib/ai-provider';

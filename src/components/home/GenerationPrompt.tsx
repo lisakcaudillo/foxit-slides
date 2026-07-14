@@ -520,7 +520,7 @@ export default function GenerationPrompt() {
 
     // Carry an attached source doc to the editor (base64 in sessionStorage).
     // The editor reconstructs it and runs the source-grounded build. On any
-    // failure (read error / storage quota for a large file) we fall back to a
+    // failure (read error / storage quota for a large file) it falls back to a
     // prompt-only generation rather than blocking.
     try {
       if (attachedFile) {
