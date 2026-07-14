@@ -1754,6 +1754,45 @@ export default function CardEditorPage() {
     return () => clearTimeout(timer);
   }, [revealReady]);
 
+  // Once the reveal has fully played, drop the session animate flags from the
+  // in-memory template so state matches the saved (stripped) copy. The
+  // `revealedBlockIds` guard in FreeformLayer already prevents any replay; this
+  // just keeps the live template clean. Gated on revealReady + generation-done
+  // AND delayed by the deck's own reveal duration, so it can never fire before a
+  // slide has typed. No-op when the deck carries no flags (e.g. a loaded deck).
+  useEffect(() => {
+    if (!revealReady || !generationDoneRef.current) return;
+    const t = templateRef.current;
+    if (!t) return;
+    const hasFlags = t.cards.some((c) => (c.freeform ?? []).some(
+      (b) => b.type === 'text' && (b as { __animateOnMount?: boolean }).__animateOnMount));
+    if (!hasFlags) return;
+    const revealMs = t.cards.reduce((acc, c) =>
+      acc + (c.freeform ?? []).reduce((a, b) =>
+        a + (b.type === 'text' ? estimateTypeDuration((b as { content?: string }).content ?? '', 55) : 0), 0), 0);
+    const timer = setTimeout(() => {
+      setTemplate((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          cards: prev.cards.map((c) => ({
+            ...c,
+            freeform: c.freeform?.map((b) => {
+              const bb = b as typeof b & { __animateOnMount?: boolean; __animateDelay?: number };
+              if (b.type === 'text' && (bb.__animateOnMount || bb.__animateDelay != null)) {
+                const { __animateOnMount: _a, __animateDelay: _d, ...rest } = bb;
+                void _a; void _d;
+                return rest as typeof b;
+              }
+              return b;
+            }),
+          })),
+        };
+      });
+    }, revealMs + 3000);
+    return () => clearTimeout(timer);
+  }, [revealReady]);
+
   // Track a fire-and-forget image promise so the gate knows when imagery is
   // complete. Increments on fire, decrements + re-checks on settle.
   const trackImage = useCallback((p: Promise<unknown>) => {

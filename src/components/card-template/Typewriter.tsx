@@ -27,6 +27,12 @@ interface TypewriterProps {
    * Defaults to `true` so existing call sites get the historical behavior.
    */
   animate?: boolean;
+  /**
+   * Called once when the reveal finishes (or immediately when there's no text
+   * or `animate` is false). Callers use this to record that a block has already
+   * played, so a later remount / prop change never replays it.
+   */
+  onDone?: () => void;
 }
 
 /**
@@ -34,7 +40,7 @@ interface TypewriterProps {
  * shows the full text immediately. Restarts the animation whenever `text`,
  * `speed`, `delay`, or `animate` change.
  */
-export function Typewriter({ text, speed = 45, delay = 0, render, animate = true }: TypewriterProps) {
+export function Typewriter({ text, speed = 45, delay = 0, render, animate = true, onDone }: TypewriterProps) {
   const [revealed, setRevealed] = useState('');
   const [done, setDone] = useState(false);
 
@@ -42,6 +48,7 @@ export function Typewriter({ text, speed = 45, delay = 0, render, animate = true
     if (!text) {
       setRevealed('');
       setDone(true);
+      onDone?.();
       return;
     }
 
@@ -51,6 +58,7 @@ export function Typewriter({ text, speed = 45, delay = 0, render, animate = true
     if (!animate) {
       setRevealed(text);
       setDone(true);
+      onDone?.();
       return;
     }
 
@@ -70,6 +78,7 @@ export function Typewriter({ text, speed = 45, delay = 0, render, animate = true
         if (i >= text.length) {
           setRevealed(text);
           setDone(true);
+          onDone?.();
           if (interval) clearInterval(interval);
         } else {
           setRevealed(text.slice(0, i));

@@ -62,6 +62,16 @@ const VOLT_PANEL: SkinPanel = {
 
 export const SKIN_PANEL: Record<string, SkinPanel> = { glacier: GLACIER_PANEL, volt: VOLT_PANEL };
 
+// Cosmos content accent (Figma `accent/cosmos-1`, node 14:2) — a galaxy backdrop
+// (deep base + violet/blue nebula glows + a starfield) for the content-type
+// categories, so they aren't the flat deep-space ground. Full-bleed 960×540
+// image, so it renders identically on screen and survives PPTX export as a
+// picture. Applied to content/data/quote only — NOT cover/divider/closing.
+const COSMOS_ACCENT_1: NonNullable<Card['background']> = {
+  image: '/textures/cosmos/cosmos-accent-1.png',
+  color: '#0A0814',
+};
+
 // Fixed skins with hand-authored per-category maps.
 export const CATEGORY_BACKGROUNDS: Record<string, Partial<Record<LayoutCategory, CategoryBg>>> = {
   'mono-light': {
@@ -104,6 +114,12 @@ export const CATEGORY_BACKGROUNDS: Record<string, Partial<Record<LayoutCategory,
   cosmos: {
     cover: { bg: { image: '/textures/cosmos/cosmos-bg.png', color: '#0A0814' } },
     closing: { bg: { image: '/textures/cosmos/cosmos-bg.png', color: '#0A0814' } },
+    // accent/cosmos-1 on the content-type categories only. Cover + closing keep
+    // the nebula image above; divider has NO entry, so it falls back to the flat
+    // deep-space ground (accent explicitly does not apply to it).
+    content: { bg: COSMOS_ACCENT_1 },
+    data: { bg: COSMOS_ACCENT_1 },
+    quote: { bg: COSMOS_ACCENT_1 },
   },
   // MUBI (Quartz) — Figma ships ~4 slide designs; it maps them across the
   // categories and get creative for the gaps. Each is a full CSS `background`
