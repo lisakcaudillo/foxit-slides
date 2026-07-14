@@ -42,3 +42,8 @@ next-env.d.ts
 
 # design decisions review log (local observe-only artifact — see docs/README-design-log.md)
 docs/design-decisions.csv
+
+# local scratch
+.boot.log
+.verify-*
+.dl/
