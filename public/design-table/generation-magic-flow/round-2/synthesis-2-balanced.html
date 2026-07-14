@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Compose · Generate Magic — Round 2 · Balanced Synthesis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --wash-1:#f9f6ff; --wash-2:#f4f0ff; --wash-3:#eef3ff;
+    --ink:#3B2856; --ink-soft:#6b5d80; --ink-faint:#a99fbb;
+    --foxit:#6B3FA0;
+    --pink:#F0A8F2; --lav:#C8B6F4; --sky:#9CC4FE;
+    --magenta:#E267E4; --blue:#4198FF;
+    --glass-bd:rgba(255,255,255,.7);
+    --line:rgba(59,40,86,.08);
+    --shadow-card:0 1px 2px rgba(48,30,72,.04), 0 12px 30px -12px rgba(75,48,110,.18), 0 40px 90px -44px rgba(75,48,110,.32);
+    --shadow-lg:0 40px 100px -40px rgba(59,40,86,.30), 0 12px 40px -16px rgba(59,40,86,.16);
+    --shadow-sm:0 8px 28px -12px rgba(59,40,86,.20);
+    --ease:cubic-bezier(.22,1,.36,1);
+    --ease-out:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 78% -8%, rgba(226,103,228,.12), transparent 55%),
+      radial-gradient(1000px 800px at 8% 112%, rgba(65,152,255,.10), transparent 55%),
+      radial-gradient(900px 900px at 50% 120%, rgba(200,182,244,.16), transparent 60%),
+      linear-gradient(150deg, var(--wash-1) 0%, var(--wash-2) 45%, var(--wash-3) 100%);
+    min-height:100vh; overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* fine grain — A's material finish */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:.34; mix-blend-mode:soft-light;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  /* ambient drifting orbs — B's living substrate, always alive under everything */
+  .ambient{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+  .orb{position:absolute; border-radius:50%; filter:blur(64px); opacity:.5; mix-blend-mode:multiply;}
+  .orb.a{width:520px;height:520px;left:-120px;top:-90px;background:radial-gradient(circle at 30% 30%,#f6c3f8,transparent 70%);animation:drift1 24s var(--ease) infinite;}
+  .orb.b{width:600px;height:600px;right:-170px;top:-130px;background:radial-gradient(circle at 60% 40%,#bcd2ff,transparent 70%);animation:drift2 28s var(--ease) infinite;}
+  .orb.c{width:460px;height:460px;left:44%;bottom:-220px;background:radial-gradient(circle at 50% 50%,#d8c5f7,transparent 70%);animation:drift3 32s var(--ease) infinite;}
+  @keyframes drift1{50%{transform:translate(80px,60px) scale(1.1);}}
+  @keyframes drift2{50%{transform:translate(-60px,90px) scale(1.05);}}
+  @keyframes drift3{50%{transform:translate(40px,-70px) scale(1.12);}}
+
+  /* ---------- shell : C's intentional 12-col grid ---------- */
+  .stage{
+    width:1440px; max-width:100%; margin:0 auto;
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:repeat(12,1fr);
+    column-gap:32px; row-gap:0;
+    padding:28px 80px 80px;
+    min-height:100vh; align-content:start;
+  }
+
+  /* ---------- whisper chrome ---------- */
+  .chrome{
+    grid-column:1 / -1;
+    display:flex; align-items:center; justify-content:space-between;
+    height:54px; margin-bottom:14px;
+  }
+  .brand{display:flex; align-items:center; gap:11px;}
+  .brand .mark{
+    width:30px; height:30px; border-radius:9px;
+    background:linear-gradient(120deg,var(--magenta),var(--lav) 52%,var(--blue));
+    box-shadow:0 6px 16px -6px rgba(101,63,160,.5), inset 0 1px 0 rgba(255,255,255,.55);
+  }
+  .brand b{font-family:'Fraunces',serif; font-weight:500; font-size:19px; letter-spacing:-.01em; color:var(--ink);}
+  .chrome-r{display:flex; align-items:center; gap:8px;}
+  .pip{
+    height:34px; padding:0 14px; border-radius:10px;
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; color:var(--ink-soft); font-weight:500;
+    background:rgba(255,255,255,.46); border:1px solid rgba(255,255,255,.6);
+    backdrop-filter:blur(10px);
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(135deg,var(--magenta),var(--sky));
+    border:1.5px solid #fff; box-shadow:var(--shadow-sm);
+  }
+
+  /* ============ SCENE machinery ============ */
+  .scene{grid-column:1 / -1; display:none;}
+  .scene.live{display:block;}
+
+  /* =================================================================
+     SCENE 1 — INPUT  (C's asymmetric 7:5 focal composition)
+     left hero dominates; right "director" rail recedes as a promise
+  ================================================================= */
+  #scene-input{
+    display:none; grid-column:1 / -1;
+    grid-template-columns:repeat(12,1fr); column-gap:32px;
+  }
+  #scene-input.live{display:grid; animation:sceneIn .8s var(--ease) both;}
+  @keyframes sceneIn{from{opacity:0; transform:translateY(8px);}to{opacity:1; transform:none;}}
+
+  .hero{grid-column:1 / 8; align-self:start; padding-top:36px; position:relative; z-index:2;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    font-size:12px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--foxit); margin-bottom:24px;
+  }
+  .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:linear-gradient(135deg,var(--magenta),var(--blue));
+    box-shadow:0 0 0 4px rgba(226,103,228,.14);
+  }
+  /* A's editorial display, C's confident scale jump */
+  .headline{
+    font-family:'Fraunces',serif; font-weight:300;
+    font-size:74px; line-height:.98; letter-spacing:-.025em;
+    color:var(--ink); margin-bottom:34px; max-width:11ch;
+  }
+  .headline em{
+    font-style:italic; font-weight:400;
+    background:linear-gradient(100deg,var(--magenta),var(--foxit) 58%,var(--blue));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* the input slab — A's glass card finish, the single unmissable object */
+  .magic{
+    position:relative; max-width:620px;
+    background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,255,255,.66));
+    border:1px solid var(--glass-bd); border-radius:26px;
+    box-shadow:var(--shadow-card); backdrop-filter:blur(26px) saturate(140%);
+    padding:24px 24px 16px;
+  }
+  .magic::before{ /* gradient halo edge */
+    content:""; position:absolute; inset:-1px; border-radius:27px; padding:1px;
+    background:linear-gradient(120deg,rgba(240,168,242,.55),rgba(156,196,254,.5),rgba(226,103,228,.4));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:.9;
+  }
+  .magic textarea{
+    width:100%; border:0; outline:0; resize:none; background:transparent;
+    font-family:'Fraunces',serif; font-weight:300; font-size:25px; line-height:1.34;
+    color:var(--ink); min-height:96px;
+  }
+  .magic textarea::placeholder{color:var(--ink-faint); font-weight:300;}
+
+  .magic-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:12px; padding-top:14px; border-top:1px solid var(--line);
+  }
+  /* receding advanced controls — icon-led, summoned on intent */
+  .adv{display:flex; align-items:center; gap:4px;}
+  .adv button{
+    height:38px; padding:0 12px; border:0; cursor:pointer; border-radius:11px; background:transparent;
+    display:flex; align-items:center; gap:8px;
+    font-family:inherit; font-size:13.5px; font-weight:500; color:var(--ink-soft);
+    transition:.18s ease;
+  }
+  .adv button:hover{background:rgba(107,63,160,.08); color:var(--foxit);}
+  .adv .ic{width:16px; height:16px; display:block; opacity:.85;}
+  .adv .sep{width:1px; height:20px; background:var(--line); margin:0 3px;}
+  .stepper{display:inline-flex; align-items:center; border-radius:10px; overflow:hidden; border:1px solid rgba(108,63,160,.16);}
+  .stepper i{width:26px; height:30px; display:grid; place-items:center; cursor:pointer; color:var(--foxit); font-style:normal; font-size:16px; background:rgba(255,255,255,.5); transition:.15s;}
+  .stepper i:hover{background:#fff;}
+  .stepper .count{width:30px; text-align:center; font-weight:600; font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink);}
+
+  /* the CTA — the magic itself, biggest gravitational pull (A+B+C lineage) */
+  .generate{
+    height:54px; padding:0 30px; border:0; cursor:pointer; border-radius:14px;
+    font-family:inherit; font-size:16.5px; font-weight:650; letter-spacing:-.01em; color:#2e1065;
+    background:linear-gradient(100deg,var(--magenta),var(--lav) 52%,var(--blue));
+    background-size:200% 100%;
+    box-shadow:0 16px 40px -12px rgba(120,80,200,.6), inset 0 1px 0 rgba(255,255,255,.5);
+    display:inline-flex; align-items:center; gap:11px; position:relative; overflow:hidden; isolation:isolate;
+    transition:transform .22s var(--ease-out), box-shadow .24s, background-position 1s var(--ease);
+  }
+  .generate::before{ /* sheen sweep */
+    content:""; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(110deg, transparent 22%, rgba(255,255,255,.55) 48%, transparent 72%);
+    transform:translateX(-120%); animation:sheen 3.6s ease-in-out infinite;
+  }
+  @keyframes sheen{0%,58%{transform:translateX(-120%);}80%,100%{transform:translateX(120%);}}
+  .generate:hover{transform:translateY(-2px); box-shadow:0 22px 52px -12px rgba(120,80,200,.7), inset 0 1px 0 rgba(255,255,255,.6); background-position:100% 0;}
+  .generate svg{width:19px; height:19px;}
+
+  /* the no-topic doorway — quiet sibling */
+  .doorway{margin-top:20px; display:flex; align-items:center; gap:14px; padding-left:4px;}
+  .surprise{
+    display:inline-flex; align-items:center; gap:9px; height:40px; padding:0 16px 0 13px; cursor:pointer;
+    border-radius:12px; border:1px dashed rgba(107,63,160,.35); background:rgba(255,255,255,.35);
+    font-family:inherit; font-size:14px; font-weight:550; color:var(--foxit); transition:.18s ease;
+  }
+  .surprise:hover{background:rgba(255,255,255,.6); border-style:solid; transform:translateY(-1px);}
+  .surprise svg{width:16px; height:16px;}
+  .doorway .or{font-size:13px; color:var(--ink-faint);}
+
+  /* RIGHT — C's tall glass director rail. POST-reveal it becomes "shop the look",
+     but here at rest it's a quiet promise of the deck to come. */
+  .promise{grid-column:8 / 13; align-self:start; margin-top:6px; position:relative; z-index:1;}
+  .promise-card{
+    position:relative; border-radius:24px; padding:20px;
+    background:linear-gradient(180deg,rgba(255,255,255,.56),rgba(255,255,255,.32));
+    border:1px solid rgba(255,255,255,.6); box-shadow:var(--shadow-lg);
+    backdrop-filter:blur(22px) saturate(130%);
+  }
+  .promise-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding:0 2px;}
+  .promise-head .t{font-size:13px; font-weight:600; color:var(--ink); letter-spacing:-.01em;}
+  .promise-head .live{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--foxit);
+    background:rgba(107,63,160,.08); padding:3px 9px; border-radius:20px;
+  }
+  .promise-head .blink{width:6px; height:6px; border-radius:50%; background:linear-gradient(135deg,var(--magenta),var(--blue)); animation:blink 2s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:.35;}50%{opacity:1;}}
+  .promise-hero{margin-bottom:12px;}
+  .promise-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+
+  /* =================================================================
+     SCENE 2 — GENERATING  (B's choreography: particles → glowing core)
+  ================================================================= */
+  #scene-generating{text-align:center; padding-top:70px;}
+  #scene-generating.live{animation:sceneIn .8s var(--ease) both;}
+  .gen-orbit{position:relative; width:280px; height:280px; margin:0 auto 46px;}
+  .gen-core{
+    position:absolute; inset:86px; border-radius:50%;
+    background:conic-gradient(from 0deg,var(--magenta),var(--lav),var(--sky),var(--blue),var(--magenta));
+    filter:blur(2px); animation:spin 3.4s linear infinite;
+    box-shadow:0 0 70px 10px rgba(180,130,240,.5);
+  }
+  .gen-core::after{content:"";position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#f3ecff 60%,#e9dffb);box-shadow:inset 0 0 30px rgba(160,120,220,.3);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .gen-ring{position:absolute; inset:0; border-radius:50%; border:1px solid rgba(150,110,210,.25);}
+  .gen-ring.r2{inset:38px; border-color:rgba(150,110,210,.18); animation:genpulse 2.6s var(--ease) infinite;}
+  .gen-ring.r1{animation:genpulse 2.6s var(--ease) .4s infinite;}
+  @keyframes genpulse{0%,100%{transform:scale(1);opacity:.7;}50%{transform:scale(1.06);opacity:.3;}}
+  .pt{position:absolute; width:7px; height:7px; border-radius:2px; left:50%; top:50%; opacity:0;}
+
+  .gen-status{font-family:'Fraunces',serif; font-weight:300; font-size:34px; color:var(--ink); letter-spacing:-.012em; min-height:44px;}
+  .gen-status em{font-style:italic; color:var(--foxit);}
+  .gen-sub{margin-top:13px; font-size:14px; color:var(--ink-soft); letter-spacing:.04em;}
+  .gen-track{width:320px; height:3px; border-radius:3px; background:rgba(108,63,160,.12); margin:30px auto 0; overflow:hidden;}
+  .gen-fill{height:100%; width:0; border-radius:3px; background:linear-gradient(90deg,var(--magenta),var(--blue)); transition:width .45s var(--ease);}
+
+  /* =================================================================
+     SCENE 3 — REVEAL  (A's editorial deck-grid materializes,
+     B's cover-first staggered cascade)
+  ================================================================= */
+  #scene-reveal{padding-top:6px;}
+  #scene-reveal.live{animation:sceneIn .7s var(--ease) both;}
+  .reveal-top{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:24px;}
+  .reveal-kicker{font:600 11px/1 'Inter'; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px;}
+  .reveal-title{font-family:'Fraunces',serif; font-weight:300; font-size:40px; color:var(--ink); letter-spacing:-.018em; line-height:1;}
+  .reveal-title em{font-style:italic; color:var(--foxit);}
+  .reveal-actions{display:flex; align-items:center; gap:10px;}
+
+  /* TWO distinct affordances — cheap+instant is the obvious one */
+  .reskin{
+    height:46px; padding:0 20px; border-radius:13px; cursor:pointer; border:0;
+    color:#2e1065; font-weight:650; font-size:14.5px;
+    background:linear-gradient(110deg,var(--pink),var(--lav) 50%,var(--sky));
+    box-shadow:0 12px 30px -12px rgba(120,80,200,.5), inset 0 1px 0 rgba(255,255,255,.55);
+    display:inline-flex; align-items:center; gap:9px; transition:transform .2s var(--ease-out), box-shadow .2s;
+  }
+  .reskin:hover{transform:translateY(-2px); box-shadow:0 18px 40px -12px rgba(120,80,200,.6);}
+  .reskin svg{width:16px; height:16px;}
+  .ghost-act{
+    height:46px; padding:0 18px; border-radius:13px; cursor:pointer;
+    border:1px solid rgba(108,63,160,.2); background:rgba(255,255,255,.55);
+    color:var(--ink-soft); font-weight:600; font-size:14px; backdrop-filter:blur(12px);
+    display:inline-flex; align-items:center; gap:8px; transition:.18s var(--ease-out);
+  }
+  .ghost-act:hover{background:#fff; color:var(--ink); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+  .ghost-act svg{width:15px; height:15px; stroke:currentColor;}
+  .open-deck{
+    height:46px; padding:0 22px; border-radius:13px; border:0; cursor:pointer; color:#fff; font-weight:650; font-size:14.5px;
+    background:linear-gradient(120deg,var(--foxit),#401842);
+    box-shadow:0 12px 30px -12px rgba(64,24,66,.6); display:inline-flex; align-items:center; gap:9px;
+    transition:transform .2s var(--ease-out);
+  }
+  .open-deck:hover{transform:translateY(-2px);}
+  .open-deck svg{width:16px; height:16px;}
+
+  .deck-grid{
+    display:grid; grid-template-columns:1.9fr 1fr 1fr; grid-template-rows:auto auto;
+    gap:18px;
+  }
+  .slide{
+    border-radius:16px; overflow:hidden; position:relative; background:#fff; aspect-ratio:16/9;
+    box-shadow:0 2px 4px rgba(48,30,72,.05), 0 18px 44px -18px rgba(75,48,110,.4);
+    border:1px solid rgba(255,255,255,.6);
+    opacity:0; transform:translateY(26px) scale(.965);
+  }
+  .slide.hero-slide{grid-row:span 2; aspect-ratio:auto;}
+  .slide.in{animation:slideRise .85s var(--ease) forwards;}
+  @keyframes slideRise{to{opacity:1; transform:translateY(0) scale(1);}}
+  .slide-num{position:absolute; right:12px; bottom:10px; z-index:9; font:600 10px/1 'Inter'; letter-spacing:.1em; color:rgba(255,255,255,.7);}
+  .slide-num.dk{color:rgba(60,40,80,.4);}
+
+  /* shared mini-slide type */
+  .ms{width:100%; height:100%; position:relative; padding:22px; display:flex; flex-direction:column;}
+  .ms-k{font:600 8px/1 'Inter'; letter-spacing:.18em; text-transform:uppercase; opacity:.7; margin-bottom:8px;}
+  .ms-h{font-family:'Fraunces',serif; font-weight:400; letter-spacing:-.01em; line-height:1.06;}
+
+  /* glass-ribbon motif (A's SVG language reused) */
+
+  /* ---------- the arc hint (input → reveal → deck) ---------- */
+  .arc{
+    grid-column:1 / -1; margin-top:48px;
+    display:flex; align-items:center; gap:18px; opacity:.92;
+  }
+  .arc .step{display:flex; align-items:center; gap:11px;}
+  .arc .bead{
+    width:30px; height:30px; border-radius:10px; display:grid; place-items:center;
+    font-family:'Fraunces',serif; font-size:14px; color:#fff;
+    background:linear-gradient(135deg,var(--foxit),#401842); box-shadow:var(--shadow-sm);
+    transition:.4s var(--ease);
+  }
+  .arc .step.ghost .bead{background:rgba(59,40,86,.14); color:var(--ink-soft); box-shadow:none;}
+  .arc .step .name{font-size:13.5px; font-weight:600; color:var(--ink);}
+  .arc .step.ghost .name{color:var(--ink-faint); font-weight:500;}
+  .arc .flow{flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,rgba(107,63,160,.4),rgba(156,196,254,.25),rgba(59,40,86,.06));}
+
+  /* mini-slide CSS interiors for the promise rail / shop-the-look */
+  .mini{position:relative; aspect-ratio:16/9; border-radius:11px; overflow:hidden; box-shadow:0 12px 30px -14px rgba(59,40,86,.42); border:1px solid rgba(255,255,255,.55); cursor:pointer; transition:transform .2s var(--ease-out), box-shadow .2s;}
+  .mini:hover{transform:translateY(-3px); box-shadow:0 18px 36px -14px rgba(59,40,86,.5);}
+  .mini.lg{border-radius:14px;}
+  .ribbon{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(120% 90% at 95% 30%, rgba(200,182,244,.95), transparent 60%),
+      radial-gradient(80% 120% at 80% 90%, rgba(156,196,254,.9), transparent 55%),
+      conic-gradient(from 200deg at 78% 45%, rgba(255,255,255,0), rgba(240,168,242,.5), rgba(255,255,255,0) 50%);
+  }
+  .ribbon::after{content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(118deg, rgba(255,255,255,0) 0 14px, rgba(255,255,255,.16) 14px 16px, rgba(255,255,255,0) 16px 30px);
+    mix-blend-mode:screen; opacity:.7;
+    -webkit-mask:radial-gradient(120% 110% at 88% 45%, #000 25%, transparent 70%); mask:radial-gradient(120% 110% at 88% 45%, #000 25%, transparent 70%);}
+  .mcv{background:#fff;}
+  .mcv .ribbon{left:42%;}
+  .mcv .veil{position:absolute; inset:0 58% 0 0; background:linear-gradient(90deg,#fff 55%,transparent);}
+  .mcv .txt{position:absolute; left:9%; top:50%; transform:translateY(-50%); width:50%;}
+  .mcv .eb{font-size:7px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--foxit); margin-bottom:7px;}
+  .mcv .h{font-family:'Fraunces',serif; font-weight:400; font-size:18px; line-height:1.02; color:var(--ink); letter-spacing:-.02em;}
+  .mcv .h em{font-style:italic; color:var(--foxit);}
+  .mcv .sub{margin-top:8px; font-size:7.5px; color:var(--ink-soft); line-height:1.4; max-width:88%;}
+  .mst{background:linear-gradient(160deg,#fff,#faf7ff);}
+  .mst .h{position:absolute; left:10%; top:15%; font-family:'Fraunces',serif; font-size:9px; color:var(--ink); font-weight:400;}
+  .mst .row{position:absolute; left:10%; right:10%; bottom:20%; display:flex; gap:6px;}
+  .mst .stat{flex:1; padding:6px 6px 5px; border-radius:6px; background:rgba(255,255,255,.7); border:1px solid var(--line);}
+  .mst .num{font-family:'Fraunces',serif; font-size:14px; font-weight:500; line-height:1; background:linear-gradient(120deg,var(--magenta),var(--blue)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .mst .cap{font-size:5px; color:var(--ink-soft); margin-top:3px;}
+  .msp{background:#fff;}
+  .msp .img{position:absolute; right:0; top:0; bottom:0; width:46%;}
+  .msp .img .ribbon{inset:0;}
+  .msp .body{position:absolute; left:10%; top:20%; right:52%;}
+  .msp .body .h{font-family:'Fraunces',serif; font-size:10px; color:var(--ink); line-height:1.05; margin-bottom:6px; font-weight:400;}
+  .msp .ln{height:2.5px; border-radius:2px; background:rgba(59,40,86,.12); margin-bottom:4px;}
+  .msp .ln.s{width:68%;} .msp .ln.m{width:90%;}
+
+  /* theme-swap flash on the deck (free + instant re-skin feedback) */
+  .deck-grid.swapping .slide{animation:reskinFlash .55s var(--ease);}
+  @keyframes reskinFlash{0%{filter:saturate(1);}45%{filter:saturate(1.4) brightness(1.04); transform:translateY(-2px) scale(1.004);}100%{filter:saturate(1); transform:none;}}
+
+  .reset{position:fixed; left:22px; bottom:20px; z-index:30; font-size:12px; color:var(--ink-soft); background:rgba(255,255,255,.6); border:1px solid var(--glass-bd); padding:7px 13px; border-radius:11px; cursor:pointer; backdrop-filter:blur(10px);}
+  .reset:hover{color:var(--ink);}
+
+  /* corner badge — kept out of the design */
+  .badge{position:fixed; right:14px; bottom:14px; z-index:50; font:600 11px/1 'Inter'; letter-spacing:.04em; color:#fff; background:rgba(59,40,86,.78); backdrop-filter:blur(8px); padding:7px 12px; border-radius:9px; box-shadow:var(--shadow-sm);}
+
+  @media (max-width:1200px){
+    .deck-grid{grid-template-columns:1fr 1fr;}
+    .slide.hero-slide{grid-row:span 1; aspect-ratio:16/9;}
+  }
+</style>
+</head>
+<body>
+  <div class="ambient"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+  <div class="badge">Round 2 · Balanced</div>
+  <button class="reset" onclick="reset()">↺ Replay</button>
+
+  <div class="stage">
+    <!-- whisper chrome -->
+    <header class="chrome">
+      <div class="brand"><span class="mark"></span><b>Compose</b></div>
+      <div class="chrome-r">
+        <span class="pip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Slides
+        </span>
+        <span class="avatar"></span>
+      </div>
+    </header>
+
+    <!-- ============ SCENE 1 — INPUT ============ -->
+    <section class="scene live" id="scene-input">
+      <div class="hero">
+        <span class="eyebrow"><span class="dot"></span>New presentation</span>
+        <h1 class="headline">One line in.<br>A <em>finished deck</em> out.</h1>
+
+        <div class="magic">
+          <textarea id="topic" placeholder="A board update on our Q3 results — confident, exec-ready.">The future of renewable energy for our 2026 board review</textarea>
+          <div class="magic-foot">
+            <div class="adv">
+              <button title="Choose a theme">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20c1 0 1.5-.8 1.5-1.5 0-1.6-1.5-1.6-1.5-3 0-.8.7-1.5 1.5-1.5H16a5 5 0 0 0 5-5c0-5-4-9-9-9z"/></svg>
+                Theme
+              </button>
+              <button title="Customize audience, tone, depth">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                Customize
+              </button>
+              <button title="Upload reference">
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M12 3v13M7 8l5-5 5 5"/></svg>
+              </button>
+              <span class="sep"></span>
+              <span class="stepper"><i onclick="step(-1)">–</i><span class="count" id="cnt">9</span><i onclick="step(1)">+</i></span>
+            </div>
+            <button class="generate" onclick="run()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"/></svg>
+              Generate
+            </button>
+          </div>
+        </div>
+
+        <div class="doorway">
+          <button class="surprise" onclick="surprise()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7"/><path d="M3 8V3h5M16 21h5v-5"/></svg>
+            Surprise me
+          </button>
+          <span class="or">no topic needed</span>
+        </div>
+      </div>
+
+      <!-- the quiet promise rail (becomes shop-the-look after reveal) -->
+      <aside class="promise">
+        <div class="promise-card">
+          <div class="promise-head">
+            <span class="t">Your deck, designing itself</span>
+            <span class="live"><span class="blink"></span>Live</span>
+          </div>
+          <div class="promise-hero">
+            <div class="mini mcv lg">
+              <div class="ribbon"></div><div class="veil"></div>
+              <div class="txt">
+                <div class="eb">Board Review · 2026</div>
+                <div class="h">A strong quarter, <em>told straight.</em></div>
+                <div class="sub">Revenue beat plan. Two headwinds. The plan for Q4.</div>
+              </div>
+            </div>
+          </div>
+          <div class="promise-strip">
+            <div class="mini msp"><div class="img"><div class="ribbon"></div></div><div class="body"><div class="h">The beat</div><div class="ln m"></div><div class="ln m"></div><div class="ln s"></div></div></div>
+            <div class="mini mst"><div class="h">Numbers</div><div class="row"><div class="stat"><div class="num">+24%</div><div class="cap">Rev</div></div><div class="stat"><div class="num">3.1×</div><div class="cap">Pipe</div></div><div class="stat"><div class="num">92</div><div class="cap">NPS</div></div></div></div>
+            <div class="mini msp"><div class="img"><div class="ribbon"></div></div><div class="body"><div class="h">Q4 plan</div><div class="ln m"></div><div class="ln s"></div><div class="ln m"></div></div></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ============ SCENE 2 — GENERATING ============ -->
+    <section class="scene" id="scene-generating">
+      <div class="gen-orbit" id="orbit">
+        <div class="gen-ring r1"></div>
+        <div class="gen-ring r2"></div>
+        <div class="gen-core"></div>
+      </div>
+      <div class="gen-status" id="genStatus">Reading your idea…</div>
+      <div class="gen-sub" id="genSub">understanding intent</div>
+      <div class="gen-track"><div class="gen-fill" id="genFill"></div></div>
+    </section>
+
+    <!-- ============ SCENE 3 — REVEAL ============ -->
+    <section class="scene" id="scene-reveal">
+      <div class="reveal-top">
+        <div>
+          <div class="reveal-kicker">Designed · Dawn Prism · <span id="revealCount">9</span> slides</div>
+          <h1 class="reveal-title" id="revealTitle">The Future of <em>Renewable Energy</em></h1>
+        </div>
+        <div class="reveal-actions">
+          <!-- cheap + instant : the obvious one -->
+          <button class="reskin" onclick="reskin()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2e1065" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            Try a theme
+          </button>
+          <!-- deliberate : re-writes content -->
+          <button class="ghost-act" onclick="run()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M20 9a8 8 0 0 0-14-3M4 15a8 8 0 0 0 14 3"/></svg>
+            Regenerate
+          </button>
+          <button class="open-deck">
+            Open in editor
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="deck-grid" id="deckGrid">
+        <!-- HERO COVER — split editorial with glass ribbons (A) -->
+        <div class="slide hero-slide" data-i="0">
+          <div class="ms" style="background:#fbf9ff; padding:0;">
+            <div style="position:absolute; inset:0; display:grid; grid-template-columns:1.05fr 1fr;">
+              <div style="padding:44px 38px; display:flex; flex-direction:column; justify-content:center;">
+                <div class="ms-k" style="color:#6B3FA0; font-size:11px; margin-bottom:18px;">Board Review · 2026</div>
+                <div class="ms-h" id="coverH" style="color:#2a1d3f; font-size:40px; line-height:1.04;">The Future of <span style="font-style:italic; color:#6B3FA0;">Renewable</span> Energy</div>
+                <div style="font-size:13px; color:#8a8096; margin-top:18px; max-width:240px; line-height:1.5;">A market crossing the threshold from subsidy to scale.</div>
+              </div>
+              <div style="position:relative; overflow:hidden; background:linear-gradient(150deg,#C8B6F4,#9CC4FE);">
+                <svg viewBox="0 0 300 460" preserveAspectRatio="xMidYMid slice" style="position:absolute; inset:0; width:100%; height:100%;">
+                  <defs>
+                    <linearGradient id="rib1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".85"/><stop offset="1" stop-color="#F0A8F2" stop-opacity=".35"/></linearGradient>
+                    <linearGradient id="rib2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9CC4FE" stop-opacity=".7"/><stop offset="1" stop-color="#ffffff" stop-opacity=".5"/></linearGradient>
+                    <linearGradient id="rib3" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#E267E4" stop-opacity=".4"/><stop offset="1" stop-color="#ffffff" stop-opacity=".75"/></linearGradient>
+                  </defs>
+                  <path d="M-20 120 C 80 40, 200 220, 320 90 L 320 170 C 200 300, 80 120, -20 200 Z" fill="url(#rib1)"/>
+                  <path d="M-20 240 C 100 180, 220 360, 320 240 L 320 320 C 220 440, 100 260, -20 320 Z" fill="url(#rib2)"/>
+                  <path d="M40 -10 C 160 60, 120 260, 260 200 L 300 250 C 150 330, 200 80, 80 30 Z" fill="url(#rib3)" opacity=".8"/>
+                  <ellipse cx="220" cy="150" rx="90" ry="180" fill="#ffffff" opacity=".18" transform="rotate(30 220 150)"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="slide-num">01</div>
+        </div>
+
+        <!-- STAT TRIO -->
+        <div class="slide" data-i="1">
+          <div class="ms" style="background:linear-gradient(160deg,#fff,#f5f0ff);">
+            <div class="ms-k" style="color:#6B3FA0;">By the numbers</div>
+            <div style="display:flex; gap:14px; margin-top:auto; margin-bottom:6px;">
+              <div><div style="font-family:'Fraunces'; font-size:30px; color:#3b2756; line-height:1;">86%</div><div style="font-size:9px; color:#9990a6; margin-top:5px;">clean by 2035</div></div>
+              <div><div style="font-family:'Fraunces'; font-size:30px; color:#6B3FA0; line-height:1;">$1.7T</div><div style="font-size:9px; color:#9990a6; margin-top:5px;">2026 capex</div></div>
+              <div><div style="font-family:'Fraunces'; font-size:30px; color:#3b2756; line-height:1;">3×</div><div style="font-size:9px; color:#9990a6; margin-top:5px;">storage growth</div></div>
+            </div>
+          </div>
+          <div class="slide-num dk">04</div>
+        </div>
+
+        <!-- SPLIT IMAGE (photo full-bleed feel) -->
+        <div class="slide" data-i="2">
+          <div class="ms" style="padding:0; background:linear-gradient(135deg,#2a1d3f,#4a3168);">
+            <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" style="position:absolute; inset:0; width:100%; height:100%; opacity:.85;">
+              <defs><linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0A8F2"/><stop offset=".6" stop-color="#9CC4FE"/><stop offset="1" stop-color="#3b2756"/></linearGradient></defs>
+              <rect width="320" height="180" fill="url(#sky2)"/>
+              <g fill="#241a33" opacity=".55"><rect x="40" y="120" width="14" height="60"/><rect x="60" y="100" width="10" height="80"/><rect x="76" y="130" width="16" height="50"/><rect x="200" y="110" width="12" height="70"/><rect x="218" y="95" width="10" height="85"/></g>
+              <circle cx="160" cy="70" r="26" fill="#fff" opacity=".5"/>
+            </svg>
+            <div style="position:absolute; inset:0; background:linear-gradient(0deg,rgba(20,10,30,.75),transparent 60%);"></div>
+            <div class="ms-h" style="color:#fff; font-size:16px; margin-top:auto; position:relative;">Where the grid<br>is going</div>
+          </div>
+          <div class="slide-num">06</div>
+        </div>
+
+        <!-- PULL QUOTE -->
+        <div class="slide" data-i="3">
+          <div class="ms" style="background:#3b2756; justify-content:center;">
+            <div style="font-family:'Fraunces'; font-size:44px; color:#C8B6F4; line-height:0; height:14px;">“</div>
+            <div style="font-family:'Fraunces'; font-style:italic; font-weight:300; font-size:17px; color:#fff; line-height:1.32;">The cheapest electricity in history is now the default choice.</div>
+            <div style="font-size:9px; color:rgba(255,255,255,.5); margin-top:12px; letter-spacing:.1em;">IEA · WORLD ENERGY OUTLOOK</div>
+          </div>
+          <div class="slide-num">07</div>
+        </div>
+
+        <!-- ICON GRID / FEATURES -->
+        <div class="slide" data-i="4">
+          <div class="ms" style="background:linear-gradient(160deg,#fff,#eef3ff);">
+            <div class="ms-k" style="color:#6B3FA0;">Three levers</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:auto;">
+              <div style="text-align:center;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(110deg,#F0A8F2,#C8B6F4 50%,#9CC4FE);margin:0 auto 6px;box-shadow:0 4px 10px -4px rgba(101,63,160,.4);"></div><div style="font-size:8.5px;color:#5b5168;">Storage</div></div>
+              <div style="text-align:center;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#9CC4FE,#4198FF);margin:0 auto 6px;box-shadow:0 4px 10px -4px rgba(65,152,255,.4);"></div><div style="font-size:8.5px;color:#5b5168;">Grid AI</div></div>
+              <div style="text-align:center;"><div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#E267E4,#C8B6F4);margin:0 auto 6px;box-shadow:0 4px 10px -4px rgba(226,103,228,.4);"></div><div style="font-size:8.5px;color:#5b5168;">Policy</div></div>
+            </div>
+          </div>
+          <div class="slide-num dk">08</div>
+        </div>
+      </div>
+
+      <!-- shop-the-look : the director rail's post-reveal job -->
+    </section>
+
+    <!-- the arc hint -->
+    <div class="arc" id="arc">
+      <div class="step" id="arc1"><span class="bead">1</span><span class="name">Your idea</span></div>
+      <div class="flow"></div>
+      <div class="step ghost" id="arc2"><span class="bead">2</span><span class="name">The reveal</span></div>
+      <div class="flow"></div>
+      <div class="step ghost" id="arc3"><span class="bead">3</span><span class="name">A designed deck</span></div>
+    </div>
+  </div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const scenes = {input:'#scene-input', gen:'#scene-generating', reveal:'#scene-reveal'};
+  function show(name){
+    Object.values(scenes).forEach(s=>$(s).classList.remove('live'));
+    $(scenes[name]).classList.add('live');
+  }
+  function setArc(n){
+    [['arc1',1],['arc2',2],['arc3',3]].forEach(([id,i])=>{
+      $('#'+id).classList.toggle('ghost', i>n);
+    });
+  }
+
+  // slide count stepper
+  let cnt = 9;
+  function step(d){ cnt = Math.max(3, Math.min(20, cnt+d)); $('#cnt').textContent = cnt; }
+
+  function surprise(){
+    const ideas = [
+      'The quiet rise of the four-day work week',
+      'How great teams disagree and still ship',
+      'Designing calm software in a noisy world',
+      'What deep-sea ecosystems teach us about resilience'
+    ];
+    $('#topic').value = ideas[Math.floor(Math.random()*ideas.length)];
+    run();
+  }
+
+  // B's particle field — assembles inward into the glowing core
+  function spawnParticles(){
+    const orbit = $('#orbit');
+    orbit.querySelectorAll('.pt').forEach(p=>p.remove());
+    const cols = ['#E267E4','#C8B6F4','#9CC4FE','#4198FF','#F0A8F2'];
+    for(let i=0;i<28;i++){
+      const p = document.createElement('div');
+      p.className='pt';
+      const ang = Math.random()*Math.PI*2, r = 128+Math.random()*64;
+      const x = Math.cos(ang)*r, y = Math.sin(ang)*r;
+      p.style.background = cols[i%cols.length];
+      p.style.setProperty('--x', x+'px'); p.style.setProperty('--y', y+'px');
+      p.style.transform = `translate(${x}px,${y}px)`;
+      p.style.animation = `assemble 2.2s var(--ease) ${(i*55)%1400}ms infinite`;
+      orbit.appendChild(p);
+    }
+  }
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `@keyframes assemble{
+    0%{transform:translate(var(--x),var(--y));opacity:0;}
+    22%{opacity:1;}
+    72%{opacity:1;}
+    100%{transform:translate(0,0) scale(.35);opacity:0;}
+  }`;
+  document.head.appendChild(styleEl);
+
+  const STAGES = [
+    {t:'Reading your idea…', s:'understanding intent', p:14},
+    {t:'Composing the <em>structure</em>…', s:'one narrative, slide by slide', p:40},
+    {t:'Choosing a <em>palette</em>…', s:'matching mood to message', p:64},
+    {t:'Designing each layout…', s:'placing imagery & rhythm', p:88},
+    {t:'Almost there', s:'final polish', p:100},
+  ];
+
+  let timers = [];
+  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+
+  function run(){
+    clearTimers();
+    const topic = ($('#topic').value || '').trim() || 'Your big idea';
+    // italic accent on the trailing words for cover + title
+    const words = topic.split(' ');
+    let title = topic, coverHTML = topic;
+    if(words.length>2){
+      const tail = words.slice(-2).join(' ');
+      const head = words.slice(0,-2).join(' ');
+      title = head + ' <em>'+tail+'</em>';
+      coverHTML = head.replace(/ /g,'<br>') + '<br><span style="font-style:italic;color:#6B3FA0;">'+tail+'</span>';
+    }
+    $('#revealTitle').innerHTML = title;
+    $('#coverH').innerHTML = coverHTML;
+    $('#revealCount').textContent = cnt;
+
+    setArc(2);
+    show('gen');
+    spawnParticles();
+    $('#genFill').style.width='0%';
+
+    STAGES.forEach((st,i)=>{
+      timers.push(setTimeout(()=>{
+        $('#genStatus').innerHTML = st.t;
+        $('#genSub').textContent = st.s;
+        $('#genFill').style.width = st.p+'%';
+      }, 620*i + 220));
+    });
+    timers.push(setTimeout(reveal, 620*STAGES.length + 560));
+  }
+
+  function reveal(){
+    setArc(3);
+    show('reveal');
+    const slides = document.querySelectorAll('#scene-reveal .slide');
+    slides.forEach(s=>s.classList.remove('in'));
+    // B's cover-first staggered cascade
+    slides.forEach((s,i)=>{
+      timers.push(setTimeout(()=>s.classList.add('in'), 150*i + 120));
+    });
+  }
+
+  // cheap + instant re-skin : a free palette flash, no regeneration
+  const THEMES = [
+    {grid:'#fbf9ff', kicker:'Dawn Prism', label:'Dawn Prism'},
+    {grid:'#fbf7f0', kicker:'Warm Editorial', label:'Warm Editorial'},
+    {grid:'#eef3ff', kicker:'Cool Slate', label:'Cool Slate'},
+    {grid:'#f3ecff', kicker:'Violet Hour', label:'Violet Hour'},
+  ];
+  let tIdx = 0;
+  function reskin(){
+    tIdx = (tIdx+1)%THEMES.length;
+    const g = $('#deckGrid');
+    g.classList.remove('swapping'); void g.offsetWidth; g.classList.add('swapping');
+    $('.reveal-kicker').firstChild.textContent = 'Designed · ';
+    $('.reveal-kicker').innerHTML = 'Designed · '+THEMES[tIdx].label+' · <span id="revealCount">'+cnt+'</span> slides';
+  }
+
+  function reset(){
+    clearTimers();
+    setArc(1);
+    show('input');
+  }
+
+  // textarea autosize
+  const ta = $('#topic');
+  const fit = ()=>{ ta.style.height='auto'; ta.style.height=Math.max(96, ta.scrollHeight)+'px'; };
+  ta.addEventListener('input', fit); fit();
+</script>
+</body>
+</html>

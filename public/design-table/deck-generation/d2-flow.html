@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foxit Slides · Deck Generation — D2 · Flow & Interaction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;560;600;700&family=Source+Serif+4:ital,opsz,wght@1,8..60,500;1,8..60,600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   D2 · FLOW & INTERACTION  (ux-flow-designer lens)
+   ------------------------------------------------------------
+   THESIS: configuring a deck should feel like nudging a control,
+   not filling a form. The experience over TIME:
+
+   • RESTING CALM — before engagement the user sees ONLY the
+     textarea, ONE quiet row of "value pills" (icon + current
+     value, no options exposed), Attach, the honest Slides·16:9
+     indicator, and Generate. No chips. No accordion. No labels.
+     The 5 controls read as a sentence the user can amend.
+
+   • REVEAL ON INTENT — clicking ONE pill opens a single focused
+     popover anchored to it, showing ONLY that control's choices.
+     Long lists (Audience / Tone / Voice) get instant type-ahead.
+     One popover at a time; opening another closes the first;
+     Esc / outside-click / Enter dismiss. The rest of the card
+     stays put — nothing reflows, nothing else is exposed.
+
+   • HAPPY PATH — type → Generate (1 action). Most users never
+     open a control. Power path: type → tap 1 pill → pick → Gen.
+
+   • THE GENERATE MOMENT — the card "settles": value-pills and
+     actions cross-fade out, an accent orb spins up, a staged
+     status writes itself, and a deck silhouette assembles. A
+     premium hand-off, not a spinner.
+
+   • KEYBOARD — ⌘K opens the first un-set control; Tab accepts
+     the ghost example; ⌘↵ generates; arrows move within a
+     popover; type-to-filter on the long lists. Full focus rings.
+     prefers-reduced-motion fully guarded.
+   Tokens lifted from the approved manager-v5 home aesthetic.
+   ============================================================ */
+
+:root{
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
+  --s-6:32px; --s-7:48px; --s-8:64px;
+
+  --ink:        #0B1220;
+  --ink-2:      #1E293B;
+  --body:       #475569;
+  --muted:      #94A3B8;
+  --faint:      #CBD5E1;
+  --canvas:     #FCFCFD;
+  --surface:    #FFFFFF;
+  --accent:     #6B3FA0;
+  --accent-ink: #57318A;
+  --accent-wash:rgba(107,63,160,0.06);
+  --accent-line:rgba(107,63,160,0.32);
+  --accent-soft:rgba(107,63,160,0.10);
+  --spark:      #C5A6EC;
+
+  --grad-violet:#6B3FA0;
+  --grad-indigo:#5B6CF0;
+  --grad-blue:  #4198FF;
+
+  --line:        rgba(15,23,42,0.08);
+  --line-strong: rgba(15,23,42,0.12);
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px;
+  --shadow-card:0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.05);
+  --shadow-lift:0 2px 6px rgba(15,23,42,0.06), 0 18px 44px rgba(15,23,42,0.09);
+  --shadow-pop:0 1px 2px rgba(15,23,42,0.06), 0 12px 32px rgba(15,23,42,0.14), 0 2px 8px rgba(33,18,64,0.06);
+
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--canvas); color:var(--body);
+  font-size:16px; line-height:1.5; min-height:100vh;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  .rise{ opacity:1 !important; transform:none !important; }
+}
+
+.page{ position:relative; min-height:100vh; }
+.page::before{
+  content:""; position:fixed; inset:0 0 auto 0; height:60vh;
+  background:radial-gradient(64% 64% at 50% -8%, rgba(107,63,160,0.05), transparent 62%);
+  pointer-events:none; z-index:0;
+}
+.wrap{
+  position:relative; z-index:1;
+  max-width:760px; margin:0 auto; padding:84px 32px 120px;
+}
+
+/* greeting + headline */
+.greeting{
+  font-size:13px; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:18px;
+}
+.greeting .dot{
+  display:inline-block; width:5px; height:5px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 0 3px var(--accent-wash);
+  vertical-align:2px; margin-right:9px;
+}
+.display{
+  font-size:42px; font-weight:700; line-height:1.06; letter-spacing:-.03em; color:var(--ink);
+}
+.display .accent{
+  font-family:'Source Serif 4',Georgia,serif; font-style:italic; font-weight:600; letter-spacing:-.012em;
+  background:linear-gradient(108deg, var(--grad-violet) 0%, var(--grad-indigo) 52%, var(--grad-blue) 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+  padding-right:.04em;
+}
+.subhead{ font-size:16px; font-weight:450; color:var(--body); margin-top:18px; max-width:560px; }
+
+/* ============================================================
+   PROMPT CARD
+   ============================================================ */
+.hero-card{ position:relative; margin-top:var(--s-7); }
+.hero-card::before{
+  content:""; position:absolute; inset:-34px -18px;
+  background:radial-gradient(58% 78% at 42% 26%, rgba(107,63,160,0.05), transparent 70%);
+  filter:blur(10px); z-index:0; pointer-events:none; opacity:.85;
+  transition:opacity .4s var(--ease);
+}
+.hero-card.is-focused::before{ opacity:1.35; }
+
+.prompt{
+  position:relative; z-index:1;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r-xl); box-shadow:var(--shadow-card);
+  transition:box-shadow .35s var(--ease), border-color .35s var(--ease), transform .35s var(--ease);
+}
+.hero-card.is-focused .prompt{
+  border-color:var(--accent-line);
+  box-shadow:var(--shadow-lift), 0 0 0 4px var(--accent-wash);
+  transform:translateY(-1px);
+}
+.prompt.is-generating{ border-color:var(--accent-line); }
+
+/* textarea + cycling ghost */
+.field{ position:relative; padding:30px 32px 10px; }
+.field textarea{
+  position:relative; z-index:2;
+  width:100%; border:0; outline:0; resize:none; background:transparent;
+  font-family:inherit; font-size:19px; line-height:1.55; font-weight:450;
+  color:var(--ink-2); letter-spacing:-.005em; min-height:84px;
+}
+.field textarea::placeholder{ color:transparent; }
+.ghost{
+  position:absolute; left:32px; right:32px; top:30px; z-index:1;
+  font-size:19px; line-height:1.55; font-weight:450; letter-spacing:-.005em;
+  color:var(--muted); pointer-events:none; user-select:none;
+}
+.ghost .lead{ color:var(--muted); }
+.ghost #ghostCycle{ display:inline; transition:opacity .42s var(--ease); }
+.ghost.is-hidden{ display:none; }
+.tabhint{ display:inline-flex; align-items:center; gap:6px; margin-left:10px; vertical-align:1px; opacity:.9; }
+.tabhint .tkbd{
+  font-family:inherit; font-size:11px; font-weight:500; color:var(--muted);
+  border:1px solid var(--line-strong); border-bottom-width:1.5px; border-radius:5px;
+  padding:1px 6px; background:#FBFBFC; letter-spacing:.02em;
+}
+.tabhint .ttxt{ font-size:12px; color:var(--faint); font-weight:450; }
+
+/* ============================================================
+   VALUE-PILL ROW — the resting state of the 5 controls.
+   Each pill is icon + current value (NO options exposed).
+   Unset controls read muted ("Audience", "Tone"); set controls
+   read in ink. This is the "sentence you can amend".
+   ============================================================ */
+.controls{
+  display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+  padding:6px 30px 4px;
+}
+.ctl-pill{
+  position:relative;
+  display:inline-flex; align-items:center; gap:8px;
+  height:38px; padding:0 13px 0 11px; border-radius:999px;
+  border:1px solid var(--line); background:var(--surface); cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:500; color:var(--muted);
+  letter-spacing:-.004em; white-space:nowrap;
+  transition:background .16s var(--ease), border-color .16s var(--ease), color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.ctl-pill .ico{ width:17px; height:17px; flex-shrink:0; display:block; }
+.ctl-pill .ico svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.7; display:block; }
+.ctl-pill .chev{ width:13px; height:13px; margin-left:1px; opacity:.5; }
+.ctl-pill .chev svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:1.9; display:block; }
+.ctl-pill:hover{ background:#FBFAFD; border-color:var(--line-strong); color:var(--ink-2); }
+.ctl-pill:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); border-color:var(--accent-line); }
+/* a control that holds a non-default value reads "set" */
+.ctl-pill.is-set{ color:var(--ink); border-color:var(--accent-line); background:var(--accent-wash); }
+.ctl-pill.is-set .ico{ color:var(--accent); }
+.ctl-pill.is-open{ color:var(--ink); border-color:var(--accent-line); background:var(--accent-wash); box-shadow:0 0 0 4px var(--accent-wash); }
+.ctl-pill.is-open .ico{ color:var(--accent); }
+
+/* ============================================================
+   ACTION ROW — Attach · Slides·16:9 · (spacer) · ⌘K hint · Generate
+   ============================================================ */
+.actionrow{
+  display:flex; align-items:center; gap:14px;
+  padding:12px 24px 20px 22px;
+  margin-top:6px;
+  border-top:1px solid transparent; transition:border-color .22s var(--ease);
+}
+.hero-card.is-focused .actionrow,
+.prompt.has-text .actionrow{ border-top-color:var(--line); }
+
+.tool{
+  display:inline-flex; align-items:center; gap:9px;
+  height:40px; min-width:40px; padding:0 14px; border-radius:var(--r-md);
+  border:1px solid var(--line); background:var(--surface); cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:500; color:var(--ink-2);
+  letter-spacing:-.004em; white-space:nowrap;
+  transition:background .16s var(--ease), border-color .16s var(--ease), color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.tool:hover{ background:#FBFAFD; border-color:var(--line-strong); color:var(--ink); }
+.tool:active{ background:#F6F4FB; }
+.tool:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); border-color:var(--accent-line); }
+.tool svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.7; flex-shrink:0; }
+.tool.is-static{ cursor:default; }
+.tool.is-static:hover{ background:var(--surface); border-color:var(--line); color:var(--ink-2); }
+.tool .val{ color:var(--muted); font-weight:450; }
+
+.spacer{ flex:1; }
+
+.cmdk-hint{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; color:var(--muted); letter-spacing:.005em; white-space:nowrap;
+  opacity:0; transition:opacity .2s var(--ease);
+}
+.hero-card.is-focused .cmdk-hint{ opacity:1; }
+.cmdk-hint .kbd{
+  font-family:inherit; font-size:11px; font-weight:500; border:1px solid var(--line-strong);
+  border-bottom-width:1.5px; border-radius:5px; padding:1px 5px; color:var(--muted); background:#FBFBFC;
+}
+
+.generate{
+  display:inline-flex; align-items:center; gap:10px;
+  height:44px; padding:0 22px; border-radius:var(--r-md);
+  border:0; cursor:pointer; background:var(--ink); color:#fff;
+  font-family:inherit; font-size:15px; font-weight:560; letter-spacing:-.005em;
+  white-space:nowrap; flex-shrink:0;
+  box-shadow:0 1px 2px rgba(15,23,42,.12), 0 6px 18px rgba(15,23,42,.10);
+  transition:transform .16s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease), opacity .2s var(--ease);
+}
+.generate svg{ width:17px; height:17px; }
+.generate .spark{ color:var(--spark); }
+.generate:hover{ background:#000; transform:translateY(-1px); box-shadow:var(--shadow-card); }
+.generate:active{ transform:translateY(0); }
+.generate:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); }
+.generate[disabled]{ background:#EEF0F3; color:var(--faint); cursor:not-allowed; box-shadow:none; }
+.generate[disabled] .spark{ color:var(--faint); }
+
+/* ============================================================
+   POPOVER — the focused reveal for ONE control. Anchored to its
+   pill, floats above, shows only that control's options. Long
+   lists get a live type-ahead filter at the top.
+   ============================================================ */
+.pop{
+  position:absolute; z-index:40; top:0; left:0;
+  min-width:248px; max-width:320px;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r-lg); box-shadow:var(--shadow-pop);
+  padding:0; overflow:hidden;
+  opacity:0; transform:translateY(-6px) scale(.985); pointer-events:none;
+  transform-origin:top left;
+  transition:opacity .2s var(--ease), transform .22s var(--ease);
+}
+.pop.is-open{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.pop-head{
+  display:flex; align-items:center; gap:9px;
+  padding:13px 15px 11px; border-bottom:1px solid var(--line);
+}
+.pop-head .ico{ width:17px; height:17px; color:var(--accent); }
+.pop-head .ico svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.7; }
+.pop-head .ttl{ font-size:13px; font-weight:600; color:var(--ink-2); letter-spacing:-.004em; }
+.pop-head .clear{
+  margin-left:auto; font-family:inherit; font-size:12px; font-weight:500; color:var(--muted);
+  background:none; border:0; cursor:pointer; padding:3px 6px; border-radius:6px;
+  transition:color .15s var(--ease), background .15s var(--ease);
+}
+.pop-head .clear:hover{ color:var(--accent-ink); background:var(--accent-wash); }
+.pop-head .clear.is-hidden{ display:none; }
+
+/* live filter input (long lists only) */
+.pop-filter{ padding:10px 12px 4px; }
+.pop-filter input{
+  width:100%; height:38px; border:1px solid var(--line-strong); border-radius:10px;
+  background:#FCFCFD; padding:0 12px; font-family:inherit; font-size:14px; color:var(--ink-2);
+  outline:none; transition:border-color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.pop-filter input::placeholder{ color:var(--faint); }
+.pop-filter input:focus{ border-color:var(--accent-line); box-shadow:0 0 0 4px var(--accent-wash); }
+
+/* options list */
+.pop-list{ padding:6px; max-height:286px; overflow-y:auto; }
+.pop-opt{
+  display:flex; align-items:center; gap:10px; width:100%;
+  padding:9px 10px; border-radius:9px; border:0; background:none; cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:480; color:var(--ink-2);
+  letter-spacing:-.004em; text-align:left;
+  transition:background .12s var(--ease), color .12s var(--ease);
+}
+.pop-opt .dot{
+  width:7px; height:7px; border-radius:50%; flex-shrink:0;
+  background:transparent; box-shadow:inset 0 0 0 1.4px var(--faint);
+  transition:background .14s var(--ease), box-shadow .14s var(--ease);
+}
+.pop-opt .lbl{ flex:1; }
+.pop-opt .sub{ display:block; font-size:12px; font-weight:450; color:var(--muted); margin-top:2px; letter-spacing:0; }
+.pop-opt .check{ width:16px; height:16px; color:var(--accent); opacity:0; flex-shrink:0; }
+.pop-opt .check svg{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.2; }
+.pop-opt:hover,.pop-opt.is-active{ background:var(--accent-wash); color:var(--accent-ink); }
+.pop-opt.is-sel{ color:var(--accent-ink); font-weight:560; }
+.pop-opt.is-sel .dot{ background:var(--accent); box-shadow:inset 0 0 0 1.4px var(--accent); }
+.pop-opt.is-sel .check{ opacity:1; }
+.pop-opt.is-hidden{ display:none; }
+.pop-empty{ padding:14px 12px 16px; font-size:13px; color:var(--muted); text-align:center; display:none; }
+.pop-empty.is-shown{ display:block; }
+
+/* "use my own" custom row sits under the filtered presets */
+.pop-custom{
+  border-top:1px solid var(--line); padding:8px; margin-top:2px; display:none;
+}
+.pop-custom.is-shown{ display:block; }
+.pop-custom .use{
+  display:flex; align-items:center; gap:10px; width:100%;
+  padding:9px 10px; border-radius:9px; border:0; background:none; cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:520; color:var(--accent-ink); text-align:left;
+  transition:background .12s var(--ease);
+}
+.pop-custom .use:hover{ background:var(--accent-wash); }
+.pop-custom .use .plus{ width:16px; height:16px; color:var(--accent); }
+.pop-custom .use .plus svg{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; }
+.pop-custom .use b{ font-weight:560; }
+
+/* compact segmented control (Detail) renders inside the popover */
+.pop-seg{ padding:12px; }
+.seg{
+  display:flex; gap:4px; padding:4px; border-radius:11px; background:#F4F5F7; border:1px solid var(--line);
+}
+.seg button{
+  flex:1; height:36px; border:0; border-radius:8px; background:transparent; cursor:pointer;
+  font-family:inherit; font-size:13.5px; font-weight:520; color:var(--body); letter-spacing:-.004em;
+  transition:background .16s var(--ease), color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.seg button:hover{ color:var(--ink-2); }
+.seg button.is-sel{ background:var(--surface); color:var(--accent-ink); box-shadow:0 1px 2px rgba(15,23,42,.08); }
+.seg button:focus-visible{ outline:none; box-shadow:0 0 0 3px var(--accent-wash); }
+.seg-hint{ font-size:12px; color:var(--muted); margin-top:9px; text-align:center; }
+
+/* generating state */
+.gen-status{ display:none; align-items:center; gap:14px; padding:28px 32px; }
+.prompt.is-generating .gen-status{ display:flex; }
+.prompt.is-generating .field,
+.prompt.is-generating .controls,
+.prompt.is-generating .actionrow{ display:none; }
+.gen-orb{ width:18px; height:18px; border-radius:50%; border:2px solid var(--accent-line); border-top-color:var(--accent); animation:spin .7s linear infinite; flex-shrink:0; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.gen-text{ font-size:15px; color:var(--ink-2); font-weight:480; }
+.gen-text b{ font-weight:600; color:var(--ink); }
+.gen-step{ font-size:13px; color:var(--muted); margin-top:2px; }
+.gen-deck{
+  margin-left:auto; display:flex; gap:6px; align-items:flex-end; height:34px;
+}
+.gen-deck i{
+  display:block; width:9px; border-radius:3px;
+  background:linear-gradient(180deg,var(--grad-indigo),var(--grad-violet)); opacity:.25;
+  animation:bar 1.1s var(--ease) infinite;
+}
+.gen-deck i:nth-child(1){ height:40%; animation-delay:0s; }
+.gen-deck i:nth-child(2){ height:70%; animation-delay:.12s; }
+.gen-deck i:nth-child(3){ height:100%; animation-delay:.24s; }
+.gen-deck i:nth-child(4){ height:62%; animation-delay:.36s; }
+@keyframes bar{ 0%,100%{ opacity:.25; } 50%{ opacity:.9; } }
+
+/* ============================================================
+   ANNOTATION RAIL — flow notes (toggle with the chip lower-right)
+   ============================================================ */
+.notes{
+  margin-top:var(--s-8); border:1px dashed var(--line-strong); border-radius:var(--r-lg);
+  background:rgba(107,63,160,0.018); padding:22px 26px;
+}
+.notes h4{ font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-ink); margin-bottom:14px; }
+.notes ul{ list-style:none; display:flex; flex-direction:column; gap:11px; }
+.notes li{ position:relative; padding-left:22px; font-size:14px; color:var(--body); line-height:1.5; }
+.notes li::before{ content:""; position:absolute; left:0; top:7px; width:7px; height:7px; border-radius:50%; background:var(--accent); opacity:.55; }
+.notes li b{ color:var(--ink-2); font-weight:600; }
+.notes kbd{
+  font-family:inherit; font-size:12px; font-weight:500; border:1px solid var(--line-strong);
+  border-bottom-width:1.5px; border-radius:5px; padding:0 5px; color:var(--ink-2); background:#FBFBFC;
+}
+
+.cornerlabel{
+  position:fixed; left:16px; bottom:16px; z-index:60;
+  background:var(--ink); color:#fff; font-size:11px; font-weight:600;
+  letter-spacing:.04em; padding:7px 12px; border-radius:8px;
+  box-shadow:0 4px 14px rgba(0,0,0,.22);
+}
+.cornerlabel b{ color:var(--spark); font-weight:600; }
+
+/* toast for the demo's terminal Generate action */
+.toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+  z-index:70; background:var(--ink); color:#fff; font-size:13.5px; font-weight:500;
+  padding:11px 18px; border-radius:11px; box-shadow:0 8px 28px rgba(0,0,0,.26);
+  opacity:0; pointer-events:none; transition:opacity .26s var(--ease), transform .26s var(--ease);
+  display:flex; align-items:center; gap:10px; max-width:520px;
+}
+.toast.is-shown{ opacity:1; transform:translateX(-50%) translateY(0); }
+.toast .ok{ width:18px; height:18px; color:var(--spark); }
+.toast .ok svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.4; }
+.toast code{ font-family:'SF Mono',ui-monospace,monospace; font-size:12px; color:var(--spark); }
+
+@media (max-width:680px){
+  .wrap{ padding:56px 20px 100px; }
+  .display{ font-size:34px; }
+  .controls{ padding-left:24px; padding-right:24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="wrap">
+
+    <div class="greeting"><span class="dot"></span>Good morning, Lisa</div>
+    <h1 class="display">Start with a sentence.<br>We <span class="accent">compose</span> the deck.</h1>
+    <p class="subhead">Describe what you want to present. Foxit Slides drafts the structure, writes the slides, and designs every page.</p>
+
+    <!-- PROMPT CARD -->
+    <div class="hero-card" id="heroCard">
+      <div class="prompt" id="prompt">
+
+        <!-- generating state -->
+        <div class="gen-status">
+          <div class="gen-orb"></div>
+          <div>
+            <div class="gen-text"><b id="genTitle">Composing your deck</b></div>
+            <div class="gen-step" id="genStep">Outlining sections…</div>
+          </div>
+          <div class="gen-deck" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+
+        <!-- textarea + ghost -->
+        <div class="field">
+          <div class="ghost" id="ghost">
+            <span class="lead">Try &ldquo;</span><span id="ghostCycle">A Series A pitch for a fintech startup</span><span class="lead">&rdquo;</span>
+            <span class="tabhint"><span class="tkbd">Tab</span><span class="ttxt">to use</span></span>
+          </div>
+          <textarea id="ta" rows="2" aria-label="Describe the deck you want to create"></textarea>
+        </div>
+
+        <!-- RESTING-STATE VALUE PILLS — the 5 controls, values only -->
+        <div class="controls" id="controls" role="group" aria-label="Deck settings">
+          <!-- pills injected by JS so state + popovers stay in sync -->
+        </div>
+
+        <!-- ACTION ROW -->
+        <div class="actionrow">
+          <button class="tool" id="attachBtn" type="button" aria-label="Attach files">
+            <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Attach
+          </button>
+          <div class="tool is-static" aria-label="Format: Slides, 16 by 9">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 20h18" stroke-linecap="round"/></svg>
+            Slides <span class="val">· 16:9</span>
+          </div>
+
+          <div class="spacer"></div>
+
+          <span class="cmdk-hint" aria-hidden="true"><span class="kbd">⌘</span><span class="kbd">K</span> settings · <span class="kbd">⌘</span><span class="kbd">↵</span> generate</span>
+          <button class="generate" id="genBtn" type="button" disabled>
+            <svg class="spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 5.1a3 3 0 0 0 1.9 1.9L20.7 11l-5.1 1.7a3 3 0 0 0-1.9 1.9L12 19.5l-1.7-5.1a3 3 0 0 0-1.9-1.9L3.3 11l5.1-1.7a3 3 0 0 0 1.9-1.9z"/></svg>
+            Generate
+          </button>
+        </div>
+
+      </div><!-- /prompt -->
+
+      <!-- POPOVER (single, reused for whichever control is open) -->
+      <div class="pop" id="pop" role="dialog" aria-modal="false" aria-label="Edit setting">
+        <div class="pop-head">
+          <span class="ico" id="popIco"></span>
+          <span class="ttl" id="popTtl">Audience</span>
+          <button class="clear" id="popClear" type="button">Clear</button>
+        </div>
+        <div class="pop-filter" id="popFilter">
+          <input id="popFilterInput" type="text" autocomplete="off" spellcheck="false" placeholder="Search or type your own…" aria-label="Search or type a custom value" />
+        </div>
+        <div class="pop-seg" id="popSeg" hidden>
+          <div class="seg" id="segWrap" role="radiogroup" aria-label="Detail level"></div>
+          <div class="seg-hint" id="segHint"></div>
+        </div>
+        <div class="pop-list" id="popList" role="listbox"></div>
+        <div class="pop-empty" id="popEmpty">No match — press Enter to use it as a custom value.</div>
+        <div class="pop-custom" id="popCustom">
+          <button class="use" id="popUse" type="button">
+            <span class="plus"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span>
+            <span>Use &ldquo;<b id="popUseTxt"></b>&rdquo;</span>
+          </button>
+        </div>
+      </div>
+    </div><!-- /hero-card -->
+
+    <!-- FLOW ANNOTATIONS -->
+    <div class="notes">
+      <h4>D2 · Flow notes</h4>
+      <ul>
+        <li><b>Resting calm.</b> Before you touch anything, the 5 controls are one quiet row of value-pills — icon + current value, no options exposed. Defaults read muted; a changed control turns violet. It reads like a sentence you can amend, not a form.</li>
+        <li><b>Reveal on intent.</b> Click a pill → a single focused popover opens anchored to it, showing <i>only</i> that control. Audience / Tone / Voice get instant type-ahead; below the presets, &ldquo;Use &lsquo;…&rsquo;&rdquo; turns whatever you typed into the custom value. Detail is a 3-stop segmented control. One popover at a time.</li>
+        <li><b>Fewest clicks.</b> Type a sentence, hit <kbd>Generate</kbd> — <b>1 action</b>. Tweak one thing first — <b>3</b> (pill → choice → Generate). The card never reflows while you configure.</li>
+        <li><b>Keyboard-first.</b> <kbd>Tab</kbd> accepts the ghost example · <kbd>⌘K</kbd> opens the first un-set control · arrows move in a popover, type-to-filter, <kbd>Enter</kbd> commits · <kbd>Esc</kbd> closes · <kbd>⌘↵</kbd> generates. Visible focus rings throughout; <code>prefers-reduced-motion</code> fully honored.</li>
+        <li><b>The Generate moment.</b> Pills + actions cross-fade out, an accent orb spins up, the status writes itself, and a deck silhouette assembles — a premium hand-off, not a spinner.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div class="cornerlabel">D2 · <b>Flow &amp; Interaction</b></div>
+<div class="toast" id="toast">
+  <span class="ok"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <span id="toastTxt"></span>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const reduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* ---- icon set (inline so the pills + popover share exact glyphs) ---- */
+  const ICONS = {
+    audience: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0" stroke-linecap="round"/><path d="M16 6.4a3 3 0 0 1 0 5.2M17.6 19a5 5 0 0 0-3-4.6" stroke-linecap="round"/></svg>',
+    tone:     '<svg viewBox="0 0 24 24"><path d="M4 10v4h3l4 4V6L7 10H4z" stroke-linejoin="round"/><path d="M15.5 9a3.5 3.5 0 0 1 0 6" stroke-linecap="round"/></svg>',
+    detail:   '<svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7" stroke-linecap="round"/><circle cx="15" cy="7" r="2.4" fill="currentColor" stroke="none"/><line x1="4" y1="17" x2="20" y2="17" stroke-linecap="round"/><circle cx="9" cy="17" r="2.4" fill="currentColor" stroke="none"/></svg>',
+    voice:    '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke-linecap="round"/></svg>',
+    treat:    '<svg viewBox="0 0 24 24"><path d="M4 20l4-1L19.5 7.5a2.1 2.1 0 0 0-3-3L4 17z" stroke-linejoin="round"/></svg>',
+    chev:     '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    check:    '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  };
+
+  /* ---- control model ----
+     kind: 'freetext' (presets + type-ahead + custom)  → Audience, Tone
+           'list'     (single-select preset list)       → Voice
+           'segment'  (3-stop segmented)                → Detail
+           'cards'    (label + sub, single select)      → Treat
+     value '' = default/unset. `def` = the label shown when unset. ---- */
+  const CONTROLS = {
+    audience: {
+      kind:'freetext', icon:'audience', title:'Audience', def:'Audience',
+      placeholder:'Search or type your own…',
+      presets:['Executives','Engineers','Designers','Sales team','Customers','General public','Investors','Students'],
+      value:'',
+    },
+    tone: {
+      kind:'freetext', icon:'tone', title:'Tone', def:'Tone',
+      placeholder:'Search or type your own…',
+      presets:['Professional','Casual','Friendly','Authoritative','Inspirational','Educational','Conversational','Technical'],
+      value:'',
+    },
+    detail: {
+      kind:'segment', icon:'detail', title:'Detail level', def:'Detailed',
+      presets:['Concise','Detailed','Extensive'],
+      hints:{ 'Concise':'Tight — headline + one idea per slide.', 'Detailed':'Balanced — the recommended default.', 'Extensive':'Thorough — supporting points on every slide.' },
+      value:'Detailed', isDefault:true,
+    },
+    voice: {
+      kind:'list', icon:'voice', title:'Voice', def:'Default',
+      presets:['Default','No voice','Legal','Executive','Technical','Persuasive','Simple','HR','Research','Government','Educational','Financial'],
+      value:'Default', isDefault:true,
+    },
+    treat: {
+      kind:'cards', icon:'treat', title:'How to treat my text', def:'Inspire from this',
+      cards:[
+        { label:'Inspire from this', sub:'AI writes freely from my intent' },
+        { label:'Build on this',     sub:'Keep my key phrases, AI fills the rest' },
+        { label:'Use as the text',   sub:"Don't paraphrase, just structure it" },
+      ],
+      value:'Inspire from this', isDefault:true,
+    },
+  };
+  const ORDER = ['audience','tone','detail','voice','treat'];
+
+  /* a control is "set" (violet) only if its value differs from the default */
+  const isSet = (k) => {
+    const c = CONTROLS[k];
+    if (c.kind === 'freetext') return c.value.trim().length > 0;
+    return !c.isDefault && c.value !== c.def ? c.value !== '' : (c.value !== c.def && c.value !== '');
+  };
+  // simpler + correct: set when value present AND not the default label
+  const setFlag = (k) => {
+    const c = CONTROLS[k];
+    if (c.kind === 'freetext') return c.value.trim().length > 0;
+    return c.value !== '' && c.value !== c.def;
+  };
+
+  /* ---- build the resting value-pill row ---- */
+  const controlsEl = $('#controls');
+  function pillLabel(k){
+    const c = CONTROLS[k];
+    if (setFlag(k)) return c.value;
+    return c.def;
+  }
+  function renderPills(){
+    controlsEl.innerHTML = '';
+    ORDER.forEach(k => {
+      const c = CONTROLS[k];
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ctl-pill' + (setFlag(k) ? ' is-set' : '');
+      b.dataset.key = k;
+      b.setAttribute('aria-haspopup','dialog');
+      b.setAttribute('aria-expanded','false');
+      b.setAttribute('aria-label', c.title + ': ' + pillLabel(k));
+      b.innerHTML =
+        `<span class="ico">${ICONS[c.icon]}</span>` +
+        `<span class="lbl">${pillLabel(k)}</span>` +
+        `<span class="chev">${ICONS.chev}</span>`;
+      b.addEventListener('click', (e) => { e.stopPropagation(); togglePop(k, b); });
+      controlsEl.appendChild(b);
+    });
+  }
+
+  /* ---- popover machinery ---- */
+  const pop = $('#pop'), popIco = $('#popIco'), popTtl = $('#popTtl'), popClear = $('#popClear');
+  const popFilter = $('#popFilter'), popFilterInput = $('#popFilterInput');
+  const popList = $('#popList'), popEmpty = $('#popEmpty');
+  const popCustom = $('#popCustom'), popUse = $('#popUse'), popUseTxt = $('#popUseTxt');
+  const popSeg = $('#popSeg'), segWrap = $('#segWrap'), segHint = $('#segHint');
+  let openKey = null, anchorEl = null;
+
+  function positionPop(){
+    if (!anchorEl) return;
+    const card = $('#heroCard').getBoundingClientRect();
+    const a = anchorEl.getBoundingClientRect();
+    let left = a.left - card.left;
+    const top = a.bottom - card.top + 8;
+    pop.style.left = '0px'; pop.style.top = top + 'px';
+    // measure width then clamp so it never spills the card
+    const pw = pop.offsetWidth;
+    const maxLeft = card.width - pw - 4;
+    left = Math.max(4, Math.min(left, maxLeft));
+    pop.style.left = left + 'px';
+  }
+
+  function buildList(k, filter=''){
+    const c = CONTROLS[k];
+    popList.innerHTML = '';
+    const f = filter.trim().toLowerCase();
+    let shown = 0;
+    if (c.kind === 'cards'){
+      c.cards.forEach(card => {
+        const sel = card.label === c.value;
+        const o = document.createElement('button');
+        o.type='button'; o.className='pop-opt' + (sel?' is-sel':''); o.dataset.val = card.label;
+        o.setAttribute('role','option'); o.setAttribute('aria-selected', sel?'true':'false');
+        o.innerHTML = `<span class="dot"></span><span class="lbl">${card.label}<span class="sub">${card.sub}</span></span><span class="check">${ICONS.check}</span>`;
+        o.addEventListener('click', () => commit(k, card.label));
+        popList.appendChild(o); shown++;
+      });
+    } else {
+      (c.presets||[]).forEach(p => {
+        if (f && !p.toLowerCase().includes(f)) return;
+        const sel = p === c.value;
+        const o = document.createElement('button');
+        o.type='button'; o.className='pop-opt' + (sel?' is-sel':''); o.dataset.val = p;
+        o.setAttribute('role','option'); o.setAttribute('aria-selected', sel?'true':'false');
+        o.innerHTML = `<span class="dot"></span><span class="lbl">${p}</span><span class="check">${ICONS.check}</span>`;
+        o.addEventListener('click', () => commit(k, p));
+        popList.appendChild(o); shown++;
+      });
+    }
+    // freetext: offer "Use '<typed>'" when the filter isn't an exact preset
+    if (c.kind === 'freetext'){
+      const exact = (c.presets||[]).some(p => p.toLowerCase() === f);
+      if (f && !exact){
+        popUseTxt.textContent = filter.trim();
+        popCustom.classList.add('is-shown');
+      } else {
+        popCustom.classList.remove('is-shown');
+      }
+      popEmpty.classList.toggle('is-shown', shown === 0 && !f);
+    } else {
+      popCustom.classList.remove('is-shown');
+      popEmpty.classList.remove('is-shown');
+    }
+    return shown;
+  }
+
+  function buildSeg(k){
+    const c = CONTROLS[k];
+    segWrap.innerHTML = '';
+    c.presets.forEach(p => {
+      const b = document.createElement('button');
+      b.type='button'; b.dataset.val=p; b.textContent=p;
+      b.className = p === c.value ? 'is-sel' : '';
+      b.setAttribute('role','radio'); b.setAttribute('aria-checked', p===c.value?'true':'false');
+      b.addEventListener('click', () => {
+        c.value = p;
+        $$('#segWrap button').forEach(x => { const s = x.dataset.val===p; x.classList.toggle('is-sel', s); x.setAttribute('aria-checked', s?'true':'false'); });
+        segHint.textContent = c.hints[p] || '';
+        renderPills(); syncPillStates();
+      });
+      segWrap.appendChild(b);
+    });
+    segHint.textContent = c.hints[c.value] || '';
+  }
+
+  function openPop(k, anchor){
+    const c = CONTROLS[k];
+    openKey = k; anchorEl = anchor;
+    popIco.innerHTML = ICONS[c.icon];
+    popTtl.textContent = c.title;
+
+    const isFreetext = c.kind === 'freetext';
+    const isSegment  = c.kind === 'segment';
+    popFilter.style.display = isFreetext ? '' : 'none';
+    popSeg.hidden = !isSegment;
+    popList.style.display = isSegment ? 'none' : '';
+
+    // Clear is available only when the control holds a non-default value
+    popClear.classList.toggle('is-hidden', !setFlag(k));
+    popClear.textContent = isFreetext ? 'Clear' : 'Reset';
+
+    if (isSegment){
+      buildSeg(k);
+    } else {
+      popFilterInput.value = '';
+      popFilterInput.placeholder = c.placeholder || 'Search…';
+      buildList(k, '');
+    }
+
+    pop.classList.add('is-open');
+    requestAnimationFrame(positionPop);
+    anchor.classList.add('is-open'); anchor.setAttribute('aria-expanded','true');
+
+    // focus management
+    setTimeout(() => {
+      if (isFreetext) popFilterInput.focus();
+      else { const first = popList.querySelector('.pop-opt.is-sel') || popList.querySelector('.pop-opt') || segWrap.querySelector('button'); first && first.focus(); }
+    }, reduced ? 0 : 60);
+  }
+
+  function closePop(){
+    if (!openKey) return;
+    pop.classList.remove('is-open');
+    const a = anchorEl;
+    if (a){ a.classList.remove('is-open'); a.setAttribute('aria-expanded','false'); }
+    openKey = null; anchorEl = null;
+  }
+  function togglePop(k, anchor){
+    if (openKey === k){ closePop(); return; }
+    if (openKey) closePop();
+    openPop(k, anchor);
+  }
+
+  function commit(k, val){
+    const c = CONTROLS[k];
+    c.value = val;
+    if (c.kind !== 'segment') c.isDefault = false; // any explicit pick clears default styling logic
+    renderPills(); syncPillStates();
+    closePop();
+    // return focus to the pill we just edited
+    const pill = controlsEl.querySelector(`.ctl-pill[data-key="${k}"]`);
+    pill && pill.focus();
+  }
+
+  function clearControl(k){
+    const c = CONTROLS[k];
+    if (c.kind === 'freetext'){ c.value=''; }
+    else { c.value = c.def; c.isDefault = true; }
+    renderPills(); syncPillStates();
+    // re-render list state if still open
+    if (openKey === k){
+      popClear.classList.toggle('is-hidden', !setFlag(k));
+      if (c.kind === 'segment') buildSeg(k);
+      else { popFilterInput.value=''; buildList(k,''); }
+    }
+  }
+
+  function syncPillStates(){
+    $$('.ctl-pill').forEach(p => {
+      const k = p.dataset.key;
+      p.classList.toggle('is-set', setFlag(k));
+      if (k === openKey) p.classList.add('is-open');
+    });
+  }
+
+  popClear.addEventListener('click', () => { if (openKey) clearControl(openKey); });
+  popUse.addEventListener('click', () => { if (openKey) commit(openKey, popFilterInput.value.trim()); });
+
+  /* type-ahead on freetext popovers */
+  popFilterInput.addEventListener('input', () => { if (openKey) buildList(openKey, popFilterInput.value); });
+  popFilterInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      const first = popList.querySelector('.pop-opt:not(.is-hidden)');
+      const typed = popFilterInput.value.trim();
+      if (first) commit(openKey, first.dataset.val);
+      else if (typed) commit(openKey, typed);
+    } else if (e.key === 'ArrowDown'){
+      e.preventDefault(); const first = popList.querySelector('.pop-opt'); first && first.focus();
+    }
+  });
+
+  /* keyboard nav inside the options list */
+  popList.addEventListener('keydown', (e) => {
+    const opts = $$('.pop-opt', popList);
+    const idx = opts.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown'){ e.preventDefault(); (opts[idx+1]||opts[0]).focus(); }
+    else if (e.key === 'ArrowUp'){
+      e.preventDefault();
+      if (idx <= 0 && popFilter.style.display !== 'none'){ popFilterInput.focus(); }
+      else (opts[idx-1]||opts[opts.length-1]).focus();
+    }
+    else if (e.key === 'Enter' && document.activeElement.classList.contains('pop-opt')){
+      e.preventDefault(); document.activeElement.click();
+    }
+  });
+
+  /* dismissals — use mousedown so an outside press dismisses BEFORE the
+     pill's own click can re-toggle (avoids a close→reopen race). */
+  document.addEventListener('mousedown', (e) => {
+    if (!openKey) return;
+    if (pop.contains(e.target)) return;
+    if (e.target.closest && e.target.closest('.ctl-pill')) return;
+    closePop();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openKey){ e.preventDefault(); const a = anchorEl; closePop(); a && a.focus(); }
+  });
+  window.addEventListener('resize', () => { if (openKey) positionPop(); });
+
+  /* ---- ⌘K : open the first un-set control (or the first one) ---- */
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')){
+      e.preventDefault();
+      const target = ORDER.find(k => !setFlag(k)) || ORDER[0];
+      const pill = controlsEl.querySelector(`.ctl-pill[data-key="${target}"]`);
+      if (pill) togglePop(target, pill);
+    }
+  });
+
+  /* ============================================================
+     TEXTAREA · ghost cycling · Tab-to-use · generate state
+     ============================================================ */
+  const EXAMPLES = [
+    'A Series A pitch for a fintech startup',
+    'A Q3 business review for the leadership team',
+    'A product launch narrative for a new app',
+    'Brand guidelines for a design studio',
+    'An onboarding playbook for new hires',
+  ];
+  const STEPS = ['Outlining sections…','Designing layouts…','Writing your slides…','Polishing…'];
+
+  const heroCard = $('#heroCard'), prompt = $('#prompt'), ta = $('#ta');
+  const ghost = $('#ghost'), ghostCycle = $('#ghostCycle');
+  const genBtn = $('#genBtn'), genStep = $('#genStep');
+  let exIdx = 0;
+
+  const hasText = () => ta.value.trim().length > 0;
+  function refresh(){
+    const t = hasText();
+    ghost.classList.toggle('is-hidden', t);
+    prompt.classList.toggle('has-text', t);
+    genBtn.disabled = !t;
+    ta.style.height = 'auto'; ta.style.height = Math.max(84, ta.scrollHeight) + 'px';
+  }
+  ta.addEventListener('input', refresh);
+  ta.addEventListener('focus', () => heroCard.classList.add('is-focused'));
+  ta.addEventListener('blur',  () => heroCard.classList.remove('is-focused'));
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' && !hasText()){ e.preventDefault(); ta.value = EXAMPLES[exIdx]; refresh(); ta.focus(); return; }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hasText()){ e.preventDefault(); doGenerate(); }
+  });
+
+  if (!reduced){
+    setInterval(() => {
+      if (hasText() || prompt.classList.contains('is-generating')) return;
+      ghostCycle.style.opacity = '0';
+      setTimeout(() => { exIdx = (exIdx+1) % EXAMPLES.length; ghostCycle.textContent = EXAMPLES[exIdx]; ghostCycle.style.opacity = '1'; }, 420);
+    }, 3200);
+  }
+
+  /* ---- the Generate moment ---- */
+  function payload(){
+    const p = { prompt: ta.value.trim() };
+    ORDER.forEach(k => p[k] = CONTROLS[k].value || CONTROLS[k].def);
+    return p;
+  }
+  function doGenerate(){
+    if (!hasText() || prompt.classList.contains('is-generating')) return;
+    closePop();
+    prompt.classList.add('is-generating');
+    let i = 0; genStep.textContent = STEPS[0];
+    const iv = setInterval(() => { i++; if (i < STEPS.length) genStep.textContent = STEPS[i]; }, 620);
+    setTimeout(() => {
+      clearInterval(iv);
+      prompt.classList.remove('is-generating');
+      const p = payload();
+      showToast(`Composing → /editor/slides · ${p.audience} · ${p.tone} · ${p.detail} · ${p.voice}`);
+      refresh();
+    }, reduced ? 400 : 2600);
+  }
+  genBtn.addEventListener('click', doGenerate);
+  $('#attachBtn').addEventListener('click', () => showToast('Attach — file picker (demo)'));
+
+  /* toast */
+  const toast = $('#toast'), toastTxt = $('#toastTxt');
+  let toastT;
+  function showToast(msg){
+    toastTxt.innerHTML = msg.replace(/\/editor\/slides/, '<code>/editor/slides</code>');
+    toast.classList.add('is-shown');
+    clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('is-shown'), 3200);
+  }
+
+  /* ---- boot ---- */
+  renderPills();
+  refresh();
+})();
+</script>
+</body>
+</html>

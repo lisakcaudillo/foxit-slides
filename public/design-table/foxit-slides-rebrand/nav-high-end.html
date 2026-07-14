@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foxit Slides — High-End Nav Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --grad-primary:linear-gradient(135deg,#4776E6 0%,#6D28D9 50%,#A855F7 100%);
+    --grad-logo:linear-gradient(135deg,#4776E6,#A855F7);
+    --brand-50:#F3F0FF;--brand-100:#E9E4FF;--brand-200:#CEC4FF;--brand-300:#AE96FF;
+    --brand-400:#8A64FF;--brand-500:#684CF5;--brand-600:#5037C3;--brand-700:#3A2491;
+    --brand-800:#261460;--brand-850:#1D0E49;--brand-900:#140932;--brand-950:#0C051E;
+    --ink:#0f172a;--ink-2:#334155;--ink-3:#64748b;--ink-4:#94a3b8;
+    --line:#e2e8f0;--line-2:#f1f5f9;
+  }
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',-apple-system,sans-serif;color:var(--ink);
+    background:linear-gradient(180deg,#f6f4fc 0%,#eef0fa 100%);-webkit-font-smoothing:antialiased;padding:40px 32px 64px}
+  .page-head{max-width:1120px;margin:0 auto 28px}
+  .page-head h1{font-size:22px;font-weight:700;letter-spacing:-.02em}
+  .page-head p{font-size:14px;color:var(--ink-3);margin-top:6px;max-width:680px;line-height:1.5}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:1120px;margin:0 auto}
+  .col{display:flex;flex-direction:column;gap:14px}
+  .cap{font-size:13px}
+  .cap b{font-size:14px;font-weight:600}
+  .cap .tag{display:inline-block;font-size:11px;font-weight:600;color:var(--brand-600);
+    background:var(--brand-50);border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .cap p{color:var(--ink-3);margin-top:4px;line-height:1.45}
+  .stage{height:660px;border-radius:18px;overflow:hidden;position:relative;
+    background:#fbfaff;box-shadow:0 1px 3px rgba(15,23,42,.05),0 18px 50px rgba(80,55,195,.08)}
+  /* faux canvas behind the rail to give context */
+  .canvas{position:absolute;inset:0 0 0 232px;padding:26px 22px;opacity:.55}
+  .canvas .ln{height:11px;border-radius:6px;background:#e7e9f3;margin-bottom:12px}
+  .canvas .ln.s{width:55%}.canvas .ln.m{width:78%}.canvas .ln.l{width:90%}
+  .canvas .cardrow{display:flex;gap:12px;margin-top:18px}
+  .canvas .cardrow div{flex:1;height:88px;border-radius:12px;background:#eceefa}
+
+  /* ───────── shared rail skeleton ───────── */
+  .rail{position:absolute;top:0;left:0;bottom:0;width:232px;display:flex;flex-direction:column;z-index:2}
+  .brand{display:flex;align-items:center;gap:10px;padding:22px 20px 6px}
+  .brand .word{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
+  .logo-tile{width:30px;height:30px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .create{margin:14px 16px 6px;height:42px;border:none;border-radius:11px;cursor:pointer;
+    font:600 13.5px 'Inter';display:flex;align-items:center;justify-content:center;gap:8px;position:relative;
+    transition:transform .15s ease,box-shadow .15s ease}
+  .create .kbd{position:absolute;right:12px;font-size:11px;font-weight:600;opacity:.65}
+  .navwrap{flex:1;padding:10px 12px}
+  .seclabel{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    padding:8px 10px 6px}
+  .item{display:flex;align-items:center;gap:11px;height:38px;padding:0 10px;border-radius:9px;
+    font:500 13.5px 'Inter';cursor:pointer;position:relative;text-decoration:none;transition:background .13s ease,color .13s ease}
+  .item .kbd{margin-left:auto;font-size:10.5px;font-weight:600;opacity:0;transition:opacity .13s ease}
+  .item:hover .kbd{opacity:.5}
+  .ic{width:19px;height:19px;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .dock{padding:10px 12px 16px}
+  .account{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:11px;cursor:pointer;transition:background .13s ease}
+  .av{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font:600 12px 'Inter';flex-shrink:0;position:relative}
+  .av .dot{position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:50%;background:#34d399}
+  .acc-nm{font-size:12.5px;font-weight:600;line-height:1.2}
+  .acc-sub{font-size:11px;margin-top:1px}
+
+  /* ───────── A · Refined Light ───────── */
+  .A .rail{background:#fff}
+  .A .rail::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;
+    background:linear-gradient(180deg,transparent,rgba(80,55,195,.10) 18%,rgba(80,55,195,.10) 82%,transparent)}
+  .A .logo-tile{background:var(--grad-logo);box-shadow:0 3px 8px rgba(103,76,245,.30)}
+  .A .word{color:var(--ink)}.A .word .ac{background:var(--grad-logo);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .A .create{background:var(--grad-primary);color:#fff;
+    box-shadow:0 6px 16px rgba(103,76,245,.30),inset 0 1px 0 rgba(255,255,255,.28)}
+  .A .create:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(103,76,245,.38)}
+  .A .create .kbd{color:#fff}
+  .A .seclabel{color:var(--ink-4)}
+  .A .item{color:var(--ink-3)}
+  .A .item .ic{stroke:var(--ink-3)}
+  .A .item:hover{background:#f7f8fc;color:var(--ink-2)}
+  .A .item.active{background:var(--brand-50);color:var(--ink);font-weight:600}
+  .A .item.active .ic{stroke:var(--brand-600)}
+  .A .item.active::before{content:'';position:absolute;left:-2px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--grad-logo)}
+  .A .item .kbd{color:var(--ink-4)}
+  .A .dock{border-top:1px solid var(--line-2)}
+  .A .account:hover{background:#f7f8fc}
+  .A .av{background:#312e81;color:#fff;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--brand-200)}
+  .A .acc-nm{color:var(--ink)}.A .acc-sub{color:var(--ink-4)}
+
+  /* ───────── B · Elevated Glass ───────── */
+  .B .rail{background:linear-gradient(180deg,#fbf9ff 0%,#ffffff 30%)}
+  .B .rail::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(80,55,195,.12),transparent)}
+  .B .rail::before{content:'';position:absolute;top:-30px;left:-20px;width:220px;height:200px;z-index:-1;
+    background:radial-gradient(circle at 30% 30%,rgba(103,76,245,.16),transparent 65%);filter:blur(6px)}
+  .B .logo-tile{background:var(--grad-logo);box-shadow:0 4px 12px rgba(103,76,245,.35)}
+  .B .word{color:var(--ink)}.B .word .ac{background:var(--grad-logo);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .B .create{background:var(--grad-primary);color:#fff;box-shadow:0 8px 20px rgba(103,76,245,.34),inset 0 1px 0 rgba(255,255,255,.3)}
+  .B .create:hover{transform:translateY(-1px)}
+  .B .create .kbd{color:#fff}
+  .B .seclabel{color:var(--ink-4)}
+  .B .item{color:var(--ink-3)}.B .item .ic{stroke:var(--ink-3)}
+  .B .item:hover{background:rgba(243,240,255,.6);color:var(--ink-2)}
+  .B .item.active{color:var(--ink);font-weight:600;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(15,23,42,.04),0 6px 16px rgba(103,76,245,.14);border:1px solid rgba(174,150,255,.4)}
+  .B .item.active .ic{stroke:var(--brand-600)}
+  .B .item.active::before{content:'';position:absolute;left:-3px;top:9px;bottom:9px;width:3px;border-radius:2px;background:var(--grad-logo)}
+  .B .item .kbd{color:var(--ink-4)}
+  .B .dock{border-top:1px solid rgba(80,55,195,.1)}
+  .B .account:hover{background:rgba(243,240,255,.6)}
+  .B .av{background:var(--grad-logo);color:#fff;box-shadow:0 0 0 2px #fff,0 0 0 3.5px rgba(174,150,255,.5)}
+  .B .acc-nm{color:var(--ink)}.B .acc-sub{color:var(--ink-4)}
+
+  /* ───────── C · Dark Signature ───────── */
+  .C .rail{background:linear-gradient(180deg,#1A1040 0%,#140932 60%,#0F0726 100%)}
+  .C .rail::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(168,85,247,.5),rgba(71,118,230,.35),transparent)}
+  .C .logo-tile{background:var(--grad-logo);box-shadow:0 4px 14px rgba(168,85,247,.5)}
+  .C .word{color:#fff}.C .word .ac{background:linear-gradient(135deg,#9CC4FE,#C8B6F4);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .C .create{background:var(--grad-primary);color:#fff;box-shadow:0 8px 22px rgba(168,85,247,.45),inset 0 1px 0 rgba(255,255,255,.3)}
+  .C .create:hover{transform:translateY(-1px)}
+  .C .create .kbd{color:rgba(255,255,255,.8)}
+  .C .seclabel{color:rgba(255,255,255,.4)}
+  .C .item{color:rgba(255,255,255,.65)}.C .item .ic{stroke:rgba(255,255,255,.65)}
+  .C .item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.92)}
+  .C .item.active{color:#fff;font-weight:600;background:rgba(124,92,255,.18)}
+  .C .item.active .ic{stroke:#C8B6F4}
+  .C .item.active::before{content:'';position:absolute;left:-3px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--grad-logo);box-shadow:0 0 10px rgba(168,85,247,.7)}
+  .C .item .kbd{color:rgba(255,255,255,.45)}
+  .C .dock{border-top:1px solid rgba(255,255,255,.08)}
+  .C .account:hover{background:rgba(255,255,255,.06)}
+  .C .av{background:linear-gradient(135deg,#4776E6,#A855F7);color:#fff;box-shadow:0 0 0 2px #1A1040,0 0 0 3.5px rgba(168,85,247,.55)}
+  .C .av .dot{box-shadow:0 0 0 2px #140932}
+  .C .acc-nm{color:#fff}.C .acc-sub{color:rgba(255,255,255,.5)}
+  .C .canvas .ln{background:#dfe2f2}.C .canvas .cardrow div{background:#e7e9f8}
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Foxit Slides — High-End Navigation, three material directions</h1>
+    <p>Same structure and the same premium details in all three: a gradient Create button, a lit active state with a gradient accent, and an account dock with ring + presence + role. What changes is the <b>material</b> — light → tinted glass → dark signature.</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- A -->
+    <div class="col A">
+      <div class="cap"><b>A · Refined Light</b><span class="tag">safest</span><p>White rail, but elevated: a hairline seam that fades, gradient logo tile, lit brand-tinted active pill, avatar ring. The current look, leveled up.</p></div>
+      <div class="stage">
+        <div class="canvas"><div class="ln l"></div><div class="ln m"></div><div class="ln s"></div><div class="cardrow"><div></div><div></div><div></div></div></div>
+        <div class="rail">
+          <div class="brand"><span class="logo-tile"><svg width="18" height="18" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg></span><span class="word">Foxit <span class="ac">Slides</span></span></div>
+          <button class="create">＋ Create</button>
+          <div class="navwrap">
+            <div class="seclabel">Workspace</div>
+            <a class="item active"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</a>
+            <a class="item"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Studio</a>
+          </div>
+          <div class="dock">
+            <div class="account"><span class="av">LC<span class="dot"></span></span><span><span class="acc-nm">Lisa Caudillo</span><br><span class="acc-sub">Foxit · Pro</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B -->
+    <div class="col B">
+      <div class="cap"><b>B · Elevated Glass</b><span class="tag">more mood</span><p>A whisper of brand tint top-to-bottom, a soft glow behind the logo, and a <i>floating</i> active pill with real shadow. Premium without going dark.</p></div>
+      <div class="stage">
+        <div class="canvas"><div class="ln l"></div><div class="ln m"></div><div class="ln s"></div><div class="cardrow"><div></div><div></div><div></div></div></div>
+        <div class="rail">
+          <div class="brand"><span class="logo-tile"><svg width="18" height="18" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg></span><span class="word">Foxit <span class="ac">Slides</span></span></div>
+          <button class="create">＋ Create</button>
+          <div class="navwrap">
+            <div class="seclabel">Workspace</div>
+            <a class="item active"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</a>
+            <a class="item"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Studio</a>
+          </div>
+          <div class="dock">
+            <div class="account"><span class="av">LC<span class="dot"></span></span><span><span class="acc-nm">Lisa Caudillo</span><br><span class="acc-sub">Foxit · Pro</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C -->
+    <div class="col C">
+      <div class="cap"><b>C · Dark Signature</b><span class="tag">boldest</span><p>A deep violet-ink rail from the brand ramp. The gradient accent and logo <i>glow</i> against the dark; the light canvas pops beside it. The Linear / Vercel move.</p></div>
+      <div class="stage">
+        <div class="canvas"><div class="ln l"></div><div class="ln m"></div><div class="ln s"></div><div class="cardrow"><div></div><div></div><div></div></div></div>
+        <div class="rail">
+          <div class="brand"><span class="logo-tile"><svg width="18" height="18" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg></span><span class="word">Foxit <span class="ac">Slides</span></span></div>
+          <button class="create">＋ Create</button>
+          <div class="navwrap">
+            <div class="seclabel">Workspace</div>
+            <a class="item active"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</a>
+            <a class="item"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Studio</a>
+          </div>
+          <div class="dock">
+            <div class="account"><span class="av">LC<span class="dot"></span></span><span><span class="acc-nm">Lisa Caudillo</span><br><span class="acc-sub">Foxit · Pro</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Designer 1 — Editorial Title Treatments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Lato:ital,wght@0,400;0,700;0,900;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500;1,8..60,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --ink: #0b1f3a;
+    --slate-700: #334155;
+    --slate-500: #64748b;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1100px 700px at 12% -8%, #f3eefc 0%, transparent 55%),
+      radial-gradient(900px 600px at 96% 4%, #eaf1ff 0%, transparent 55%),
+      linear-gradient(180deg, #faf8ff 0%, #f4f0ff 50%, #eef3ff 100%);
+    min-height: 100vh;
+    padding: 48px clamp(20px, 4vw, 64px) 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Page header ─────────────────────────────────────────────── */
+  header.page-head { max-width: 1180px; margin: 0 auto 40px; }
+  .eyebrow-page {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #6b3fa0; margin: 0 0 10px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow-page::after {
+    content: ''; flex: 0 0 64px; height: 1px;
+    background: linear-gradient(90deg, #6b3fa0, transparent);
+  }
+  h1.page-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(30px, 4vw, 46px); font-weight: 600;
+    line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 16px;
+    color: #401842;
+  }
+  h1.page-title em { font-style: italic; color: #6b3fa0; }
+  p.rationale {
+    font-size: 16px; line-height: 1.6; color: var(--slate-700);
+    max-width: 760px; margin: 0 0 24px;
+  }
+  .legend {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px 20px; padding: 18px 22px; border-radius: 14px;
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(107, 63, 160, 0.14);
+    backdrop-filter: blur(8px); box-shadow: 0 8px 30px rgba(64, 24, 66, 0.06);
+  }
+  .legend .lg-item { display: flex; gap: 10px; font-size: 14px; align-items: baseline; }
+  .legend .lg-n {
+    font-family: 'Source Serif 4', Georgia, serif; font-weight: 700;
+    color: #6b3fa0; min-width: 22px;
+  }
+  .legend .lg-name { font-weight: 600; color: var(--ink); }
+  .legend .lg-theme { color: var(--slate-500); }
+
+  /* ── Grid of covers ──────────────────────────────────────────── */
+  .grid {
+    max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(540px, 1fr));
+    gap: 40px 36px;
+  }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+
+  figure.tile { margin: 0; }
+  .cover {
+    position: relative; width: 100%; aspect-ratio: 16 / 9;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(15, 23, 42, 0.08);
+    isolation: isolate;
+  }
+  .motif { position: absolute; inset: 0; pointer-events: none; }
+  .stage {
+    position: absolute; inset: 0; padding: 7.2% 7.6%;
+    display: flex; flex-direction: column;
+  }
+  figcaption {
+    margin-top: 14px; display: flex; align-items: baseline;
+    justify-content: space-between; gap: 12px;
+  }
+  .cap-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .cap-theme {
+    font-size: 13px; color: var(--slate-500);
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .cap-dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.08) inset; }
+  .cap-note { font-size: 13px; color: var(--slate-500); margin-top: 4px; line-height: 1.5; }
+
+  /* Shared editorial primitives ----------------------------------- */
+  .eyebrow {
+    font-size: 0.95em; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; display: flex; align-items: center; gap: 14px;
+  }
+  .eyebrow .rule { flex: 1; height: 1px; max-width: 96px; }
+  .byline {
+    margin-top: auto; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px;
+  }
+  .presenter { display: flex; align-items: center; gap: 10px; }
+  .presenter .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 11px; font-weight: 700;
+  }
+  .presenter .who { display: flex; flex-direction: column; line-height: 1.2; }
+  .presenter .who .nm { font-size: 0.92em; font-weight: 600; }
+  .presenter .who .rl { font-size: 0.78em; opacity: 0.72; }
+  .pageno { font-size: 0.82em; letter-spacing: 0.14em; font-variant-numeric: tabular-nums; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <p class="eyebrow-page">Design Table · Compose Themes</p>
+  <h1 class="page-title">Designer&nbsp;1 — Editorial <em>Title</em> Treatments</h1>
+  <p class="rationale">
+    A title slide should read like the title page of a hardcover book — never a body slide with bigger
+    text. Each treatment below combines moves no body slide ever wears (an eyebrow with a hairline rule,
+    a headline with one italic or accent word, a bottom byline strip that frames the page as a cover) and
+    promotes the theme's own CoverArt motif from background decoration to ambient texture at 12–22% opacity.
+    The eight treatments are typographically distinct from one another, and each is rendered on a different
+    real Compose theme so the variety reads at a glance — the system is a <em>family</em>, not one template
+    recolored eight times. Every headline and label clears WCAG&nbsp;AA on its theme.
+  </p>
+  <div class="legend">
+    <div class="lg-item"><span class="lg-n">01</span><span><span class="lg-name">The Anchor</span> · <span class="lg-theme">Counsel</span></span></div>
+    <div class="lg-item"><span class="lg-n">02</span><span><span class="lg-name">All-Caps Masthead</span> · <span class="lg-theme">Foxit Glow</span></span></div>
+    <div class="lg-item"><span class="lg-n">03</span><span><span class="lg-name">Drop-Cap Opening</span> · <span class="lg-theme">Ledger</span></span></div>
+    <div class="lg-item"><span class="lg-n">04</span><span><span class="lg-name">Stacked Baseline</span> · <span class="lg-theme">Volt</span></span></div>
+    <div class="lg-item"><span class="lg-n">05</span><span><span class="lg-name">Chapter Divider</span> · <span class="lg-theme">Quartz</span></span></div>
+    <div class="lg-item"><span class="lg-n">06</span><span><span class="lg-name">Centered Colophon</span> · <span class="lg-theme">Aurora</span></span></div>
+    <div class="lg-item"><span class="lg-n">07</span><span><span class="lg-name">Statement Cover</span> · <span class="lg-theme">Obsidian</span></span></div>
+    <div class="lg-item"><span class="lg-n">08</span><span><span class="lg-name">Ledger Folio</span> · <span class="lg-theme">Solstice</span></span></div>
+  </div>
+</header>
+
+<div class="grid">
+
+  <!-- ════════ 01 · THE ANCHOR · COUNSEL ════════ -->
+  <!-- counsel: pageBg #FAFAF7, ruled pattern, titleColor #14223C ink, body #5C6770, link #B85C2E, Inter -->
+  <figure class="tile">
+    <div class="cover" style="background:#FAFAF7; font-family:'Inter',system-ui,sans-serif;">
+      <!-- ruled pattern -->
+      <div class="motif" style="background:repeating-linear-gradient(0deg, rgba(20,34,60,0.025) 0 1px, transparent 1px 28px);"></div>
+      <!-- compass motif, bottom-right, ~18% -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMax slice">
+        <g transform="translate(248,140)" opacity="0.18">
+          <circle r="46" fill="none" stroke="#14223C" stroke-width="0.6"/>
+          <circle r="38" fill="none" stroke="#14223C" stroke-width="0.4"/>
+          <circle r="30" fill="none" stroke="#14223C" stroke-width="0.4"/>
+          <path d="M -14 -6 L 0 -18 L 14 -6 L 14 14 L -14 14 Z" fill="none" stroke="#14223C" stroke-width="0.6"/>
+          <line x1="-8" y1="2" x2="8" y2="2" stroke="#14223C" stroke-width="0.5"/>
+        </g>
+      </svg>
+      <div class="stage" style="width:68%;">
+        <div class="eyebrow" style="color:#B85C2E; font-size:11px;">
+          Quarterly Counsel Brief<span class="rule" style="background:linear-gradient(90deg,#B85C2E,transparent);"></span>
+        </div>
+        <div style="height:18px;"></div>
+        <h2 style="margin:0; font-size:46px; line-height:1.04; font-weight:700; color:#14223C; letter-spacing:-0.02em; max-width:11ch;">
+          Contract Risk, <em style="font-family:'Source Serif 4',Georgia,serif; font-style:italic; font-weight:500; color:#B85C2E;">reconsidered</em>
+        </h2>
+        <div class="byline" style="color:#5C6770; border-top:1px solid rgba(20,34,60,0.14); padding-top:12px; margin-top:auto;">
+          <div class="presenter">
+            <div class="avatar" style="background:#14223C; color:#fff;">DM</div>
+            <div class="who"><span class="nm" style="color:#14223C;">Dana Morrow</span><span class="rl">General Counsel</span></div>
+          </div>
+          <span class="pageno">01 / 14</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">01 · The Anchor</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#14223C;"></span>Counsel</span>
+    </figcaption>
+    <p class="cap-note">Eyebrow + hairline rule + serif italic accent word + byline strip. Ink-on-paper restraint; compass motif at 18%.</p>
+  </figure>
+
+  <!-- ════════ 02 · ALL-CAPS MASTHEAD · FOXIT GLOW ════════ -->
+  <!-- foxit-glow: warm terracotta gradient bg, gradient title 8B2A0A→E8602C, body #5C2E12, link #B33C0F, Plus Jakarta Sans -->
+  <figure class="tile">
+    <div class="cover" style="background:linear-gradient(135deg,#FFEFD5 0%,#FFD4B0 35%,#FFB382 75%,#FF955C 100%); font-family:'Plus Jakarta Sans',system-ui,sans-serif;">
+      <div class="motif" style="background:radial-gradient(ellipse at 80% -10%, rgba(255,255,255,0.5) 0%, transparent 45%), radial-gradient(ellipse at 10% 110%, rgba(179,60,15,0.18) 0%, transparent 50%);"></div>
+      <!-- sunburst motif bottom-right ~ from CoverArt, opacity tuned to ~20% overall -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMax slice" style="opacity:0.55;">
+        <defs>
+          <radialGradient id="fg-sun" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#FFE5C0" stop-opacity="0.7"/>
+            <stop offset="60%" stop-color="#E8602C" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#B33C0F" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="280" cy="190" r="120" fill="url(#fg-sun)"/>
+        <g transform="translate(280,190)" opacity="0.4">
+          <!-- rays -->
+          <g stroke="#B33C0F" stroke-width="1" stroke-linecap="round">
+            <line x1="0" y1="-70" x2="0" y2="-110"/>
+            <line x1="-12" y1="-69" x2="-19" y2="-108"/>
+            <line x1="12" y1="-69" x2="19" y2="-108"/>
+            <line x1="-24" y1="-66" x2="-38" y2="-103"/>
+            <line x1="24" y1="-66" x2="38" y2="-103"/>
+            <line x1="-36" y1="-60" x2="-56" y2="-94"/>
+            <line x1="36" y1="-60" x2="56" y2="-94"/>
+          </g>
+        </g>
+      </svg>
+      <div class="stage">
+        <div class="eyebrow" style="color:#8B2A0A; font-size:11px; letter-spacing:0.26em;">
+          <span class="rule" style="max-width:34px; background:#B33C0F;"></span>2026 Brand Refresh<span class="rule" style="background:linear-gradient(90deg,#B33C0F,transparent);"></span>
+        </div>
+        <div style="margin:auto 0;">
+          <h2 style="margin:0; font-size:54px; line-height:0.92; font-weight:800; text-transform:uppercase; letter-spacing:-0.01em; background:linear-gradient(135deg,#8B2A0A 0%,#B33C0F 50%,#E8602C 100%); -webkit-background-clip:text; background-clip:text; color:transparent;">
+            Glow<br>Forward
+          </h2>
+          <p style="margin:14px 0 0; font-size:15px; line-height:1.5; color:#5C2E12; max-width:30ch; font-weight:500;">The next chapter of the Foxit visual language — warmer, brighter, unmistakably ours.</p>
+        </div>
+        <div class="byline" style="color:#5C2E12;">
+          <div class="presenter">
+            <div class="avatar" style="background:#B33C0F; color:#fff;">RK</div>
+            <div class="who"><span class="nm" style="color:#8B2A0A;">Ravi Kapoor</span><span class="rl">Head of Brand</span></div>
+          </div>
+          <span class="pageno" style="opacity:0.75;">COVER · 01</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">02 · All-Caps Masthead</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#E8602C;"></span>Foxit Glow</span>
+    </figcaption>
+    <p class="cap-note">Newspaper-masthead caps, tight leading, kicker rule on both sides. Gradient title on brand wash; sunburst promoted.</p>
+  </figure>
+
+  <!-- ════════ 03 · DROP-CAP OPENING · LEDGER ════════ -->
+  <!-- ledger: pageBg #F8F7F2, title #1A2B4A, body #4A5568, link gold #A8852E, Poppins/Open Sans, ledger-lines motif -->
+  <figure class="tile">
+    <div class="cover" style="background:#F8F7F2; font-family:'Open Sans',system-ui,sans-serif;">
+      <!-- ledger column lines motif right side ~22% -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMid slice">
+        <g opacity="0.22">
+          <line x1="216" y1="0" x2="216" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="230" y1="0" x2="230" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="244" y1="0" x2="244" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="258" y1="0" x2="258" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="272" y1="0" x2="272" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="286" y1="0" x2="286" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="300" y1="0" x2="300" y2="200" stroke="#1A2B4A" stroke-width="0.4"/>
+          <line x1="210" y1="40" x2="320" y2="40" stroke="#1A2B4A" stroke-width="0.5"/>
+          <line x1="210" y1="160" x2="320" y2="160" stroke="#1A2B4A" stroke-width="0.5"/>
+        </g>
+        <line x1="210" y1="100" x2="320" y2="100" stroke="#A8852E" stroke-opacity="0.4" stroke-width="0.6"/>
+      </svg>
+      <div class="stage" style="width:74%;">
+        <div class="eyebrow" style="color:#A8852E; font-family:'Poppins',sans-serif; font-size:11px;">
+          Annual Report · FY 2026<span class="rule" style="background:linear-gradient(90deg,#A8852E,transparent);"></span>
+        </div>
+        <div style="display:flex; gap:18px; align-items:flex-start; margin:auto 0;">
+          <span style="font-family:'Source Serif 4',Georgia,serif; font-size:118px; line-height:0.78; font-weight:700; color:#A8852E; flex:0 0 auto;">T</span>
+          <div>
+            <h2 style="margin:0; font-family:'Poppins',sans-serif; font-size:34px; line-height:1.06; font-weight:700; color:#1A2B4A; letter-spacing:-0.015em; max-width:14ch;">he year we stopped guessing.</h2>
+            <p style="margin:10px 0 0; font-size:14px; line-height:1.55; color:#4A5568; max-width:32ch;">Three quarters of disciplined spend, one decisive bet, and a balance sheet that finally tells the truth.</p>
+          </div>
+        </div>
+        <div class="byline" style="color:#4A5568; font-family:'Poppins',sans-serif; border-top:1px solid rgba(26,43,74,0.15); padding-top:12px;">
+          <div class="presenter">
+            <div class="avatar" style="background:#1A2B4A; color:#fff;">EB</div>
+            <div class="who"><span class="nm" style="color:#1A2B4A;">Elena Brandt</span><span class="rl">Chief Financial Officer</span></div>
+          </div>
+          <span class="pageno">FOLIO 01</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">03 · Drop-Cap Opening</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#A8852E;"></span>Ledger</span>
+    </figcaption>
+    <p class="cap-note">Oversized serif initial letter sets the headline like a novel's first page. Gold link accent; ledger-line motif at 22%.</p>
+  </figure>
+
+  <!-- ════════ 04 · STACKED BASELINE · VOLT ════════ -->
+  <!-- volt: dark nebula bg, gradient title E8C8FF→FFB4D4, body #C8B8D8, link #FFB4D4, Work Sans -->
+  <figure class="tile">
+    <div class="cover" style="background:radial-gradient(ellipse at 25% 30%, rgba(140,180,255,0.18) 0%, transparent 55%), radial-gradient(ellipse at 78% 68%, rgba(200,130,220,0.14) 0%, transparent 55%), radial-gradient(ellipse at 50% 95%, rgba(255,180,200,0.08) 0%, transparent 55%), linear-gradient(180deg,#131D2E 0%,#1F2940 100%); font-family:'Work Sans',system-ui,sans-serif;">
+      <!-- nebula + stars motif (full) tuned down to ~22% -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" style="opacity:0.6;">
+        <defs>
+          <radialGradient id="volt-neb1" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#C8A8FF" stop-opacity="0.5"/><stop offset="100%" stop-color="#C8A8FF" stop-opacity="0"/></radialGradient>
+          <radialGradient id="volt-neb2" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FFB4D4" stop-opacity="0.4"/><stop offset="100%" stop-color="#FFB4D4" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="240" cy="60" rx="100" ry="60" fill="url(#volt-neb1)"/>
+        <ellipse cx="280" cy="160" rx="80" ry="50" fill="url(#volt-neb2)"/>
+        <g fill="#FFFFFF">
+          <circle cx="40" cy="30" r="1.2" opacity="0.5"/><circle cx="70" cy="150" r="0.7" opacity="0.65"/>
+          <circle cx="120" cy="40" r="1.2" opacity="0.8"/><circle cx="180" cy="170" r="0.7" opacity="0.5"/>
+          <circle cx="230" cy="30" r="1.2" opacity="0.65"/><circle cx="260" cy="110" r="0.7" opacity="0.8"/>
+          <circle cx="300" cy="60" r="1.2" opacity="0.5"/><circle cx="55" cy="180" r="0.7" opacity="0.65"/>
+          <circle cx="140" cy="100" r="0.7" opacity="0.8"/>
+        </g>
+      </svg>
+      <div class="stage">
+        <div class="eyebrow" style="color:#FFB4D4; font-size:11px;">
+          Product Vision 2027<span class="rule" style="background:linear-gradient(90deg,#FFB4D4,transparent);"></span>
+        </div>
+        <div style="margin:auto 0;">
+          <h2 style="margin:0; font-size:46px; line-height:0.98; font-weight:700; letter-spacing:-0.01em; background:linear-gradient(135deg,#E8C8FF 0%,#C8A8FF 50%,#FFB4D4 100%); -webkit-background-clip:text; background-clip:text; color:transparent;">
+            <span style="display:block;">Build</span>
+            <span style="display:block;">in the</span>
+            <span style="display:block; font-style:italic; font-weight:500;">open.</span>
+          </h2>
+        </div>
+        <div class="byline" style="color:#C8B8D8;">
+          <div class="presenter">
+            <div class="avatar" style="background:linear-gradient(135deg,#C8A8FF,#FFB4D4); color:#131D2E;">JL</div>
+            <div class="who"><span class="nm" style="color:#E8C8FF;">Jordan Lee</span><span class="rl">VP, Product</span></div>
+          </div>
+          <span class="pageno">01 — 09</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">04 · Stacked Baseline</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#C8A8FF;"></span>Volt</span>
+    </figcaption>
+    <p class="cap-note">Each word on its own baseline line; the last word italicizes for the turn. Gradient title legible on dark nebula; AA verified.</p>
+  </figure>
+
+  <!-- ════════ 05 · CHAPTER DIVIDER · QUARTZ ════════ -->
+  <!-- quartz: #FFFFFF, title #0B1F3A solid, body #475569, link #1F4FAA, DM Sans, gem motif -->
+  <figure class="tile">
+    <div class="cover" style="background:#FFFFFF; font-family:'DM Sans',system-ui,sans-serif;">
+      <!-- gem facet motif right ~18% -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMid slice" style="opacity:0.85;">
+        <g transform="translate(258,100)" opacity="0.5">
+          <polygon points="0,-50 43,-25 43,25 0,50 -43,25 -43,-25" fill="none" stroke="#0B1F3A" stroke-width="0.8"/>
+          <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#0B1F3A" opacity="0.08"/>
+          <line x1="-43" y1="-25" x2="43" y2="25" stroke="#0B1F3A" stroke-width="0.4"/>
+          <line x1="-43" y1="25" x2="43" y2="-25" stroke="#0B1F3A" stroke-width="0.4"/>
+          <line x1="0" y1="-50" x2="0" y2="50" stroke="#0B1F3A" stroke-width="0.4"/>
+        </g>
+      </svg>
+      <div class="stage" style="width:72%;">
+        <div style="display:flex; align-items:baseline; gap:18px;">
+          <span style="font-size:88px; line-height:1; font-weight:700; color:#1F4FAA; letter-spacing:-0.04em; font-variant-numeric:tabular-nums;">03</span>
+          <div style="height:64px; width:1px; background:#0B1F3A; opacity:0.18;"></div>
+          <span class="eyebrow" style="color:#1F4FAA; font-size:11px; align-self:center;">Chapter Three</span>
+        </div>
+        <div style="margin:24px 0 auto;">
+          <h2 style="margin:0; font-size:40px; line-height:1.05; font-weight:700; color:#0B1F3A; letter-spacing:-0.02em; max-width:13ch;">
+            Scaling without <em style="font-family:'Source Serif 4',Georgia,serif; font-style:italic; font-weight:500; color:#1F4FAA;">breaking</em> trust
+          </h2>
+          <p style="margin:12px 0 0; font-size:15px; line-height:1.55; color:#475569; max-width:34ch;">What changes — and what must not — as we triple the customer base in eighteen months.</p>
+        </div>
+        <div class="byline" style="color:#475569;">
+          <div class="presenter">
+            <div class="avatar" style="background:#0B1F3A; color:#fff;">SM</div>
+            <div class="who"><span class="nm" style="color:#0B1F3A;">Sam Okafor</span><span class="rl">Chief Operating Officer</span></div>
+          </div>
+          <span class="pageno">SECTION 03</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">05 · Chapter Divider</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#0B1F3A;"></span>Quartz</span>
+    </figcaption>
+    <p class="cap-note">A book's section opener: oversized numeral, hairline divider, "Chapter Three" kicker. Crisp white stage; gem facet at 18%.</p>
+  </figure>
+
+  <!-- ════════ 06 · CENTERED COLOPHON · AURORA ════════ -->
+  <!-- aurora: pastel gradient bg, gradient title 6B2C8E→E8602C, body #5A4A6E, link #8B3A8C, Poppins/Open Sans -->
+  <figure class="tile">
+    <div class="cover" style="background:linear-gradient(135deg,#FFE5ED 0%,#FFE0D0 30%,#F0E0FF 65%,#DCE8FF 100%); font-family:'Open Sans',system-ui,sans-serif;">
+      <div class="motif" style="background:radial-gradient(circle at 18% 22%, rgba(255,255,255,0.45) 0%, transparent 24%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.35) 0%, transparent 28%);"></div>
+      <!-- aurora gradient wash motif right, opacity tuned -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMid slice" style="opacity:0.5;">
+        <defs>
+          <linearGradient id="aur-a" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6B2C8E" stop-opacity="0.4"/><stop offset="100%" stop-color="#E8602C" stop-opacity="0.18"/></linearGradient>
+        </defs>
+        <path d="M 180 -10 C 240 40, 280 80, 360 60 L 360 120 C 280 100, 240 160, 200 220 L 320 220 L 320 -20 Z" fill="url(#aur-a)"/>
+        <circle cx="270" cy="50" r="28" fill="#FFFFFF" opacity="0.3"/>
+      </svg>
+      <div class="stage" style="align-items:center; text-align:center; justify-content:center; gap:0;">
+        <div class="eyebrow" style="color:#8B3A8C; font-size:10.5px; justify-content:center; letter-spacing:0.28em;">
+          <span class="rule" style="max-width:32px; background:#8B3A8C;"></span>An Invitation<span class="rule" style="max-width:32px; background:#8B3A8C;"></span>
+        </div>
+        <h2 style="margin:18px 0 0; font-family:'Poppins',sans-serif; font-size:42px; line-height:1.06; font-weight:700; letter-spacing:-0.01em; background:linear-gradient(135deg,#6B2C8E 0%,#B33C7A 50%,#E8602C 100%); -webkit-background-clip:text; background-clip:text; color:transparent; max-width:15ch;">
+          Designing for <em style="font-style:italic; font-weight:600;">delight</em>
+        </h2>
+        <div style="display:flex; align-items:center; gap:12px; margin-top:14px;">
+          <span style="width:28px; height:1px; background:#8B3A8C; opacity:0.5;"></span>
+          <span style="width:5px; height:5px; border-radius:50%; background:#8B3A8C; opacity:0.6;"></span>
+          <span style="width:28px; height:1px; background:#8B3A8C; opacity:0.5;"></span>
+        </div>
+        <p style="margin:14px 0 0; font-size:15px; line-height:1.55; color:#5A4A6E; max-width:40ch;">A keynote on the small moments that make software feel human.</p>
+        <p style="margin:20px 0 0; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#8B3A8C; font-weight:600;">Mara Vance · Creative Director · 01</p>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">06 · Centered Colophon</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#B33C7A;"></span>Aurora</span>
+    </figcaption>
+    <p class="cap-note">Symmetric title-page-of-a-novel: balanced kicker, centered headline, ornament rule, single colophon byline line.</p>
+  </figure>
+
+  <!-- ════════ 07 · STATEMENT COVER · OBSIDIAN ════════ -->
+  <!-- obsidian: dark amber bg, gradient title F5E6C8→D4B878, body #B8A88C, link #E8D49E, Space Grotesk -->
+  <figure class="tile">
+    <div class="cover" style="background:linear-gradient(135deg,#1A1612 0%,#2D2620 50%,#1F1A17 100%); font-family:'Space Grotesk',system-ui,sans-serif;">
+      <!-- sunrise-arc motif bottom-right gold ~22% -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMax slice" style="opacity:0.55;">
+        <g transform="translate(260,200)">
+          <circle r="100" fill="none" stroke="#D4B878" stroke-width="0.5"/>
+          <circle r="70" fill="none" stroke="#D4B878" stroke-width="0.4"/>
+          <circle r="40" fill="#D4B878" opacity="0.18"/>
+          <g stroke="#D4B878" stroke-width="0.6">
+            <line x1="-40" y1="0" x2="-100" y2="0"/>
+            <line x1="-38" y1="-12" x2="-95" y2="-30"/>
+            <line x1="-32" y1="-24" x2="-80" y2="-60"/>
+            <line x1="-24" y1="-32" x2="-60" y2="-80"/>
+            <line x1="-12" y1="-38" x2="-30" y2="-95"/>
+            <line x1="0" y1="-40" x2="0" y2="-100"/>
+          </g>
+        </g>
+      </svg>
+      <div class="stage" style="width:80%;">
+        <div class="eyebrow" style="color:#E8D49E; font-size:11px;">
+          Founder's Letter<span class="rule" style="background:linear-gradient(90deg,#E8D49E,transparent);"></span>
+        </div>
+        <div style="margin:auto 0;">
+          <h2 style="margin:0; font-size:38px; line-height:1.12; font-weight:500; color:#F5E6C8; letter-spacing:-0.005em; max-width:22ch;">
+            &ldquo;We bet the company on a thing nobody asked for — and it&rsquo;s the <em style="font-style:italic; color:#E8D49E;">only</em> reason we&rsquo;re still here.&rdquo;
+          </h2>
+        </div>
+        <div class="byline" style="color:#B8A88C; border-top:1px solid rgba(212,184,120,0.2); padding-top:12px;">
+          <div class="presenter">
+            <div class="avatar" style="background:linear-gradient(135deg,#F5E6C8,#D4B878); color:#1A1612;">AT</div>
+            <div class="who"><span class="nm" style="color:#F5E6C8;">Aria Tran</span><span class="rl">Founder & CEO</span></div>
+          </div>
+          <span class="pageno">LETTER · 2026</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">07 · Statement Cover</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#D4B878;"></span>Obsidian</span>
+    </figcaption>
+    <p class="cap-note">Quote-led: the headline IS the statement, set in lighter weight with one italic emphasis. Gold-on-charcoal, AA clear.</p>
+  </figure>
+
+  <!-- ════════ 08 · LEDGER FOLIO · SOLSTICE ════════ -->
+  <!-- solstice: warm coral→magenta gradient, gradient title 8E1F4A→E8602C, body #6B2A3D, link #C72E5C, Lato -->
+  <figure class="tile">
+    <div class="cover" style="background:linear-gradient(135deg,#FFE0CC 0%,#FFB8A8 30%,#FF8A8E 60%,#E85A8C 100%); font-family:'Lato',system-ui,sans-serif;">
+      <div class="motif" style="background:repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 14px, rgba(255,255,255,0.0) 14px 32px);"></div>
+      <!-- concentric sun motif bottom-right -->
+      <svg class="motif" viewBox="0 0 320 200" preserveAspectRatio="xMaxYMax slice" style="opacity:0.55;">
+        <g>
+          <circle cx="320" cy="200" r="170" fill="none" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="0.8"/>
+          <circle cx="320" cy="200" r="135" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="0.6"/>
+          <circle cx="320" cy="200" r="100" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="0.5"/>
+          <circle cx="320" cy="200" r="65" fill="#FFFFFF" opacity="0.28"/>
+          <circle cx="320" cy="200" r="40" fill="#FFE0CC" opacity="0.55"/>
+        </g>
+      </svg>
+      <div class="stage">
+        <!-- top folio rail: kicker left, edition right -->
+        <div style="display:flex; justify-content:space-between; align-items:center; color:#8E1F4A; font-weight:700; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; border-bottom:1px solid rgba(142,31,74,0.25); padding-bottom:10px;">
+          <span>The Summer Review</span><span style="font-variant-numeric:tabular-nums;">Issue 06</span>
+        </div>
+        <div style="margin:auto 0; width:74%;">
+          <h2 style="margin:0; font-size:48px; line-height:0.98; font-weight:900; letter-spacing:-0.02em; background:linear-gradient(135deg,#8E1F4A 0%,#C72E5C 35%,#E8602C 100%); -webkit-background-clip:text; background-clip:text; color:transparent;">
+            Heat, light, <em style="font-style:italic; font-weight:700;">momentum.</em>
+          </h2>
+          <p style="margin:12px 0 0; font-size:15px; line-height:1.5; color:#6B2A3D; max-width:30ch; font-weight:400;">Six months of the boldest work this team has shipped — collected in one place.</p>
+        </div>
+        <div class="byline" style="color:#6B2A3D; border-top:1px solid rgba(142,31,74,0.25); padding-top:12px;">
+          <div class="presenter">
+            <div class="avatar" style="background:#C72E5C; color:#fff;">NP</div>
+            <div class="who"><span class="nm" style="color:#8E1F4A;">Nina Park</span><span class="rl">Editor at Large</span></div>
+          </div>
+          <span class="pageno">FOLIO 01</span>
+        </div>
+      </div>
+    </div>
+    <figcaption>
+      <span class="cap-name">08 · Ledger Folio</span>
+      <span class="cap-theme"><span class="cap-dot" style="background:#C72E5C;"></span>Solstice</span>
+    </figcaption>
+    <p class="cap-note">Magazine folio: title rail top (masthead + issue no.), heavy display headline, byline strip bottom — page bracketed top &amp; bottom.</p>
+  </figure>
+
+</div>
+
+</body>
+</html>

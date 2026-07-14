@@ -1,0 +1,28 @@
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rowH {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: rgba(41, 38, 27, 0.72);
+}
+
+.label > span:first-child {
+  font-weight: 500;
+}
+
+.value {
+  color: rgba(41, 38, 27, 0.5);
+  font-variant-numeric: tabular-nums;
+}

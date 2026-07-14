@@ -1,0 +1,726 @@
+<!doctype html>
+<!--
+  ============================================================================
+  v5 — Compose · FLOATING SLIDE-PREVIEW STRIP (focused component)
+  Prototype only. Touches NO production code.
+  ============================================================================
+
+  THIS IS THE COMPONENT WE CARRY INTO IMPLEMENTATION.
+  Lisa narrowed slide-generation down to ONE thing: the floating slide preview.
+  Everything else (prompt input, frameworks, Add-Visuals, Customize) is OUT of
+  scope here — a minimal neutral backdrop is intentional.
+
+  Two fixes vs v4 (refined-v4.html's overlapping "fan"):
+
+    FIX 1 — OPACITY / OVERLAP.
+      v4 fanned cards out as rotated, semi-transparent, OVERLAPPING tiles. Lisa:
+      "some are transparent and I cannot see the exact theme … the text on the
+      slides overlaps."  → v5 cards are FULLY OPAQUE. The selected theme's
+      background, colors and fonts are unmistakable on every card. Neighbours
+      are dimmed by a SOLID white-veil overlay (a sibling element), never by
+      lowering the card's own opacity — so the background never bleeds through
+      content, and no card ever covers another card's TEXT (gap-separated).
+
+    FIX 2 — LEFT / RIGHT NAVIGATION.
+      v4 had no way to move through slides. → v5 is a horizontal SPOTLIGHT:
+      Prev (‹) / Next (›) buttons, keyboard ←/→, click-a-neighbour-to-center,
+      trackpad / wheel scrub, and a "n / N" + dots position indicator. A
+      secondary Spotlight / Overview toggle lays every slide out as an evenly
+      spaced, non-overlapping thumbnail row.
+
+  KEPT from v4: per-theme typography + type scale, editable titles
+  (contentEditable, pencil affordance, focus ring, steers the designer), and
+  the Theme | Palette live-recolor picker (real themes + the 6 vibrant palettes).
+
+  A11y: real <button> nav, ←/→ keys, visible violet focus rings, ≥44px hit
+  areas, active-card body text ≥16px, contrast respected, prefers-reduced-motion
+  guard kills all motion.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v5 · Compose floating slide-preview strip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  :root{
+    --ai:#6B3FA0; --ai-2:#8B5CF6;
+    --ink:#241733; --ink-soft:#5b4d6e;
+    --slate-900:#1c1a26; --slate-700:#44414f; --slate-500:#6b6878; --slate-300:#cbd2dd;
+    --line:rgba(60,40,90,0.10);
+    --shadow:rgba(60,30,90,0.20);
+    --shadow-soft:rgba(60,30,90,0.10);
+    --focus:#7c4dff;
+
+    /* live THEME tokens — JS overwrites these to recolor + re-font every card */
+    --t-bg:#FAFAF7;
+    --t-pattern:none;
+    --t-title:#14223C;
+    --t-titlebg:none;
+    --t-titlefill:#14223C;
+    --t-body:#5C6770;
+    --t-accent:#B85C2E;
+    --t-line:rgba(20,34,60,0.12);
+    --t-titlefont:'Source Serif 4', Georgia, serif;
+    --t-bodyfont:Inter, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--slate-900);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    /* deliberately quiet neutral backdrop — the slides carry the color */
+    background:
+      radial-gradient(1100px 720px at 50% -14%, rgba(139,92,246,0.08) 0%, transparent 60%),
+      linear-gradient(180deg, #fbfaff 0%, #f5f3fb 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+
+  /* ── header band: states the focus + the two fixes (per brief) ── */
+  .band{ background:linear-gradient(120deg,#1a1030,#2a1b48 60%,#3a2160); color:#efe6ff; padding:18px 30px; font-size:14px; }
+  .band h1{ margin:0 0 8px; font-size:18px; font-weight:800; letter-spacing:-.01em; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .band h1 .tag{ font-size:11px; font-weight:800; letter-spacing:.06em; background:linear-gradient(90deg,#E267E4,#4198FF); color:#fff; padding:3px 9px; border-radius:7px; }
+  .band .fixes{ display:flex; gap:22px; flex-wrap:wrap; margin-top:4px; }
+  .band .fix{ display:flex; align-items:flex-start; gap:9px; max-width:520px; }
+  .band .fix .pill{ flex-shrink:0; font-size:11px; font-weight:800; letter-spacing:.05em; color:#ffd9fb; border:1px solid rgba(255,217,251,.4); padding:2px 8px; border-radius:6px; margin-top:1px; }
+  .band .fix p{ margin:0; line-height:1.45; color:#e4d8f6; }
+  .band .fix b{ color:#fff; }
+
+  /* ── workspace ── */
+  .wrap{ max-width:1180px; margin:0 auto; padding:34px 30px 64px; }
+  .heading{ display:flex; align-items:baseline; justify-content:space-between; gap:18px; margin-bottom:6px; flex-wrap:wrap; }
+  .heading h2{ margin:0; font-size:1.6rem; font-weight:800; letter-spacing:-.5px; color:var(--slate-900); }
+  .heading .sub{ font-size:1rem; color:var(--ink-soft); }
+
+  .deck-row{ display:flex; align-items:center; gap:12px; margin:14px 0 6px; }
+  .deck-title{
+    font-size:1.5rem; font-weight:800; letter-spacing:-.5px; line-height:1.1;
+    color:transparent; -webkit-text-stroke:1.2px var(--ai);
+    outline:none; cursor:text; border-radius:8px; padding:2px 6px; margin:-2px -6px; transition:background .15s ease;
+  }
+  .deck-title:hover{ background:rgba(107,63,160,.05); }
+  .deck-title:focus{ background:rgba(107,63,160,.07); }
+  .deck-title:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .edit-badge{ display:inline-flex; align-items:center; gap:5px; font-size:.74rem; font-weight:600; color:var(--ai); background:rgba(107,63,160,.08); border:1px solid rgba(107,63,160,.22); padding:3px 9px; border-radius:999px; }
+  .edit-badge svg{ width:12px; height:12px; }
+
+  /* view toggle (Spotlight | Overview) */
+  .viewseg{ margin-left:auto; display:flex; background:#f1edf8; border:1px solid var(--line); border-radius:11px; padding:3px; }
+  .viewseg button{ display:inline-flex; align-items:center; gap:6px; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:.86rem; font-weight:700; color:var(--ink-soft); padding:8px 13px; border-radius:9px; min-height:40px; transition:all .15s ease; }
+  .viewseg button svg{ width:15px; height:15px; }
+  .viewseg button[aria-selected="true"]{ background:#fff; color:var(--ai); box-shadow:0 3px 8px -4px var(--shadow); }
+  .viewseg button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .outline-hint{ font-size:.9rem; color:var(--ink-soft); margin:2px 0 14px; display:flex; align-items:center; gap:7px; }
+  .outline-hint svg{ width:15px; height:15px; color:var(--ai); flex-shrink:0; }
+  .outline-hint b{ color:var(--ai); font-weight:600; }
+
+  /* ============================================================
+     STAGE — the floating slide-preview component
+     ============================================================ */
+  .stage-wrap{
+    position:relative; border-radius:26px; padding:30px 18px 22px; isolation:isolate;
+    background:rgba(255,255,255,0.66);
+    border:1px solid var(--line);
+    box-shadow:0 36px 80px -42px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
+    backdrop-filter:blur(14px) saturate(1.1);
+    overflow:hidden;
+  }
+  .stage-wrap::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg,var(--ai-2),#4198FF,#F0A8F2); opacity:.85;
+  }
+
+  /* ---- SPOTLIGHT (horizontal carousel) ---- */
+  .spotlight{ position:relative; height:430px; }
+  /* the viewport masks neighbours that scroll off the edges */
+  .viewport{ position:absolute; inset:0; overflow:hidden; }
+  /* the track centers the active card and lays neighbours beside it */
+  .track{
+    position:absolute; top:50%; left:50%; height:0;
+    transition:transform .46s cubic-bezier(.22,.84,.28,1);
+    will-change:transform;
+  }
+
+  /* SLIDE CARD — fully OPAQUE 16:9, real theme bg/fonts */
+  .slide{
+    position:absolute; top:0;
+    width:560px; aspect-ratio:16/9; transform:translate(-50%,-50%);
+    border-radius:16px;
+    background:var(--t-bg);
+    background-image:var(--t-pattern);
+    border:1px solid var(--t-line);
+    box-shadow:0 30px 60px -26px var(--shadow), 0 2px 0 rgba(255,255,255,.5) inset;
+    overflow:hidden;
+    transition:width .46s cubic-bezier(.22,.84,.28,1), box-shadow .3s ease, background .4s ease, border-color .4s ease;
+    cursor:default;
+  }
+  /* neighbours: smaller + click-to-center; centre stays full */
+  .slide.neighbour{ width:430px; cursor:pointer; }
+  .slide.far{ width:360px; cursor:pointer; }
+  /* SOLID dimming veil — NOT card transparency. White wash over the bg so the
+     theme is still legible but the card recedes; never lets backdrop bleed in. */
+  .slide .veil{
+    position:absolute; inset:0; background:#ffffff; opacity:0; pointer-events:none;
+    transition:opacity .4s ease; z-index:5;
+  }
+  .slide.neighbour .veil{ opacity:.34; }
+  .slide.far .veil{ opacity:.52; }
+
+  /* genuine slide composition */
+  .slide .pad{ position:relative; padding:30px 36px 28px 40px; display:flex; flex-direction:column; height:100%; z-index:2; }
+  .slide .accentbar{ position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--t-accent); }
+  .slide .num{ position:absolute; top:18px; right:24px; font-size:.8rem; font-weight:700; color:var(--t-accent); opacity:.55; font-variant-numeric:tabular-nums; }
+  .slide .eyebrow{ font-family:var(--t-bodyfont); font-size:.78rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--t-accent); opacity:.9; margin-bottom:11px; }
+  .slide h4{
+    margin:0 0 12px; font-family:var(--t-titlefont); font-size:2.05rem; font-weight:700;
+    line-height:1.08; letter-spacing:-.01em;
+    color:var(--t-title);
+    background:var(--t-titlebg); -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:var(--t-titlefill);
+  }
+  .slide .lede{ font-family:var(--t-bodyfont); font-size:1.04rem; line-height:1.5; color:var(--t-body); margin:0; max-width:92%; }
+  .slide .bullets{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .slide .bullets li{ position:relative; font-family:var(--t-bodyfont); font-size:1rem; line-height:1.35; color:var(--t-body); padding-left:20px; }
+  .slide .bullets li::before{ content:""; position:absolute; left:0; top:8px; width:8px; height:8px; border-radius:50%; background:var(--t-accent); }
+  .slide .metric{ margin-top:auto; display:flex; align-items:baseline; gap:12px; }
+  .slide .metric b{ font-family:var(--t-titlefont); font-size:3.2rem; font-weight:700; line-height:1; color:var(--t-accent); }
+  .slide .metric span{ font-family:var(--t-bodyfont); font-size:1rem; color:var(--t-body); }
+
+  /* editable title affordance (only meaningful on the active card) */
+  .slide h4[contenteditable]{ cursor:text; border-radius:6px; outline:none; transition:box-shadow .14s ease, background .14s ease; }
+  .slide.active h4[contenteditable]:hover{ box-shadow:0 0 0 2px color-mix(in srgb, var(--t-accent) 45%, transparent); }
+  .slide.active h4[contenteditable]:focus{ box-shadow:0 0 0 2px var(--focus); background:rgba(124,77,255,.07); -webkit-text-fill-color:var(--t-title); }
+  .slide .edit-dot{ position:absolute; top:16px; left:16px; width:16px; height:16px; color:var(--t-accent); opacity:0; transition:opacity .15s ease; z-index:6; }
+  .slide.active:hover .edit-dot{ opacity:.6; }
+  /* non-active titles aren't editable; pointer passes through to click-to-center */
+  .slide:not(.active) h4{ pointer-events:none; }
+
+  /* ---- NAV controls ---- */
+  .nav-btn{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:30;
+    width:52px; height:52px; min-width:52px; border-radius:50%;
+    background:#fff; border:1px solid var(--line); color:var(--ai);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    box-shadow:0 14px 30px -12px var(--shadow); transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+  }
+  .nav-btn svg{ width:24px; height:24px; }
+  .nav-btn:hover{ transform:translateY(-50%) scale(1.07); background:rgba(107,63,160,.06); box-shadow:0 20px 40px -14px var(--shadow); }
+  .nav-btn:active{ transform:translateY(-50%) scale(.95); }
+  .nav-btn:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+  .nav-btn[disabled]{ opacity:.4; cursor:default; box-shadow:none; }
+  .nav-btn[disabled]:hover{ transform:translateY(-50%); background:#fff; }
+  .nav-prev{ left:14px; } .nav-next{ right:14px; }
+
+  /* ---- position indicator ---- */
+  .pos-bar{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:20px; }
+  .pos-read{ font-size:.95rem; font-weight:700; color:var(--slate-700); font-variant-numeric:tabular-nums; min-width:54px; text-align:center; }
+  .pos-read b{ color:var(--ai); }
+  .dots{ display:flex; gap:8px; align-items:center; }
+  .dot{ width:9px; height:9px; border-radius:50%; padding:0; border:none; background:var(--slate-300); cursor:pointer; transition:all .2s ease; }
+  .dot[aria-current="true"]{ background:var(--ai); width:26px; border-radius:6px; }
+  .dot:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .dot:hover:not([aria-current="true"]){ background:var(--ai-2); }
+
+  /* ---- OVERVIEW (evenly spaced thumbnail row, no overlap) ---- */
+  .overview{ display:none; }
+  .stage-wrap.is-overview .spotlight{ display:none; }
+  .stage-wrap.is-overview .pos-bar{ display:none; }
+  .stage-wrap.is-overview .overview{
+    display:grid; grid-auto-flow:column; grid-auto-columns:minmax(200px,1fr); gap:18px;
+    overflow-x:auto; padding:6px 6px 16px; scroll-snap-type:x proximity;
+  }
+  .ov-card{
+    position:relative; aspect-ratio:16/9; border-radius:12px; scroll-snap-align:start;
+    background:var(--t-bg); background-image:var(--t-pattern);
+    border:1px solid var(--t-line); overflow:hidden; cursor:pointer;
+    box-shadow:0 14px 30px -18px var(--shadow); transition:transform .18s ease, box-shadow .18s ease;
+    text-align:left;
+  }
+  .ov-card:hover{ transform:translateY(-3px); box-shadow:0 22px 44px -20px var(--shadow); }
+  .ov-card:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+  .ov-card.active{ box-shadow:0 0 0 3px var(--ai), 0 14px 30px -18px var(--shadow); }
+  .ov-card .pad{ position:relative; padding:14px 14px 12px 16px; height:100%; display:flex; flex-direction:column; }
+  .ov-card .accentbar{ position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--t-accent); }
+  .ov-card .num{ position:absolute; top:8px; right:11px; font-size:.62rem; font-weight:700; color:var(--t-accent); opacity:.55; }
+  .ov-card .eyebrow{ font-family:var(--t-bodyfont); font-size:.54rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--t-accent); opacity:.85; margin-bottom:5px; }
+  .ov-card h5{ margin:0; font-family:var(--t-titlefont); font-size:.92rem; font-weight:700; line-height:1.12; color:var(--t-title);
+    background:var(--t-titlebg); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:var(--t-titlefill); }
+
+  /* ============================================================
+     LOOK PICKER — Theme | Palette (compact, from v4) live-recolor
+     ============================================================ */
+  .look{ margin-top:26px; background:rgba(255,255,255,0.82); border:1px solid var(--line); border-radius:20px; padding:18px 20px 20px; box-shadow:0 26px 60px -40px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9); }
+  .look-title{ color:var(--ai); font-size:.78rem; font-weight:700; letter-spacing:.6px; text-transform:uppercase; margin:0 2px 14px; display:flex; align-items:center; gap:7px; }
+  .look-title svg{ width:15px; height:15px; }
+  .segmented{ display:inline-flex; background:#f1edf8; border:1px solid var(--line); border-radius:11px; padding:3px; margin-bottom:16px; }
+  .segmented button{ border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:.88rem; font-weight:700; color:var(--ink-soft); padding:9px 22px; border-radius:9px; min-height:42px; transition:all .15s ease; }
+  .segmented button[aria-selected="true"]{ background:#fff; color:var(--ai); box-shadow:0 3px 8px -4px var(--shadow); }
+  .segmented button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .picker-pane{ display:none; } .picker-pane.active{ display:block; }
+  .themes{ display:grid; grid-template-columns:repeat(auto-fill,minmax(116px,1fr)); gap:10px; }
+  .theme{ position:relative; border:1px solid var(--line); border-radius:13px; cursor:pointer; overflow:hidden; padding:0; background:#fff; transition:transform .14s ease, box-shadow .14s ease; font-family:inherit; }
+  .theme:hover{ transform:translateY(-2px); box-shadow:0 10px 22px -12px var(--shadow); }
+  .theme:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .theme .swatch{ height:46px; display:flex; align-items:flex-end; padding:6px 8px; }
+  .theme .swatch .glyph{ font-size:.8rem; font-weight:800; letter-spacing:-.01em; }
+  .theme .nm{ display:block; font-size:.76rem; font-weight:700; color:var(--slate-700); padding:7px 5px 8px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .theme[aria-pressed="true"]{ border-color:var(--ai); box-shadow:0 0 0 2px rgba(107,63,160,.25); }
+  .theme[aria-pressed="true"]::after,.pal[aria-pressed="true"]::after{ content:""; position:absolute; top:6px; right:6px; width:17px; height:17px; border-radius:50%; background:var(--ai); box-shadow:0 0 0 2px #fff;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:center; }
+
+  .pals{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:11px; }
+  .pal{ position:relative; border:1px solid var(--line); border-radius:13px; cursor:pointer; overflow:hidden; padding:0; background:#fff; transition:transform .14s ease, box-shadow .14s ease; font-family:inherit; text-align:left; }
+  .pal:hover{ transform:translateY(-2px); box-shadow:0 10px 22px -12px var(--shadow); }
+  .pal:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .pal .strip{ height:34px; display:flex; } .pal .strip i{ flex:1; }
+  .pal .nm{ display:block; font-size:.76rem; font-weight:700; color:var(--slate-700); padding:7px 9px 8px; }
+  .pal[aria-pressed="true"]{ border-color:var(--ai); box-shadow:0 0 0 2px rgba(107,63,160,.25); }
+
+  @media (max-width:760px){
+    .slide{ width:420px; } .slide.neighbour{ width:300px; } .slide.far{ width:240px; }
+    .spotlight{ height:330px; } .slide h4{ font-size:1.5rem; }
+  }
+
+  /* reduced-motion guard */
+  @media (prefers-reduced-motion:reduce){
+    .track,.slide,.nav-btn,.dot,.ov-card,.theme,.pal,.veil{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== HEADER BAND: focus + the two fixes ===== -->
+  <div class="band">
+    <h1><span class="tag">v5 · FOCUSED COMPONENT</span> Floating slide-preview strip — the one piece we carry forward</h1>
+    <div class="fixes">
+      <div class="fix"><span class="pill">FIX 1 · OPACITY</span><p>Cards are <b>fully opaque</b> — the theme bg, colors &amp; fonts are unmistakable. Neighbours dim via a <b>solid white veil</b>, never card transparency, and never overlap another card's text.</p></div>
+      <div class="fix"><span class="pill">FIX 2 · LEFT/RIGHT NAV</span><p>Move with <b>‹ ›</b> buttons, keyboard <b>← →</b>, click a side slide to center it, scrub with the trackpad, or jump via the dots. <b>Overview</b> lays them out in an even row.</p></div>
+    </div>
+  </div>
+
+  <!-- ===== WORKSPACE ===== -->
+  <div class="wrap">
+    <div class="heading">
+      <h2>Preview your slides</h2>
+      <span class="sub">Pick the look, edit a title, step through the deck.</span>
+    </div>
+
+    <div class="deck-row">
+      <span class="deck-title" contenteditable="true" spellcheck="false" aria-label="Deck title — click to edit">Beating Plan in Q1</span>
+      <span class="edit-badge"><span data-lucide="pencil"></span> editable</span>
+
+      <div class="viewseg" role="tablist" aria-label="Preview view">
+        <button id="view-spot" role="tab" aria-selected="true"><span data-lucide="gallery-horizontal-end"></span> Spotlight</button>
+        <button id="view-over" role="tab" aria-selected="false"><span data-lucide="layout-grid"></span> Overview</button>
+      </div>
+    </div>
+
+    <p class="outline-hint">
+      <span data-lucide="list-tree"></span>
+      <span>Each slide title is an <b>editable outline</b> — edit the centered slide's title to steer what it generates.</span>
+    </p>
+
+    <!-- THE COMPONENT -->
+    <div class="stage-wrap" id="stage">
+
+      <!-- spotlight carousel -->
+      <div class="spotlight" id="spotlight">
+        <button class="nav-btn nav-prev" id="prev" aria-label="Previous slide"><span data-lucide="chevron-left"></span></button>
+        <div class="viewport">
+          <div class="track" id="track"></div>
+        </div>
+        <button class="nav-btn nav-next" id="next" aria-label="Next slide"><span data-lucide="chevron-right"></span></button>
+      </div>
+
+      <!-- overview row -->
+      <div class="overview" id="overview" role="list" aria-label="All slides"></div>
+
+      <!-- position indicator -->
+      <div class="pos-bar">
+        <span class="pos-read" aria-live="polite"><b id="posn">1</b> / <span id="posN">6</span></span>
+        <div class="dots" id="dots" role="tablist" aria-label="Jump to slide"></div>
+      </div>
+    </div>
+
+    <!-- ===== LOOK PICKER (Theme | Palette) ===== -->
+    <div class="look">
+      <div class="look-title"><span data-lucide="palette"></span> Look — live-recolors every slide</div>
+      <div class="segmented" role="tablist" aria-label="Look source">
+        <button id="seg-theme" role="tab" aria-selected="true">Theme</button>
+        <button id="seg-palette" role="tab" aria-selected="false">Palette</button>
+      </div>
+      <div class="picker-pane active" id="pane-theme">
+        <div class="themes" id="themes" role="group" aria-label="Theme"></div>
+      </div>
+      <div class="picker-pane" id="pane-palette">
+        <div class="pals" id="pals" role="group" aria-label="Palette"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  lucide.createIcons();
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ════════ REAL Compose themes (values faithful to themes.ts) ════════ */
+  const THEMES = [
+    { id:'counsel', name:'Counsel',
+      bg:'#FAFAF7', pattern:'repeating-linear-gradient(0deg, rgba(20,34,60,0.025) 0 1px, transparent 1px 28px)',
+      title:'#14223C', body:'#5C6770', accent:'#B85C2E', line:'rgba(20,34,60,0.12)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#FAFAF7','#14223C','#B85C2E'], glyph:'#14223C' },
+    { id:'aurora', name:'Aurora',
+      bg:'linear-gradient(135deg, #FFE5ED 0%, #FFE0D0 30%, #F0E0FF 65%, #DCE8FF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #6B2C8E 0%, #B33C7A 50%, #E8602C 100%)', body:'#5A4A6E', accent:'#8B3A8C', line:'rgba(107,44,142,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      sw:['#FFE5ED','#F0E0FF','#6B2C8E'], glyph:'#6B2C8E' },
+    { id:'cobalt', name:'Cobalt',
+      bg:'linear-gradient(135deg, #E8F0FF 0%, #D4E0FF 50%, #BCD0FF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #0F2654 0%, #2A4F9E 100%)', body:'#3B4A6B', accent:'#1F3D8A', line:'rgba(31,61,138,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      sw:['#E8F0FF','#BCD0FF','#1F3D8A'], glyph:'#1F3D8A' },
+    { id:'foxit-glow', name:'Foxit Glow',
+      bg:'linear-gradient(135deg, #FFEFD5 0%, #FFD4B0 35%, #FFB382 75%, #FF955C 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #8B2A0A 0%, #B33C0F 50%, #E8602C 100%)', body:'#5C2E12', accent:'#B33C0F', line:'rgba(179,60,15,0.18)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#FFEFD5','#FFB382','#B33C0F'], glyph:'#B33C0F' },
+    { id:'volt', name:'Volt',
+      bg:'radial-gradient(ellipse at 25% 30%, rgba(140,180,255,0.18) 0%, transparent 55%), radial-gradient(ellipse at 78% 68%, rgba(200,130,220,0.14) 0%, transparent 55%), linear-gradient(180deg, #131D2E 0%, #1F2940 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #E8C8FF 0%, #C8A8FF 50%, #FFB4D4 100%)', body:'#C8B8D8', accent:'#FFB4D4', line:'rgba(200,168,255,0.28)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#131D2E','#C8A8FF','#FFB4D4'], glyph:'#C8A8FF' },
+    { id:'quartz', name:'Quartz',
+      bg:'#FFFFFF', pattern:'none',
+      title:'#0B1F3A', body:'#475569', accent:'#1F4FAA', line:'rgba(11,31,58,0.12)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#FFFFFF','#F1F5F9','#0B1F3A'], glyph:'#0B1F3A' },
+    { id:'verdant', name:'Verdant',
+      bg:'linear-gradient(135deg, #EDF2E4 0%, #D5E4C0 45%, #B5CC95 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #1F3A1F 0%, #3B6D2E 100%)', body:'#3D5230', accent:'#3B6D2E', line:'rgba(59,109,46,0.18)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#EDF2E4','#B5CC95','#3B6D2E'], glyph:'#1F3A1F' },
+    { id:'obsidian', name:'Obsidian',
+      bg:'linear-gradient(135deg, #1A1612 0%, #2D2620 50%, #1F1A17 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #F5E6C8 0%, #E8D49E 50%, #D4B878 100%)', body:'#B8A88C', accent:'#D4B878', line:'rgba(212,184,120,0.26)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#1A1612','#2D2620','#D4B878'], glyph:'#D4B878' },
+  ];
+
+  /* ════════ The 6 vibrant curated palettes (from v4) ════════ */
+  const PALETTES = [
+    { id:'blossom', name:'Blossom — pink',
+      bg:'linear-gradient(135deg, #FFF0F6 0%, #FFE3F0 55%, #FFD0E8 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #C2185B 0%, #E0518C 100%)', body:'#7A3358', accent:'#E0518C', line:'rgba(194,24,91,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#FFE3F0','#FFB3D6','#E0518C','#C2185B'] },
+    { id:'azure', name:'Azure — blue',
+      bg:'linear-gradient(135deg, #EAF3FF 0%, #DCEBFF 55%, #C6DEFF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #0B4FB0 0%, #3B82F6 100%)', body:'#2F4B72', accent:'#2563EB', line:'rgba(37,99,235,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#DCEBFF','#9CC4FE','#3B82F6','#0B4FB0'] },
+    { id:'ink', name:'Ink — mono',
+      bg:'linear-gradient(135deg, #18181B 0%, #232328 60%, #2C2C32 100%)', pattern:'none',
+      title:'#FAFAFA', body:'#C4C4CC', accent:'#FFFFFF', line:'rgba(255,255,255,0.18)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#18181B','#3A3A40','#9A9AA2','#FAFAFA'] },
+    { id:'sunset', name:'Sunset — duotone',
+      bg:'linear-gradient(135deg, #2B1055 0%, #6B2C8E 45%, #C2185B 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #FFD166 0%, #FF8FA3 100%)', body:'rgba(255,233,244,0.86)', accent:'#FFB347', line:'rgba(255,209,102,0.30)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#2B1055','#6B2C8E','#C2185B','#FFD166'] },
+    { id:'citrus', name:'Citrus — fresh',
+      bg:'linear-gradient(135deg, #F0FFF4 0%, #DBF7E4 50%, #C6F0FF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #0E7C5A 0%, #1296C9 100%)', body:'#2A5046', accent:'#10B981', line:'rgba(16,185,129,0.18)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#DBF7E4','#9DEBC4','#10B981','#1296C9'] },
+    { id:'paper', name:'Paper — light mono',
+      bg:'#F7F6F3', pattern:'none',
+      title:'#1B1B1B', body:'#4A4A4A', accent:'#1B1B1B', line:'rgba(0,0,0,0.12)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#F7F6F3','#D8D6D0','#7A7A7A','#1B1B1B'] },
+  ];
+
+  /* ════════ slide content (genuine typeset compositions) ════════ */
+  const SLIDES = [
+    { kind:'cover',  eyebrow:'Q1 Board Review', title:'Beating Plan in Q1',
+      lede:'How we beat our revenue target — and what it sets up for the year ahead.' },
+    { kind:'metric', eyebrow:'The result', title:'We beat the target',
+      metricA:'112%', metricB:'of plan · $4.2M booked' },
+    { kind:'bullets',eyebrow:'What changed', title:'What made the difference',
+      bullets:['Enterprise pipeline matured faster than forecast','Two flagship renewals closed a quarter early','New pricing lifted average deal size 18%'] },
+    { kind:'lede',   eyebrow:'The year ahead', title:'Looking ahead',
+      lede:'Three bets carry the momentum into H2 — and a clear read on where the risk sits.' },
+    { kind:'bullets',eyebrow:'Deep dive', title:'Where the growth came from',
+      bullets:['Segment-level revenue breakdown','Cohort retention held above 94%','Forecast scenarios for H2'] },
+    { kind:'cover',  eyebrow:'The ask', title:'The ask',
+      lede:'Greenlight the H2 hiring plan and the regional expansion budget today.' },
+  ];
+
+  /* ════════ live recolor ════════ */
+  function applyLook(look){
+    const grad = String(look.title).startsWith('linear-gradient');
+    root.style.setProperty('--t-bg', look.bg);
+    root.style.setProperty('--t-pattern', look.pattern || 'none');
+    root.style.setProperty('--t-body', look.body);
+    root.style.setProperty('--t-accent', look.accent);
+    root.style.setProperty('--t-line', look.line);
+    root.style.setProperty('--t-titlefont', look.titleFont);
+    root.style.setProperty('--t-bodyfont', look.bodyFont);
+    if(grad){
+      root.style.setProperty('--t-title', 'transparent');
+      root.style.setProperty('--t-titlebg', look.title);
+      root.style.setProperty('--t-titlefill', 'transparent');
+    } else {
+      root.style.setProperty('--t-title', look.title);
+      root.style.setProperty('--t-titlebg', 'none');
+      root.style.setProperty('--t-titlefill', look.title);
+    }
+  }
+
+  /* ════════ slide composition markup ════════ */
+  function slideBody(s){
+    if(s.kind === 'metric') return `<div class="metric"><b>${s.metricA||''}</b><span>${s.metricB||''}</span></div>`;
+    if(s.kind === 'bullets') return `<ul class="bullets">${(s.bullets||[]).map(b=>`<li>${b}</li>`).join('')}</ul>`;
+    return `<p class="lede">${s.lede||''}</p>`;
+  }
+  function slideInner(s, idx, editable){
+    return `
+      <div class="veil" aria-hidden="true"></div>
+      <div class="pad">
+        <span class="accentbar"></span>
+        ${editable?'<span class="edit-dot" data-lucide="pencil"></span>':''}
+        <span class="num">${idx+1}</span>
+        <div class="eyebrow">${s.eyebrow||''}</div>
+        <h4 ${editable?'contenteditable="true" spellcheck="false" aria-label="Slide title — click to edit"':''}>${s.title||'New slide'}</h4>
+        ${slideBody(s)}
+      </div>`;
+  }
+
+  /* ════════ SPOTLIGHT state + layout ════════ */
+  const track = document.getElementById('track');
+  const dotsEl = document.getElementById('dots');
+  const posn = document.getElementById('posn');
+  document.getElementById('posN').textContent = SLIDES.length;
+  let active = 0;
+
+  // geometry: center card width + step between card centers (gap-separated, no overlap)
+  const CENTER_W = 560, STEP = 480; // STEP > neighbour half-widths so text never overlaps
+
+  function buildSpotlight(){
+    track.innerHTML = '';
+    SLIDES.forEach((s,i)=>{
+      const el = document.createElement('div');
+      el.className = 'slide';
+      el.dataset.idx = i;
+      el.innerHTML = slideInner(s, i, i===active);
+      track.appendChild(el);
+    });
+    lucide.createIcons();
+    wireTitleEditing();
+    layoutSpotlight();
+  }
+
+  function layoutSpotlight(){
+    const slides = [...track.children];
+    slides.forEach((el,i)=>{
+      const d = i - active;                       // signed distance from center
+      el.classList.toggle('active', d===0);
+      el.classList.toggle('neighbour', Math.abs(d)===1);
+      el.classList.toggle('far', Math.abs(d)>=2);
+      el.style.left = (d*STEP) + 'px';
+      el.style.zIndex = 30 - Math.abs(d);
+      // hide cards far off-stage so they can't catch clicks
+      el.style.visibility = Math.abs(d) > 3 ? 'hidden' : 'visible';
+    });
+    track.style.transform = 'translate(-50%,-50%)'; // track centered; cards offset by left
+    // dots + readout
+    posn.textContent = active + 1;
+    [...dotsEl.children].forEach((d,i)=>d.setAttribute('aria-current', i===active?'true':'false'));
+    document.getElementById('prev').disabled = active===0;
+    document.getElementById('next').disabled = active===SLIDES.length-1;
+    syncOverviewActive();
+  }
+
+  // re-render so only the active card is contentEditable + shows edit affordance
+  function refreshEditable(){
+    [...track.children].forEach((el,i)=>{
+      const wasEditable = el.querySelector('h4[contenteditable]');
+      const shouldEdit = i===active;
+      if(!!wasEditable !== shouldEdit){
+        el.innerHTML = slideInner(SLIDES[i], i, shouldEdit);
+      }
+    });
+    lucide.createIcons();
+    wireTitleEditing();
+  }
+
+  function goTo(i){
+    active = Math.max(0, Math.min(SLIDES.length-1, i));
+    refreshEditable();
+    layoutSpotlight();
+  }
+
+  function wireTitleEditing(){
+    const h = track.querySelector('.slide.active h4[contenteditable]');
+    if(!h) return;
+    h.addEventListener('input', ()=>{ SLIDES[active].title = h.textContent; syncOverviewTitle(active); });
+    h.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); h.blur(); } });
+  }
+
+  /* click a neighbour to bring it center */
+  track.addEventListener('click', e=>{
+    const card = e.target.closest('.slide');
+    if(!card) return;
+    const i = +card.dataset.idx;
+    if(i!==active) goTo(i);
+  });
+
+  /* nav buttons */
+  document.getElementById('prev').addEventListener('click', ()=>goTo(active-1));
+  document.getElementById('next').addEventListener('click', ()=>goTo(active+1));
+
+  /* keyboard ← / → (ignore while editing a title or typing in a field) */
+  document.addEventListener('keydown', e=>{
+    const t = e.target;
+    if(t && (t.isContentEditable || t.tagName==='INPUT' || t.tagName==='TEXTAREA')) return;
+    if(stage.classList.contains('is-overview')) return;
+    if(e.key==='ArrowLeft'){ e.preventDefault(); goTo(active-1); }
+    else if(e.key==='ArrowRight'){ e.preventDefault(); goTo(active+1); }
+  });
+
+  /* trackpad / wheel scrub (horizontal-dominant gestures advance one slide) */
+  let wheelLock = false;
+  document.getElementById('spotlight').addEventListener('wheel', e=>{
+    const horiz = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : 0;
+    const amt = horiz || (e.shiftKey ? e.deltaY : 0);
+    if(Math.abs(amt) < 12 || wheelLock) return;
+    e.preventDefault();
+    wheelLock = true;
+    goTo(active + (amt>0 ? 1 : -1));
+    setTimeout(()=>{ wheelLock = false; }, reduceMotion ? 60 : 360);
+  }, { passive:false });
+
+  /* dots */
+  function buildDots(){
+    dotsEl.innerHTML = '';
+    SLIDES.forEach((_,i)=>{
+      const d = document.createElement('button');
+      d.className='dot'; d.type='button'; d.setAttribute('role','tab');
+      d.setAttribute('aria-label', 'Go to slide '+(i+1));
+      d.setAttribute('aria-current', i===0?'true':'false');
+      d.addEventListener('click', ()=>goTo(i));
+      dotsEl.appendChild(d);
+    });
+  }
+
+  /* ════════ OVERVIEW (even thumbnail row) ════════ */
+  const overview = document.getElementById('overview');
+  function buildOverview(){
+    overview.innerHTML = '';
+    SLIDES.forEach((s,i)=>{
+      const b = document.createElement('button');
+      b.className='ov-card'; b.type='button'; b.setAttribute('role','listitem');
+      b.dataset.idx = i;
+      b.innerHTML = `
+        <div class="pad">
+          <span class="accentbar"></span>
+          <span class="num">${i+1}</span>
+          <div class="eyebrow">${s.eyebrow||''}</div>
+          <h5>${s.title||'New slide'}</h5>
+        </div>`;
+      b.addEventListener('click', ()=>{
+        goTo(i); setView('spotlight');
+      });
+      overview.appendChild(b);
+    });
+  }
+  function syncOverviewActive(){
+    [...overview.children].forEach((c,i)=>c.classList.toggle('active', i===active));
+  }
+  function syncOverviewTitle(i){
+    const c = overview.children[i]; if(c) c.querySelector('h5').textContent = SLIDES[i].title;
+  }
+
+  /* ════════ view toggle ════════ */
+  const stage = document.getElementById('stage');
+  const vSpot = document.getElementById('view-spot');
+  const vOver = document.getElementById('view-over');
+  function setView(v){
+    const over = v==='overview';
+    stage.classList.toggle('is-overview', over);
+    vSpot.setAttribute('aria-selected', over?'false':'true');
+    vOver.setAttribute('aria-selected', over?'true':'false');
+  }
+  vSpot.addEventListener('click', ()=>setView('spotlight'));
+  vOver.addEventListener('click', ()=>setView('overview'));
+
+  /* ════════ Theme | Palette picker ════════ */
+  const themesEl = document.getElementById('themes');
+  THEMES.forEach((t,i)=>{
+    const b = document.createElement('button');
+    b.className='theme'; b.type='button';
+    b.setAttribute('aria-pressed', i===0?'true':'false');
+    b.setAttribute('aria-label', t.name+' theme'); b.dataset.idx=i;
+    b.innerHTML = `<span class="swatch" style="background:${t.bg}"><span class="glyph" style="color:${t.glyph}">Aa</span></span><span class="nm">${t.name}</span>`;
+    themesEl.appendChild(b);
+  });
+  themesEl.addEventListener('click', e=>{
+    const b = e.target.closest('.theme'); if(!b) return;
+    themesEl.querySelectorAll('.theme').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    applyLook(THEMES[+b.dataset.idx]);
+  });
+
+  const palsEl = document.getElementById('pals');
+  PALETTES.forEach((p,i)=>{
+    const b = document.createElement('button');
+    b.className='pal'; b.type='button';
+    b.setAttribute('aria-pressed','false');
+    b.setAttribute('aria-label', p.name); b.dataset.idx=i;
+    b.innerHTML = `<span class="strip">${p.strip.map(c=>`<i style="background:${c}"></i>`).join('')}</span><span class="nm">${p.name}</span>`;
+    palsEl.appendChild(b);
+  });
+  palsEl.addEventListener('click', e=>{
+    const b = e.target.closest('.pal'); if(!b) return;
+    palsEl.querySelectorAll('.pal').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    applyLook(PALETTES[+b.dataset.idx]);
+  });
+
+  const segTheme = document.getElementById('seg-theme');
+  const segPalette = document.getElementById('seg-palette');
+  function selectSeg(themeOn){
+    segTheme.setAttribute('aria-selected', themeOn?'true':'false');
+    segPalette.setAttribute('aria-selected', themeOn?'false':'true');
+    document.getElementById('pane-theme').classList.toggle('active', themeOn);
+    document.getElementById('pane-palette').classList.toggle('active', !themeOn);
+    const active = (themeOn?themesEl:palsEl).querySelector('[aria-pressed="true"]');
+    if(active) applyLook((themeOn?THEMES:PALETTES)[+active.dataset.idx]);
+  }
+  segTheme.addEventListener('click', ()=>selectSeg(true));
+  segPalette.addEventListener('click', ()=>selectSeg(false));
+
+  /* ════════ deck title (demo only) ════════ */
+  document.querySelector('.deck-title').addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); e.target.blur(); }
+  });
+
+  /* ════════ init ════════ */
+  applyLook(THEMES[0]);
+  buildDots();
+  buildSpotlight();
+  buildOverview();
+  window.addEventListener('resize', layoutSpotlight);
+</script>
+</body>
+</html>

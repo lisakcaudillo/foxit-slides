@@ -1,0 +1,1019 @@
+<!doctype html>
+<!--
+  ============================================================================
+  REFINED v4 — Compose · /editor/slides generation surface
+  NARROWED DIRECTION. Prototype only — touches NO production code.
+  ============================================================================
+
+  Lisa narrowed v3 hard:
+    "What I'd keep is honestly just the floating preview slides and the
+     palette/theme selection."
+
+  So this rebuild STRIPS the easel metaphor entirely (no brass pins/bolts, no
+  wood tray, no "easel" chrome, no narration sentences) and rebuilds a clean,
+  uncluttered surface around the TWO things she keeps:
+
+    ★ STAR 1 — Floating 16:9 preview slide-cards with EDITABLE TITLES.
+       Each title is contentEditable (caret + edit affordance). The titles
+       form an editable outline that STEERS the presentation-designer skill —
+       editing a title guides what content that slide generates. The deck
+       title is also editable (outlined-title treatment Lisa liked). Picking a
+       framework SEEDS these slide titles (Pitch deck → Problem / Solution /
+       Ask). Card typography is genuinely typeset — real theme font pairing,
+       proper type scale, a real slide composition (eyebrow + title + lede +
+       bullets / metric), NOT cramped boxes. (v3 type was "terrible" — fixed.)
+
+    ★ STAR 2 — Theme / Palette selection. A clean segmented switch:
+       • Theme  = our real designed themes, faithful to themes.ts (real
+                  palettes + Google-Font pairings + gradient titles).
+       • Palette = NEW raw curated color stories (pink-led, blue-led,
+                  black/mono, duotone) — vibrant + designed, not the boring v3 set.
+       Selecting EITHER live-recolors the preview slide-cards (bg, title,
+       accent, type, fonts) via JS.
+
+  KEPT & CLEANED:
+    • Prompt input, Add-reference upload, Slides count stepper.
+    • Customize = our REAL verbiage: Audience / Tone / Voice (+ Custom… free
+      text) / Detail level (Concise · Detailed · Extensive icon tiles). Same as v3.
+    • Add Visuals = single clean role="switch" toggle. NO sub-copy, NO per-slide
+      count. When ON, reveals a LIGHT image-gen style picker mirroring the
+      editor's 8 styles (photographic / illustration / 3d-render / watercolor /
+      sketch / minimal / cinematic / abstract) + a Custom… field.
+    • Framework cards (Pitch deck / Quarterly review / Lesson / Brainstorm),
+      wired to seed slide titles.
+    • Generate (kit bold CTA).
+
+  REMOVED:
+    • Easel metaphor + all chrome (pins, bolts, tray, "easel" kicker copy).
+    • Narration sentences ("Describe your deck, shape it on the easel…",
+      "Your deck, taking shape.") — gone.
+
+  ADDED (vs v3):
+    • Beautiful, genuinely-typeset preview cards (per-theme fonts + type scale).
+    • Live FONT swap on theme/palette change, not just colors.
+    • Curated raw Palette stories (pink / blue / mono / duotone).
+    • Compact image-gen style picker on Add Visuals (8 styles + Custom).
+    • Calmer-but-alive page chrome: a clean editorial canvas with a quiet
+      violet-tinted vignette + faint dot grid + one thin gradient hairline.
+      Vibrant color lives in the theme/palette previews (user content color).
+      Page chrome stays on-palette (violet AI accent, slate neutrals, kit
+      gradient on the CTA only). Foxit orange is NOT used as an accent.
+
+  A11y: body ≥16px, hit areas ≥44px, visible violet focus rings, contrast
+  ≥4.5:1, role="switch" on Add Visuals (state = knob + label + icon, never
+  color alone), prefers-reduced-motion guard kills all motion.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Refined v4 · Compose slide generation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Inter (UI + body) + the theme display fonts referenced from themes.ts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  :root{
+    /* kit ramp — reserved for the CTA only */
+    --pink:#F0A8F2; --lav:#C8B6F4; --sky:#9CC4FE;
+    --magenta:#E267E4; --blue-l:#9FC7FE; --blue-m:#4198FF;
+
+    /* AI accent + neutrals (CLAUDE.md approved) */
+    --ai:#6B3FA0; --ai-2:#8B5CF6;
+    --ink:#241733; --ink-soft:#5b4d6e;
+    --cta-ink:#2e1065;
+    --slate-900:#1c1a26; --slate-700:#44414f; --slate-500:#6b6878; --slate-300:#cbd2dd;
+    --line:rgba(60,40,90,0.10);
+    --shadow:rgba(60,30,90,0.18);
+    --shadow-soft:rgba(60,30,90,0.10);
+    --focus:#7c4dff;
+
+    /* live THEME tokens — JS overwrites these to recolor + re-font preview cards */
+    --t-bg:#FAFAF7;
+    --t-pattern:none;
+    --t-title:#14223C;
+    --t-titlebg:none;        /* gradient title fill, when the theme uses one */
+    --t-body:#5C6770;
+    --t-accent:#B85C2E;
+    --t-line:rgba(20,34,60,0.12);
+    --t-titlefont:"'Source Serif 4', Georgia, serif";
+    --t-bodyfont:"Inter, sans-serif";
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--slate-900);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    /* CALM-but-ALIVE chrome: one composed violet vignette + a faint dot grid +
+       a clean off-white editorial base. Not a flat wash, not drifting blobs. */
+    background:
+      radial-gradient(1100px 720px at 50% -12%, rgba(139,92,246,0.10) 0%, transparent 60%),
+      radial-gradient(820px 620px at 100% 100%, rgba(156,196,254,0.10) 0%, transparent 58%),
+      linear-gradient(180deg, #fbfaff 0%, #f6f4fc 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  body::before{ /* faint dot grid for editorial texture */
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(60,40,90,.045) 1px, transparent 1px);
+    background-size:26px 26px;
+  }
+
+  /* ── concept band (visible, per brief) ── */
+  .band{ position:relative; z-index:1; background:linear-gradient(120deg,#1a1030,#2a1b48 60%,#3a2160); color:#efe6ff; padding:20px 30px; font-size:14px; }
+  .band h1{ margin:0 0 8px; font-size:18px; font-weight:800; letter-spacing:-.01em; display:flex; align-items:center; gap:10px; }
+  .band h1 .tag{ font-size:11px; font-weight:800; letter-spacing:.06em; background:linear-gradient(90deg,var(--magenta),var(--blue-m)); color:#fff; padding:3px 9px; border-radius:7px; }
+  .band .cols{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:6px; }
+  .band .col h3{ margin:0 0 5px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#c9b8ec; }
+  .band ul{ margin:0; padding-left:17px; }
+  .band li{ margin:3px 0; line-height:1.45; }
+  .band li b{ color:#fff; }
+  .band .star{ color:#ffd9fb; font-weight:800; }
+
+  /* ── studio ── */
+  .studio{ position:relative; z-index:1; max-width:1240px; margin:0 auto; padding:32px 34px 64px; }
+  .studio-head{ margin-bottom:20px; }
+  .studio-head h2{ margin:0; font-size:1.75rem; font-weight:800; color:var(--slate-900); letter-spacing:-.5px; }
+
+  .bench{ display:grid; grid-template-columns: 1fr 330px; gap:30px; align-items:start; }
+
+  /* ===== STAGE (left) — clean panel, NO easel chrome ===== */
+  .stage{
+    position:relative; padding:24px 24px 18px; border-radius:24px; isolation:isolate;
+    background:rgba(255,255,255,0.72);
+    border:1px solid var(--line);
+    box-shadow:0 30px 70px -36px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
+    backdrop-filter:blur(14px) saturate(1.1);
+    overflow:hidden;
+  }
+  /* one thin gradient hairline across the top — the single deliberate flourish */
+  .stage::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg,var(--ai-2),var(--blue-m),var(--pink));
+    opacity:.85;
+  }
+
+  /* ── PROMPT card ── */
+  .brief{
+    position:relative; margin:6px 0 18px; padding:18px 20px 14px;
+    background:#ffffff; border-radius:18px; border:1px solid var(--line);
+    box-shadow:0 16px 36px -24px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .brief-label{ font-size:.74rem; font-weight:700; color:var(--ai); letter-spacing:.4px; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .brief-label svg{ width:14px; height:14px; }
+  .brief textarea{ width:100%; border:none; outline:none; resize:none; background:transparent; font-family:inherit; font-size:1.06rem; line-height:1.55; color:var(--slate-900); min-height:58px; }
+  .brief textarea::placeholder{ color:#a59bb5; }
+  .brief-foot{ display:flex; align-items:center; gap:10px; margin-top:10px; padding-top:12px; border-top:1px dashed var(--line); flex-wrap:wrap; }
+  .chip{ display:inline-flex; align-items:center; gap:7px; font-size:.92rem; font-weight:600; color:var(--slate-700); background:#fff; border:1px solid var(--line); padding:0 14px; min-height:44px; border-radius:12px; cursor:pointer; font-family:inherit; transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+  .chip:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -10px var(--shadow); border-color:var(--ai); }
+  .chip svg{ width:16px; height:16px; }
+  .chip.ai{ color:var(--ai); border-color:rgba(107,63,160,.30); background:rgba(107,63,160,.05); }
+  .ref-modes{ margin-left:auto; font-size:.84rem; color:var(--ink-soft); }
+  .ref-modes b{ color:var(--ai); font-weight:600; }
+
+  /* ── EDITABLE DECK TITLE (outlined treatment Lisa liked) ── */
+  .deck-title-wrap{ display:flex; align-items:center; gap:10px; margin:2px 2px 8px; }
+  .deck-title{
+    font-size:1.7rem; font-weight:800; letter-spacing:-.5px; line-height:1.1;
+    color:transparent; -webkit-text-stroke:1.3px var(--ai);
+    outline:none; cursor:text; border-radius:8px; padding:2px 6px; margin:-2px -6px; transition:background .15s ease;
+  }
+  .deck-title:hover{ background:rgba(107,63,160,.05); }
+  .deck-title:focus{ background:rgba(107,63,160,.07); }
+  .deck-title-wrap .caret{ width:2px; height:1.4rem; background:var(--ai); border-radius:2px; animation:blink 1.1s step-end infinite; }
+  .deck-title-wrap .edit-badge{ display:inline-flex; align-items:center; gap:5px; font-size:.72rem; font-weight:600; color:var(--ai); background:rgba(107,63,160,.08); border:1px solid rgba(107,63,160,.22); padding:3px 9px; border-radius:999px; }
+  .deck-title-wrap .edit-badge svg{ width:12px; height:12px; }
+  @keyframes blink{ 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+
+  .outline-hint{ font-size:.84rem; color:var(--ink-soft); margin:0 2px 14px; display:flex; align-items:center; gap:7px; }
+  .outline-hint svg{ width:14px; height:14px; color:var(--ai); flex-shrink:0; }
+  .outline-hint b{ color:var(--ai); font-weight:600; }
+
+  /* ── THE FAN — preview SLIDES (16:9), genuinely typeset ── */
+  .fan{ position:relative; height:286px; margin:2px 6px 0; }
+  .card{
+    position:absolute; top:14px; width:270px; aspect-ratio:16/9; border-radius:14px;
+    background:var(--t-bg);
+    background-image:var(--t-pattern);
+    border:1px solid var(--t-line);
+    box-shadow:0 24px 48px -24px var(--shadow), 0 2px 0 rgba(255,255,255,.6) inset;
+    overflow:hidden;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), opacity .45s ease, box-shadow .3s ease, background .4s ease, border-color .4s ease;
+    animation:drift 7s ease-in-out infinite; will-change:transform;
+    display:flex; flex-direction:column;
+  }
+  /* genuine slide composition: padded content column + accent rule */
+  .card .pad{ position:relative; padding:14px 16px 13px 17px; display:flex; flex-direction:column; height:100%; }
+  .card .accentbar{ position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--t-accent); }
+  .card .num{ position:absolute; top:9px; right:12px; font-size:.62rem; font-weight:700; color:var(--t-accent); opacity:.6; font-variant-numeric:tabular-nums; }
+  .card .eyebrow{ font-family:var(--t-bodyfont); font-size:.56rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--t-accent); opacity:.85; margin-bottom:5px; }
+  /* the TITLE — real theme display font + type scale, gradient-aware */
+  .card h4{
+    margin:0 0 6px; font-family:var(--t-titlefont); font-size:1.02rem; font-weight:700;
+    line-height:1.12; letter-spacing:-.01em;
+    color:var(--t-title);
+    background:var(--t-titlebg); -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:var(--t-titlefill, currentColor);
+  }
+  .card .lede{ font-family:var(--t-bodyfont); font-size:.6rem; line-height:1.45; color:var(--t-body); margin:0 0 7px; max-width:96%; }
+  .card .bullets{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; }
+  .card .bullets li{ position:relative; font-family:var(--t-bodyfont); font-size:.56rem; line-height:1.3; color:var(--t-body); padding-left:11px; }
+  .card .bullets li::before{ content:""; position:absolute; left:0; top:5px; width:5px; height:5px; border-radius:50%; background:var(--t-accent); }
+  /* metric row variant */
+  .card .metric{ margin-top:auto; display:flex; align-items:baseline; gap:6px; }
+  .card .metric b{ font-family:var(--t-titlefont); font-size:1.5rem; font-weight:700; line-height:1; color:var(--t-accent); }
+  .card .metric span{ font-family:var(--t-bodyfont); font-size:.56rem; color:var(--t-body); }
+
+  /* visual band — only when Add Visuals is ON */
+  .card .vis{ height:0; opacity:0; border-radius:9px; margin:0; overflow:hidden;
+    background:linear-gradient(120deg, color-mix(in srgb, var(--t-accent) 20%, var(--t-bg)), color-mix(in srgb, var(--t-accent) 6%, var(--t-bg)));
+    border:1px solid color-mix(in srgb, var(--t-accent) 30%, transparent);
+    display:flex; align-items:center; justify-content:center;
+    transition:height .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease, margin .35s ease; }
+  .card .vis svg{ width:18px; height:18px; color:var(--t-accent); opacity:.8; }
+  body.vison .card.hasvis .vis{ height:46px; opacity:1; margin:0 0 7px; }
+
+  .card.adding{ animation:cardIn .55s cubic-bezier(.2,.9,.2,1.2); }
+  .card.removing{ animation:cardOut .4s ease forwards; pointer-events:none; }
+  @keyframes cardIn{ 0%{ opacity:0; transform:translateY(38px) scale(.7);} 100%{ opacity:1;} }
+  @keyframes cardOut{ 0%{ opacity:1;} 100%{ opacity:0; transform:translateY(42px) scale(.6);} }
+  @keyframes drift{ 0%,100%{ translate:0 0;} 50%{ translate:0 -6px;} }
+
+  /* editable card titles read as editable on hover/focus */
+  .card h4[contenteditable]{ cursor:text; border-radius:5px; outline:none; transition:box-shadow .14s ease, background .14s ease; }
+  .card h4[contenteditable]:hover{ box-shadow:0 0 0 1.5px color-mix(in srgb, var(--t-accent) 45%, transparent); }
+  .card h4[contenteditable]:focus{ box-shadow:0 0 0 2px var(--focus); background:rgba(124,77,255,.06); -webkit-text-fill-color:var(--t-title); background-clip:border-box; }
+  .card .edit-dot{ position:absolute; top:9px; left:11px; width:13px; height:13px; color:var(--t-accent); opacity:0; transition:opacity .15s ease; }
+  .card:hover .edit-dot{ opacity:.55; }
+
+  /* ===== CONTROL COLUMN (right) — clean, no "tray" metaphor ===== */
+  .panel{ position:relative; background:rgba(255,255,255,0.78); border-radius:22px; padding:16px 16px 18px; border:1px solid var(--line); box-shadow:0 30px 70px -36px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9); backdrop-filter:blur(14px) saturate(1.1); }
+  .panel-title{ color:var(--ai); font-size:.74rem; font-weight:700; letter-spacing:.7px; text-transform:uppercase; margin:2px 4px 14px; display:flex; align-items:center; gap:7px; }
+  .panel-title svg{ width:15px; height:15px; }
+  .tool{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:13px; }
+  .tool-label{ display:flex; align-items:center; gap:8px; color:var(--slate-900); font-size:.92rem; font-weight:700; margin-bottom:12px; }
+  .tool-label svg{ width:16px; height:16px; color:var(--ai); }
+
+  /* slide count stepper */
+  .stepper{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .step{ width:46px; height:46px; border-radius:13px; border:1px solid var(--line); background:#fff; color:var(--ai); font-size:1.5rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .1s ease; }
+  .step:hover{ background:rgba(107,63,160,.06); }
+  .step:active{ transform:scale(.92); }
+  .count-read{ display:flex; flex-direction:column; align-items:center; }
+  .count-read b{ font-size:1.7rem; font-weight:800; line-height:1; color:var(--slate-900); font-variant-numeric:tabular-nums; }
+  .count-read span{ font-size:.66rem; font-weight:700; letter-spacing:.5px; color:var(--slate-500); }
+
+  /* ADD VISUALS toggle */
+  .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .switch-state{ font-size:.92rem; font-weight:700; color:var(--slate-900); display:flex; align-items:center; gap:7px; }
+  .switch-state .pos{ font-weight:600; color:var(--ink-soft); }
+  .switch-state svg{ width:15px; height:15px; }
+  .toggle{ position:relative; width:64px; height:36px; border-radius:999px; cursor:pointer; flex-shrink:0; background:#e6e1f0; border:1px solid var(--line); box-shadow:inset 0 2px 5px rgba(60,30,90,.18); transition:background .3s ease; min-height:36px; }
+  .toggle .knob{ position:absolute; top:3px; left:3px; width:28px; height:28px; border-radius:50%; background:#fff; box-shadow:0 3px 7px rgba(60,30,90,.32); transition:left .32s cubic-bezier(.34,1.56,.64,1); display:flex; align-items:center; justify-content:center; }
+  .toggle .knob svg{ width:14px; height:14px; color:#a99bc4; transition:color .2s ease; }
+  body.vison .toggle{ background:linear-gradient(135deg, var(--ai-2), var(--ai)); }
+  body.vison .toggle .knob{ left:33px; }
+  body.vison .toggle .knob svg{ color:var(--ai); }
+  .toggle:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+
+  /* style picker — revealed when Add Visuals is ON (compact / light) */
+  .stylewrap{ max-height:0; overflow:hidden; opacity:0; transition:max-height .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, margin .3s ease; margin-top:0; }
+  body.vison .stylewrap{ max-height:280px; opacity:1; margin-top:13px; }
+  .style-cap{ font-size:.74rem; font-weight:700; color:var(--slate-700); letter-spacing:.3px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .style-cap svg{ width:13px; height:13px; color:var(--ai); }
+  .styles{ display:flex; flex-wrap:wrap; gap:6px; }
+  .stylechip{ background:#fff; border:1px solid var(--line); color:var(--slate-700); border-radius:9px; padding:7px 11px; font-size:.8rem; font-weight:600; cursor:pointer; min-height:38px; font-family:inherit; transition:all .14s ease; }
+  .stylechip[aria-pressed="true"]{ background:var(--ai); color:#fff; border-color:transparent; }
+  .stylechip:hover:not([aria-pressed="true"]){ border-color:var(--ai); }
+  .style-custom{ width:100%; margin-top:8px; border:1px solid var(--line); border-radius:9px; padding:9px 11px; font-family:inherit; font-size:.84rem; color:var(--slate-900); min-height:40px; outline:none; }
+  .style-custom:focus{ border-color:var(--ai); box-shadow:0 0 0 3px rgba(124,77,255,.14); }
+  .style-custom::placeholder{ color:#a99bb5; }
+
+  /* Palette | Theme segmented switch + picker */
+  .segmented{ display:flex; background:#f1edf8; border:1px solid var(--line); border-radius:11px; padding:3px; margin-bottom:12px; }
+  .segmented button{ flex:1; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:.86rem; font-weight:700; color:var(--ink-soft); padding:9px 6px; border-radius:9px; min-height:40px; transition:all .15s ease; }
+  .segmented button[aria-selected="true"]{ background:#fff; color:var(--ai); box-shadow:0 3px 8px -4px var(--shadow); }
+
+  .picker-pane{ display:none; }
+  .picker-pane.active{ display:block; }
+
+  /* THEME tiles — real Compose themes (true gradient swatches) */
+  .themes{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .theme{ position:relative; border:1px solid var(--line); border-radius:12px; cursor:pointer; overflow:hidden; padding:0; background:#fff; transition:transform .14s ease, box-shadow .14s ease; font-family:inherit; }
+  .theme:hover{ transform:translateY(-2px); box-shadow:0 10px 22px -12px var(--shadow); }
+  .theme .swatch{ height:40px; display:flex; align-items:flex-end; padding:5px 6px; }
+  .theme .swatch .glyph{ font-size:.74rem; font-weight:800; letter-spacing:-.01em; }
+  .theme .nm{ display:block; font-size:.72rem; font-weight:700; color:var(--slate-700); padding:6px 4px 7px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .theme[aria-pressed="true"]{ border-color:var(--ai); box-shadow:0 0 0 2px rgba(107,63,160,.25); }
+  .theme[aria-pressed="true"]::after{ content:""; position:absolute; top:5px; right:5px; width:16px; height:16px; border-radius:50%; background:var(--ai); box-shadow:0 0 0 2px #fff;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:center; }
+
+  /* PALETTE stories — curated raw color combos */
+  .pals{ display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
+  .pal{ position:relative; border:1px solid var(--line); border-radius:12px; cursor:pointer; overflow:hidden; padding:0; background:#fff; transition:transform .14s ease, box-shadow .14s ease; font-family:inherit; text-align:left; }
+  .pal:hover{ transform:translateY(-2px); box-shadow:0 10px 22px -12px var(--shadow); }
+  .pal .strip{ height:30px; display:flex; }
+  .pal .strip i{ flex:1; }
+  .pal .nm{ display:block; font-size:.72rem; font-weight:700; color:var(--slate-700); padding:6px 8px 7px; }
+  .pal[aria-pressed="true"]{ border-color:var(--ai); box-shadow:0 0 0 2px rgba(107,63,160,.25); }
+  .pal[aria-pressed="true"]::after{ content:""; position:absolute; top:5px; right:5px; width:16px; height:16px; border-radius:50%; background:var(--ai); box-shadow:0 0 0 2px #fff;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:center; }
+
+  .more-link{ background:none; border:none; color:var(--ai); font-size:.86rem; font-weight:600; cursor:pointer; padding:11px 2px 2px; text-decoration:underline; font-family:inherit; }
+
+  /* Customize drawer (real verbiage) */
+  .drawer-btn{ width:100%; display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid var(--line); border-radius:14px; padding:0 14px; color:var(--slate-900); font-size:.92rem; font-weight:700; cursor:pointer; min-height:48px; transition:background .15s ease; font-family:inherit; }
+  .drawer-btn:hover{ background:rgba(107,63,160,.04); }
+  .drawer-btn .lz{ display:flex; align-items:center; gap:9px; }
+  .drawer-btn .lz svg{ width:16px; height:16px; color:var(--ai); }
+  .drawer-btn .chev{ transition:transform .3s ease; width:16px; height:16px; color:var(--slate-500); }
+  body.draweropen .drawer-btn .chev{ transform:rotate(180deg); }
+  .drawer{ max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.2,.8,.2,1); }
+  body.draweropen .drawer{ max-height:560px; }
+  .drawer-inner{ padding:14px 2px 2px; display:flex; flex-direction:column; gap:15px; }
+  .micro-label{ font-size:.74rem; font-weight:700; color:var(--slate-700); letter-spacing:.3px; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+  .micro-label svg{ width:13px; height:13px; }
+  .badge-aud{ color:#2563eb; } .badge-tone{ color:#db2777; } .badge-voice{ color:#059669; } .badge-detail{ color:var(--ai); }
+
+  .presets{ display:flex; flex-wrap:wrap; gap:6px; }
+  .preset{ background:#fff; border:1px solid var(--line); color:var(--slate-700); border-radius:9px; padding:8px 11px; font-size:.82rem; font-weight:600; cursor:pointer; min-height:40px; font-family:inherit; transition:all .14s ease; }
+  .preset[aria-pressed="true"]{ background:var(--ai); color:#fff; border-color:transparent; }
+  .preset:hover:not([aria-pressed="true"]){ border-color:var(--ai); }
+  .custom-input{ width:100%; margin-top:7px; border:1px solid var(--line); border-radius:9px; padding:9px 11px; font-family:inherit; font-size:.86rem; color:var(--slate-900); min-height:40px; outline:none; }
+  .custom-input:focus{ border-color:var(--ai); box-shadow:0 0 0 3px rgba(124,77,255,.14); }
+  .custom-input::placeholder{ color:#a99bb5; }
+
+  .detail-row{ display:flex; gap:8px; }
+  .detail{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 6px; border-radius:11px; border:1px solid var(--line); background:#fff; color:var(--slate-700); font-size:.8rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .14s ease; }
+  .detail[aria-pressed="true"]{ background:var(--ai); color:#fff; border-color:transparent; }
+  .detail[aria-pressed="true"] svg rect{ stroke:#fff; }
+  .detail[aria-pressed="true"] svg line{ stroke:rgba(255,255,255,.85); }
+  .detail:hover:not([aria-pressed="true"]){ border-color:var(--ai); }
+  .detail svg rect{ stroke:var(--ai); }
+  .detail svg line{ stroke:var(--ai); opacity:.65; }
+
+  .voice-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .vchip{ display:inline-flex; align-items:center; gap:5px; background:#fff; border:1px solid var(--line); color:var(--slate-700); border-radius:999px; padding:7px 12px; font-size:.8rem; font-weight:600; cursor:pointer; min-height:38px; font-family:inherit; transition:all .14s ease; }
+  .vchip[aria-pressed="true"]{ background:linear-gradient(135deg,#34d399,#059669); color:#fff; border-color:transparent; }
+  .vchip:hover:not([aria-pressed="true"]){ border-color:#059669; }
+  .vchip svg{ width:12px; height:12px; }
+
+  /* GENERATE — kit bold CTA */
+  .generate{ width:100%; margin-top:16px; border:none; cursor:pointer; border-radius:16px; display:flex; align-items:center; justify-content:center; gap:10px; min-height:56px; font-family:inherit; font-size:1.05rem; font-weight:800; color:var(--cta-ink);
+    background:linear-gradient(90deg,var(--magenta) 0%,var(--blue-l) 50%,var(--blue-m) 100%); background-size:200% 100%;
+    box-shadow:0 18px 40px -16px rgba(65,152,255,.6), inset 0 1px 0 rgba(255,255,255,.5); transition:transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .2s, background-position .4s; }
+  .generate svg{ width:20px; height:20px; }
+  .generate:hover{ transform:translateY(-2px); background-position:100% 0; box-shadow:0 26px 52px -16px rgba(65,152,255,.7); }
+  .generate:active{ transform:translateY(0) scale(.99); }
+  .generate:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+
+  /* framework cards */
+  .fw-label{ margin:34px 0 14px; font-size:.86rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); }
+  .fw-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .fcard{ position:relative; border-radius:18px; padding:18px; min-height:134px; cursor:pointer; background:rgba(255,255,255,0.78); border:1px solid var(--line); box-shadow:0 16px 34px -26px var(--shadow), inset 0 1px 0 rgba(255,255,255,.8); backdrop-filter:blur(12px) saturate(1.05); overflow:hidden; transition:transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s; font-family:inherit; text-align:left; display:flex; flex-direction:column; justify-content:flex-end; gap:6px; }
+  .fcard::before{ content:""; position:absolute; right:-28px; top:-28px; width:104px; height:104px; border-radius:50%; filter:blur(26px); opacity:.5; }
+  .fcard.f1::before{ background:var(--magenta); } .fcard.f2::before{ background:var(--blue-m); }
+  .fcard.f3::before{ background:var(--lav); }     .fcard.f4::before{ background:var(--pink); }
+  .fcard:hover{ transform:translateY(-4px); box-shadow:0 28px 52px -26px var(--shadow); }
+  .fcard:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+  .fcard[aria-pressed="true"]{ border-color:var(--ai); box-shadow:0 0 0 2px rgba(107,63,160,.25), 0 16px 34px -26px var(--shadow); }
+  .fcard .f-ic{ position:relative; width:32px; height:32px; border-radius:9px; background:rgba(107,63,160,.10); display:grid; place-items:center; color:var(--ai); margin-bottom:auto; }
+  .fcard .f-ic svg{ width:17px; height:17px; }
+  .fcard .f-name{ position:relative; font-size:1rem; font-weight:700; line-height:1.15; color:var(--slate-900); }
+  .fcard .f-desc{ position:relative; font-size:.86rem; color:var(--ink-soft); }
+
+  /* focus rings */
+  .chip:focus-visible,.step:focus-visible,.preset:focus-visible,.detail:focus-visible,
+  .vchip:focus-visible,.stylechip:focus-visible,.theme:focus-visible,.pal:focus-visible,.more-link:focus-visible,
+  .drawer-btn:focus-visible,.segmented button:focus-visible,.deck-title:focus-visible,
+  .brief textarea:focus-visible,.custom-input:focus-visible,.style-custom:focus-visible,
+  .card h4:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  /* preview Prev/Next navigation — added in v6 (change 2) */
+  .fan-nav{ display:flex; align-items:center; justify-content:center; gap:14px; margin:14px 6px 2px; }
+  .navbtn{ width:44px; height:44px; min-width:44px; min-height:44px; border-radius:13px; border:1px solid var(--line); background:#fff; color:var(--ai); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .1s ease, box-shadow .15s ease; }
+  .navbtn:hover{ background:rgba(107,63,160,.06); box-shadow:0 8px 18px -10px var(--shadow); }
+  .navbtn:active{ transform:scale(.94); }
+  .navbtn svg{ width:20px; height:20px; }
+  .navbtn:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+  .fan-nav .nav-read{ font-size:.8rem; font-weight:700; color:var(--slate-500); font-variant-numeric:tabular-nums; min-width:54px; text-align:center; }
+
+  @media (max-width:1000px){ .bench{ grid-template-columns:1fr; } .fw-grid{ grid-template-columns:repeat(2,1fr); } .band .cols{ grid-template-columns:1fr; } }
+
+  @media (prefers-reduced-motion:reduce){
+    .card,.card.adding,.card.removing{ animation:none !important; transition:opacity .01s linear, background .01s linear !important; }
+    .toggle .knob{ transition:left .01s linear !important; }
+    .drawer,.stylewrap,.vis,.generate{ transition:none !important; }
+    .deck-title-wrap .caret{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== CONCEPT BAND ===== -->
+  <div class="band">
+    <h1><span class="tag">REFINED v4 · NARROWED</span> Slide generation — rebuilt around the two things that stay</h1>
+    <p style="margin:0 0 10px; font-size:13px; color:#ffd9fb; font-weight:600;">v4 preserved exactly — only two changes: (1) cards made opaque to fix transparency/overlap, (2) added left/right + keyboard nav.</p>
+    <div class="cols">
+      <div class="col">
+        <h3>Kept (the two stars)</h3>
+        <ul>
+          <li><span class="star">★</span> <b>Floating 16:9 preview slides</b> — editable titles that steer the designer.</li>
+          <li><span class="star">★</span> <b>Theme / Palette selection</b> — live-recolors the previews.</li>
+          <li>Prompt, reference upload, slide count, Customize (Audience/Tone/Voice/Detail), Add Visuals, frameworks, Generate.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Removed</h3>
+        <ul>
+          <li>Easel metaphor + chrome (pins, bolts, wood tray, "easel" copy).</li>
+          <li>Narration sentences ("shape it on the easel…", "taking shape").</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Added / fixed</h3>
+        <ul>
+          <li><b>Beautiful typeset cards</b> — real theme fonts + type scale (v3 type was "terrible").</li>
+          <li><b>Curated raw Palettes</b> — pink / blue / mono / duotone (v3 was boring).</li>
+          <li>Compact image-gen <b>style picker</b> on Add Visuals (8 styles + Custom).</li>
+          <li>Calm-but-alive chrome; vibrant color lives in the previews.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STUDIO ===== -->
+  <div class="studio">
+    <div class="studio-head"><h2>Create a presentation</h2></div>
+
+    <div class="bench">
+
+      <!-- ===== STAGE (left) ===== -->
+      <div class="stage">
+
+        <!-- PROMPT -->
+        <div class="brief">
+          <div class="brief-label"><span data-lucide="pen-line"></span> What's the presentation?</div>
+          <textarea aria-label="Describe your presentation">Q1 board review: how we beat our revenue target and what it means for the year ahead.</textarea>
+          <div class="brief-foot">
+            <button class="chip ai" type="button"><span data-lucide="paperclip"></span> Add a reference</button>
+            <button class="chip" type="button"><span data-lucide="wand-sparkles"></span> Inspire me</button>
+            <span class="ref-modes">Reference: <b>Inspire</b> · Inspire + structure · Use as source</span>
+          </div>
+        </div>
+
+        <!-- EDITABLE DECK TITLE -->
+        <div class="deck-title-wrap">
+          <span class="deck-title" contenteditable="true" spellcheck="false" aria-label="Deck title — click to edit">Beating Plan in Q1</span>
+          <span class="caret" aria-hidden="true"></span>
+          <span class="edit-badge"><span data-lucide="pencil"></span> editable</span>
+        </div>
+
+        <p class="outline-hint">
+          <span data-lucide="list-tree"></span>
+          <span>These slide titles are an <b>editable outline</b> — edit any title to steer what that slide generates.</span>
+        </p>
+
+        <!-- PREVIEW SLIDES — 16:9, genuinely typeset -->
+        <div class="fan" id="fan"></div>
+
+        <!-- PREVIEW NAV — added in v6 (change 2): shifts which slide is front/active -->
+        <div class="fan-nav">
+          <button class="navbtn" id="navprev" type="button" aria-label="Previous slide"><span data-lucide="chevron-left"></span></button>
+          <span class="nav-read" id="navread" aria-live="polite">1 / 5</span>
+          <button class="navbtn" id="navnext" type="button" aria-label="Next slide"><span data-lucide="chevron-right"></span></button>
+        </div>
+      </div>
+
+      <!-- ===== CONTROL COLUMN (right) ===== -->
+      <div class="panel">
+        <div class="panel-title"><span data-lucide="sliders-horizontal"></span> Shape the deck</div>
+
+        <!-- slide count -->
+        <div class="tool">
+          <div class="tool-label"><span data-lucide="layers"></span> Slides</div>
+          <div class="stepper">
+            <button class="step" id="minus" aria-label="Remove a slide">−</button>
+            <div class="count-read" aria-live="polite"><b id="count">5</b><span>SLIDES</span></div>
+            <button class="step" id="plus" aria-label="Add a slide">+</button>
+          </div>
+        </div>
+
+        <!-- ADD VISUALS — clean on/off + light style picker on -->
+        <div class="tool">
+          <div class="tool-label"><span data-lucide="image"></span> Add Visuals</div>
+          <div class="switch-row">
+            <span class="switch-state" id="visstate"><span data-lucide="circle-slash"></span> <span class="pos">Off</span></span>
+            <div class="toggle" id="vistoggle" role="switch" aria-checked="false" tabindex="0" aria-label="Add Visuals">
+              <div class="knob"><span data-lucide="image"></span></div>
+            </div>
+          </div>
+          <div class="stylewrap" id="stylewrap" aria-hidden="true">
+            <div class="style-cap"><span data-lucide="brush"></span> Visual style — the designer adds visuals only where they help</div>
+            <div class="styles" data-single role="group" aria-label="Visual style">
+              <button class="stylechip" aria-pressed="true">Photographic</button>
+              <button class="stylechip" aria-pressed="false">Illustration</button>
+              <button class="stylechip" aria-pressed="false">3D render</button>
+              <button class="stylechip" aria-pressed="false">Watercolor</button>
+              <button class="stylechip" aria-pressed="false">Sketch</button>
+              <button class="stylechip" aria-pressed="false">Minimal</button>
+              <button class="stylechip" aria-pressed="false">Cinematic</button>
+              <button class="stylechip" aria-pressed="false">Abstract</button>
+            </div>
+            <input class="style-custom" type="text" placeholder="Custom… describe the look you want" aria-label="Custom visual style" />
+          </div>
+        </div>
+
+        <!-- PALETTE | THEME picker (live-recolors preview) -->
+        <div class="tool">
+          <div class="tool-label"><span data-lucide="palette"></span> Look</div>
+          <div class="segmented" role="tablist" aria-label="Look source">
+            <button id="seg-theme" role="tab" aria-selected="true">Theme</button>
+            <button id="seg-palette" role="tab" aria-selected="false">Palette</button>
+          </div>
+
+          <!-- THEME pane: real Compose themes (data straight from themes.ts) -->
+          <div class="picker-pane active" id="pane-theme">
+            <div class="themes" id="themes" role="group" aria-label="Theme"></div>
+            <button class="more-link" type="button">Browse all 42 themes →</button>
+          </div>
+
+          <!-- PALETTE pane: curated raw color stories -->
+          <div class="picker-pane" id="pane-palette">
+            <div class="pals" id="pals" role="group" aria-label="Palette"></div>
+            <button class="more-link" type="button">More palettes →</button>
+          </div>
+        </div>
+
+        <!-- CUSTOMIZE drawer — real verbiage (preserved from v3) -->
+        <div class="tool" style="padding-bottom:10px;">
+          <button class="drawer-btn" id="drawerbtn" aria-expanded="false">
+            <span class="lz"><span data-lucide="settings-2"></span> Customize</span>
+            <span class="chev" data-lucide="chevron-down"></span>
+          </button>
+          <div class="drawer" id="drawer">
+            <div class="drawer-inner">
+
+              <div>
+                <div class="micro-label"><span class="badge-aud" data-lucide="users"></span> Audience</div>
+                <div class="presets" data-single role="group" aria-label="Audience">
+                  <button class="preset" aria-pressed="true">Executives</button>
+                  <button class="preset" aria-pressed="false">Engineers</button>
+                  <button class="preset" aria-pressed="false">Investors</button>
+                  <button class="preset" aria-pressed="false">Customers</button>
+                  <button class="preset" aria-pressed="false">Students</button>
+                </div>
+                <input class="custom-input" type="text" placeholder="Custom audience…" aria-label="Custom audience" />
+              </div>
+
+              <div>
+                <div class="micro-label"><span class="badge-tone" data-lucide="megaphone"></span> Tone</div>
+                <div class="presets" data-single role="group" aria-label="Tone">
+                  <button class="preset" aria-pressed="true">Professional</button>
+                  <button class="preset" aria-pressed="false">Friendly</button>
+                  <button class="preset" aria-pressed="false">Authoritative</button>
+                  <button class="preset" aria-pressed="false">Inspirational</button>
+                </div>
+                <input class="custom-input" type="text" placeholder="Custom tone…" aria-label="Custom tone" />
+              </div>
+
+              <div>
+                <div class="micro-label"><span class="badge-voice" data-lucide="mic-2"></span> Voice</div>
+                <div class="voice-chips" data-single role="group" aria-label="Voice">
+                  <button class="vchip" aria-pressed="true">Default</button>
+                  <button class="vchip" aria-pressed="false"><span data-lucide="briefcase"></span> Executive</button>
+                  <button class="vchip" aria-pressed="false"><span data-lucide="flame"></span> Persuasive</button>
+                  <button class="vchip" aria-pressed="false"><span data-lucide="scale"></span> Legal</button>
+                  <button class="vchip" aria-pressed="false"><span data-lucide="graduation-cap"></span> Educational</button>
+                  <button class="vchip" aria-pressed="false">No voice</button>
+                </div>
+                <input class="custom-input" type="text" placeholder="Custom… describe the voice you want" aria-label="Custom voice" />
+              </div>
+
+              <div>
+                <div class="micro-label"><span class="badge-detail" data-lucide="sparkles"></span> Detail level</div>
+                <div class="detail-row" data-single role="group" aria-label="Detail level">
+                  <button class="detail" aria-pressed="false">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="14" y2="14"/></svg>Concise</button>
+                  <button class="detail" aria-pressed="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="15" x2="14" y2="15"/><line x1="6" y1="18" x2="16" y2="18"/></svg>Detailed</button>
+                  <button class="detail" aria-pressed="false">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="10.5" x2="18" y2="10.5"/><line x1="6" y1="13" x2="18" y2="13"/><line x1="6" y1="15.5" x2="18" y2="15.5"/><line x1="6" y1="18" x2="15" y2="18"/></svg>Extensive</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- GENERATE -->
+        <button class="generate" id="generate" type="button"><span data-lucide="sparkles"></span> Generate</button>
+      </div>
+
+    </div>
+
+    <!-- frameworks — seed slide titles -->
+    <div class="fw-label">Or start from a framework</div>
+    <div class="fw-grid" id="fwgrid">
+      <button class="fcard f1" type="button" data-fw="pitch" aria-pressed="false">
+        <span class="f-ic"><span data-lucide="presentation"></span></span>
+        <span class="f-name">Pitch deck</span><span class="f-desc">Problem → solution → ask</span>
+      </button>
+      <button class="fcard f2" type="button" data-fw="quarterly" aria-pressed="false">
+        <span class="f-ic"><span data-lucide="trending-up"></span></span>
+        <span class="f-name">Quarterly review</span><span class="f-desc">Results, risks, next bets</span>
+      </button>
+      <button class="fcard f3" type="button" data-fw="lesson" aria-pressed="false">
+        <span class="f-ic"><span data-lucide="graduation-cap"></span></span>
+        <span class="f-name">Lesson</span><span class="f-desc">Teach one idea well</span>
+      </button>
+      <button class="fcard f4" type="button" data-fw="brainstorm" aria-pressed="false">
+        <span class="f-ic"><span data-lucide="lightbulb"></span></span>
+        <span class="f-name">Brainstorm</span><span class="f-desc">Diverge, then cluster</span>
+      </button>
+    </div>
+  </div>
+
+<script>
+  lucide.createIcons();
+  const root = document.documentElement;
+
+  // ════════════════════════════════════════════════════════════════════════
+  //  REAL Compose themes — values copied from app/src/components/themes/themes.ts
+  //  (titleColor that begins with "linear-gradient" is rendered as a gradient
+  //   text fill on the card title, exactly like production.)
+  // ════════════════════════════════════════════════════════════════════════
+  const THEMES = [
+    { id:'counsel', name:'Counsel',
+      bg:'#FAFAF7', pattern:'repeating-linear-gradient(0deg, rgba(20,34,60,0.025) 0 1px, transparent 1px 28px)',
+      title:'#14223C', body:'#5C6770', accent:'#B85C2E', line:'rgba(20,34,60,0.12)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#FAFAF7','#14223C','#B85C2E'], glyph:'#14223C' },
+    { id:'aurora', name:'Aurora',
+      bg:'linear-gradient(135deg, #FFE5ED 0%, #FFE0D0 30%, #F0E0FF 65%, #DCE8FF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #6B2C8E 0%, #B33C7A 50%, #E8602C 100%)', body:'#5A4A6E', accent:'#8B3A8C', line:'rgba(107,44,142,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      sw:['#FFE5ED','#F0E0FF','#6B2C8E'], glyph:'#6B2C8E' },
+    { id:'cobalt', name:'Cobalt',
+      bg:'linear-gradient(135deg, #E8F0FF 0%, #D4E0FF 50%, #BCD0FF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #0F2654 0%, #2A4F9E 100%)', body:'#3B4A6B', accent:'#1F3D8A', line:'rgba(31,61,138,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      sw:['#E8F0FF','#BCD0FF','#1F3D8A'], glyph:'#1F3D8A' },
+    { id:'foxit-glow', name:'Foxit Glow',
+      bg:'linear-gradient(135deg, #FFEFD5 0%, #FFD4B0 35%, #FFB382 75%, #FF955C 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #8B2A0A 0%, #B33C0F 50%, #E8602C 100%)', body:'#5C2E12', accent:'#B33C0F', line:'rgba(179,60,15,0.18)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#FFEFD5','#FFB382','#B33C0F'], glyph:'#B33C0F' },
+    { id:'volt', name:'Volt',
+      bg:'radial-gradient(ellipse at 25% 30%, rgba(140,180,255,0.18) 0%, transparent 55%), radial-gradient(ellipse at 78% 68%, rgba(200,130,220,0.14) 0%, transparent 55%), linear-gradient(180deg, #131D2E 0%, #1F2940 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #E8C8FF 0%, #C8A8FF 50%, #FFB4D4 100%)', body:'#C8B8D8', accent:'#FFB4D4', line:'rgba(200,168,255,0.28)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#131D2E','#C8A8FF','#FFB4D4'], glyph:'#C8A8FF' },
+    { id:'quartz', name:'Quartz',
+      bg:'#FFFFFF', pattern:'none',
+      title:'#0B1F3A', body:'#475569', accent:'#1F4FAA', line:'rgba(11,31,58,0.12)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#FFFFFF','#F1F5F9','#0B1F3A'], glyph:'#0B1F3A' },
+    { id:'verdant', name:'Verdant',
+      bg:'linear-gradient(135deg, #EDF2E4 0%, #D5E4C0 45%, #B5CC95 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #1F3A1F 0%, #3B6D2E 100%)', body:'#3D5230', accent:'#3B6D2E', line:'rgba(59,109,46,0.18)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#EDF2E4','#B5CC95','#3B6D2E'], glyph:'#1F3A1F' },
+    { id:'velvet', name:'Velvet',
+      bg:'radial-gradient(ellipse at 25% 35%, rgba(255,200,220,0.15) 0%, transparent 55%), linear-gradient(135deg, #2D1B3D 0%, #4A2851 45%, #6B2E4D 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #FFE0C8 0%, #F5C0B0 55%, #E8A8B8 100%)', body:'#D8B8C8', accent:'#F5C0B0', line:'rgba(245,192,176,0.28)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#2D1B3D','#6B2E4D','#F5C0B0'], glyph:'#F5C0B0' },
+    { id:'obsidian', name:'Obsidian',
+      bg:'linear-gradient(135deg, #1A1612 0%, #2D2620 50%, #1F1A17 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #F5E6C8 0%, #E8D49E 50%, #D4B878 100%)', body:'#B8A88C', accent:'#D4B878', line:'rgba(212,184,120,0.26)',
+      titleFont:"'Source Serif 4', Georgia, serif", bodyFont:'Inter, sans-serif',
+      sw:['#1A1612','#2D2620','#D4B878'], glyph:'#D4B878' },
+  ];
+
+  // ════════════════════════════════════════════════════════════════════════
+  //  CURATED RAW PALETTE STORIES — NOT tied to themes. Vibrant + designed.
+  //  Each = {bg, title, body, accent, line, fonts, strip swatches}.
+  // ════════════════════════════════════════════════════════════════════════
+  const PALETTES = [
+    { id:'blossom', name:'Blossom — pink-led',
+      bg:'linear-gradient(135deg, #FFF0F6 0%, #FFE3F0 55%, #FFD0E8 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #C2185B 0%, #E0518C 100%)', body:'#7A3358', accent:'#E0518C', line:'rgba(194,24,91,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#FFE3F0','#FFB3D6','#E0518C','#C2185B'] },
+    { id:'azure', name:'Azure — blue-led',
+      bg:'linear-gradient(135deg, #EAF3FF 0%, #DCEBFF 55%, #C6DEFF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #0B4FB0 0%, #3B82F6 100%)', body:'#2F4B72', accent:'#2563EB', line:'rgba(37,99,235,0.16)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#DCEBFF','#9CC4FE','#3B82F6','#0B4FB0'] },
+    { id:'ink', name:'Ink — black / mono',
+      bg:'linear-gradient(135deg, #18181B 0%, #232328 60%, #2C2C32 100%)', pattern:'none',
+      title:'#FAFAFA', body:'#C4C4CC', accent:'#FFFFFF', line:'rgba(255,255,255,0.18)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#18181B','#3A3A40','#9A9AA2','#FAFAFA'] },
+    { id:'sunset', name:'Sunset — duotone',
+      bg:'linear-gradient(135deg, #2B1055 0%, #6B2C8E 45%, #C2185B 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #FFD166 0%, #FF8FA3 100%)', body:'rgba(255,233,244,0.82)', accent:'#FFB347', line:'rgba(255,209,102,0.30)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#2B1055','#6B2C8E','#C2185B','#FFD166'] },
+    { id:'citrus', name:'Citrus — fresh duotone',
+      bg:'linear-gradient(135deg, #F0FFF4 0%, #DBF7E4 50%, #C6F0FF 100%)', pattern:'none',
+      title:'linear-gradient(135deg, #0E7C5A 0%, #1296C9 100%)', body:'#2A5046', accent:'#10B981', line:'rgba(16,185,129,0.18)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#DBF7E4','#9DEBC4','#10B981','#1296C9'] },
+    { id:'mono-light', name:'Paper — light mono',
+      bg:'#F7F6F3', pattern:'none',
+      title:'#1B1B1B', body:'#4A4A4A', accent:'#1B1B1B', line:'rgba(0,0,0,0.12)',
+      titleFont:'Inter, sans-serif', bodyFont:'Inter, sans-serif',
+      strip:['#F7F6F3','#D8D6D0','#7A7A7A','#1B1B1B'] },
+  ];
+
+  // ── slide content scaffolds (genuine typeset compositions per kind) ──
+  // kind: 'cover' | 'metric' | 'bullets' | 'lede'
+  let SLIDES = [
+    { kind:'cover',  eyebrow:'Q1 Board Review', title:'Beating Plan in Q1',
+      lede:'How we beat our revenue target — and what it sets up for the year.', vis:true },
+    { kind:'metric', eyebrow:'The result', title:'We beat the target',
+      metricA:'112%', metricB:'of plan · $4.2M booked', vis:false },
+    { kind:'bullets',eyebrow:'What changed', title:'What made the difference',
+      bullets:['Enterprise pipeline matured faster','Two flagship renewals closed early','New pricing lifted average deal size'], vis:true },
+    { kind:'lede',   eyebrow:'The year ahead', title:'Looking ahead',
+      lede:'Three bets carry the momentum into H2 — and where the risk sits.', vis:false },
+    { kind:'cover',  eyebrow:'The ask', title:'The ask',
+      lede:'Greenlight the H2 hiring plan and the regional expansion budget.', vis:true },
+    { kind:'bullets',eyebrow:'Deep dive', title:'Deep dive',
+      bullets:['Segment-level breakdown','Cohort retention','Forecast scenarios'], vis:false },
+    { kind:'lede',   eyebrow:'Evidence', title:'Case study',
+      lede:'One customer story that shows the new motion working end to end.', vis:true },
+    { kind:'cover',  eyebrow:'Close', title:'Next steps',
+      lede:'Owners, dates, and the decision we need today.', vis:false },
+  ];
+
+  // ── framework → seed slide titles (Lisa: frameworks seed the outline) ──
+  const FRAMEWORKS = {
+    pitch:     ['The problem','Why now','Our solution','How it works','Traction','Market size','The ask'],
+    quarterly: ['Title & agenda','The Q1 result','What made the difference','Risks we watched','Next bets','The ask'],
+    lesson:    ['Today’s big idea','Why it matters','Walk through it','See it in action','Practice','What to remember'],
+    brainstorm:['The question','Diverge freely','Cluster the ideas','Promising directions','Pick & commit'],
+  };
+  const FW_KINDS = ['cover','metric','bullets','lede','bullets','metric','lede','cover']; // rotation hint
+
+  // ════════════════════════════════════════════════════════════════════════
+  //  RENDER PREVIEW CARDS
+  // ════════════════════════════════════════════════════════════════════════
+  const fan = document.getElementById('fan');
+  const countEl = document.getElementById('count');
+  let count = 5; const MIN = 3, MAX = 8;
+  let activeIndex = 0; // v6 (change 2): which slide is front/active in the fan
+
+  function cardInner(s, idx){
+    let body = '';
+    if(s.kind === 'metric'){
+      body = `<div class="metric"><b>${s.metricA||''}</b><span>${s.metricB||''}</span></div>`;
+    } else if(s.kind === 'bullets'){
+      body = `<ul class="bullets">${(s.bullets||[]).map(b=>`<li>${b}</li>`).join('')}</ul>`;
+    } else if(s.kind === 'cover'){
+      body = `<p class="lede">${s.lede||''}</p>`;
+    } else {
+      body = `<p class="lede">${s.lede||''}</p>`;
+    }
+    return `
+      <div class="pad">
+        <span class="accentbar"></span>
+        <span class="edit-dot" data-lucide="pencil"></span>
+        <span class="num">${idx+1}</span>
+        <div class="eyebrow">${s.eyebrow||''}</div>
+        <h4 contenteditable="true" spellcheck="false" aria-label="Slide title — click to edit">${s.title||'New slide'}</h4>
+        <div class="vis"><span data-lucide="image"></span></div>
+        ${body}
+      </div>`;
+  }
+
+  function buildCards(){
+    fan.innerHTML = '';
+    for(let i=0;i<count;i++){
+      const s = SLIDES[i] || { kind:'lede', eyebrow:'New slide', title:'New slide', lede:'Add your content here.', vis:false };
+      const el = document.createElement('div');
+      el.className = 'card' + (s.vis ? ' hasvis' : '');
+      el.innerHTML = cardInner(s, i);
+      fan.appendChild(el);
+    }
+    lucide.createIcons();
+    wireTitleEditing();
+    layout();
+  }
+
+  function layout(){
+    const cards = [...fan.querySelectorAll('.card:not(.removing)')];
+    const n = cards.length;
+    if(activeIndex > n-1) activeIndex = n-1;
+    if(activeIndex < 0) activeIndex = 0;
+    cards.forEach((c,i)=>{
+      // v4 fan geometry — preserved EXACTLY (same positions, rotations, sizes)
+      const t = n>1 ? i/(n-1) : .5;
+      const rot = (t-0.5)*12;
+      const lift = Math.abs(t-0.5)*16;
+      const scale = 1 - Math.abs(t-0.5)*0.13;
+      const left = 1 + t*60;
+      c.style.left = left + '%';
+      c.style.transform = `rotate(${rot}deg) translateY(${ -4 + lift }px) scale(${scale})`;
+      // v6 (change 2): the active slide comes to the front of the stack.
+      // Distance-from-active sets z-order; active card is on top.
+      c.style.zIndex = String(100 - Math.abs(i - activeIndex));
+      // v6 (change 1): fully OPAQUE — front card completely occludes the ones behind.
+      c.style.opacity = 1;
+      c.style.animationDelay = (i*0.4)+'s';
+    });
+    updateNavRead(n);
+  }
+
+  // v6 (change 2): nav readout + which slide is active
+  function updateNavRead(n){
+    const readEl = document.getElementById('navread');
+    if(readEl) readEl.textContent = (activeIndex+1) + ' / ' + (n || count);
+  }
+  function goto(delta){
+    const n = fan.querySelectorAll('.card:not(.removing)').length;
+    if(!n) return;
+    activeIndex = (activeIndex + delta + n) % n;
+    layout();
+  }
+
+  // editable card titles steer the outline (demo: keep SLIDES in sync)
+  function wireTitleEditing(){
+    fan.querySelectorAll('.card h4[contenteditable]').forEach((h,i)=>{
+      h.addEventListener('input', ()=>{ if(SLIDES[i]) SLIDES[i].title = h.textContent; });
+      h.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); h.blur(); } });
+    });
+  }
+
+  document.getElementById('plus').addEventListener('click', ()=>{ if(count>=MAX)return; count++; countEl.textContent=count; buildCards(); });
+  document.getElementById('minus').addEventListener('click', ()=>{ if(count<=MIN)return; count--; countEl.textContent=count; buildCards(); });
+
+  // ── v6 (change 2): Prev/Next nav + keyboard ←/→ ──
+  document.getElementById('navprev').addEventListener('click', ()=>goto(-1));
+  document.getElementById('navnext').addEventListener('click', ()=>goto(1));
+  document.addEventListener('keydown', e=>{
+    if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    // ignore arrows while a title (deck or slide) is being edited
+    const a = document.activeElement;
+    if(a && (a.isContentEditable || a.tagName === 'TEXTAREA' || a.tagName === 'INPUT')) return;
+    e.preventDefault();
+    goto(e.key === 'ArrowRight' ? 1 : -1);
+  });
+
+  // ── ADD VISUALS toggle (role=switch; reveals style picker) ──
+  const vistoggle = document.getElementById('vistoggle');
+  const visstate  = document.getElementById('visstate');
+  const stylewrap = document.getElementById('stylewrap');
+  function flipVis(){
+    const on = vistoggle.getAttribute('aria-checked') !== 'true';
+    vistoggle.setAttribute('aria-checked', on?'true':'false');
+    document.body.classList.toggle('vison', on);
+    stylewrap.setAttribute('aria-hidden', on?'false':'true');
+    visstate.innerHTML = on ? '<span data-lucide="check"></span> <span class="pos">On</span>'
+                            : '<span data-lucide="circle-slash"></span> <span class="pos">Off</span>';
+    lucide.createIcons();
+  }
+  vistoggle.addEventListener('click', flipVis);
+  vistoggle.addEventListener('keydown', e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flipVis(); } });
+
+  // ════════════════════════════════════════════════════════════════════════
+  //  LIVE RECOLOR + RE-FONT of preview cards
+  // ════════════════════════════════════════════════════════════════════════
+  function applyLook(look){
+    const isGradTitle = String(look.title).startsWith('linear-gradient');
+    root.style.setProperty('--t-bg', look.bg);
+    root.style.setProperty('--t-pattern', look.pattern || 'none');
+    root.style.setProperty('--t-body', look.body);
+    root.style.setProperty('--t-accent', look.accent);
+    root.style.setProperty('--t-line', look.line);
+    root.style.setProperty('--t-titlefont', look.titleFont);
+    root.style.setProperty('--t-bodyfont', look.bodyFont);
+    if(isGradTitle){
+      root.style.setProperty('--t-title', 'transparent');
+      root.style.setProperty('--t-titlebg', look.title);
+      root.style.setProperty('--t-titlefill', 'transparent');
+    } else {
+      root.style.setProperty('--t-title', look.title);
+      root.style.setProperty('--t-titlebg', 'none');
+      root.style.setProperty('--t-titlefill', look.title);
+    }
+  }
+
+  // ── build THEME tiles ──
+  const themesEl = document.getElementById('themes');
+  THEMES.forEach((t,i)=>{
+    const b = document.createElement('button');
+    b.className = 'theme'; b.type='button';
+    b.setAttribute('aria-pressed', i===0 ? 'true':'false');
+    b.setAttribute('aria-label', t.name+' theme');
+    b.dataset.idx = i;
+    b.innerHTML = `<span class="swatch" style="background:${t.bg}"><span class="glyph" style="color:${t.glyph}">Aa</span></span><span class="nm">${t.name}</span>`;
+    themesEl.appendChild(b);
+  });
+  themesEl.addEventListener('click', e=>{
+    const b = e.target.closest('.theme'); if(!b) return;
+    themesEl.querySelectorAll('.theme').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    applyLook(THEMES[+b.dataset.idx]);
+  });
+
+  // ── build PALETTE tiles ──
+  const palsEl = document.getElementById('pals');
+  PALETTES.forEach((p,i)=>{
+    const b = document.createElement('button');
+    b.className='pal'; b.type='button';
+    b.setAttribute('aria-pressed', i===0 ? 'true':'false');
+    b.setAttribute('aria-label', p.name);
+    b.dataset.idx = i;
+    b.innerHTML = `<span class="strip">${p.strip.map(c=>`<i style="background:${c}"></i>`).join('')}</span><span class="nm">${p.name}</span>`;
+    palsEl.appendChild(b);
+  });
+  palsEl.addEventListener('click', e=>{
+    const b = e.target.closest('.pal'); if(!b) return;
+    palsEl.querySelectorAll('.pal').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    applyLook(PALETTES[+b.dataset.idx]);
+  });
+
+  // ── Theme | Palette segmented switch ──
+  const segTheme = document.getElementById('seg-theme');
+  const segPalette = document.getElementById('seg-palette');
+  const paneTheme = document.getElementById('pane-theme');
+  const panePalette = document.getElementById('pane-palette');
+  function selectSeg(themeOn){
+    segTheme.setAttribute('aria-selected', themeOn?'true':'false');
+    segPalette.setAttribute('aria-selected', themeOn?'false':'true');
+    paneTheme.classList.toggle('active', themeOn);
+    panePalette.classList.toggle('active', !themeOn);
+    const active = (themeOn?themesEl:palsEl).querySelector('[aria-pressed="true"]');
+    if(active) applyLook((themeOn?THEMES:PALETTES)[+active.dataset.idx]);
+  }
+  segTheme.addEventListener('click', ()=>selectSeg(true));
+  segPalette.addEventListener('click', ()=>selectSeg(false));
+
+  // ── Customize drawer ──
+  const drawerbtn = document.getElementById('drawerbtn');
+  drawerbtn.addEventListener('click', ()=>{
+    const open = !document.body.classList.contains('draweropen');
+    document.body.classList.toggle('draweropen', open);
+    drawerbtn.setAttribute('aria-expanded', open?'true':'false');
+  });
+
+  // single-select groups (Audience / Tone / Voice / Detail / Style)
+  document.querySelectorAll('[data-single]').forEach(group=>{
+    group.addEventListener('click', e=>{
+      const b = e.target.closest('button'); if(!b) return;
+      group.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+    });
+  });
+  document.querySelectorAll('.custom-input').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      if(!inp.value) return;
+      const group = inp.previousElementSibling;
+      if(group && group.hasAttribute('data-single'))
+        group.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    });
+  });
+
+  // ── framework cards: seed slide titles + outline ──
+  const fwgrid = document.getElementById('fwgrid');
+  const deckTitleEl = document.querySelector('.deck-title');
+  fwgrid.addEventListener('click', e=>{
+    const b = e.target.closest('.fcard'); if(!b) return;
+    fwgrid.querySelectorAll('.fcard').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    const seeds = FRAMEWORKS[b.dataset.fw]; if(!seeds) return;
+    count = Math.min(MAX, Math.max(MIN, seeds.length));
+    countEl.textContent = count;
+    SLIDES = seeds.map((title,i)=>{
+      const kind = i===0 ? 'cover' : (FW_KINDS[i] || 'lede');
+      const base = { kind, eyebrow:b.querySelector('.f-name').textContent, title, vis:(i%2===0) };
+      if(kind==='metric'){ base.metricA='—'; base.metricB='your key number'; }
+      else if(kind==='bullets'){ base.bullets=['Point one','Point two','Point three']; }
+      else { base.lede='Edit this title to steer what this slide generates.'; }
+      return base;
+    });
+    deckTitleEl.textContent = b.querySelector('.f-name').textContent;
+    buildCards();
+  });
+
+  // ── Generate (demo feedback) ──
+  document.getElementById('generate').addEventListener('click', function(){
+    this.innerHTML = '<span data-lucide="loader"></span> Building…'; lucide.createIcons();
+    setTimeout(()=>{ this.innerHTML='<span data-lucide="sparkles"></span> Generate'; lucide.createIcons(); }, 1400);
+  });
+
+  // ── init ──
+  applyLook(THEMES[0]);
+  buildCards();
+  window.addEventListener('resize', layout);
+</script>
+</body>
+</html>

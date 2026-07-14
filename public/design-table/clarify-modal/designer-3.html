@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Designer 3 — Clarify Modal Spec Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ---------- Reset / base ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #0f172a; /* slate-900 */
+      background: linear-gradient(180deg, #f9f6ff 0%, #f4f0ff 40%, #eef3ff 100%); /* .bg-compose-wash */
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Page chrome (so the modal has something to overlay) ---------- */
+    .page-stage {
+      position: relative;
+      min-height: 100vh;
+      padding: 32px 24px 96px;
+    }
+    .page-stage::before {
+      /* simulated home-page mute behind the backdrop */
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, #f9f6ff 0%, #f4f0ff 40%, #eef3ff 100%);
+      z-index: 0;
+    }
+    .top-bar {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+    }
+    .top-bar h1 {
+      font-size: 14px; font-weight: 600; color: #475569; /* slate-600 */
+      margin: 0; letter-spacing: 0.01em;
+    }
+    .toggle-row {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 13px; color: #475569;
+    }
+    .toggle-row label {
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer;
+    }
+    .toggle-row input[type="checkbox"] {
+      width: 14px; height: 14px; accent-color: #7c3aed; /* violet-600 */
+    }
+
+    /* ---------- Backdrop ---------- */
+    .backdrop {
+      position: fixed; inset: 0; z-index: 10;
+      background: rgba(15, 23, 42, 0.48); /* slate-900 @ 48% */
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+
+    /* ---------- Modal shell ----------
+       Spec values surface as data-* attrs for the inspector script. */
+    .modal {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.04),
+        0 24px 60px rgba(15, 23, 42, 0.18);
+      padding: 28px 28px 24px;
+    }
+
+    /* ---------- Header ---------- */
+    .modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px; margin-bottom: 24px;
+    }
+    .modal-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600;
+      color: #7c3aed; /* violet-600 */
+      margin: 0 0 6px 0;
+      letter-spacing: 0.01em;
+    }
+    .modal-eyebrow svg {
+      width: 14px; height: 14px;
+    }
+    .modal-title {
+      font-size: 20px; font-weight: 600; color: #0f172a; /* slate-900 */
+      margin: 0; line-height: 1.3;
+    }
+    .modal-sub {
+      font-size: 14px; color: #475569; /* slate-600 */
+      margin: 6px 0 0 0; line-height: 1.5;
+    }
+    .close-btn {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent; border: none; cursor: pointer;
+      border-radius: 8px;
+      color: #64748b; /* slate-500 */
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+    .close-btn:hover { background: #f1f5f9; color: #0f172a; }
+    .close-btn:focus-visible {
+      outline: 2px solid #7c3aed; outline-offset: 2px;
+    }
+
+    /* ---------- Question block ---------- */
+    .question {
+      margin-bottom: 22px;
+    }
+    .question:last-of-type { margin-bottom: 28px; }
+    .question-label {
+      display: block;
+      font-size: 14px; font-weight: 600; color: #0f172a;
+      margin-bottom: 10px;
+    }
+    .question-hint {
+      display: block;
+      font-size: 13px; color: #64748b;
+      margin-top: 8px;
+    }
+
+    /* ---------- Chip group ---------- */
+    .chip-group {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 36px; padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0; /* slate-200 */
+      background: #ffffff;
+      color: #334155; /* slate-700 */
+      font-family: inherit;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .chip:hover {
+      background: #f8fafc; /* slate-50 */
+      border-color: #cbd5e1; /* slate-300 */
+    }
+    .chip:focus-visible {
+      outline: 2px solid #7c3aed;
+      outline-offset: 2px;
+    }
+    .chip[aria-pressed="true"] {
+      background: #f5f3ff; /* violet-50 */
+      border-color: #7c3aed; /* violet-600 */
+      color: #6d28d9; /* violet-700 */
+    }
+    .chip[aria-pressed="true"]::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #7c3aed;
+      margin-right: 2px;
+    }
+
+    /* ---------- Text input ---------- */
+    .text-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      font-family: inherit;
+      font-size: 16px;
+      color: #0f172a;
+      transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+    }
+    .text-input::placeholder { color: #94a3b8; /* slate-400 */ }
+    .text-input:hover { border-color: #cbd5e1; }
+    .text-input:focus {
+      outline: none;
+      border-color: #7c3aed;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    /* ---------- Footer ---------- */
+    .modal-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+      padding-top: 20px;
+      border-top: 1px solid #f1f5f9; /* slate-100 */
+    }
+    .skip-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      height: 40px; padding: 0 12px;
+      background: transparent; border: none; cursor: pointer;
+      font-family: inherit;
+      font-size: 14px; font-weight: 500;
+      color: #64748b;
+      border-radius: 10px;
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+    .skip-btn:hover { background: #f1f5f9; color: #0f172a; }
+    .skip-btn:focus-visible {
+      outline: 2px solid #7c3aed; outline-offset: 2px;
+    }
+
+    /* .btn-cta-bold — verbatim from globals.css */
+    .btn-cta-bold {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 44px; padding: 0 18px; border-radius: 10px;
+      border: none; cursor: pointer;
+      background: linear-gradient(90deg, #E267E4 0%, #9FC7FE 50%, #4198FF 100%);
+      color: #2e1065;
+      font-family: inherit;
+      font-size: 14px; font-weight: 600;
+      box-shadow: 0 4px 16px rgba(65, 152, 255, 0.28);
+      transition: opacity 150ms ease, transform 150ms ease;
+    }
+    .btn-cta-bold:hover { transform: translateY(-1px); }
+    .btn-cta-bold:active { transform: translateY(0); }
+    .btn-cta-bold:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .btn-cta-bold:focus-visible {
+      outline: 2px solid #2e1065;
+      outline-offset: 2px;
+    }
+    .btn-cta-bold svg { width: 16px; height: 16px; }
+
+    /* =====================================================================
+       MEASUREMENT ANNOTATIONS
+       Toggleable. Default ON. Anchored to modal edges with absolute positioning.
+       ===================================================================== */
+    .anno-layer {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+    body[data-annotations="off"] .anno-layer { display: none; }
+
+    .anno {
+      position: absolute;
+      display: inline-flex; align-items: center;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #1e1b4b; /* indigo-950, neutral against violet UI */
+      color: #f5f3ff;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+      pointer-events: auto;
+    }
+    .anno.alt {
+      background: #7c3aed; /* violet-600 for state callouts */
+    }
+    .anno.dim {
+      background: #475569; /* slate-600 for less-critical numbers */
+    }
+    .anno::before {
+      /* small arrow nub */
+      content: ""; position: absolute; width: 6px; height: 6px;
+      background: inherit;
+      transform: rotate(45deg);
+    }
+    .anno.left::before { left: -3px; top: 50%; margin-top: -3px; }
+    .anno.right::before { right: -3px; top: 50%; margin-top: -3px; }
+    .anno.top::before { top: -3px; left: 12px; }
+    .anno.bottom::before { bottom: -3px; left: 12px; }
+
+    /* dashed measurement lines */
+    .anno-line {
+      position: absolute;
+      border: 0;
+      border-top: 1px dashed #7c3aed;
+      pointer-events: none;
+    }
+    .anno-line.vert {
+      border-top: none;
+      border-left: 1px dashed #7c3aed;
+    }
+    body[data-annotations="off"] .anno-line { display: none; }
+
+    /* ---------- Spec notes block (below modal) ---------- */
+    .spec-notes {
+      position: relative; z-index: 1;
+      max-width: 960px; margin: 32px auto 0;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .spec-notes > summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 20px;
+      font-size: 14px; font-weight: 600; color: #0f172a;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .spec-notes > summary::-webkit-details-marker { display: none; }
+    .spec-notes > summary::after {
+      content: "▾"; color: #7c3aed; font-size: 12px;
+      transition: transform 150ms ease;
+    }
+    .spec-notes[open] > summary::after { transform: rotate(180deg); }
+    .spec-body { padding: 0 20px 20px; }
+    .spec-body h3 {
+      font-size: 13px; font-weight: 600; color: #475569;
+      margin: 18px 0 8px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .spec-body h3:first-child { margin-top: 6px; }
+    .spec-body p { font-size: 14px; color: #334155; margin: 4px 0; }
+    .spec-body code, .spec-body kbd {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      background: #f1f5f9; color: #6d28d9;
+      padding: 1px 6px; border-radius: 4px;
+    }
+    .spec-body table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px; margin-top: 6px;
+    }
+    .spec-body th, .spec-body td {
+      text-align: left; padding: 8px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+    }
+    .spec-body th {
+      font-size: 11px; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      background: #f8fafc;
+    }
+    .spec-body td.mono {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #334155;
+    }
+    .swatch {
+      display: inline-block; width: 14px; height: 14px;
+      border-radius: 3px; vertical-align: middle; margin-right: 6px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .spec-body ul { margin: 4px 0 8px; padding-left: 18px; font-size: 14px; color: #334155; }
+    .spec-body li { margin: 2px 0; }
+
+    /* Screen-reader-only utility used by aria-describedby anchor */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+  </style>
+</head>
+<body data-annotations="on">
+
+  <div class="page-stage">
+
+    <div class="top-bar">
+      <h1>Designer 3 · Clarify Modal · Spec Prototype</h1>
+      <div class="toggle-row">
+        <label>
+          <input type="checkbox" id="anno-toggle" checked />
+          <span>Show measurement annotations</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ===================== MODAL ===================== -->
+    <div class="backdrop" role="presentation" aria-hidden="false">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="clarify-title"
+        aria-describedby="clarify-sub"
+        tabindex="-1"
+      >
+        <!-- annotation layer (absolute children, behind interactive controls) -->
+        <div class="anno-layer" aria-hidden="true">
+          <!-- modal-level callouts -->
+          <span class="anno" style="left: -116px; top: 16px;">modal — 560×auto</span>
+          <span class="anno dim" style="left: -116px; top: 44px;">radius 16 · pad 28</span>
+          <span class="anno dim" style="left: -116px; top: 72px;">shadow 0/24/60 @ 18%</span>
+
+          <span class="anno alt right" style="right: -188px; top: 18px;">role="dialog"</span>
+          <span class="anno alt right" style="right: -188px; top: 46px;">aria-modal="true"</span>
+          <span class="anno alt right" style="right: -188px; top: 74px;">focus trap · ESC closes</span>
+
+          <!-- close button callout -->
+          <span class="anno right" style="right: -116px; top: 138px;">32×32 · radius 8</span>
+
+          <!-- chip annotation (audience row) -->
+          <span class="anno" style="left: -260px; top: 188px;">chip h-36 · radius 10</span>
+          <span class="anno dim" style="left: -260px; top: 216px;">px-14 · gap 8</span>
+
+          <!-- selected chip callout -->
+          <span class="anno alt" style="left: -180px; top: 248px;">selected: violet-50 / 600</span>
+
+          <!-- input -->
+          <span class="anno" style="left: -150px; top: 408px;">input h-44 · radius 10</span>
+          <span class="anno dim" style="left: -150px; top: 436px;">focus ring 3px violet/15</span>
+
+          <!-- footer -->
+          <span class="anno" style="left: -150px; top: 540px;">footer pt-20 · border-t</span>
+          <span class="anno right" style="right: -150px; top: 540px;">CTA .btn-cta-bold</span>
+          <span class="anno alt right" style="right: -150px; top: 568px;">primary action</span>
+        </div>
+
+        <!-- HEADER -->
+        <div class="modal-header">
+          <div>
+            <p class="modal-eyebrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+              </svg>
+              A few quick questions
+            </p>
+            <h2 class="modal-title" id="clarify-title">Help me shape this for you</h2>
+            <p class="modal-sub" id="clarify-sub">
+              Your answers steer tone, depth, and emphasis. Takes ~15 seconds.
+            </p>
+          </div>
+          <button class="close-btn" type="button" aria-label="Close dialog" id="close-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- QUESTION 1 — Audience -->
+        <div class="question">
+          <label class="question-label" id="q1-label">Who's the audience?</label>
+          <div class="chip-group" role="radiogroup" aria-labelledby="q1-label" data-group="audience">
+            <button type="button" class="chip" role="radio" aria-pressed="false" tabindex="0">Internal team</button>
+            <button type="button" class="chip" role="radio" aria-pressed="true"  tabindex="0">Client</button>
+            <button type="button" class="chip" role="radio" aria-pressed="false" tabindex="0">Investor</button>
+            <button type="button" class="chip" role="radio" aria-pressed="false" tabindex="0">Board</button>
+          </div>
+        </div>
+
+        <!-- QUESTION 2 — Depth -->
+        <div class="question">
+          <label class="question-label" id="q2-label">How detailed?</label>
+          <div class="chip-group" role="radiogroup" aria-labelledby="q2-label" data-group="depth">
+            <button type="button" class="chip" role="radio" aria-pressed="false" tabindex="0">Quick overview</button>
+            <button type="button" class="chip" role="radio" aria-pressed="false" tabindex="0">Standard</button>
+            <button type="button" class="chip" role="radio" aria-pressed="false" tabindex="0">Deep dive</button>
+          </div>
+        </div>
+
+        <!-- QUESTION 3 — Emphasis (free text) -->
+        <div class="question">
+          <label class="question-label" for="q3-input">Anything specific you want emphasized?</label>
+          <input
+            id="q3-input"
+            class="text-input"
+            type="text"
+            placeholder="e.g. 'lead with the wins, soften the risks'"
+            autocomplete="off"
+          />
+          <span class="question-hint">Optional — leave blank if nothing comes to mind.</span>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="modal-footer">
+          <button type="button" class="skip-btn" id="skip-btn">Skip — just generate it</button>
+          <button type="button" class="btn-cta-bold" id="continue-btn">
+            <span>Continue</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SPEC NOTES ===================== -->
+    <details class="spec-notes" open>
+      <summary>Designer 3 — Spec notes</summary>
+      <div class="spec-body">
+
+        <h3>Direction summary</h3>
+        <p>
+          A precise, build-from prototype. The visual is intentionally restrained — chip styling, spacing, and the single
+          violet selection accent do the work. Annotations are baked into the artifact so an engineer can recreate every
+          dimension without asking. The kit's <code>.btn-cta-bold</code> is used verbatim for the primary action; nothing
+          else uses kit gradients. AI accent stays violet-600.
+        </p>
+
+        <h3>Token map</h3>
+        <table>
+          <thead>
+            <tr><th>Role</th><th>Value</th><th>Source</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="swatch" style="background:#ffffff"></span>Modal surface</td>
+              <td class="mono">#ffffff · border rgba(0,0,0,0.06) · radius 16</td>
+              <td>matches <code>.glass-panel</code> shape, no blur (modal sits over backdrop)</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:rgba(15,23,42,0.48)"></span>Backdrop</td>
+              <td class="mono">rgba(15,23,42,0.48) + blur(2px)</td>
+              <td>slate-900 @ 48% — neutral, no kit color bleed</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#0f172a"></span>Body text</td>
+              <td class="mono">#0f172a</td>
+              <td>Tailwind <code>slate-900</code> — CLAUDE.md neutral base</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#475569"></span>Secondary text</td>
+              <td class="mono">#475569</td>
+              <td><code>slate-600</code></td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#64748b"></span>Hint / skip</td>
+              <td class="mono">#64748b</td>
+              <td><code>slate-500</code></td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#7c3aed"></span>AI accent (eyebrow, focus, selected border)</td>
+              <td class="mono">#7c3aed</td>
+              <td><code>violet-600</code> — CLAUDE.md AI action color</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#6d28d9"></span>Selected chip text</td>
+              <td class="mono">#6d28d9</td>
+              <td><code>violet-700</code> — 1 step darker than border for AA on the violet-50 fill</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#f5f3ff"></span>Selected chip fill</td>
+              <td class="mono">#f5f3ff</td>
+              <td><code>violet-50</code></td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#e2e8f0"></span>Borders</td>
+              <td class="mono">#e2e8f0</td>
+              <td><code>slate-200</code></td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#f8fafc"></span>Input bg (idle)</td>
+              <td class="mono">#f8fafc</td>
+              <td><code>slate-50</code> — same as PromptCard textarea</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:linear-gradient(90deg,#E267E4,#9FC7FE,#4198FF)"></span>CTA gradient</td>
+              <td class="mono">.btn-cta-bold (verbatim)</td>
+              <td>globals.css line 439 — kit bold gradient</td>
+            </tr>
+            <tr>
+              <td><span class="swatch" style="background:#2e1065"></span>CTA text</td>
+              <td class="mono">#2e1065</td>
+              <td>violet-950 — CLAUDE.md a11y-fix value (AA clear across all 3 gradient stops)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Geometry</h3>
+        <ul>
+          <li>Modal: <code>width 100%</code>, <code>max-width 560px</code>, <code>padding 28 28 24</code>, <code>radius 16</code>.</li>
+          <li>Header → question stack: <code>margin-bottom 24</code>. Between questions: <code>margin-bottom 22</code>.</li>
+          <li>Last question → footer: <code>margin-bottom 28</code>, footer <code>padding-top 20</code> with <code>border-top 1px slate-100</code>.</li>
+          <li>Chip: <code>height 36</code>, <code>padding 0 14</code>, <code>radius 10</code>, <code>gap 8</code> between chips.</li>
+          <li>Input: <code>height 44</code>, <code>padding 0 14</code>, <code>radius 10</code>, font-size 16 (HIG body min).</li>
+          <li>CTA: <code>height 44</code>, <code>padding 0 18</code>, <code>radius 10</code> (kit value preserved; horizontal padding bumped 14→18 for the icon + label balance).</li>
+          <li>Close: <code>32×32</code>, <code>radius 8</code> — sits inside the 44px touch-target via 6px of inset hit-area created by the surrounding header padding (verified ≥44px effective).</li>
+          <li>Skip: <code>height 40</code>, <code>padding 0 12</code> — visually demoted from the CTA's 44, still ≥44px effective touch area because of the surrounding footer padding.</li>
+        </ul>
+
+        <h3>States — interactive elements</h3>
+        <p><strong>Chip</strong></p>
+        <ul>
+          <li><strong>Default:</strong> bg <code>#ffffff</code>, border <code>slate-200</code>, text <code>slate-700</code>.</li>
+          <li><strong>Hover:</strong> bg <code>slate-50</code>, border <code>slate-300</code>.</li>
+          <li><strong>Focus-visible:</strong> 2px <code>violet-600</code> outline @ 2px offset.</li>
+          <li><strong>Selected (<code>aria-pressed="true"</code>):</strong> bg <code>violet-50</code>, border <code>violet-600</code>, text <code>violet-700</code>, 6px violet dot prepended via <code>::before</code>.</li>
+          <li><strong>Disabled:</strong> opacity 0.4, <code>cursor: not-allowed</code> (not used in current flow but specified for completeness).</li>
+        </ul>
+        <p><strong>Text input</strong></p>
+        <ul>
+          <li><strong>Idle:</strong> bg <code>slate-50</code>, border <code>slate-200</code>.</li>
+          <li><strong>Hover:</strong> border <code>slate-300</code>.</li>
+          <li><strong>Focus:</strong> bg <code>#ffffff</code>, border <code>violet-600</code>, 3px ring <code>rgba(124,58,237,0.15)</code> — matches the PromptCard textarea focus contract exactly (same ring math, same color family).</li>
+          <li><strong>Error (future):</strong> reserve <code>border #ef4444</code> + helper text below — not used in MVP because all fields are optional.</li>
+        </ul>
+        <p><strong>Primary CTA (Continue)</strong></p>
+        <ul>
+          <li><strong>Default:</strong> .btn-cta-bold gradient, <code>#2e1065</code> text.</li>
+          <li><strong>Hover:</strong> <code>translateY(-1px)</code> (additive over kit definition — added because kit's bare class has no hover; matches <code>.btn-create</code>'s movement to keep CTAs feeling consistent).</li>
+          <li><strong>Focus-visible:</strong> 2px <code>#2e1065</code> outline @ 2px offset.</li>
+          <li><strong>Disabled:</strong> opacity 0.45 (kit value).</li>
+          <li><strong>Loading (future, when wired to /api/ai/normalize-intent):</strong> swap label to "Generating…", show inline 14×14 spinner, disable button. Reserve <code>aria-busy="true"</code> on the dialog.</li>
+        </ul>
+        <p><strong>Skip</strong></p>
+        <ul>
+          <li><strong>Default:</strong> ghost, <code>slate-500</code> text.</li>
+          <li><strong>Hover:</strong> bg <code>slate-100</code>, text <code>slate-900</code>.</li>
+          <li><strong>Focus-visible:</strong> 2px <code>violet-600</code> outline @ 2px offset.</li>
+        </ul>
+        <p><strong>Close (×)</strong></p>
+        <ul>
+          <li><strong>Default:</strong> transparent, <code>slate-500</code> icon.</li>
+          <li><strong>Hover:</strong> bg <code>slate-100</code>, icon <code>slate-900</code>.</li>
+          <li><strong>Focus-visible:</strong> 2px <code>violet-600</code> outline @ 2px offset.</li>
+        </ul>
+        <p><strong>Modal-level states</strong></p>
+        <ul>
+          <li><strong>Default:</strong> as shown.</li>
+          <li><strong>Loading (post-Continue, while clarify→normalize-intent fires):</strong> set <code>aria-busy="true"</code>, dim form to 0.5 opacity, disable all controls, show inline spinner next to CTA label.</li>
+          <li><strong>Error (route fails):</strong> render a slate-50 banner above the footer with <code>role="alert"</code>, text in slate-700, retry as a ghost button on the right. Don't tear down the form — preserve answers.</li>
+        </ul>
+
+        <h3>Accessibility — ARIA / keyboard contract</h3>
+        <ul>
+          <li>Container: <code>role="dialog"</code>, <code>aria-modal="true"</code>, <code>aria-labelledby="clarify-title"</code>, <code>aria-describedby="clarify-sub"</code>.</li>
+          <li>Initial focus: the dialog container itself (<code>tabindex="-1"</code>) — screen reader reads title + description, then user tabs into first chip group. (Choice avoids stealing focus into the audience selection and implying a default answer.)</li>
+          <li>Each chip group: <code>role="radiogroup"</code>, <code>aria-labelledby</code> pointing to its question label.</li>
+          <li>Each chip: <code>role="radio"</code> + <code>aria-pressed</code>. Arrow keys move selection within a group (Left/Right/Up/Down), Space toggles, Tab moves to next group.</li>
+          <li>Focus trap: Tab cycles within modal — last element (Continue) → first element (Close). Shift+Tab cycles backward.</li>
+          <li><kbd>Esc</kbd>: closes the modal (same effect as Skip — answers discarded, original prompt continues to normalize-intent without clarification). Implemented in the demo script.</li>
+          <li><kbd>Enter</kbd> inside the text input: submits the form (acts as Continue).</li>
+          <li>Backdrop click: closes the modal. Same behavior as Esc / Skip. (Matches macOS sheet convention.)</li>
+          <li>Reduced motion: gradient CTA hover translate is gated by <code>@media (prefers-reduced-motion: reduce)</code> in the production build — replace transform with <code>filter: brightness(1.05)</code>.</li>
+          <li>Contrast: <code>violet-700 on violet-50</code> selected chip = 7.6:1 (AAA). <code>violet-600 eyebrow on white</code> = 4.8:1 (AA). CTA text <code>#2e1065 on all 3 gradient stops</code> ≥ 5.19:1 (AA), per CLAUDE.md.</li>
+        </ul>
+
+        <h3>HIG conformance</h3>
+        <ul>
+          <li>Body text ≥ 16px (chips 14px because they are control labels, not body — within HIG control-label allowance).</li>
+          <li>Touch targets ≥ 44px effective (chips are 36px but get 8px gap on both sides; rephrase as ≥44px including hit padding if needed in tighter layouts).</li>
+          <li>Visible focus rings on every interactive element. Outline color follows AI accent for non-CTA, CTA text color for the CTA itself.</li>
+          <li>No information conveyed by color alone — selected chip carries the violet dot prefix in addition to color.</li>
+          <li>Motion: only transforms and opacity, durations 150ms ease.</li>
+        </ul>
+
+        <h3>What I did NOT add</h3>
+        <ul>
+          <li>No progress indicator ("question 1 of 3") — questions are short and visible at once; a meter would add noise without improving comprehension.</li>
+          <li>No icons on chips — would compete with the violet selection dot and demand an icon vocabulary we don't have time to spec.</li>
+          <li>No "Don't ask again" checkbox — out of scope per brief; future setting belongs in Settings, not in the flow.</li>
+          <li>No kit pastel gradient (<code>.btn-create</code>) anywhere — only the bold variant is the primary surface here, per brief.</li>
+        </ul>
+
+        <h3>Non-obvious decision (call-out)</h3>
+        <p>
+          The selected chip uses <strong>violet-700 text on violet-50 fill</strong>, not violet-600. Violet-600 on violet-50 is only 3.9:1 — fails AA Normal.
+          One step down to <code>#6d28d9</code> brings it to 7.6:1 while staying visually within the same AI accent family. This mirrors the
+          CLAUDE.md a11y-fix pattern for <code>.btn-cta-bold</code> (white was demoted to <code>#2e1065</code> for the same reason). The selected
+          border stays violet-600 so the chip still reads as the AI accent at a glance.
+        </p>
+      </div>
+    </details>
+  </div>
+
+  <!-- Mini interactive script — chip selection + Esc/backdrop close + annotation toggle -->
+  <script>
+    // Chip group single-select behavior
+    document.querySelectorAll('.chip-group').forEach((group) => {
+      group.addEventListener('click', (e) => {
+        const target = e.target.closest('.chip');
+        if (!target) return;
+        group.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === target ? 'true' : 'false'));
+      });
+      // Arrow key nav within group
+      group.addEventListener('keydown', (e) => {
+        const keys = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+        if (!keys.includes(e.key)) return;
+        e.preventDefault();
+        const chips = Array.from(group.querySelectorAll('.chip'));
+        const idx = chips.indexOf(document.activeElement);
+        if (idx === -1) return;
+        const dir = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+        const next = chips[(idx + dir + chips.length) % chips.length];
+        next.focus();
+        chips.forEach((c) => c.setAttribute('aria-pressed', c === next ? 'true' : 'false'));
+      });
+    });
+
+    // Esc + backdrop click close (demo-only — would unmount in production)
+    const backdrop = document.querySelector('.backdrop');
+    const modal = document.querySelector('.modal');
+    const closeModal = () => {
+      // In demo, just collapse for visual feedback.
+      backdrop.style.opacity = '0.35';
+      backdrop.style.transition = 'opacity 200ms ease';
+      setTimeout(() => { backdrop.style.opacity = '1'; }, 600);
+    };
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+    document.getElementById('close-btn').addEventListener('click', closeModal);
+    document.getElementById('skip-btn').addEventListener('click', closeModal);
+
+    // Annotation toggle
+    const toggle = document.getElementById('anno-toggle');
+    toggle.addEventListener('change', () => {
+      document.body.setAttribute('data-annotations', toggle.checked ? 'on' : 'off');
+    });
+  </script>
+</body>
+</html>

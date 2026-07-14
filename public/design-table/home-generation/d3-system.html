@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Compose · Home / Generate — D3 System &amp; Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   D3 · SYSTEM & SPEC — Compose Home / Slide-Generation page
+   The page is immaculate BECAUSE the system is exact.
+   All values below are the wiring contract. Tokens map to
+   Compose globals.css where they exist (slate text, #6B3FA0
+   AI accent, 12px button radius, Inter, min 16px body).
+   ============================================================ */
+
+:root{
+  /* ---- SPACING SCALE (8px base, 4px half-step) ---------------- */
+  --s-1: 4px;   --s-2: 8px;   --s-3: 12px;  --s-4: 16px;
+  --s-5: 24px;  --s-6: 32px;  --s-7: 48px;  --s-8: 64px;
+  --s-9: 96px;  --s-10:128px;
+
+  /* ---- GRID ---------------------------------------------------- */
+  --frame: 1280px;        /* desktop frame */
+  --margin: 96px;         /* outer margin (generous, Apple/Linear) */
+  --cols: 12;             /* 12-column grid */
+  --gutter: 24px;         /* column gutter */
+  --content: 1088px;      /* frame - 2*margin = live content width */
+
+  /* ---- COLOR (Compose tokens) --------------------------------- */
+  --ink:        #0B1220;  /* near-black display ink (refined slate-950) */
+  --ink-2:      #1E293B;  /* slate-800 — titles */
+  --body:       #475569;  /* slate-600 — body */
+  --muted:      #94A3B8;  /* slate-400 — captions/meta */
+  --faint:      #CBD5E1;  /* slate-300 — disabled glyph */
+  --canvas:     #FCFCFD;  /* near-white canvas (not pure white) */
+  --surface:    #FFFFFF;  /* card surface */
+  --accent:     #6B3FA0;  /* THE single accent — Compose AI violet */
+  --accent-ink: #57318A;  /* darker accent for text contrast */
+  --accent-wash:#F6F2FB;  /* faintest violet wash */
+
+  /* ---- HAIRLINE / RADIUS / SHADOW (one of each, no overload) --- */
+  --line:        rgba(15,23,42,0.08);   /* hairline border */
+  --line-strong: rgba(15,23,42,0.12);   /* focus / hover hairline */
+  --r-sm: 8px;    /* chips, small controls */
+  --r-md: 12px;   /* buttons (Compose contract), tiles */
+  --r-lg: 16px;   /* hero card */
+  --shadow-card: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.05);
+  --shadow-lift: 0 2px 6px rgba(15,23,42,0.06), 0 18px 44px rgba(15,23,42,0.09);
+
+  /* ---- TYPE SCALE (px / weight / tracking) -------------------- */
+  /* display 40/700/-1.4 · title 22/600/-0.4 · body 16/450/0
+     label 14/500/0 · caption 13/500/+0.1 · micro 11/600/+0.6 */
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--canvas);
+  color:var(--body);
+  font-size:16px; line-height:1.5;
+  letter-spacing:0;
+}
+
+/* ===== PAGE FRAME ============================================== */
+.page{
+  max-width:var(--frame);
+  margin:0 auto;
+  padding:0 var(--margin);
+  position:relative;
+}
+
+/* ===== SPEC SIDE RAIL (annotation, screen only) =============== */
+.specrail{
+  position:fixed; top:0; right:0; bottom:0; width:248px;
+  background:#FBFBFC;
+  border-left:1px solid var(--line);
+  padding:24px 22px;
+  overflow-y:auto;
+  font-size:11px; line-height:1.55; color:var(--body);
+  letter-spacing:.1px;
+  z-index:40;
+}
+.specrail h4{
+  font-size:10px; font-weight:700; letter-spacing:.10em;
+  text-transform:uppercase; color:var(--accent-ink);
+  margin:18px 0 7px;
+}
+.specrail h4:first-child{ margin-top:0; }
+.specrail .row{ display:flex; justify-content:space-between; gap:8px; padding:2px 0; }
+.specrail .row span:first-child{ color:var(--muted); }
+.specrail .row span:last-child{ color:var(--ink-2); font-variant-numeric:tabular-nums; font-weight:500; }
+.specrail .sw{ display:inline-block; width:11px; height:11px; border-radius:3px; border:1px solid var(--line); vertical-align:-1px; margin-right:5px; }
+.specrail .note{ color:var(--muted); font-size:10px; margin-top:5px; }
+.specrail hr{ border:0; border-top:1px solid var(--line); margin:16px 0; }
+
+/* On the live page the rail is collapsed away; we keep the content
+   centered in the frame. Shift page left of rail purely for the demo. */
+@media (min-width:1281px){ body{ padding-right:0; } }
+
+/* ===== TOP BAR (whisper-quiet) ================================ */
+.topbar{
+  height:64px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand .mark{
+  width:22px; height:22px; border-radius:6px;
+  background:var(--accent); position:relative;
+}
+.brand .mark::after{
+  content:""; position:absolute; inset:6px 6px auto auto;
+  width:6px; height:6px; border-radius:2px; background:#fff; opacity:.9;
+}
+.brand .name{ font-size:14px; font-weight:600; color:var(--ink-2); letter-spacing:-.01em; }
+.topnav{ display:flex; align-items:center; gap:28px; }
+.topnav a{ font-size:13px; font-weight:500; color:var(--muted); text-decoration:none; letter-spacing:.005em; }
+.topnav a.active{ color:var(--ink-2); }
+.avatar{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#E7DEF4,#D6C8EC); border:1px solid var(--line); }
+
+/* ===== HERO BLOCK ============================================= */
+.hero{ padding:var(--s-9) 0 var(--s-8); }
+.greeting{
+  font-size:13px; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:18px;
+}
+.greeting .dot{ display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--accent); vertical-align:2px; margin-right:9px; }
+.display{
+  font-size:40px; font-weight:700; line-height:1.08; letter-spacing:-.028em;
+  color:var(--ink); max-width:720px;
+}
+.display .soft{ color:var(--faint); font-weight:600; }
+.subhead{
+  font-size:16px; font-weight:450; color:var(--body); margin-top:16px; max-width:520px;
+}
+
+/* ===== HERO PROMPT CARD (primary energy) ===================== */
+.prompt{
+  margin-top:var(--s-7);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  box-shadow:var(--shadow-card);
+  max-width:820px;
+  transition:box-shadow .35s cubic-bezier(.22,1,.36,1), border-color .35s;
+}
+.prompt:focus-within{
+  border-color:rgba(107,63,160,0.32);
+  box-shadow:var(--shadow-lift), 0 0 0 4px rgba(107,63,160,0.06);
+}
+.prompt .field{ padding:24px 24px 6px; }
+.prompt textarea{
+  width:100%; border:0; outline:0; resize:none; background:transparent;
+  font-family:inherit; font-size:18px; line-height:1.55; font-weight:450;
+  color:var(--ink-2); letter-spacing:-.005em;
+  min-height:76px;
+}
+.prompt textarea::placeholder{ color:var(--muted); }
+
+/* action row — restrained, hairline-separated */
+.actionrow{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px 16px; border-top:1px solid var(--line);
+}
+.actions-left{ display:flex; align-items:center; gap:6px; }
+.ghost{
+  display:inline-flex; align-items:center; gap:7px;
+  height:36px; padding:0 12px; border-radius:var(--r-sm);
+  border:1px solid transparent; background:transparent; cursor:pointer;
+  font-family:inherit; font-size:13px; font-weight:500; color:var(--body);
+  letter-spacing:.005em; transition:background .18s, color .18s;
+}
+.ghost:hover{ background:rgba(15,23,42,0.04); color:var(--ink-2); }
+.ghost svg{ width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:1.75; }
+.ghost .meta{ color:var(--muted); font-size:12px; margin-left:1px; }
+
+.generate{
+  display:inline-flex; align-items:center; gap:9px;
+  height:40px; padding:0 18px; border-radius:var(--r-md);
+  border:0; cursor:pointer; background:var(--accent); color:#fff;
+  font-family:inherit; font-size:14px; font-weight:600; letter-spacing:.005em;
+  box-shadow:0 1px 2px rgba(107,63,160,.28), 0 6px 18px rgba(107,63,160,.22);
+  transition:transform .16s cubic-bezier(.22,1,.36,1), box-shadow .16s, background .16s;
+}
+.generate:hover{ background:var(--accent-ink); transform:translateY(-1px); box-shadow:0 2px 4px rgba(107,63,160,.3), 0 10px 26px rgba(107,63,160,.28); }
+.generate:active{ transform:translateY(0); }
+.generate svg{ width:15px; height:15px; stroke:#fff; fill:none; stroke-width:2; }
+.generate kbd{
+  font-family:inherit; font-size:11px; font-weight:500; letter-spacing:.04em;
+  background:rgba(255,255,255,.18); padding:2px 6px; border-radius:5px; color:rgba(255,255,255,.92);
+}
+
+/* ===== SECTION HEADER (Recent) =============================== */
+.section{ padding:var(--s-9) 0 var(--s-10); }
+.sectionhead{
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin-bottom:var(--s-6); padding-bottom:14px; border-bottom:1px solid var(--line);
+}
+.sectionhead h2{
+  font-size:14px; font-weight:600; letter-spacing:.10em; text-transform:uppercase;
+  color:var(--ink-2);
+}
+.sectionhead .count{ color:var(--muted); font-weight:500; letter-spacing:.04em; }
+.sectionhead a{
+  font-size:13px; font-weight:500; color:var(--muted); text-decoration:none;
+  display:inline-flex; align-items:center; gap:5px; transition:color .18s;
+}
+.sectionhead a:hover{ color:var(--accent-ink); }
+.sectionhead a svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:1.75; }
+
+/* ===== RECENT GRID — 3 columns × 2 rows ====================== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  column-gap:24px; row-gap:40px;
+}
+
+/* ----- TILE primitive ----- */
+.tile{ cursor:pointer; }
+.thumb{
+  position:relative;
+  aspect-ratio:16/10;                 /* exact thumbnail ratio */
+  border-radius:var(--r-md);
+  border:1px solid var(--line);
+  overflow:hidden;
+  background:#fff;
+  box-shadow:var(--shadow-card);
+  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s, border-color .35s;
+}
+.tile:hover .thumb{ transform:translateY(-3px); box-shadow:var(--shadow-lift); border-color:var(--line-strong); }
+.tilemeta{ padding:14px 2px 0; }
+.tilename{ font-size:15px; font-weight:600; color:var(--ink-2); letter-spacing:-.006em; }
+.tilesub{ font-size:13px; font-weight:500; color:var(--muted); margin-top:4px; letter-spacing:.005em; }
+.tilesub .dotsep{ margin:0 6px; opacity:.6; }
+
+/* =====================================================================
+   MINI SLIDE COMPOSITIONS — realistic cover-slide previews in pure CSS.
+   Each .slide is a 16:10 frame; inner elements scale by % so they read
+   as a real cover at thumbnail size. Six distinct compositions below.
+   ===================================================================== */
+.slide{ position:absolute; inset:0; padding:13% 14%; display:flex; flex-direction:column; }
+.s-eyebrow{ font-size:6.5px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; opacity:.7; }
+.s-title{ font-weight:700; letter-spacing:-.02em; line-height:1.04; }
+.s-rule{ height:2px; width:30%; border-radius:2px; }
+.s-foot{ margin-top:auto; display:flex; align-items:center; gap:6px; font-size:6px; font-weight:600; letter-spacing:.04em; opacity:.65; }
+.s-dot{ width:7px; height:7px; border-radius:50%; }
+
+/* 1 · Series A Pitch — editorial dark, left-rail accent */
+.cover-pitch{ background:linear-gradient(150deg,#15182A 0%,#1E2342 100%); color:#EAE6F5; }
+.cover-pitch .s-eyebrow{ color:#A99BE0; }
+.cover-pitch .s-title{ font-size:19px; margin-top:6%; max-width:78%; }
+.cover-pitch .accentbar{ position:absolute; left:0; top:24%; bottom:24%; width:4px; background:linear-gradient(#7E5BC6,#A99BE0); border-radius:0 3px 3px 0; }
+.cover-pitch .s-foot{ color:#9C93C7; }
+.cover-pitch .s-dot{ background:#7E5BC6; }
+
+/* 2 · Q3 Go-to-Market — light, metric tiles */
+.cover-gtm{ background:#FFFFFF; color:#1E293B; }
+.cover-gtm .s-eyebrow{ color:#6B3FA0; }
+.cover-gtm .s-title{ font-size:15px; margin-top:5%; color:#0B1220; max-width:70%; }
+.cover-gtm .metrics{ position:absolute; right:13%; bottom:15%; display:flex; gap:6px; }
+.cover-gtm .mtile{ width:34px; height:30px; border-radius:5px; background:#F4F1FA; border:1px solid rgba(107,63,160,.12); display:flex; flex-direction:column; justify-content:center; padding:4px; }
+.cover-gtm .mtile .n{ font-size:10px; font-weight:700; color:#6B3FA0; }
+.cover-gtm .mtile .l{ height:2px; width:60%; background:#CBBFE3; border-radius:2px; margin-top:3px; }
+.cover-gtm .s-rule{ background:#6B3FA0; margin-top:8%; }
+.cover-gtm .s-foot{ color:#94A3B8; }
+.cover-gtm .s-dot{ background:#6B3FA0; }
+
+/* 3 · Brand Guidelines 2026 — type-forward, swatch row */
+.cover-brand{ background:#F7F5F2; color:#1A1714; }
+.cover-brand .s-eyebrow{ color:#9A8C7A; }
+.cover-brand .s-title{ font-size:22px; margin-top:7%; line-height:.98; max-width:85%; }
+.cover-brand .swatches{ position:absolute; left:14%; bottom:15%; display:flex; gap:5px; }
+.cover-brand .swatch{ width:18px; height:18px; border-radius:50%; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.cover-brand .s-foot{ color:#A89A88; }
+
+/* 4 · Onboarding Playbook — split panel */
+.cover-onb{ background:#FFFFFF; color:#1E293B; padding:0; flex-direction:row; }
+.cover-onb .lp{ flex:1.1; padding:13% 9% 12% 14%; display:flex; flex-direction:column; }
+.cover-onb .rp{ flex:.9; background:linear-gradient(160deg,#EEF2FF,#E3E9FE); position:relative; }
+.cover-onb .rp::after{ content:""; position:absolute; inset:28% 30%; border-radius:8px; border:1.5px dashed rgba(107,63,160,.35); }
+.cover-onb .rp .pin{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:14px; height:14px; border-radius:50%; background:#6B3FA0; box-shadow:0 0 0 5px rgba(107,63,160,.16); }
+.cover-onb .s-eyebrow{ color:#6B3FA0; }
+.cover-onb .s-title{ font-size:13px; margin-top:6%; color:#0B1220; }
+.cover-onb .steps{ margin-top:auto; display:flex; flex-direction:column; gap:5px; }
+.cover-onb .step{ display:flex; align-items:center; gap:6px; font-size:6.5px; font-weight:600; color:#64748B; }
+.cover-onb .step .b{ width:8px; height:8px; border-radius:50%; background:#EDE7F6; color:#6B3FA0; font-size:5px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+
+/* 5 · Sustainability Report 2026 — organic gradient field */
+.cover-sus{ background:linear-gradient(155deg,#0E2A24 0%,#16443A 60%,#1E5A48 100%); color:#E6F2EC; }
+.cover-sus .s-eyebrow{ color:#8FD3BB; }
+.cover-sus .s-title{ font-size:16px; margin-top:6%; max-width:74%; }
+.cover-sus .leaf{ position:absolute; right:-6%; top:-10%; width:54%; height:80%; background:radial-gradient(circle at 70% 30%, rgba(143,211,187,.34), transparent 60%); }
+.cover-sus .ring{ position:absolute; right:14%; bottom:16%; width:30px; height:30px; border-radius:50%; border:2px solid rgba(143,211,187,.5); }
+.cover-sus .ring::after{ content:""; position:absolute; inset:5px; border-radius:50%; border:2px solid rgba(143,211,187,.28); }
+.cover-sus .s-foot{ color:#7FC0A8; }
+.cover-sus .s-dot{ background:#8FD3BB; }
+
+/* 6 · Product Launch — Atlas — cinematic, centered */
+.cover-launch{ background:linear-gradient(135deg,#1A1430 0%,#2A1B52 55%,#3A2270 100%); color:#F1ECFA; align-items:center; justify-content:center; text-align:center; }
+.cover-launch .halo{ position:absolute; left:50%; top:42%; transform:translate(-50%,-50%); width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, rgba(160,120,230,.28), transparent 62%); }
+.cover-launch .s-eyebrow{ color:#B9A4ED; position:relative; }
+.cover-launch .s-title{ font-size:20px; margin-top:5%; position:relative; }
+.cover-launch .s-rule{ background:linear-gradient(90deg,#7E5BC6,#B9A4ED); width:38px; margin:8% auto 0; position:relative; }
+.cover-launch .s-foot{ color:#A48FD6; justify-content:center; }
+
+/* ===== ENTRANCE (subtle micro-motion, reduced-motion safe) === */
+.rise{ opacity:0; transform:translateY(14px); animation:rise .6s cubic-bezier(.22,1,.36,1) forwards; }
+.d1{ animation-delay:.04s; } .d2{ animation-delay:.10s; } .d3{ animation-delay:.16s; }
+.grid .tile{ opacity:0; transform:translateY(16px); animation:rise .55s cubic-bezier(.22,1,.36,1) forwards; }
+.grid .tile:nth-child(1){ animation-delay:.06s; }
+.grid .tile:nth-child(2){ animation-delay:.12s; }
+.grid .tile:nth-child(3){ animation-delay:.18s; }
+.grid .tile:nth-child(4){ animation-delay:.24s; }
+.grid .tile:nth-child(5){ animation-delay:.30s; }
+.grid .tile:nth-child(6){ animation-delay:.36s; }
+@keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce){
+  .rise,.grid .tile{ opacity:1; transform:none; animation:none; }
+}
+
+/* ===== CORNER LABEL ========================================== */
+.cornerlabel{
+  position:fixed; left:16px; bottom:16px; z-index:60;
+  background:var(--ink); color:#fff; font-size:11px; font-weight:600;
+  letter-spacing:.04em; padding:7px 12px; border-radius:8px;
+  box-shadow:0 4px 14px rgba(0,0,0,.22);
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SPEC SIDE RAIL (annotation) ============ -->
+<aside class="specrail" aria-hidden="true">
+  <h4>Grid</h4>
+  <div class="row"><span>Frame</span><span>1280px</span></div>
+  <div class="row"><span>Outer margin</span><span>96px</span></div>
+  <div class="row"><span>Columns</span><span>12</span></div>
+  <div class="row"><span>Gutter</span><span>24px</span></div>
+  <div class="row"><span>Content</span><span>1088px</span></div>
+  <p class="note">Hero card spans 8 cols (820px). Recent grid = 3 cols × 2 rows.</p>
+
+  <h4>Type scale</h4>
+  <div class="row"><span>Display</span><span>40 / 700 / −2.8%</span></div>
+  <div class="row"><span>Title</span><span>22 / 600 / −2%</span></div>
+  <div class="row"><span>Prompt</span><span>18 / 450</span></div>
+  <div class="row"><span>Body</span><span>16 / 450</span></div>
+  <div class="row"><span>Label</span><span>14 / 500</span></div>
+  <div class="row"><span>Caption</span><span>13 / 500</span></div>
+  <div class="row"><span>Micro</span><span>11 / 700 / +10%</span></div>
+
+  <h4>Spacing (8px base)</h4>
+  <div class="row"><span>tokens</span><span>4·8·12·16</span></div>
+  <div class="row"><span></span><span>24·32·48·64</span></div>
+  <div class="row"><span></span><span>96·128</span></div>
+  <p class="note">Section rhythm = 96px top / 128px bottom.</p>
+
+  <h4>Color</h4>
+  <div class="row"><span><span class="sw" style="background:#FCFCFD"></span>Canvas</span><span>#FCFCFD</span></div>
+  <div class="row"><span><span class="sw" style="background:#0B1220"></span>Ink</span><span>#0B1220</span></div>
+  <div class="row"><span><span class="sw" style="background:#475569"></span>Body</span><span>#475569</span></div>
+  <div class="row"><span><span class="sw" style="background:#94A3B8"></span>Muted</span><span>#94A3B8</span></div>
+  <div class="row"><span><span class="sw" style="background:#6B3FA0"></span>Accent</span><span>#6B3FA0</span></div>
+  <p class="note">ONE accent only — Compose AI violet.</p>
+
+  <h4>Hairline · Radius · Shadow</h4>
+  <div class="row"><span>Border</span><span>rgba 15·23·42 / .08</span></div>
+  <div class="row"><span>Radius</span><span>8 · 12 · 16</span></div>
+  <div class="row"><span>Btn radius</span><span>12px</span></div>
+  <div class="row"><span>Shadow</span><span>card · lift</span></div>
+
+  <h4>Thumbnail</h4>
+  <div class="row"><span>Ratio</span><span>16:10</span></div>
+  <div class="row"><span>Radius</span><span>12px</span></div>
+  <div class="row"><span>Grid</span><span>3 × 2</span></div>
+
+  <hr/>
+  <h4>Primitives</h4>
+  <p class="note">① PromptCard ② Button (ghost / accent) ③ Tile ④ MiniSlide ⑤ SectionHead ⑥ SpecRow. Page is composed only of these six.</p>
+</aside>
+
+<!-- ============ PAGE ============ -->
+<div class="page">
+
+  <!-- top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark"></div>
+      <div class="name">Compose</div>
+    </div>
+    <nav class="topnav">
+      <a href="#" class="active">Home</a>
+      <a href="#">Compose</a>
+      <a href="#">Templates</a>
+    </nav>
+    <div class="avatar"></div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="greeting rise"><span class="dot"></span>Good morning, Lisa</div>
+    <h1 class="display rise d1">Start with a sentence.<br><span class="soft">We build the deck.</span></h1>
+    <p class="subhead rise d2">Describe what you want to present. Compose drafts the structure, writes the slides, and designs every page.</p>
+
+    <!-- ① PROMPT CARD primitive -->
+    <div class="prompt rise d2">
+      <div class="field">
+        <textarea placeholder="Describe the deck you want to create…  e.g. A Series A pitch for an AI document platform, 12 slides, confident and investor-ready."></textarea>
+      </div>
+      <div class="actionrow">
+        <div class="actions-left">
+          <button class="ghost" type="button">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Customize
+          </button>
+          <button class="ghost" type="button">
+            <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            Add files <span class="meta">PDF, PPTX, notes</span>
+          </button>
+        </div>
+        <button class="generate" type="button">
+          <svg viewBox="0 0 24 24"><path d="M12 3l2.09 6.26L20 11l-5.91 1.74L12 19l-2.09-6.26L4 11l5.91-1.74z"></path></svg>
+          Generate
+          <kbd>⌘↵</kbd>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECENT -->
+  <section class="section">
+    <div class="sectionhead">
+      <h2>Recent <span class="count">· 6</span></h2>
+      <a href="#">View all <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+
+    <div class="grid">
+
+      <!-- 1 -->
+      <article class="tile">
+        <div class="thumb">
+          <div class="slide cover-pitch">
+            <div class="accentbar"></div>
+            <div class="s-eyebrow">Confidential · 2026</div>
+            <div class="s-title">Series A<br>Pitch</div>
+            <div class="s-foot"><span class="s-dot"></span>Atlas · Seed to Series A</div>
+          </div>
+        </div>
+        <div class="tilemeta">
+          <div class="tilename">Series A Pitch</div>
+          <div class="tilesub">14 slides<span class="dotsep">·</span>Edited 2h ago</div>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="tile">
+        <div class="thumb">
+          <div class="slide cover-gtm">
+            <div class="s-eyebrow">Quarterly Plan</div>
+            <div class="s-title">Q3 Go-to-<br>Market</div>
+            <div class="s-rule"></div>
+            <div class="metrics">
+              <div class="mtile"><div class="n">+38%</div><div class="l"></div></div>
+              <div class="mtile"><div class="n">2.4×</div><div class="l"></div></div>
+            </div>
+            <div class="s-foot"><span class="s-dot"></span>Revenue Org</div>
+          </div>
+        </div>
+        <div class="tilemeta">
+          <div class="tilename">Q3 Go-to-Market</div>
+          <div class="tilesub">18 slides<span class="dotsep">·</span>Edited yesterday</div>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="tile">
+        <div class="thumb">
+          <div class="slide cover-brand">
+            <div class="s-eyebrow">Identity System</div>
+            <div class="s-title">Brand<br>Guidelines</div>
+            <div class="swatches">
+              <div class="swatch" style="background:#6B3FA0"></div>
+              <div class="swatch" style="background:#F0A8F2"></div>
+              <div class="swatch" style="background:#1A1714"></div>
+              <div class="swatch" style="background:#9CC4FE"></div>
+            </div>
+            <div class="s-foot">2026 Edition</div>
+          </div>
+        </div>
+        <div class="tilemeta">
+          <div class="tilename">Brand Guidelines 2026</div>
+          <div class="tilesub">26 slides<span class="dotsep">·</span>Edited 3 days ago</div>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="tile">
+        <div class="thumb">
+          <div class="slide cover-onb">
+            <div class="lp">
+              <div class="s-eyebrow">People Ops</div>
+              <div class="s-title">Onboarding<br>Playbook</div>
+              <div class="steps">
+                <div class="step"><span class="b">1</span>Welcome &amp; setup</div>
+                <div class="step"><span class="b">2</span>First 30 days</div>
+                <div class="step"><span class="b">3</span>Team &amp; tools</div>
+              </div>
+            </div>
+            <div class="rp"><div class="pin"></div></div>
+          </div>
+        </div>
+        <div class="tilemeta">
+          <div class="tilename">Onboarding Playbook</div>
+          <div class="tilesub">11 slides<span class="dotsep">·</span>Edited 4 days ago</div>
+        </div>
+      </article>
+
+      <!-- 5 -->
+      <article class="tile">
+        <div class="thumb">
+          <div class="slide cover-sus">
+            <div class="leaf"></div>
+            <div class="ring"></div>
+            <div class="s-eyebrow">Impact &amp; ESG</div>
+            <div class="s-title">Sustainability<br>Report</div>
+            <div class="s-foot"><span class="s-dot"></span>Fiscal Year 2026</div>
+          </div>
+        </div>
+        <div class="tilemeta">
+          <div class="tilename">Sustainability Report 2026</div>
+          <div class="tilesub">22 slides<span class="dotsep">·</span>Edited last week</div>
+        </div>
+      </article>
+
+      <!-- 6 -->
+      <article class="tile">
+        <div class="thumb">
+          <div class="slide cover-launch">
+            <div class="halo"></div>
+            <div class="s-eyebrow">Introducing</div>
+            <div class="s-title">Product Launch</div>
+            <div class="s-rule"></div>
+            <div class="s-foot">Atlas</div>
+          </div>
+        </div>
+        <div class="tilemeta">
+          <div class="tilename">Product Launch — Atlas</div>
+          <div class="tilesub">9 slides<span class="dotsep">·</span>Edited last week</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</div>
+
+<div class="cornerlabel">D3 · System &amp; Spec</div>
+
+<script>
+  // Prompt textarea autosize — the only behavior on the page.
+  const ta = document.querySelector('.prompt textarea');
+  const grow = () => { ta.style.height = 'auto'; ta.style.height = Math.max(76, ta.scrollHeight) + 'px'; };
+  ta.addEventListener('input', grow);
+</script>
+</body>
+</html>

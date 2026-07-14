@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  COMPOSE — Slide Generation Page Redesign
+  OPTION 4 · MANAGER RECOMMENDATION (synthesis of Designers 1, 2, 3)  ·  2026-05-31
+  ============================================================================
+
+  THE SYNTHESIS
+  The three designers converged on the same diagnosis (a four-way colour fight
+  in the control row) but split on the cure. This recommendation takes the
+  strongest move from each and resolves the one place they disagreed.
+
+  ADOPTED FROM DESIGNER 3 (UI Spec) — THE BACKBONE.
+    The `.ctl` token discipline is the skeleton of this build: one primitive,
+    five instances. 32px tall, 10px radius, glass rgba(255,255,255,.62) +
+    blur(14px), slate-700 (#334155) / 0.82rem / 600 text, slate-500 16px
+    monochrome Lucide icons, hairline slate border. Colour = state, not
+    decoration: `.is-active` (open / ON / chosen) is the ONLY place a secondary
+    control gains the violet accent. Exact tokens reused verbatim.
+
+  ADOPTED FROM DESIGNER 1 (Visual) — RESERVED ACCENT + GENERATE FOCUS.
+    Violet is spent on exactly two things: the Generate CTA and `.is-active`
+    states. Generate is the SOLE saturated element and lives ALONE on its own
+    row — the unmistakable focal point. Theme's identity becomes a small 3-dot
+    swatch trio, not a rainbow gradient badge. The auto-image switch ON-state
+    is read by position FIRST (knob slides right), colour second (colour-blind
+    safe). All colored icon badges deleted.
+
+  ADOPTED FROM DESIGNER 2 (UX Flow) — HIERARCHY + CALM, WITHOUT HIDING.
+    The page is tiered: PRIMARY (prompt + Generate) glows; the SECONDARY
+    control family is calm, neutral, subordinate. The eye lands on the prompt,
+    fills it, drops to Generate — nothing competes between them (P-UX10).
+
+  THE ONE CONTESTED CALL — ENABLER STAYS VISIBLE.
+    Designer 2 collapsed Upload + Auto-images + Customize behind an "Options"
+    disclosure. We DECLINE that for the auto-image switch: PM Lisa explicitly
+    wants the auto-image enabler VISIBLE in the generation stage, not hidden
+    behind a click. So we keep Designer 2's calm hierarchy but achieve it
+    through visual subordination (neutral family, secondary rail) rather than
+    progressive disclosure. Every control stays on the rail — no "Options"
+    collapse. Calm is earned by colour discipline, not by hiding.
+
+  ACCESSIBILITY (HIG + CLAUDE.md checklists).
+    Control text slate-700 #334155 on glass ≥ 4.5:1. CTA text violet-950
+    #2e1065 on the kit gradient clears WCAG AA Normal (5.19–8.75:1 across
+    stops, per CLAUDE.md kit note). Every control has a 44px hit-area via a
+    ::before inset overlay (32px visual). 2px violet focus-visible ring on all
+    interactive elements. Switch is role="switch" + aria-checked, state never
+    by colour alone (knob position + "On"/"Off" text). prefers-reduced-motion
+    collapses all transitions to instant.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Compose — Slide Generation (Option 4 · Manager Recommendation)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    /* ---- WASH (Compose lavender) -------------------------------------- */
+    --wash-1:#f9f6ff; --wash-2:#f4f0ff; --wash-3:#eef3ff;
+
+    /* ---- NEUTRAL CONTROL FAMILY (adopted from Designer 3 verbatim) ----- */
+    --ctl-bg: rgba(255,255,255,0.62);
+    --ctl-bg-hover: rgba(255,255,255,0.9);
+    --ctl-border: rgba(15,23,42,0.10);
+    --ctl-border-hover: rgba(15,23,42,0.18);
+    --ctl-text: #334155;          /* slate-700 — ≥4.5:1 on glass */
+    --ctl-icon: #64748b;          /* slate-500 */
+
+    /* ---- THE ONE ACCENT — AI violet. State + CTA states ONLY ----------- */
+    --violet: #6B3FA0;
+    --violet-bright: #8B5CF6;
+    --violet-700: #6d28d9;
+    --violet-950: #2e1065;        /* CTA text — WCAG AA on kit gradient */
+    --accent-tint-bg: rgba(139,92,246,0.12);
+    --accent-tint-border: rgba(107,63,160,0.45);
+    --accent-text: #4a3270;
+
+    /* ---- KIT CTA GRADIENT (CLAUDE.md "Compose Design System") ---------- */
+    --cta-pink:#E267E4; --cta-lblue:#9FC7FE; --cta-blue:#4198FF;
+
+    /* ---- METRICS ------------------------------------------------------- */
+    --h-ctl: 32px;
+    --radius-ctl: 10px;
+    --radius-card: 18px;
+    --radius-cta: 12px;
+    --fs-label: 0.82rem;
+    --fw-label: 600;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin:0; font-family:'Inter',system-ui,sans-serif; color:#1a1f36;
+    background: linear-gradient(150deg, var(--wash-1) 0%, var(--wash-2) 45%, var(--wash-3) 100%);
+    min-height:100vh; -webkit-font-smoothing:antialiased;
+  }
+
+  /* ============ HEADER BAND — "MANAGER RECOMMENDATION" ================== */
+  .band {
+    background: linear-gradient(135deg, rgba(107,63,160,0.09), rgba(139,92,246,0.05));
+    border-bottom:1px solid rgba(107,63,160,0.14);
+    padding:20px 32px;
+  }
+  .band .badge {
+    display:inline-block; font-size:0.66rem; font-weight:700; letter-spacing:0.08em;
+    text-transform:uppercase; color:#fff; background:linear-gradient(135deg,var(--violet),var(--violet-bright));
+    border-radius:6px; padding:4px 10px; margin-bottom:10px;
+  }
+  .band h1 { margin:0 0 8px; font-size:1rem; font-weight:700; color:var(--violet); letter-spacing:-0.01em; }
+  .band ul { margin:6px 0 0; padding-left:18px; columns:2; column-gap:44px; }
+  .band li { font-size:0.78rem; line-height:1.55; color:#475569; margin-bottom:3px; break-inside:avoid; }
+  .band b { color:#1a1f36; }
+  .band .from { font-weight:700; color:var(--violet-700); }
+  .band code { font-size:0.72rem; background:rgba(15,23,42,0.05); padding:1px 5px; border-radius:4px; color:#334155; }
+
+  /* ============ THE PRIMITIVE: .ctl (one control family) =============== */
+  /* (token discipline adopted from Designer 3) */
+  .ctl {
+    position:relative;
+    display:inline-flex; align-items:center; gap:0.45rem;
+    height:var(--h-ctl); padding:0 0.7rem;
+    border-radius:var(--radius-ctl);
+    background:var(--ctl-bg);
+    border:1px solid var(--ctl-border);
+    backdrop-filter:blur(14px) saturate(1.05);
+    -webkit-backdrop-filter:blur(14px) saturate(1.05);
+    font-family:inherit; font-size:var(--fs-label); font-weight:var(--fw-label);
+    color:var(--ctl-text); cursor:pointer;
+    transition:background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+  .ctl svg { width:16px; height:16px; color:var(--ctl-icon); stroke-width:2; flex:none; }
+  /* 44px tap target via invisible inset overlay (a11y) */
+  .ctl::before { content:''; position:absolute; inset:-6px; }
+  .ctl:hover {
+    background:var(--ctl-bg-hover); border-color:var(--ctl-border-hover);
+    transform:translateY(-1px); box-shadow:0 2px 8px rgba(15,23,42,0.08);
+  }
+  .ctl:focus-visible { outline:2px solid var(--violet-bright); outline-offset:2px; }
+
+  /* ACTIVE / ON modifier — the ONLY place a secondary control gains colour */
+  .ctl.is-active {
+    background:var(--accent-tint-bg);
+    border-color:var(--accent-tint-border);
+    color:var(--accent-text);
+  }
+  .ctl.is-active svg { color:var(--violet); }
+  .ctl .chev { width:12px; height:12px; color:var(--ctl-icon); transition:transform 150ms ease; }
+  .ctl.is-active .chev { color:var(--violet); transform:rotate(180deg); }
+
+  /* ---- Stepper: same family, internal +/- buttons (Designer 3) -------- */
+  .stepper { padding:0 0.35rem 0 0.7rem; gap:0.15rem; }
+  .stepper .lbl { margin-right:0.25rem; }
+  .stepper .val { min-width:1.1rem; text-align:center; font-weight:700; font-size:0.88rem; color:#1a1f36; }
+  .step-btn {
+    position:relative;
+    width:24px; height:24px; border:none; background:transparent; border-radius:6px;
+    color:var(--ctl-text); font-size:1rem; line-height:1; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; font-family:inherit; transition:background 120ms ease;
+  }
+  .step-btn::before { content:''; position:absolute; inset:-10px -4px; } /* 44px hit */
+  .step-btn:hover { background:rgba(15,23,42,0.06); }
+  .step-btn:focus-visible { outline:2px solid var(--violet-bright); outline-offset:1px; }
+
+  /* ---- The Switch (auto-image enabler) — real track + sliding knob ----- */
+  .switch-ctl { padding-right:0.7rem; }
+  .switch {
+    position:relative; width:36px; height:20px; border-radius:999px;
+    background:#cbd5e1; transition:background 180ms ease; flex:none;
+  }
+  .switch .thumb {
+    position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%;
+    background:#fff; box-shadow:0 1px 2px rgba(15,23,42,0.25); transition:left 180ms ease;
+  }
+  .ctl.is-active .switch { background:var(--violet-bright); }
+  .ctl.is-active .switch .thumb { left:18px; }
+  .switch-ctl .on-flag { color:var(--violet); font-weight:700; font-size:0.76rem; }
+  .switch-ctl .off-flag { color:var(--ctl-icon); font-weight:700; font-size:0.76rem; }
+
+  /* ---- Theme 3-dot swatch trio (adopted from Designer 1) -------------- */
+  .swatch-trio { display:inline-flex; gap:2px; align-items:center; }
+  .swatch-trio span { width:9px; height:9px; border-radius:50%; display:inline-block; }
+
+  /* ============ PRIMARY CTA — kit gradient, the ONE bold colour ========= */
+  /* (kept ALONE on its own row, Designer 1's focus treatment) */
+  .cta {
+    display:inline-flex; align-items:center; justify-content:center; gap:0.55rem;
+    height:48px; padding:0 2.1rem; border:none; border-radius:var(--radius-cta);
+    font-family:inherit; font-size:1rem; font-weight:700; letter-spacing:-0.01em;
+    color:var(--violet-950); cursor:pointer;
+    background:linear-gradient(100deg, var(--cta-pink) 0%, var(--cta-lblue) 50%, var(--cta-blue) 100%);
+    box-shadow:0 6px 20px rgba(124,58,237,0.24);
+    transition:transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+  }
+  .cta:hover { transform:translateY(-1px); box-shadow:0 10px 28px rgba(124,58,237,0.32); filter:brightness(1.03); }
+  .cta:focus-visible { outline:2px solid var(--violet-bright); outline-offset:3px; }
+  .cta svg { width:18px; height:18px; color:var(--violet-950); stroke-width:2.2; }
+
+  /* ============ PAGE LAYOUT ============================================ */
+  .page { max-width:780px; margin:0 auto; padding:4rem 2rem 5rem; text-align:center; }
+
+  .eyebrow { font-size:0.72rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; margin-bottom:14px; }
+  .title { font-size:2.4rem; font-weight:700; color:#1a1f36; margin:0 0 0.5rem; letter-spacing:-0.02em; line-height:1.12; }
+  .subtitle { font-size:1rem; color:#697386; margin:0 0 2rem; }
+
+  /* Inspire row */
+  .inspire-row { display:flex; align-items:center; justify-content:center; gap:0.625rem; margin:0 0 0.9rem; flex-wrap:wrap; }
+  .inspire-btn {
+    display:inline-flex; align-items:center; gap:0.45rem; height:var(--h-ctl); padding:0 0.95rem;
+    border-radius:var(--radius-ctl); cursor:pointer; font-family:inherit;
+    font-size:var(--fs-label); font-weight:600; color:var(--violet);
+    background:linear-gradient(135deg, rgba(107,63,160,0.08), rgba(139,92,246,0.13));
+    border:1px solid rgba(107,63,160,0.22); transition:all 150ms ease;
+  }
+  .inspire-btn:hover { transform:translateY(-1px); box-shadow:0 2px 8px rgba(107,63,160,0.18); }
+  .inspire-btn:focus-visible { outline:2px solid var(--violet-bright); outline-offset:2px; }
+  .inspire-btn svg { width:14px; height:14px; }
+
+  /* ---- PROMPT CARD (PRIMARY tier — glows) ----------------------------- */
+  .prompt-card {
+    text-align:left;
+    border-radius:var(--radius-card);
+    background:rgba(255,255,255,0.86); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(148,163,184,0.22);
+    box-shadow:0 8px 36px rgba(76,29,149,0.07), 0 1px 2px rgba(0,0,0,0.03);
+    padding:1.4rem 1.5rem 1rem;
+  }
+  .prompt-card textarea {
+    width:100%; min-height:88px; border:none; background:transparent; resize:none;
+    font-family:inherit; font-size:1rem; line-height:1.6; color:#1a1f36; outline:none;
+  }
+  .prompt-card textarea::placeholder { color:#94a3b8; }
+
+  /* The control ROW — single neutral family, subordinate to the prompt */
+  .ctl-row {
+    border-top:1px solid rgba(15,23,42,0.07); padding-top:0.85rem; margin-top:0.6rem;
+    display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;
+  }
+  .spacer { flex:1; }
+
+  /* PRIMARY action — alone on its own row (Designer 1) */
+  .generate-row { display:flex; justify-content:flex-end; margin-top:1.6rem; }
+
+  /* ---- Inspire / framework cards (calm, quiet — Designer 1) ------------ */
+  .inspire-head {
+    margin:3rem auto 1rem; font-size:0.72rem; font-weight:600; letter-spacing:0.08em;
+    text-transform:uppercase; color:#94a3b8; text-align:left;
+  }
+  .inspire-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+  .inspire-card {
+    text-align:left; background:rgba(255,255,255,0.55);
+    border:1px solid transparent; border-radius:14px; padding:1rem 1.1rem; cursor:pointer;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    transition:border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease; font-family:inherit;
+  }
+  .inspire-card:hover { border-color:rgba(107,63,160,0.22); transform:translateY(-2px); box-shadow:0 8px 22px rgba(76,29,149,0.08); }
+  .inspire-card:focus-visible { outline:2px solid var(--violet-bright); outline-offset:2px; }
+  .ic-icon { width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; background:rgba(107,63,160,0.07); margin-bottom:0.6rem; }
+  .ic-icon svg { width:16px; height:16px; color:var(--violet); stroke-width:2; }
+  .ic-title { font-size:0.86rem; font-weight:600; color:#1a1f36; margin-bottom:0.2rem; }
+  .ic-sub { font-size:0.8rem; color:#64748b; line-height:1.45; }
+
+  /* ---- annotations (prototype only) ----------------------------------- */
+  .ann {
+    font-size:0.72rem; color:var(--violet-700); font-weight:500; line-height:1.5;
+    background:rgba(124,58,237,0.06); border:1px dashed rgba(124,58,237,0.28);
+    border-radius:8px; padding:7px 11px; margin:0.75rem 0 0;
+  }
+  .ann b { color:#1a1f36; }
+  .ann .from { font-weight:700; color:var(--violet-700); }
+
+  /* ---- switch state showcase ------------------------------------------ */
+  .states { display:flex; gap:1.25rem; align-items:flex-start; text-align:left; margin-top:2.6rem; }
+  .state-box { flex:1; background:rgba(255,255,255,0.55); border:1px solid rgba(148,163,184,0.22); border-radius:14px; padding:1.1rem 1.2rem; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .state-box h4 { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:#94a3b8; margin:0 0 0.8rem; font-weight:700; }
+  .state-box p { font-size:0.78rem; color:#64748b; margin:0.8rem 0 0; line-height:1.5; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ MANAGER RECOMMENDATION header band ============ -->
+  <div class="band">
+    <span class="badge">Manager Recommendation · Option 4</span>
+    <h1>Synthesis — one neutral control family, one reserved accent, the enabler stays visible</h1>
+    <ul>
+      <li><span class="from">From Designer 3 (UI Spec):</span> the <b><code>.ctl</code> token discipline</b> is the backbone — one primitive, five instances (32px, 10px radius, glass <code>rgba(255,255,255,.62)</code>, slate-700 / 0.82rem / 600, monochrome slate-500 icons). Colour = state, never decoration.</li>
+      <li><span class="from">From Designer 1 (Visual):</span> violet is <b>reserved</b> for the Generate CTA + <code>.is-active</code> states only. Generate sits <b>alone on its own row</b> as the sole saturated focal point. Theme = a small <b>3-dot swatch trio</b>, not a rainbow badge.</li>
+      <li><span class="from">From Designer 2 (UX Flow):</span> a clear <b>hierarchy</b> — prompt + Generate are PRIMARY and glow; the control family is calm and subordinate. The eye flows prompt → Generate with nothing competing (P-UX10).</li>
+      <li><b>The contested call — enabler stays visible.</b> We DECLINE Designer 2's "Options" disclosure for the auto-image switch: <b>PM Lisa wants the enabler visible in the generation stage</b>. Calm is achieved by colour discipline + visual subordination, NOT by hiding controls.</li>
+      <li><b>Accessibility:</b> control text <code>#334155</code> ≥ 4.5:1 on glass; CTA text <code>#2e1065</code> clears WCAG AA on the kit gradient; 44px hit-areas via <code>::before</code>; 2px violet focus rings; switch is <code>role="switch"</code> with state by position + text (never colour alone); <code>prefers-reduced-motion</code> honoured.</li>
+    </ul>
+  </div>
+
+  <!-- ============ THE REDESIGNED PAGE ============ -->
+  <div class="page">
+    <div class="eyebrow">New presentation</div>
+    <h1 class="title">What would you like to create?</h1>
+    <p class="subtitle">Type your topic, upload notes, or describe what you need.</p>
+
+    <!-- Inspire affordance -->
+    <div class="inspire-row">
+      <button class="inspire-btn" type="button"><i data-lucide="sparkles"></i> Inspire Me</button>
+    </div>
+
+    <!-- PROMPT CARD — PRIMARY tier -->
+    <div class="prompt-card">
+      <textarea placeholder="Paste your notes, outline, or describe what you'd like to create…">Q1 marketing review for the leadership team — what we shipped, the pipeline impact, and where we're focusing next quarter.</textarea>
+
+      <!-- THE CONTROL ROW — one neutral family, accent reserved for state -->
+      <div class="ctl-row">
+
+        <!-- Upload (neutral — NO blue badge) [from Designer 1: badge deleted] -->
+        <button class="ctl" type="button" aria-label="Upload a reference file">
+          <i data-lucide="upload"></i> Upload
+        </button>
+
+        <div class="spacer"></div>
+
+        <!-- Slides stepper (neutral, same family) [from Designer 3: .ctl.stepper] -->
+        <div class="ctl stepper" role="group" aria-label="Slide count">
+          <span class="lbl">Slides</span>
+          <button class="step-btn" type="button" aria-label="Fewer slides">−</button>
+          <span class="val">8</span>
+          <button class="step-btn" type="button" aria-label="More slides">+</button>
+        </div>
+
+        <!-- Auto-image ENABLER — real switch, VISIBLE, shown ON -->
+        <!-- [contested call: kept on the rail, NOT hidden — PM Lisa] -->
+        <button class="ctl switch-ctl is-active" type="button" role="switch" aria-checked="true"
+                aria-label="Auto-generate images during slide creation">
+          <i data-lucide="image"></i>
+          <span>Auto images</span>
+          <span class="on-flag">On</span>
+          <span class="switch" aria-hidden="true"><span class="thumb"></span></span>
+        </button>
+
+        <!-- Customize — neutral default (no violet badge) [from Designer 1: badge deleted] -->
+        <button class="ctl" type="button" aria-haspopup="menu" aria-expanded="false">
+          <i data-lucide="sliders-horizontal"></i> Customize
+          <i data-lucide="chevron-down" class="chev"></i>
+        </button>
+
+        <!-- Theme — 3-dot swatch trio (no rainbow badge) [from Designer 1] -->
+        <!-- is-active because a theme is chosen -->
+        <button class="ctl is-active" type="button" aria-label="Change theme: Counsel">
+          <span class="swatch-trio" aria-hidden="true">
+            <span style="background:#0f172a"></span>
+            <span style="background:#6B3FA0"></span>
+            <span style="background:#cbd5e1"></span>
+          </span>
+          Counsel
+          <i data-lucide="chevron-down" class="chev"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- PRIMARY action — ALONE on its own row, the only bold colour [Designer 1] -->
+    <div class="generate-row">
+      <button class="cta" type="button"><i data-lucide="sparkles"></i> Generate</button>
+    </div>
+
+    <div class="ann">
+      <b>Why the row reads calm:</b> every secondary control shares ONE skin (slate ink · glass · no colored badges).
+      Theme states "colour picker" via a 3-dot swatch <span class="from">[Designer 1]</span> instead of a competing rainbow.
+      The Generate CTA is physically separated onto its own row and carries the only saturated colour — the unmistakable focal point.
+      The auto-image switch sits right there on the rail, visible — not hidden behind a disclosure <span class="from">[Manager call: PM Lisa]</span>.
+    </div>
+
+    <!-- AUTO-IMAGE SWITCH — both states annotated [synthesis: D1 form + D3 tokens] -->
+    <div class="states">
+      <div class="state-box">
+        <h4>Auto-image enabler — OFF (default)</h4>
+        <button class="ctl switch-ctl" type="button" role="switch" aria-checked="false"
+                aria-label="Auto-generate images during slide creation">
+          <i data-lucide="image"></i>
+          <span>Auto images</span>
+          <span class="off-flag">Off</span>
+          <span class="switch" aria-hidden="true"><span class="thumb"></span></span>
+        </button>
+        <p>Calm slate track, knob left, label reads "Off" — opt-in, defaults OFF (P-UX10 Calm Default). No violet, no badge: it sits quietly with its neutral siblings <span style="color:var(--violet-700);font-weight:600">[D3 tokens · D1 calm-default form]</span>.</p>
+      </div>
+      <div class="state-box">
+        <h4>Auto-image enabler — ON</h4>
+        <button class="ctl switch-ctl is-active" type="button" role="switch" aria-checked="true"
+                aria-label="Auto-generate images during slide creation">
+          <i data-lucide="image"></i>
+          <span>Auto images</span>
+          <span class="on-flag">On</span>
+          <span class="switch" aria-hidden="true"><span class="thumb"></span></span>
+        </button>
+        <p>Knob slides right, track turns violet (the AI behavior), the word "On" appears. State is read by POSITION first — legible without colour (colour-blind safe; HIG: never colour alone) <span style="color:var(--violet-700);font-weight:600">[D1 position-led form]</span>.</p>
+      </div>
+    </div>
+
+    <!-- INSPIRE / FRAMEWORK CARDS [from Designer 1: quiet glass tiles] -->
+    <div class="inspire-head">Need a starting point?</div>
+    <div class="inspire-grid">
+      <button class="inspire-card" type="button">
+        <div class="ic-icon"><i data-lucide="trending-up"></i></div>
+        <div class="ic-title">Quarterly review</div>
+        <div class="ic-sub">Results, pipeline, and next-quarter focus for leadership.</div>
+      </button>
+      <button class="inspire-card" type="button">
+        <div class="ic-icon"><i data-lucide="book-open"></i></div>
+        <div class="ic-title">New-hire onboarding</div>
+        <div class="ic-sub">Orientation, training steps, and first-week goals.</div>
+      </button>
+      <button class="inspire-card" type="button">
+        <div class="ic-icon"><i data-lucide="rocket"></i></div>
+        <div class="ic-title">Investor pitch</div>
+        <div class="ic-sub">Problem, solution, traction, and the ask — for a board meeting.</div>
+      </button>
+    </div>
+
+    <div class="ann" style="margin-top:1.1rem">
+      <b>Inspire cards stay quiet too</b> <span class="from">[Designer 1]</span>: near-transparent glass tiles, a single faint-violet icon chip each.
+      They suggest, they don't shout — the violet only blooms on hover, echoing the AI accent without adding a competing colour at rest.
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    // Demo only: let reviewers feel the on/off switch model.
+    document.querySelectorAll('.switch-ctl[role="switch"]').forEach(function (sw) {
+      sw.addEventListener('click', function () {
+        var on = sw.getAttribute('aria-checked') === 'true';
+        sw.setAttribute('aria-checked', String(!on));
+        sw.classList.toggle('is-active', !on);
+        var flag = sw.querySelector('.on-flag, .off-flag');
+        if (flag) {
+          flag.textContent = !on ? 'On' : 'Off';
+          flag.className = !on ? 'on-flag' : 'off-flag';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

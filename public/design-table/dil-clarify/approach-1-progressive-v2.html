@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DIL Clarify — Approach 1: Progressive Interview (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Kit gradient palette */
+    --pink: #F0A8F2;
+    --lavender: #C8B6F4;
+    --sky: #9CC4FE;
+    --magenta: #E267E4;
+    --light-blue: #9FC7FE;
+    --mid-blue: #4198FF;
+    --deep-violet: #3B2856;
+    --violet-950: #2e1065;
+    --foxit-purple: #6B3FA0;
+
+    --ink: #0f172a;
+    --ink-2: #1e293b;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+    --violet-700: #6d28d9;
+    --violet-600: #7c3aed;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The page behind the modal — a faint "Generate" surface so the modal reads
+     as an overlay, matching how Clarify actually appears in /editor/slides. */
+  body {
+    background:
+      radial-gradient(900px 500px at 18% -10%, rgba(240,168,242,0.20), transparent 60%),
+      radial-gradient(900px 600px at 90% 0%, rgba(156,196,254,0.22), transparent 55%),
+      linear-gradient(160deg, #f9f6ff 0%, #f4f0ff 45%, #eef3ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  /* faint context behind the overlay */
+  .stage-hint {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+  }
+  .stage-hint .ghost-prompt {
+    width: 540px;
+    max-width: 88vw;
+    height: 120px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 12px 40px rgba(99,102,241,0.10);
+  }
+  .stage-hint .ghost-btn {
+    width: 150px; height: 40px; border-radius: 11px;
+    background: linear-gradient(90deg, var(--magenta), var(--light-blue), var(--mid-blue));
+  }
+
+  /* ── Backdrop ───────────────────────────────────────────────── */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(107,63,160,0.18), rgba(15,23,42,0.42) 65%);
+    -webkit-backdrop-filter: blur(8px) saturate(1.05);
+    backdrop-filter: blur(8px) saturate(1.05);
+    animation: backdrop-in 220ms ease-out;
+  }
+
+  /* ── Modal shell (glass-card) ───────────────────────────────── */
+  .modal {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 48px);
+    background: rgba(255,255,255,0.92);
+    -webkit-backdrop-filter: blur(20px) saturate(1.08);
+    backdrop-filter: blur(20px) saturate(1.08);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 20px;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.04),
+      0 20px 60px rgba(99,102,241,0.18),
+      0 8px 24px rgba(107,63,160,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: modal-in 280ms cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .accent-strip {
+    flex-shrink: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--pink) 0%, var(--lavender) 50%, var(--sky) 100%);
+    opacity: 0.85;
+  }
+
+  .scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* ── Top bar — compact "1/2" step marker + close ────────────── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px 0;
+  }
+  /* minimal step count, quiet, top-left */
+  .stepcount {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--slate-400);
+    font-variant-numeric: tabular-nums;
+  }
+  .stepcount b { color: var(--violet-700); }
+
+  .close-btn {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    margin: -6px -6px 0 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: none; border-radius: 10px;
+    color: var(--slate-400); cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .close-btn:hover { background: rgba(15,23,42,0.05); color: var(--ink); }
+  .close-btn:focus-visible { outline: 2px solid var(--foxit-purple); outline-offset: 2px; }
+
+  /* ── Question stage ─────────────────────────────────────────── */
+  .stage {
+    padding: 14px 30px 6px;
+    min-height: 200px;
+  }
+  .q-card { animation: q-in 360ms cubic-bezier(0.16,1,0.3,1); }
+
+  /* "thinking with me" eyebrow — the colleague signal */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--violet-700);
+    margin-bottom: 14px;
+  }
+  .eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--foxit-purple);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  /* adaptive follow-up callback — quotes the prior answer */
+  .callback {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 0 0 14px;
+    padding: 7px 13px;
+    font-size: 13px; font-weight: 500;
+    border-radius: 12px;
+    background: rgba(107,63,160,0.07);
+    color: var(--violet-700);
+    border: 1px solid rgba(124,58,237,0.16);
+  }
+  .callback b { font-weight: 600; }
+
+  .q-text {
+    margin: 0 0 22px;
+    font-size: 22px; font-weight: 600; line-height: 1.3;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+
+  /* chips */
+  .chips { display: flex; flex-direction: column; gap: 10px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    width: 100%;
+    min-height: 48px; padding: 12px 16px;
+    font-size: 15px; font-weight: 500;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--slate-200);
+    color: #334155; cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 200ms ease, transform 120ms ease;
+  }
+  .chip > span:first-child { flex: 1; }
+  .chip:hover { border-color: var(--lavender); transform: translateY(-1px); }
+  .chip:focus-visible { outline: 2px solid var(--foxit-purple); outline-offset: 2px; }
+  .chip.selected {
+    background: linear-gradient(135deg, rgba(240,168,242,0.14) 0%, rgba(200,182,244,0.12) 50%, rgba(156,196,254,0.14) 100%), #f5f3ff;
+    border-color: var(--foxit-purple);
+    color: var(--violet-700);
+    font-weight: 600;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 0 0 3px rgba(107,63,160,0.12), 0 4px 12px rgba(107,63,160,0.10);
+  }
+  .chip .check { display: inline-flex; width: 16px; height: 16px; color: var(--foxit-purple); flex: 0 0 auto; }
+  .chip.is-other { color: var(--slate-500); font-style: normal; }
+  .chip.is-other.selected { color: var(--violet-700); }
+
+  /* inline "Other…" text input, revealed only when Other is chosen */
+  .other-reveal {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 280ms cubic-bezier(0.16,1,0.3,1), opacity 220ms ease, margin-top 280ms ease;
+  }
+  .other-reveal.open {
+    max-height: 260px;
+    opacity: 1;
+    margin-top: 10px;
+  }
+  .other-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(248,250,252,0.85);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    color: var(--ink);
+    font-family: inherit; font-size: 16px; line-height: 1.5;
+    outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+  }
+  .other-input::placeholder { color: var(--slate-400); }
+  .other-input:focus {
+    background: #fff;
+    border-color: var(--foxit-purple);
+    box-shadow: 0 0 0 3px rgba(107,63,160,0.15);
+  }
+
+  /* ── AI suggestion pills (under any free-text input) ─────────── */
+  /* Quiet, optional starters. Violet AI accent, tiny sparkle lead-in. */
+  .ai-suggest {
+    margin-top: 10px;
+    animation: q-in 320ms cubic-bezier(0.16,1,0.3,1);
+  }
+  .ai-suggest .lead {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 8px;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.01em;
+    color: var(--violet-700);
+  }
+  .ai-suggest .lead svg { opacity: 0.9; }
+  .sugg-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sugg {
+    display: inline-flex; align-items: center;
+    max-width: 100%;
+    padding: 7px 12px;
+    font-size: 13px; font-weight: 500; line-height: 1.3;
+    text-align: left;
+    border-radius: 11px;
+    background: rgba(124,58,237,0.05);
+    border: 1px solid rgba(124,58,237,0.18);
+    color: var(--violet-700);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 150ms ease, border-color 150ms ease, box-shadow 180ms ease, transform 120ms ease;
+  }
+  .sugg:hover { background: rgba(124,58,237,0.09); border-color: rgba(124,58,237,0.32); transform: translateY(-1px); }
+  .sugg:focus-visible { outline: 2px solid var(--foxit-purple); outline-offset: 2px; }
+  .sugg.active {
+    background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(156,196,254,0.12));
+    border-color: var(--foxit-purple);
+    color: var(--violet-950);
+    font-weight: 600;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 0 2px rgba(107,63,160,0.10);
+  }
+
+  /* textarea (free-text questions) */
+  .ta-wrap { display: flex; flex-direction: column; gap: 8px; }
+  textarea.answer {
+    width: 100%; min-height: 96px;
+    padding: 13px 15px;
+    background: rgba(248,250,252,0.85);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    color: var(--ink);
+    font-family: inherit; font-size: 16px; line-height: 1.5;
+    resize: none; outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+  }
+  textarea.answer::placeholder { color: var(--slate-400); }
+  textarea.answer:focus {
+    background: #fff;
+    border-color: var(--foxit-purple);
+    box-shadow: 0 0 0 3px rgba(107,63,160,0.15);
+  }
+
+  /* ── "Ready" state ──────────────────────────────────────────── */
+  .ready { animation: q-in 360ms cubic-bezier(0.16,1,0.3,1); text-align: center; padding-top: 14px; }
+  .ready .seal {
+    width: 56px; height: 56px; margin: 0 auto 18px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--pink), var(--lavender), var(--sky));
+    box-shadow: 0 8px 24px rgba(156,196,254,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    color: var(--violet-950);
+    animation: seal-pop 420ms cubic-bezier(0.16,1,0.3,1);
+  }
+  .ready h3 { margin: 0 0 8px; font-size: 22px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+  .ready p { margin: 0 auto; max-width: 380px; font-size: 15px; line-height: 1.55; color: var(--slate-500); }
+
+  /* ── Footer ─────────────────────────────────────────────────── */
+  footer.foot {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px 22px;
+    background: rgba(255,255,255,0.6);
+    border-top: 1px solid var(--slate-100);
+  }
+  .btn-skip {
+    display: inline-flex; align-items: center;
+    height: 44px; padding: 0 12px;
+    background: transparent; border: none; border-radius: 10px;
+    color: var(--slate-500); font-size: 14px; font-weight: 500; cursor: pointer;
+    font-family: inherit;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .btn-skip span { text-decoration: underline; text-decoration-color: var(--slate-300); text-underline-offset: 3px; }
+  .btn-skip:hover { background: rgba(15,23,42,0.05); color: var(--ink); }
+  .btn-skip:focus-visible { outline: 2px solid var(--foxit-purple); outline-offset: 2px; }
+
+  .foot-right { display: inline-flex; align-items: center; gap: 12px; }
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 44px; padding: 0 14px;
+    background: transparent; border: 1px solid var(--slate-200); border-radius: 10px;
+    color: var(--slate-600); font-size: 14px; font-weight: 500; cursor: pointer;
+    font-family: inherit;
+    transition: all 150ms ease;
+  }
+  .btn-back:hover { border-color: var(--slate-300); background: rgba(15,23,42,0.03); color: var(--ink); }
+  .btn-back:focus-visible { outline: 2px solid var(--foxit-purple); outline-offset: 2px; }
+  .btn-back[hidden] { display: none; }
+
+  .btn-next {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 44px; padding: 0 20px; border: none; border-radius: 10px;
+    cursor: pointer; font-family: inherit;
+    background: linear-gradient(90deg, var(--magenta) 0%, var(--light-blue) 50%, var(--mid-blue) 100%);
+    color: var(--violet-950); font-size: 14px; font-weight: 600;
+    box-shadow: 0 4px 16px rgba(65,152,255,0.32), inset 0 1px 0 rgba(255,255,255,0.35);
+    transition: transform 150ms ease, box-shadow 200ms ease, opacity 150ms ease;
+  }
+  .btn-next:hover { transform: translateY(-1px); }
+  .btn-next:focus-visible { outline: 2px solid var(--violet-950); outline-offset: 2px; }
+  .btn-next:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* thinking shimmer for the adaptive transition */
+  .thinking {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; min-height: 200px; padding: 28px;
+    animation: q-in 200ms ease-out;
+  }
+  .thinking .orb {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--pink), var(--lavender), var(--sky), var(--magenta), var(--pink));
+    -webkit-mask: radial-gradient(circle 13px at center, transparent 99%, #000 100%);
+    mask: radial-gradient(circle 13px at center, transparent 99%, #000 100%);
+    animation: spin 1s linear infinite;
+  }
+  .thinking .label { font-size: 14px; font-weight: 500; color: var(--slate-500); }
+
+  /* ── keyframes ──────────────────────────────────────────────── */
+  @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(0.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes q-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.25); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes seal-pop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .other-reveal { transition: none !important; }
+  }
+
+  /* small screens */
+  @media (max-width: 520px) {
+    .q-text { font-size: 19px; }
+    .stage { padding-left: 22px; padding-right: 22px; }
+    .topbar { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- faint generation surface behind the overlay -->
+  <div class="stage-hint" aria-hidden="true">
+    <div class="ghost-prompt"></div>
+    <div class="ghost-btn"></div>
+  </div>
+
+  <!-- ── Clarify overlay ── -->
+  <div class="backdrop" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dlg-title">
+      <div class="accent-strip" aria-hidden="true"></div>
+
+      <div class="scroll">
+        <div class="topbar">
+          <!-- compact, quiet step marker, top-left -->
+          <span class="stepcount" id="stepcount" aria-label="Question 1 of 2"><b>1</b>/2</span>
+          <button class="close-btn" type="button" aria-label="Close and generate with what we have" onclick="skip()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- the one-question-at-a-time stage -->
+        <div class="stage" id="stage"><!-- JS renders steps here --></div>
+      </div>
+
+      <footer class="foot">
+        <button class="btn-skip" type="button" onclick="skip()"><span>Skip &amp; generate</span></button>
+        <div class="foot-right">
+          <button class="btn-back" type="button" id="backBtn" hidden onclick="back()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button class="btn-next" type="button" id="nextBtn" onclick="next()">
+            <span id="nextLabel">Continue</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+<script>
+/* ──────────────────────────────────────────────────────────────
+   Progressive Interview v2 — adaptive, one question at a time.
+   Decluttered: no plan strip, no progress bar, no "so I plan…" copy.
+   Compact "1/2" marker top-left. Every select question ends with an
+   "Other…" choice that progressively reveals an inline text input.
+   The SECOND question is GENERATED from the FIRST answer.
+   ────────────────────────────────────────────────────────────── */
+
+const CHECK = '<svg class="check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+const OTHER = 'Other…';
+
+// Step 1 — fixed (a plan-gap the DIL always needs for a Product Launch).
+// Concrete choices + "Other…" as the last option. No catch-all "None"/"Not sure".
+const STEP1 = {
+  id: 'motion',
+  eyebrow: 'Planning your Product Launch deck',
+  type: 'chips',
+  text: 'How do people actually get this product?',
+  options: [
+    'They sign up themselves',
+    'Our sales team walks them through it',
+    'A bit of both',
+  ],
+  // AI starters for the revealed "Other…" input — realistic launch motions.
+  suggest: [
+    'A free trial that converts to paid',
+    'Through a partner or reseller',
+    'Invite-only from existing customers',
+  ],
+};
+
+// Step 2 — ADAPTIVE. Built from the Step 1 answer at runtime.
+function buildStep2(motionAnswer) {
+  if (motionAnswer === 'They sign up themselves') {
+    return {
+      id: 'aha',
+      callback: 'Self-serve — so the first five minutes carry the launch.',
+      type: 'text',
+      text: 'What&rsquo;s the moment someone realizes it&rsquo;s working for them?',
+      placeholder: 'e.g. the first time they see all their files searchable in one place…',
+      suggest: [
+        'When their first task finishes in seconds',
+        'The first time they search and instantly find it',
+        'When they realize they don’t need the old tool anymore',
+      ],
+    };
+  }
+  if (motionAnswer === 'Our sales team walks them through it') {
+    return {
+      id: 'objection',
+      callback: 'Sales-led — so the deck has to clear the room&rsquo;s biggest doubt.',
+      type: 'text',
+      text: 'What&rsquo;s the one thing buyers push back on?',
+      placeholder: 'e.g. "is it actually faster than what we have?"…',
+      suggest: [
+        'Is it actually faster than what we have?',
+        'How hard is it to switch our team over?',
+        'Can we trust it with sensitive documents?',
+      ],
+    };
+  }
+  if (motionAnswer === 'A bit of both') {
+    return {
+      id: 'lead',
+      callback: 'A bit of both — so I&rsquo;ll lead with whichever lands fastest.',
+      type: 'text',
+      text: 'Which audience matters most for this launch?',
+      placeholder: 'e.g. individual users first, teams once they&rsquo;re hooked…',
+      suggest: [
+        'Individual users first, teams once they’re hooked',
+        'Team leads who can bring everyone along',
+        'Decision-makers who sign off on the budget',
+      ],
+    };
+  }
+  // The user typed their own motion via "Other…" — quote it back.
+  return {
+    id: 'custom',
+    callback: 'Got it: &ldquo;<b>' + escapeHtml(motionAnswer) + '</b>.&rdquo;',
+    type: 'text',
+    text: 'What should land hardest for that audience?',
+    placeholder: 'e.g. the one result that makes them say yes…',
+    suggest: [
+      'The one result that makes them say yes',
+      'How quickly they’ll see it pay off',
+      'Why now is the right moment to switch',
+    ],
+  };
+}
+
+const state = {
+  index: 0,          // 0 = step1, 1 = step2, 2 = ready
+  answers: {},       // id -> answer string (resolved final value)
+  otherText: {},     // id -> typed "Other…" text
+  isOther: {},       // id -> bool (is "Other…" the active choice)
+  suggMatch: {},     // id -> the suggestion string currently filled in (for active styling)
+  step2: null,       // lazily built
+};
+
+const stage = document.getElementById('stage');
+const nextBtn = document.getElementById('nextBtn');
+const nextLabel = document.getElementById('nextLabel');
+const backBtn = document.getElementById('backBtn');
+const stepcount = document.getElementById('stepcount');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function currentStep() {
+  if (state.index === 0) return STEP1;
+  if (state.index === 1) return state.step2;
+  return null; // ready
+}
+
+function setStepCount() {
+  if (state.index === 2) {
+    stepcount.innerHTML = 'Ready';
+    stepcount.setAttribute('aria-label', 'All set');
+    return;
+  }
+  const n = state.index + 1;
+  stepcount.innerHTML = '<b>' + n + '</b>/2';
+  stepcount.setAttribute('aria-label', 'Question ' + n + ' of 2');
+}
+
+function render() {
+  setStepCount();
+  backBtn.hidden = state.index === 0;
+
+  if (state.index === 2) { renderReady(); return; }
+
+  const step = currentStep();
+
+  let inner = `<div class="q-card">`;
+  if (step.eyebrow) {
+    inner += `<span class="eyebrow"><span class="dot" aria-hidden="true"></span>${step.eyebrow}</span>`;
+  }
+  if (step.callback) {
+    inner += `<div class="callback"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 5 5v1"/></svg><span>${step.callback}</span></div>`;
+  }
+  inner += `<h3 class="q-text">${step.text}</h3>`;
+
+  if (step.type === 'chips') {
+    inner += `<div class="chips" role="radiogroup" aria-label="${stripTags(step.text)}">`;
+    const otherActive = !!state.isOther[step.id];
+    step.options.forEach((opt, i) => {
+      const sel = !otherActive && state.answers[step.id] === opt;
+      const tab = (sel || (!state.answers[step.id] && !otherActive && i === 0)) ? 0 : -1;
+      inner += `<button type="button" role="radio" aria-checked="${sel}" tabindex="${tab}" class="chip${sel ? ' selected' : ''}" onclick="pickChip('${step.id}', this)" data-value="${escapeAttr(opt)}"><span>${opt}</span>${sel ? CHECK : ''}</button>`;
+    });
+    // "Other…" — always the last choice
+    inner += `<button type="button" role="radio" aria-checked="${otherActive}" tabindex="${otherActive ? 0 : -1}" class="chip is-other${otherActive ? ' selected' : ''}" onclick="pickOther('${step.id}', this)" data-value="${OTHER}"><span>${OTHER}</span>${otherActive ? CHECK : ''}</button>`;
+    inner += `</div>`;
+    // progressively-revealed inline input for "Other…"
+    inner += `<div class="other-reveal${otherActive ? ' open' : ''}" id="otherReveal">`;
+    inner += `<input class="other-input" id="otherInput" type="text" placeholder="Type your answer…" value="${escapeAttr(state.otherText[step.id] || '')}" oninput="typeOther('${step.id}', this.value)" aria-label="Your own answer" />`;
+    // AI starters under the Other… field — shown only while Other is open
+    if (otherActive) inner += suggestBlock(step, 'other');
+    inner += `</div>`;
+  } else {
+    inner += `<div class="ta-wrap"><textarea class="answer" rows="3" placeholder="${step.placeholder || 'Type a short note…'}" oninput="typeText('${step.id}', this.value)">${escapeAttr(state.answers[step.id] || '')}</textarea>`;
+    // AI starters directly beneath any text-type question
+    inner += suggestBlock(step, 'text');
+    inner += `</div>`;
+  }
+  inner += `</div>`;
+  stage.innerHTML = inner;
+
+  // focus management
+  if (step.type === 'text') {
+    const ta = stage.querySelector('textarea');
+    if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+  } else if (state.isOther[step.id]) {
+    const oi = document.getElementById('otherInput');
+    if (oi) { oi.focus(); oi.setSelectionRange(oi.value.length, oi.value.length); }
+  }
+  syncNext();
+}
+
+function syncNext() {
+  const step = currentStep();
+  if (!step) return;
+  const answered = !!(resolvedAnswer(step.id) && resolvedAnswer(step.id).trim());
+  // Calm default — never over-gate (P-UX10). Continue stays enabled; label nudges.
+  nextBtn.disabled = false;
+  if (state.index === 1) {
+    nextLabel.textContent = answered ? 'Build my deck' : 'Build it anyway';
+  } else {
+    nextLabel.textContent = 'Continue';
+  }
+}
+
+/* Build the quiet AI-suggestion block beneath a free-text input.
+   `kind` is 'text' (textarea question) or 'other' (revealed Other… field).
+   Suggestions are starters only — clicking fills the field, never locks it. */
+const SPARKLE = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>';
+
+function suggestBlock(step, kind) {
+  if (!step.suggest || !step.suggest.length) return '';
+  const cur = state.suggMatch[step.id] || '';
+  let s = `<div class="ai-suggest"><div class="sugg-row" role="group" aria-label="AI-suggested starting answers">`;
+  step.suggest.forEach((txt) => {
+    const active = cur === txt;
+    s += `<button type="button" class="sugg${active ? ' active' : ''}" aria-pressed="${active}" onclick="applySuggest('${step.id}','${kind}', this)" data-txt="${escapeAttr(txt)}">${escapeHtml(txt)}</button>`;
+  });
+  s += `</div></div>`;
+  return s;
+}
+
+// Fill the field with the suggestion. User can still edit afterwards.
+function applySuggest(id, kind, el) {
+  const txt = el.dataset.txt;
+  state.suggMatch[id] = txt;
+  if (kind === 'other') {
+    state.otherText[id] = txt;
+    const oi = document.getElementById('otherInput');
+    if (oi) { oi.value = txt; oi.focus(); oi.setSelectionRange(txt.length, txt.length); }
+  } else {
+    state.answers[id] = txt;
+    const ta = stage.querySelector('textarea');
+    if (ta) { ta.value = txt; ta.focus(); ta.setSelectionRange(txt.length, txt.length); }
+  }
+  // toggle active styling without a full re-render (keeps focus + caret)
+  stage.querySelectorAll('.sugg').forEach((b) => {
+    const on = b.dataset.txt === txt;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  syncNext();
+}
+
+// The answer that counts: typed "Other…" text overrides the picked label.
+function resolvedAnswer(id) {
+  if (state.isOther[id]) return (state.otherText[id] || '').trim();
+  return state.answers[id] || '';
+}
+
+function pickChip(id, el) {
+  state.isOther[id] = false;
+  state.answers[id] = el.dataset.value;
+  render();
+}
+
+function pickOther(id, el) {
+  state.isOther[id] = true;
+  // keep any prior typed text
+  render();
+}
+
+function typeOther(id, val) {
+  state.otherText[id] = val;
+  reconcileSuggest(id, val);
+  syncNext();
+}
+
+function typeText(id, val) {
+  state.answers[id] = val;
+  reconcileSuggest(id, val);
+  syncNext();
+}
+
+// If the user edits away from a clicked suggestion, drop its active highlight.
+function reconcileSuggest(id, val) {
+  if (state.suggMatch[id] && state.suggMatch[id] !== val) {
+    state.suggMatch[id] = '';
+    stage.querySelectorAll('.sugg').forEach((b) => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+  }
+}
+
+function next() {
+  if (state.index === 0) {
+    const motion = resolvedAnswer('motion') || 'They sign up themselves';
+    state.step2 = buildStep2(motion);
+    showThinking(() => { state.index = 1; render(); });
+    return;
+  }
+  if (state.index === 1) {
+    state.index = 2;
+    render();
+    return;
+  }
+  generate();
+}
+
+function back() {
+  if (state.index === 2) { state.index = 1; render(); return; }
+  if (state.index === 1) { state.index = 0; render(); return; }
+}
+
+function showThinking(done) {
+  backBtn.hidden = true;
+  nextBtn.disabled = true;
+  stepcount.innerHTML = '…';
+  stage.innerHTML = `<div class="thinking"><div class="orb" aria-hidden="true"></div><div class="label">Reading that, then asking the right follow-up…</div></div>`;
+  const wait = reduceMotion ? 200 : 1150;
+  setTimeout(() => { nextBtn.disabled = false; done(); }, wait);
+}
+
+function renderReady() {
+  backBtn.hidden = false;
+  nextLabel.textContent = 'Generate deck';
+  stage.innerHTML = `
+    <div class="ready">
+      <div class="seal" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h3>Got it &mdash; this&rsquo;ll be a tight one.</h3>
+      <p>Your answers reshaped two slides so the deck argues for itself. Building it now.</p>
+    </div>`;
+}
+
+function generate() {
+  const modal = document.querySelector('.modal');
+  modal.style.transition = 'opacity 240ms ease, transform 240ms ease';
+  modal.style.opacity = '0';
+  modal.style.transform = 'translateY(6px) scale(0.985)';
+  setTimeout(() => {
+    document.querySelector('.backdrop').style.display = 'none';
+    showFlash('Generating your deck…');
+  }, 240);
+}
+
+function skip() {
+  showFlash('Skipped — generating with what we have…');
+  document.querySelector('.backdrop').style.display = 'none';
+}
+
+function showFlash(msg) {
+  const f = document.createElement('div');
+  f.textContent = msg;
+  f.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.7);border-radius:14px;padding:18px 26px;font:600 16px Inter,sans-serif;color:#2e1065;box-shadow:0 20px 60px rgba(99,102,241,0.2);z-index:99;';
+  document.body.appendChild(f);
+}
+
+function stripTags(s) { return s.replace(/<[^>]*>/g, '').replace(/&rsquo;/g, '’'); }
+function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeAttr(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Esc = skip; Enter advances when not in a multiline textarea
+document.addEventListener('keydown', (e) => {
+  if (document.querySelector('.backdrop').style.display === 'none') return;
+  if (e.key === 'Escape') { e.preventDefault(); skip(); }
+  if (e.key === 'Enter' && !e.shiftKey
+      && document.activeElement.tagName !== 'TEXTAREA'
+      && document.activeElement.tagName !== 'BUTTON') {
+    e.preventDefault(); if (!nextBtn.disabled) next();
+  }
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (!nextBtn.disabled) next(); }
+});
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{
+  "_comment": "SHARED contract test set for matchFact (source-facts.ts). The keep/strip table IS the contract — both engines run their adapter's grounding against these. expect: 'keep' means the rendered number is grounded (matchFact returns a fact); 'strip' means it must be dropped (returns null). See docs/architecture/per-metric-fact-contract.md.",
+  "cases": [
+    {
+      "name": "wrong-metric: growth shows margin's number",
+      "facts": [
+        { "value": 78, "unit": "%", "metric": "gross margin", "sourceSpan": "gross margin 78%" },
+        { "value": 78, "unit": "%", "metric": "customer satisfaction", "sourceSpan": "satisfaction 78%" }
+      ],
+      "slide": { "label": "revenue growth", "subject": null, "value": 78, "unit": "%" },
+      "expect": "strip"
+    },
+    {
+      "name": "right-metric: margin shows margin's number",
+      "facts": [
+        { "value": 78, "unit": "%", "metric": "gross margin", "sourceSpan": "gross margin 78%" },
+        { "value": 78, "unit": "%", "metric": "customer satisfaction", "sourceSpan": "satisfaction 78%" }
+      ],
+      "slide": { "label": "margin", "subject": null, "value": 78, "unit": "%" },
+      "expect": "keep"
+    },
+    {
+      "name": "several values, same metric: the number picks the right one",
+      "facts": [
+        { "value": 4, "unit": "$M", "metric": "revenue", "period": "Q1", "sourceSpan": "revenue $4M in Q1" },
+        { "value": 5, "unit": "$M", "metric": "revenue", "period": "Q2", "sourceSpan": "revenue $5M in Q2" },
+        { "value": 6, "unit": "$M", "metric": "revenue", "period": "Q3", "sourceSpan": "revenue $6M in Q3" }
+      ],
+      "slide": { "label": "revenue", "subject": null, "value": 5, "unit": "$M" },
+      "expect": "keep"
+    },
+    {
+      "name": "invented: number not in source",
+      "facts": [
+        { "value": 4, "unit": "$M", "metric": "revenue", "period": "Q1", "sourceSpan": "revenue $4M in Q1" },
+        { "value": 5, "unit": "$M", "metric": "revenue", "period": "Q2", "sourceSpan": "revenue $5M in Q2" }
+      ],
+      "slide": { "label": "revenue", "subject": null, "value": 7, "unit": "$M" },
+      "expect": "strip"
+    },
+    {
+      "name": "wrong-subject: competitor's number shown as ours",
+      "facts": [
+        { "value": 20, "unit": "%", "metric": "revenue growth", "subject": "Acme", "sourceSpan": "Acme grew revenue 20%" },
+        { "value": 12, "unit": "%", "metric": "revenue growth", "subject": "our company", "sourceSpan": "we grew 12%" }
+      ],
+      "slide": { "label": "revenue growth", "subject": "our company", "value": 20, "unit": "%" },
+      "expect": "strip"
+    },
+    {
+      "name": "wrong-subject: product B shows product A's number",
+      "facts": [
+        { "value": 20, "unit": "%", "metric": "growth", "subject": "Product A", "sourceSpan": "Product A grew 20%" },
+        { "value": 5, "unit": "%", "metric": "growth", "subject": "Product B", "sourceSpan": "Product B grew 5%" }
+      ],
+      "slide": { "label": "growth", "subject": "Product B", "value": 20, "unit": "%" },
+      "expect": "strip"
+    },
+    {
+      "name": "same number both subjects: true either way",
+      "facts": [
+        { "value": 20, "unit": "%", "metric": "growth", "subject": "Product A", "sourceSpan": "Product A grew 20%" },
+        { "value": 20, "unit": "%", "metric": "growth", "subject": "Product B", "sourceSpan": "Product B grew 20%" }
+      ],
+      "slide": { "label": "growth", "subject": null, "value": 20, "unit": "%" },
+      "expect": "keep"
+    },
+    {
+      "name": "single-subject default: fact has subject, slide does not → match on metric+value",
+      "facts": [
+        { "value": 41, "unit": "", "metric": "symphonies", "subject": "Mozart", "sourceSpan": "Mozart wrote 41 symphonies" }
+      ],
+      "slide": { "label": "symphonies", "subject": null, "value": 41, "unit": "" },
+      "expect": "keep"
+    }
+  ]
+}

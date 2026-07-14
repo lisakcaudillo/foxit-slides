@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chart Data-Table Editor — Round 3 · D3 Systematic Structure</title>
+<style>
+  :root{
+    --slate-900:#0f172a; --slate-800:#1e293b; --slate-700:#334155;
+    --slate-600:#475569; --slate-500:#64748b; --slate-400:#94a3b8;
+    --slate-300:#cbd5e1; --slate-200:#e2e8f0; --slate-100:#f1f5f9; --slate-50:#f8fafc;
+    --violet-600:#7c3aed; --violet-500:#8b5cf6; --violet-100:#ede9fe; --violet-50:#f5f3ff;
+    --foxit:#FF5F00;
+    /* 6-series palette — violet/AI-blue lead, then calm extended ramp */
+    --s0:#7c3aed; --s1:#60a5fa; --s2:#f59e0b; --s3:#10b981; --s4:#ec4899; --s5:#0ea5e9;
+    --radius:12px;
+
+    /* ── SYSTEMATIC-STRUCTURE: declared layout constants ── */
+    --modal-w: min(1080px, 96vw);
+    --modal-pad-x: 26px;       /* L/R gutter inside header/zones */
+    --zone-gap: 18px;          /* vertical rhythm between zones */
+    --rowlabel-w: 132px;       /* sticky category column */
+    --series-min: 116px;       /* min series-column width (6 fit w/o scroll) */
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    color:var(--slate-900); -webkit-font-smoothing:antialiased;
+    min-height:100vh; position:relative; overflow:hidden;
+  }
+
+  /* ░░░ Ghost slide-editor backdrop ░░░ */
+  .backdrop{position:fixed; inset:0;
+    background:linear-gradient(180deg,#f9f6ff 0%,#f4f0ff 40%,#eef3ff 100%);
+    display:flex; flex-direction:column;}
+  .editor-bar{height:56px; flex:none; background:rgba(255,255,255,.7);
+    border-bottom:1px solid rgba(15,23,42,.06); display:flex; align-items:center;
+    padding:0 22px; gap:14px;}
+  .eb-dot{width:11px;height:11px;border-radius:3px;background:var(--violet-600);}
+  .eb-title{font-size:14px;font-weight:600;color:var(--slate-500);}
+  .eb-spacer{flex:1;}
+  .eb-pill{height:30px;padding:0 14px;border-radius:9px;background:rgba(15,23,42,.04);
+    font-size:13px;color:var(--slate-400);display:flex;align-items:center;}
+  .editor-body{flex:1; display:flex; padding:34px 40px; gap:26px;}
+  .ghost-rail{width:60px;flex:none;display:flex;flex-direction:column;gap:14px;}
+  .ghost-rail span{height:40px;border-radius:11px;background:rgba(255,255,255,.55);}
+  .ghost-slide{flex:1; max-width:760px; margin:0 auto; aspect-ratio:16/9;
+    background:rgba(255,255,255,.6); border-radius:18px; align-self:flex-start;
+    border:1px solid rgba(15,23,42,.04);}
+  .ghost-insp{width:300px;flex:none;background:rgba(255,255,255,.5);border-radius:16px;}
+
+  /* ░░░ Scrim ░░░ */
+  .scrim{position:fixed; inset:0; background:rgba(15,23,42,.34);
+    backdrop-filter:blur(3px) saturate(.95); -webkit-backdrop-filter:blur(3px) saturate(.95);
+    display:flex; align-items:center; justify-content:center; padding:28px;
+    animation:fadeIn .22s ease;}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes rise{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+
+  /* ░░░ MODAL — explicit vertical zone stack ░░░ */
+  .modal{
+    width:var(--modal-w); max-height:calc(100vh - 56px);
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(22px) saturate(1.06); -webkit-backdrop-filter:blur(22px) saturate(1.06);
+    border:1px solid rgba(255,255,255,.7);
+    border-radius:20px; overflow:hidden;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,
+               0 24px 80px rgba(15,23,42,.28),
+               0 4px 18px rgba(99,102,241,.12);
+    display:grid;
+    /* ZONE GRID: header / hero-grid(1fr) / chart / footer */
+    grid-template-rows:auto 1fr auto auto;
+    animation:rise .26s cubic-bezier(.16,1,.3,1);
+    position:relative;
+  }
+
+  /* ───── ZONE 1 · HEADER (≈84px) ───── */
+  .m-head{
+    padding:20px var(--modal-pad-x) 18px;
+    border-bottom:1px solid rgba(15,23,42,.06);
+    display:flex; align-items:flex-start; gap:16px;
+    background:rgba(255,255,255,.5);
+  }
+  .m-eyebrow{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--violet-600);}
+  .m-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--violet-600);box-shadow:0 0 0 3px rgba(124,58,237,.16);}
+  .m-title{font-size:21px;font-weight:700;color:var(--slate-900);margin-top:7px;letter-spacing:-.01em;}
+  .m-sub{font-size:14px;color:var(--slate-500);margin-top:3px;}
+  /* chart-type segmented lives in the header-right so the loved control is top-level */
+  .head-controls{margin-left:auto; display:flex; align-items:center; gap:18px;}
+  .ctl-inline{display:flex; flex-direction:column; gap:6px;}
+  .ctl-inline .ctl-label{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--slate-400);}
+  .m-close{
+    flex:none;width:38px;height:38px;border-radius:11px;border:1px solid rgba(15,23,42,.08);
+    background:#fff;color:var(--slate-500);display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:all .15s ease; align-self:flex-start;
+  }
+  .m-close:hover{color:var(--slate-800);border-color:var(--slate-300);background:var(--slate-50);}
+  .m-close svg{width:18px;height:18px;}
+
+  /* segmented chart-type picker (KEPT verbatim from D1) */
+  .seg{display:flex; gap:6px; background:var(--slate-100); padding:4px; border-radius:12px;}
+  .seg button{
+    width:46px; height:40px; border:none; border-radius:9px; background:transparent;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:var(--slate-500); transition:all .15s ease;
+  }
+  .seg button svg{width:18px; height:18px;}
+  .seg button.active{background:#fff; color:var(--violet-600); box-shadow:0 1px 3px rgba(15,23,42,.1);}
+  .seg button:not(.active):hover{color:var(--slate-700);}
+
+  /* ───── ZONE 2 · GRID HERO (1fr — claims all spare height) ───── */
+  .zone-grid{
+    padding:var(--zone-gap) var(--modal-pad-x) 14px;
+    min-height:0; overflow:auto; display:flex; flex-direction:column;
+  }
+  .sec-label{
+    font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--slate-400);margin-bottom:11px;display:flex;align-items:center;gap:10px;
+  }
+  .sec-label .hint{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--slate-400);}
+  .sec-label .grow{flex:1;}
+  .sec-label .dims{font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--violet-600);
+    background:var(--violet-50);border-radius:7px;padding:2px 9px;}
+
+  .grid-wrap{
+    border:1px solid rgba(15,23,42,.08); border-radius:14px; overflow:hidden;
+    background:#ffffff; box-shadow:0 1px 2px rgba(15,23,42,.03);
+  }
+  .grid-scroll{overflow-x:auto;}            /* sticky col survives if a 7th+ series is added */
+  table.grid{border-collapse:separate; border-spacing:0; width:100%; font-size:15px; table-layout:fixed;}
+  .grid th,.grid td{padding:0; position:relative;}
+
+  /* sticky corner + row-label column */
+  .corner{
+    width:var(--rowlabel-w); min-width:var(--rowlabel-w);
+    background:linear-gradient(180deg,#faf9ff,#f4f1fb);
+    border-bottom:1px solid rgba(15,23,42,.07); border-right:1px solid rgba(15,23,42,.06);
+    position:sticky; left:0; z-index:3; height:54px;
+  }
+  .corner span{display:flex;align-items:center;height:100%;padding:0 14px;
+    font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--slate-400);}
+
+  .col-head{
+    min-width:var(--series-min);
+    background:linear-gradient(180deg,#faf9ff,#f4f1fb);
+    border-bottom:1px solid rgba(15,23,42,.07);
+  }
+  .col-head:not(:last-child){border-right:1px solid rgba(15,23,42,.05);}
+  .col-dot-wrap{display:flex;align-items:center;justify-content:center;gap:7px;padding-top:9px;margin-bottom:-2px;height:18px;}
+  .col-dot-wrap i{width:9px;height:9px;border-radius:3px;}
+  .col-del{
+    width:16px;height:16px;border-radius:50%;border:1px solid var(--slate-200);background:#fff;
+    color:var(--slate-400);display:none;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .col-head:hover .col-del{display:inline-flex;}
+  .col-del:hover{color:var(--foxit);border-color:var(--foxit);}
+  .col-del svg{width:9px;height:9px;}
+  .col-head input{
+    width:100%; border:none; background:transparent; text-align:center;
+    font:inherit; font-size:14px; font-weight:600; color:var(--slate-700); padding:7px 6px 11px;
+    outline:none; letter-spacing:-.005em;
+  }
+
+  .row-head{
+    width:var(--rowlabel-w); min-width:var(--rowlabel-w);
+    background:linear-gradient(90deg,#faf9ff,#f6f4fc);
+    border-right:1px solid rgba(15,23,42,.07);
+    border-top:1px solid rgba(15,23,42,.05);
+    position:sticky; left:0; z-index:2;
+  }
+  .row-head input{
+    width:100%; border:none; background:transparent; font:inherit; font-size:15px; font-weight:600;
+    color:var(--slate-700); padding:14px 14px 14px 30px; outline:none;
+  }
+  td.cell{border-top:1px solid rgba(15,23,42,.05); border-right:1px solid rgba(15,23,42,.05);}
+  td.cell:last-child{border-right:none;}
+  .cell input{
+    width:100%; border:none; background:transparent; text-align:right;
+    font:inherit; font-size:15px; font-variant-numeric:tabular-nums; color:var(--slate-900);
+    padding:14px 18px 14px 8px; outline:none; transition:background .12s ease;
+  }
+  .cell input:hover{background:rgba(124,58,237,.035);}
+  .cell input:focus,.col-head input:focus,.row-head input:focus{
+    background:var(--violet-50); box-shadow:inset 0 0 0 2px var(--violet-500); border-radius:6px;
+  }
+  .cell input.coerced{box-shadow:inset 0 0 0 2px var(--foxit); background:rgba(255,95,0,.06);}
+
+  .row-del{
+    position:absolute; left:8px; top:50%; transform:translateY(-50%);
+    width:18px; height:18px; border-radius:50%; border:1px solid var(--slate-200);
+    background:#fff; color:var(--slate-400); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; opacity:0; transition:opacity .14s ease; box-shadow:0 1px 3px rgba(15,23,42,.1); z-index:4;
+  }
+  tr.body-row:hover .row-del{opacity:1;}
+  .row-del:hover{color:var(--foxit); border-color:var(--foxit);}
+  .row-del svg{width:10px;height:10px;}
+
+  /* add row/col + paste row */
+  .grid-tools{display:flex; gap:10px; margin-top:12px;}
+  .ghost{
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    height:40px; padding:0 16px; border-radius:12px; border:1px dashed var(--slate-300);
+    background:transparent; color:var(--slate-600); font-size:14px; font-weight:500;
+    cursor:pointer; transition:all .15s ease;
+  }
+  .ghost.grow{flex:1;}
+  .ghost:hover{border-color:var(--violet-500); color:var(--violet-600); background:var(--violet-50);}
+  .ghost svg{width:16px;height:16px;}
+  .paste-chip{
+    margin-left:auto; display:inline-flex; align-items:center; gap:8px;
+    height:40px; padding:0 13px; border-radius:12px;
+    background:linear-gradient(90deg,rgba(124,58,237,.06),rgba(96,165,250,.06));
+    border:1px solid rgba(124,58,237,.12); color:var(--slate-600); font-size:13px; font-weight:500;
+  }
+  .paste-chip svg{width:16px;height:16px;color:var(--violet-600);}
+  .paste-chip kbd{font-family:inherit;font-size:12px;font-weight:600;background:#fff;border:1px solid var(--slate-200);
+    border-bottom-width:2px;border-radius:6px;padding:1px 6px;color:var(--slate-700);}
+
+  /* ───── ZONE 3 · CHART STRIP (compact, fixed-height) ───── */
+  .zone-chart{
+    padding:14px var(--modal-pad-x) 16px;
+    border-top:1px solid rgba(15,23,42,.06);
+    background:linear-gradient(180deg,rgba(249,246,255,.5),rgba(238,243,255,.4));
+    display:flex; gap:22px; align-items:stretch;
+  }
+  .pv-card{
+    flex:1; min-width:0; background:#fff; border:1px solid rgba(15,23,42,.07); border-radius:14px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04),0 8px 24px rgba(99,102,241,.07);
+    padding:14px 16px 10px; overflow:hidden;
+  }
+  .pv-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+  .pv-title{font-size:15px; font-weight:600; color:var(--slate-800);}
+  .pv-sub{font-size:13px;color:var(--slate-500);}
+  .pv-legend{display:flex; gap:12px 16px; flex-wrap:wrap; margin-top:8px;}
+  .pv-leg{display:flex; align-items:center; gap:7px; font-size:13px; color:var(--slate-600); font-weight:500;}
+  .pv-leg i{width:11px; height:11px; border-radius:3px; display:inline-block;}
+
+  /* number-format control (KEPT) — sits in chart strip, right-docked */
+  .fmt-dock{width:236px; flex:none; display:flex; flex-direction:column; justify-content:center; gap:8px;}
+  .ctl-label{font-size:13px; font-weight:500; color:var(--slate-600);}
+  .select-shell{position:relative;}
+  .select-shell select{
+    width:100%; height:44px; border:1px solid var(--slate-200); border-radius:12px;
+    background:#fff; padding:0 40px 0 14px; font:inherit; font-size:14px; font-weight:500;
+    color:var(--slate-800); appearance:none; cursor:pointer; outline:none;
+  }
+  .select-shell select:focus{border-color:var(--violet-500); box-shadow:0 0 0 3px rgba(124,58,237,.14);}
+  .select-shell .chev{position:absolute; right:14px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--slate-400);}
+
+  /* ───── ZONE 4 · FOOTER (≈76px) ───── */
+  .m-foot{
+    padding:16px var(--modal-pad-x);
+    border-top:1px solid rgba(15,23,42,.06);
+    display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.5);
+  }
+  .m-foot .meta{font-size:13px;color:var(--slate-400);}
+  .m-foot .spacer{flex:1;}
+  .btn-ghost{
+    height:44px; padding:0 20px; border-radius:12px; border:1px solid var(--slate-200);
+    background:#fff; color:var(--slate-700); font-size:14px; font-weight:600; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .btn-ghost:hover{border-color:var(--slate-300); background:var(--slate-50);}
+  .btn-cta-bold{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    height:44px; padding:0 24px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(90deg,#E267E4 0%,#9FC7FE 50%,#4198FF 100%);
+    color:#2e1065; font-size:14px; font-weight:600; box-shadow:0 4px 16px rgba(65,152,255,.28);
+  }
+  .btn-cta-bold svg{width:16px;height:16px;}
+
+  /* coercion toast */
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--slate-900); color:#fff; font-size:13.5px; font-weight:500;
+    padding:12px 16px; border-radius:12px; display:flex; align-items:center; gap:9px;
+    box-shadow:0 12px 40px rgba(15,23,42,.4); opacity:0; pointer-events:none;
+    transition:all .25s cubic-bezier(.16,1,.3,1); z-index:50;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast svg{width:16px;height:16px;color:var(--foxit);flex:none;}
+
+  /* ░░░ SPEC CALLOUTS (annotation layer — toggleable) ░░░ */
+  .annot{position:absolute; z-index:40; pointer-events:none;
+    font-family:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+    font-size:10.5px; font-weight:600; letter-spacing:.01em; line-height:1.3;}
+  .annot .tag{display:inline-block; background:var(--violet-600); color:#fff;
+    padding:3px 7px; border-radius:6px; box-shadow:0 3px 10px rgba(124,58,237,.35); white-space:nowrap;}
+  .annot .tag.orange{background:var(--foxit); box-shadow:0 3px 10px rgba(255,95,0,.35);}
+  .annot .tag.slate{background:var(--slate-700); box-shadow:0 3px 10px rgba(15,23,42,.3);}
+  .annot .lead{position:absolute; background:var(--violet-600);}
+  body.hide-annot .annot{display:none;}
+
+  /* annotation positions (relative to .modal) */
+  .a-zone1{top:-12px; left:18px;}
+  .a-zone2{top:50%; left:-118px; transform:translateY(-50%); text-align:right; width:104px;}
+  .a-zone3{bottom:84px; left:-150px; text-align:right; width:136px;}
+  .a-zone4{bottom:-12px; right:120px;}
+  .a-seg{top:-12px; right:96px;}
+  .a-fmt{bottom:90px; right:-130px; width:120px;}
+  .a-sticky{top:120px; left:14px;}
+  .a-math{top:60px; right:-186px; width:172px; text-align:left;}
+
+  .annot-toggle{position:fixed; top:16px; right:16px; z-index:60;
+    height:34px; padding:0 14px; border-radius:10px; border:1px solid rgba(15,23,42,.12);
+    background:rgba(255,255,255,.9); color:var(--slate-700); font-size:13px; font-weight:600;
+    cursor:pointer; box-shadow:0 4px 14px rgba(15,23,42,.12); font-family:inherit;}
+</style>
+</head>
+<body>
+
+  <button class="annot-toggle" id="annotToggle">Hide spec callouts</button>
+
+  <!-- ░░░ GHOST BACKDROP ░░░ -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="editor-bar">
+      <span class="eb-dot"></span><span class="eb-title">Foxit Slides — Q4 Regional Review</span>
+      <span class="eb-spacer"></span><span class="eb-pill">Present</span>
+    </div>
+    <div class="editor-body">
+      <div class="ghost-rail"><span></span><span></span><span></span><span></span></div>
+      <div class="ghost-slide"></div>
+      <div class="ghost-insp"></div>
+    </div>
+  </div>
+
+  <!-- ░░░ SCRIM + MODAL ░░░ -->
+  <div class="scrim">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Edit chart data">
+
+      <!-- ════ SPEC CALLOUTS ════ -->
+      <div class="annot a-zone1"><span class="tag slate">ZONE 1 · HEADER — title + chart-type picker · ~84px · pad 20/26px</span></div>
+      <div class="annot a-seg"><span class="tag">segmented chart-type picker · KEPT · slate-100 track · active=#fff + violet-600</span></div>
+      <div class="annot a-zone2"><span class="tag">ZONE 2 · GRID HERO · grid-row 1fr (claims all spare height) · pad 18/26px</span></div>
+      <div class="annot a-math"><span class="tag">COLUMN MATH<br>inner 1080−52=1028px<br>−132 row-label = 896px<br>÷ 6 series = 149px ea<br>(min 116px) → 0 scroll</span></div>
+      <div class="annot a-sticky"><span class="tag">sticky row-label col · 132px · z-3 · survives 7th+ series</span></div>
+      <div class="annot a-zone3"><span class="tag">ZONE 3 · CHART STRIP · fixed ~190px · live preview + legend</span></div>
+      <div class="annot a-fmt"><span class="tag">number-format · KEPT · 44px · slate-200 border · violet focus ring</span></div>
+      <div class="annot a-zone4"><span class="tag slate">ZONE 4 · FOOTER · ~76px · Cancel (ghost) + Done (bold CTA)</span></div>
+
+      <!-- ════════ ZONE 1 · HEADER ════════ -->
+      <div class="m-head">
+        <div>
+          <div class="m-eyebrow"><span class="dot"></span> Chart data</div>
+          <div class="m-title">Edit the numbers</div>
+          <div class="m-sub">Type in the grid — the chart below updates live.</div>
+        </div>
+        <div class="head-controls">
+          <div class="ctl-inline">
+            <span class="ctl-label">Chart type</span>
+            <div class="seg" id="typeSeg">
+              <button class="active" data-type="column" title="Column">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+              </button>
+              <button data-type="bar" title="Bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h12M4 12h8M4 17h16"/></svg>
+              </button>
+              <button data-type="line" title="Line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l5-6 4 3 8-9"/></svg>
+              </button>
+              <button data-type="pie" title="Pie">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12z"/><path d="M12 2v10h10"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="m-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- ════════ ZONE 2 · GRID HERO ════════ -->
+      <div class="zone-grid">
+        <div class="sec-label">
+          Data
+          <span class="hint">Headers = series · first column = categories</span>
+          <span class="grow"></span>
+          <span class="dims" id="dimBadge">6 series × 4 rows</span>
+        </div>
+
+        <div class="grid-wrap">
+          <div class="grid-scroll">
+            <table class="grid">
+              <thead><tr id="grid-head"></tr></thead>
+              <tbody id="grid-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-tools">
+          <button class="ghost grow" id="addRow" aria-label="Add row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add row
+          </button>
+          <button class="ghost grow" id="addCol" aria-label="Add column">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add column
+          </button>
+          <span class="paste-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+            Paste from Excel <kbd>⌘V</kbd>
+          </span>
+        </div>
+      </div>
+
+      <!-- ════════ ZONE 3 · CHART STRIP ════════ -->
+      <div class="zone-chart">
+        <div class="pv-card">
+          <div class="pv-head">
+            <span class="pv-title">Quarterly revenue by region</span>
+            <span class="pv-sub">Updates as you type</span>
+          </div>
+          <svg viewBox="0 0 720 150" style="width:100%;height:150px;" id="pvChart" role="img" aria-label="Grouped column chart"></svg>
+          <div class="pv-legend" id="legend"></div>
+        </div>
+        <div class="fmt-dock">
+          <span class="ctl-label">Number format</span>
+          <div class="select-shell">
+            <select id="numFmt">
+              <option value="number">Number — 1,234</option>
+              <option value="currency">Currency — $1,234</option>
+              <option value="percent">Percent — 12.3%</option>
+              <option value="compact">Compact — 1.2K</option>
+            </select>
+            <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ ZONE 4 · FOOTER ════════ -->
+      <div class="m-foot">
+        <span class="meta" id="footMeta">Min 1 row · 1 column · every series stays the same length</span>
+        <span class="spacer"></span>
+        <button class="btn-ghost">Cancel</button>
+        <button class="btn-cta-bold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- coercion toast -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+    <span id="toastMsg">Some cells weren't numbers — set to 0.</span>
+  </div>
+
+<script>
+  // ── Sample data (6 series — proves the modal width) ──
+  const PALETTE = ['#7c3aed','#60a5fa','#f59e0b','#10b981','#ec4899','#0ea5e9'];
+  const data = {
+    chartType:'column',
+    numberFormat:'number',
+    categories:['Q1','Q2','Q3','Q4'],
+    series:[
+      {name:'North',   values:[120,135,150,162], color:PALETTE[0]},
+      {name:'South',   values:[98,110,121,130],  color:PALETTE[1]},
+      {name:'East',    values:[140,158,171,195], color:PALETTE[2]},
+      {name:'West',    values:[88,95,103,118],   color:PALETTE[3]},
+      {name:'Central', values:[112,120,128,141], color:PALETTE[4]},
+      {name:'Online',  values:[60,82,99,130],    color:PALETTE[5]},
+    ]
+  };
+
+  const headEl = document.getElementById('grid-head');
+  const bodyEl = document.getElementById('grid-body');
+  const legendEl = document.getElementById('legend');
+  const dimBadge = document.getElementById('dimBadge');
+
+  function colorFor(i){ return data.series[i].color || PALETTE[i % PALETTE.length]; }
+  function updateDims(){ dimBadge.textContent = `${data.series.length} series × ${data.categories.length} rows`; }
+
+  // ── Render grid ──
+  function renderGrid(){
+    let h = `<th class="corner"><span>Category</span></th>`;
+    data.series.forEach((s,c)=>{
+      h += `<th class="col-head">
+        <div class="col-dot-wrap">
+          <i style="background:${colorFor(c)}"></i>
+          <button class="col-del" data-col="${c}" title="Remove column" aria-label="Remove ${s.name}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+          </button>
+        </div>
+        <input value="${s.name}" data-col="${c}" data-kind="series" aria-label="Series ${c+1} name" />
+      </th>`;
+    });
+    headEl.innerHTML = h;
+
+    bodyEl.innerHTML = '';
+    data.categories.forEach((cat,r)=>{
+      const tr = document.createElement('tr');
+      tr.className = 'body-row';
+      let cells = `<td class="row-head">
+        <button class="row-del" data-row="${r}" title="Remove row" aria-label="Remove ${cat}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+        </button>
+        <input value="${cat}" data-row="${r}" data-kind="category" aria-label="Row label ${r+1}" />
+      </td>`;
+      data.series.forEach((s,c)=>{
+        cells += `<td class="cell"><input value="${s.values[r]}" inputmode="numeric"
+                   data-row="${r}" data-col="${c}" data-kind="cell" aria-label="${s.name} ${cat}" /></td>`;
+      });
+      tr.innerHTML = cells;
+      bodyEl.appendChild(tr);
+    });
+
+    renderLegend(); bindGrid(); updateDims();
+  }
+
+  function renderLegend(){
+    legendEl.innerHTML = data.series.map((s,c)=>
+      `<span class="pv-leg"><i style="background:${colorFor(c)}"></i>${s.name}</span>`).join('');
+  }
+
+  // ── Bind inputs + delete handles ──
+  function bindGrid(){
+    bodyEl.querySelectorAll('input[data-kind="cell"]').forEach(inp=>{
+      inp.addEventListener('input',e=>{
+        const r=+e.target.dataset.row, c=+e.target.dataset.col;
+        const raw=e.target.value.trim();
+        const num=Number(raw.replace(/[, $%]/g,''));
+        if(raw!=='' && Number.isNaN(num)){
+          e.target.classList.add('coerced'); data.series[c].values[r]=0;
+        } else {
+          e.target.classList.remove('coerced'); data.series[c].values[r]= raw===''?0:num;
+        }
+        draw();
+      });
+    });
+    bodyEl.querySelectorAll('input[data-kind="category"]').forEach(inp=>{
+      inp.addEventListener('input',e=>{ data.categories[+e.target.dataset.row]=e.target.value; draw(); });
+    });
+    headEl.querySelectorAll('input[data-kind="series"]').forEach(inp=>{
+      inp.addEventListener('input',e=>{ data.series[+e.target.dataset.col].name=e.target.value; renderLegend(); });
+    });
+    bodyEl.querySelectorAll('.row-del').forEach(b=>b.addEventListener('click',()=>removeRow(+b.dataset.row)));
+    headEl.querySelectorAll('.col-del').forEach(b=>b.addEventListener('click',()=>removeCol(+b.dataset.col)));
+  }
+
+  // ── Invariant-preserving structural ops ──
+  function addRow(){ data.categories.push('Q'+(data.categories.length+1)); data.series.forEach(s=>s.values.push(0)); renderGrid(); draw(); }
+  function removeRow(r){ if(data.categories.length<=1) return; data.categories.splice(r,1); data.series.forEach(s=>s.values.splice(r,1)); renderGrid(); draw(); }
+  function addCol(){ const i=data.series.length; data.series.push({name:'Series '+(i+1), values:Array(data.categories.length).fill(0), color:PALETTE[i%PALETTE.length]}); renderGrid(); draw(); }
+  function removeCol(c){ if(data.series.length<=1) return; data.series.splice(c,1); renderGrid(); draw(); }
+
+  document.getElementById('addRow').addEventListener('click',addRow);
+  document.getElementById('addCol').addEventListener('click',addCol);
+
+  // ── Paste TSV/CSV ──
+  document.querySelector('.grid-wrap').addEventListener('paste',e=>{
+    const txt=(e.clipboardData||window.clipboardData).getData('text/plain');
+    if(!txt || !/[\t,\n]/.test(txt)) return;
+    e.preventDefault();
+    const rows=txt.replace(/\r/g,'').split('\n').filter(l=>l.length);
+    const delim = rows[0].includes('\t') ? '\t' : ',';
+    const table=rows.map(l=>l.split(delim));
+    const header=table[0];
+    let coerced=false;
+    const newCats=[], newSeries=header.slice(1).map(n=>({name:n.trim()||'Series',values:[]}));
+    table.slice(1).forEach(cols=>{
+      newCats.push((cols[0]||'').trim());
+      newSeries.forEach((s,i)=>{
+        const raw=(cols[i+1]||'').trim();
+        const num=Number(raw.replace(/[, $%]/g,''));
+        if(raw!=='' && Number.isNaN(num)) coerced=true;
+        s.values.push(raw===''||Number.isNaN(num)?0:num);
+      });
+    });
+    if(newSeries.length && newCats.length){
+      data.categories=newCats;
+      data.series=newSeries.map((s,i)=>({...s,color:PALETTE[i%PALETTE.length]}));
+      renderGrid(); draw();
+      if(coerced) showToast('Some cells weren’t numbers — set to 0.');
+      else showToast('Pasted '+newCats.length+'×'+newSeries.length+' from clipboard.', true);
+    }
+  });
+
+  function showToast(msg, ok){
+    const t=document.getElementById('toast');
+    document.getElementById('toastMsg').textContent=msg;
+    t.querySelector('svg').style.color = ok ? 'var(--violet-600)' : 'var(--foxit)';
+    t.classList.add('show');
+    clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600);
+  }
+
+  // ── Chart-type + number format ──
+  document.getElementById('typeSeg').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-type]'); if(!b) return;
+    document.querySelectorAll('#typeSeg button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); data.chartType=b.dataset.type; draw();
+  });
+  document.getElementById('numFmt').addEventListener('change',e=>{ data.numberFormat=e.target.value; draw(); });
+
+  function fmt(v){
+    switch(data.numberFormat){
+      case 'currency': return '$'+Math.round(v).toLocaleString();
+      case 'percent': return v.toFixed(1)+'%';
+      case 'compact': return v>=1000?(v/1000).toFixed(1)+'K':String(Math.round(v));
+      default: return Math.round(v).toLocaleString();
+    }
+  }
+
+  // ── Chart renderers (wide aspect for the strip) ──
+  const W=720,H=150;
+  function draw(){
+    const svg=document.getElementById('pvChart');
+    if(data.chartType==='line') drawLine(svg);
+    else if(data.chartType==='bar') drawBars(svg);
+    else if(data.chartType==='pie') drawPie(svg);
+    else drawColumns(svg);
+  }
+  function yMax(){ const all=data.series.flatMap(s=>s.values.map(v=>+v||0)); return (Math.max(...all,1))*1.12; }
+  function gridY(s,pad,plotH,max){
+    for(let i=0;i<=4;i++){ const v=max/4*i, y=pad.t+plotH-(v/max)*plotH;
+      s+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#eef0f5" stroke-width="1"/>`;
+      s+=`<text x="${pad.l-8}" y="${y+3.5}" font-size="9" fill="#94a3b8" text-anchor="end" font-family="Inter">${fmt(v)}</text>`; }
+    return s;
+  }
+  function drawColumns(svg){
+    const pad={l:46,r:12,t:10,b:22}, plotW=W-pad.l-pad.r, plotH=H-pad.t-pad.b;
+    const max=yMax(), n=data.categories.length, m=data.series.length;
+    const groupW=plotW/n, groupPad=groupW*0.14, barGap=2;
+    const barW=Math.max(2,(groupW-groupPad*2-barGap*(m-1))/m);
+    let s=gridY('',pad,plotH,max);
+    data.categories.forEach((cat,ci)=>{
+      const gx=pad.l+groupW*ci+groupPad;
+      data.series.forEach((ser,si)=>{
+        const val=+ser.values[ci]||0, bh=(val/max)*plotH;
+        const x=gx+si*(barW+barGap), y=pad.t+plotH-bh, rx=Math.min(3,barW/3);
+        s+=`<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="${rx}" fill="${colorFor(si)}"><animate attributeName="height" from="0" to="${bh}" dur="0.45s" fill="freeze"/><animate attributeName="y" from="${pad.t+plotH}" to="${y}" dur="0.45s" fill="freeze"/></rect>`;
+      });
+      const cx=pad.l+groupW*ci+groupW/2;
+      s+=`<text x="${cx}" y="${H-pad.b+15}" font-size="10" fill="#64748b" text-anchor="middle" font-family="Inter" font-weight="500">${cat}</text>`;
+    });
+    svg.innerHTML=s;
+  }
+  function drawBars(svg){
+    const pad={l:64,r:14,t:8,b:16}, plotW=W-pad.l-pad.r, plotH=H-pad.t-pad.b;
+    const max=yMax(), n=data.categories.length, m=data.series.length;
+    const groupH=plotH/n, groupPad=groupH*0.14, barGap=2;
+    const barH=Math.max(2,(groupH-groupPad*2-barGap*(m-1))/m);
+    let s='';
+    for(let i=0;i<=4;i++){ const v=max/4*i, x=pad.l+(v/max)*plotW;
+      s+=`<line x1="${x}" y1="${pad.t}" x2="${x}" y2="${pad.t+plotH}" stroke="#eef0f5" stroke-width="1"/>`;
+      s+=`<text x="${x}" y="${pad.t+plotH+12}" font-size="9" fill="#94a3b8" text-anchor="middle" font-family="Inter">${fmt(v)}</text>`; }
+    data.categories.forEach((cat,ci)=>{
+      const gy=pad.t+groupH*ci+groupPad;
+      data.series.forEach((ser,si)=>{
+        const val=+ser.values[ci]||0, bw=(val/max)*plotW, y=gy+si*(barH+barGap);
+        s+=`<rect x="${pad.l}" y="${y}" width="${bw}" height="${barH}" rx="${Math.min(3,barH/3)}" fill="${colorFor(si)}"><animate attributeName="width" from="0" to="${bw}" dur="0.45s" fill="freeze"/></rect>`;
+      });
+      s+=`<text x="${pad.l-8}" y="${gy+groupH/2-groupPad}" font-size="10" fill="#64748b" text-anchor="end" font-family="Inter" font-weight="500">${cat}</text>`;
+    });
+    svg.innerHTML=s;
+  }
+  function drawLine(svg){
+    const pad={l:46,r:12,t:10,b:22}, plotW=W-pad.l-pad.r, plotH=H-pad.t-pad.b;
+    const max=yMax(), n=data.categories.length;
+    let s=gridY('',pad,plotH,max);
+    const xAt=i=> n>1 ? pad.l+(plotW/(n-1))*i : pad.l+plotW/2;
+    const yAt=v=> pad.t+plotH-((+v||0)/max)*plotH;
+    data.series.forEach((ser,si)=>{
+      const pts=ser.values.map((v,i)=>`${xAt(i)},${yAt(v)}`).join(' ');
+      s+=`<polyline points="${pts}" fill="none" stroke="${colorFor(si)}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+      ser.values.forEach((v,i)=>{ s+=`<circle cx="${xAt(i)}" cy="${yAt(v)}" r="3" fill="#fff" stroke="${colorFor(si)}" stroke-width="2"/>`; });
+    });
+    data.categories.forEach((cat,i)=>{ s+=`<text x="${xAt(i)}" y="${H-pad.b+15}" font-size="10" fill="#64748b" text-anchor="middle" font-family="Inter" font-weight="500">${cat}</text>`; });
+    svg.innerHTML=s;
+  }
+  function drawPie(svg){
+    const totals=data.series.map(s=>s.values.reduce((a,b)=>a+(+b||0),0));
+    const sum=totals.reduce((a,b)=>a+b,0)||1;
+    const cx=H*0.95, cy=H/2, rr=H/2-16;
+    let ang=-Math.PI/2, s='';
+    totals.forEach((t,i)=>{
+      const frac=t/sum, a2=ang+frac*Math.PI*2;
+      const x1=cx+rr*Math.cos(ang), y1=cy+rr*Math.sin(ang);
+      const x2=cx+rr*Math.cos(a2), y2=cy+rr*Math.sin(a2);
+      const large=frac>0.5?1:0;
+      s+=`<path d="M${cx},${cy} L${x1},${y1} A${rr},${rr} 0 ${large} 1 ${x2},${y2} Z" fill="${colorFor(i)}" stroke="#fff" stroke-width="2"/>`;
+      ang=a2;
+    });
+    data.series.forEach((ser,i)=>{
+      const ly=22+i*20;
+      s+=`<rect x="${H+40}" y="${ly-9}" width="11" height="11" rx="3" fill="${colorFor(i)}"/>`;
+      s+=`<text x="${H+57}" y="${ly}" font-size="11" fill="#475569" font-family="Inter" font-weight="500">${ser.name} · ${Math.round(totals[i]/sum*100)}%</text>`;
+    });
+    svg.innerHTML=s;
+  }
+
+  // ── boot ──
+  renderGrid(); draw();
+
+  document.querySelector('.m-close').addEventListener('click',()=>showToast('Close (prototype — stays open)'));
+  document.querySelector('.btn-ghost').addEventListener('click',()=>showToast('Cancel (prototype — stays open)'));
+  document.querySelector('.btn-cta-bold').addEventListener('click',()=>showToast('Saved (prototype).', true));
+
+  // annotation toggle
+  const at=document.getElementById('annotToggle');
+  at.addEventListener('click',()=>{
+    document.body.classList.toggle('hide-annot');
+    at.textContent = document.body.classList.contains('hide-annot') ? 'Show spec callouts' : 'Hide spec callouts';
+  });
+</script>
+</body>
+</html>

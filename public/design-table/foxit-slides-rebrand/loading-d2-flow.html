@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foxit Slides — Generating (D2 · Flow / Stage Stepper)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --grad-bg:linear-gradient(135deg,#4776E6,#6D28D9,#A855F7);
+    --grad-logo:linear-gradient(135deg,#4776E6,#A855F7);
+    --ink:#fff;
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+    -webkit-font-smoothing:antialiased;overflow:hidden;position:relative;
+    display:flex;align-items:center;justify-content:center;background:#241a5e}
+
+  /* SATURATED brand backdrop — the earned color moment, kept a touch calmer
+     toward center so the stepper card stays crisp and legible */
+  .bg{position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(900px 620px at 16% 12%,rgba(71,118,230,.92),transparent 60%),
+      radial-gradient(940px 700px at 88% 90%,rgba(168,85,247,.88),transparent 60%),
+      radial-gradient(620px 520px at 78% 16%,rgba(236,120,210,.5),transparent 62%),
+      linear-gradient(135deg,#4776E6 0%,#6D28D9 52%,#A855F7 100%);
+    animation:drift 16s ease-in-out infinite alternate}
+  @keyframes drift{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.07) translate(-1.4%,-.8%)}}
+  .bg::after{content:'';position:absolute;inset:0;
+    background:radial-gradient(1100px 760px at 50% 46%,rgba(20,10,46,.42) 0%,transparent 56%)}
+
+  .stage{position:relative;z-index:2;width:min(560px,92vw);
+    display:flex;flex-direction:column;align-items:center;gap:0}
+
+  /* header: logo + title + deck chip */
+  .logo{width:60px;height:60px;border-radius:17px;background:var(--grad-logo);
+    display:flex;align-items:center;justify-content:center;position:relative;
+    box-shadow:0 12px 34px rgba(76,40,160,.55),inset 0 1px 0 rgba(255,255,255,.4);
+    animation:bob 3.4s ease-in-out infinite}
+  .logo::before{content:'';position:absolute;inset:-13px;border-radius:28px;
+    background:radial-gradient(circle,rgba(255,255,255,.32),transparent 70%);
+    animation:halo 3.4s ease-in-out infinite;z-index:-1}
+  .logo svg{animation:tilt 6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes halo{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:.85;transform:scale(1.14)}}
+  @keyframes tilt{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+
+  h1{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-top:22px}
+  .deckchip{margin-top:11px;display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:500;color:rgba(255,255,255,.86);
+    background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);
+    padding:6px 14px;border-radius:999px;
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .deckchip .ddot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.6)}
+
+  /* THE SPINE — named stage stepper inside a glass card */
+  .stepper{margin-top:28px;width:100%;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border-radius:20px;padding:10px 8px;
+    box-shadow:0 24px 60px rgba(20,10,46,.4),inset 0 1px 0 rgba(255,255,255,.18)}
+
+  .step{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:13px;
+    position:relative;transition:background .45s ease}
+  .step + .step{margin-top:2px}
+  /* connector line between marker circles */
+  .step:not(:last-child)::before{content:'';position:absolute;left:30px;top:46px;
+    width:2px;height:18px;background:rgba(255,255,255,.18);transition:background .5s ease}
+  .step.done:not(:last-child)::before{background:rgba(255,255,255,.7)}
+
+  .marker{width:33px;height:33px;border-radius:50%;flex-shrink:0;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.28);
+    transition:background .45s ease,border-color .45s ease,transform .4s cubic-bezier(.2,.7,.3,1)}
+  .marker svg{width:16px;height:16px;stroke:#fff;stroke-width:2.4;fill:none;
+    stroke-linecap:round;stroke-linejoin:round}
+  /* check (hidden until done) */
+  .marker .check{stroke-dasharray:24;stroke-dashoffset:24;opacity:0;transition:none}
+  .marker .num{position:absolute;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);
+    transition:opacity .3s ease}
+
+  .scopy{flex:1;min-width:0;text-align:left}
+  .stitle{font-size:15px;font-weight:600;color:rgba(255,255,255,.7);
+    letter-spacing:-.01em;transition:color .4s ease}
+  /* live status line — only under the ACTIVE stage */
+  .sstatus{height:0;overflow:hidden;font-size:13px;color:rgba(255,255,255,.78);
+    margin-top:0;opacity:0;transition:height .35s ease,opacity .35s ease,margin-top .35s ease;
+    display:flex;align-items:center;gap:8px}
+  .sstatus .ldot{width:6px;height:6px;border-radius:50%;background:#fff;flex-shrink:0;
+    box-shadow:0 0 0 0 rgba(255,255,255,.6);animation:pulse 1.3s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}100%{box-shadow:0 0 0 7px rgba(255,255,255,0)}}
+  .sstatus .stxt{transition:opacity .3s ease}
+
+  /* upcoming stage = dim */
+  .step.upcoming .stitle{color:rgba(255,255,255,.42)}
+
+  /* active stage = bright, lifted, status line revealed, ring pulse on marker */
+  .step.active{background:rgba(255,255,255,.1)}
+  .step.active .stitle{color:#fff;font-weight:600}
+  .step.active .sstatus{height:20px;opacity:1;margin-top:4px}
+  .step.active .marker{background:rgba(255,255,255,.95);border-color:#fff;transform:scale(1.04)}
+  .step.active .marker .num{color:#6D28D9}
+  .step.active .marker::after{content:'';position:absolute;inset:-5px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.55);animation:ring 1.6s ease-out infinite}
+  @keyframes ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.35);opacity:0}}
+
+  /* done stage = check drawn, title regains full color */
+  .step.done .stitle{color:rgba(255,255,255,.96);font-weight:600}
+  .step.done .marker{background:rgba(255,255,255,.95);border-color:#fff}
+  .step.done .marker .num{opacity:0}
+  .step.done .marker .check{opacity:1;stroke:#6D28D9;
+    animation:draw .5s ease forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+
+  /* thin per-deck progress bar across the bottom of the card */
+  .progress{margin:8px 12px 6px;height:5px;border-radius:99px;
+    background:rgba(255,255,255,.16);overflow:hidden;position:relative}
+  .progress .bar{position:absolute;inset:0 100% 0 0;border-radius:99px;
+    background:linear-gradient(90deg,#9CC4FE,#C8B6F4,#F0A8F2);
+    transition:right .7s cubic-bezier(.4,0,.2,1)}
+  .progmeta{display:flex;justify-content:space-between;align-items:center;
+    padding:0 14px 4px;font-size:11.5px;color:rgba(255,255,255,.66);letter-spacing:.01em}
+  .progmeta .pct{font-variant-numeric:tabular-nums;font-weight:600;color:rgba(255,255,255,.86)}
+
+  /* rotating TIPS — a calmer, clearly separate zone below the spine */
+  .tipwrap{margin-top:20px;display:flex;justify-content:center;width:100%}
+  .tip-card{display:flex;align-items:center;gap:12px;max-width:440px;
+    background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-radius:14px;padding:11px 16px;text-align:left}
+  .tip-card .ic{width:30px;height:30px;border-radius:9px;flex-shrink:0;
+    background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center}
+  .tip-card .ic svg{width:16px;height:16px;stroke:#fff;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .tip-card .lbl{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .tip-card .txt{font-size:13px;color:rgba(255,255,255,.9);margin-top:2px;line-height:1.4;transition:opacity .4s ease}
+
+  /* hand-off flash into the editor */
+  .handoff{position:absolute;inset:0;z-index:5;background:#fff;opacity:0;pointer-events:none;
+    display:flex;align-items:center;justify-content:center}
+  .handoff.show{animation:flash 1.5s ease forwards}
+  @keyframes flash{0%{opacity:0}40%{opacity:.16}100%{opacity:0}}
+
+  .note{position:absolute;bottom:18px;left:0;right:0;text-align:center;z-index:2;
+    font-size:11.5px;color:rgba(255,255,255,.52)}
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="handoff" id="handoff"></div>
+
+  <div class="stage">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 1024 1024" fill="none"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg>
+    </div>
+    <h1>Making your presentation</h1>
+    <div class="deckchip"><span class="ddot"></span>Q3 Board Review · 8 slides</div>
+
+    <!-- THE SPINE: named stage stepper -->
+    <div class="stepper" id="stepper">
+      <div class="step" data-stage="0">
+        <div class="marker">
+          <span class="num">1</span>
+          <svg class="check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="scopy">
+          <div class="stitle">Understand your idea</div>
+          <div class="sstatus"><span class="ldot"></span><span class="stxt"></span></div>
+        </div>
+      </div>
+      <div class="step" data-stage="1">
+        <div class="marker">
+          <span class="num">2</span>
+          <svg class="check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="scopy">
+          <div class="stitle">Plan the flow</div>
+          <div class="sstatus"><span class="ldot"></span><span class="stxt"></span></div>
+        </div>
+      </div>
+      <div class="step" data-stage="2">
+        <div class="marker">
+          <span class="num">3</span>
+          <svg class="check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="scopy">
+          <div class="stitle">Design the slides</div>
+          <div class="sstatus"><span class="ldot"></span><span class="stxt"></span></div>
+        </div>
+      </div>
+      <div class="step" data-stage="3">
+        <div class="marker">
+          <span class="num">4</span>
+          <svg class="check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="scopy">
+          <div class="stitle">Add the visuals</div>
+          <div class="sstatus"><span class="ldot"></span><span class="stxt"></span></div>
+        </div>
+      </div>
+
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="progmeta">
+        <span id="progLabel">Designing slide 1 of 8</span>
+        <span class="pct" id="pct">0%</span>
+      </div>
+    </div>
+
+    <!-- rotating tips — calmer, slower, clearly separate from the status line -->
+    <div class="tipwrap">
+      <div class="tip-card">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.6.9.6 1.6h5.8c0-.7.1-1.2.6-1.6A6 6 0 0 0 12 3Z"/></svg></span>
+        <div>
+          <div class="lbl">Tip</div>
+          <div class="txt" id="tip">Right-click a slide to try a different layout.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">Prototype — loops continuously so you can see the full sequence. In the app this flows straight into the editor.</div>
+
+<script>
+(function(){
+  const steps = [...document.querySelectorAll('.step')];
+  const bar = document.getElementById('bar');
+  const pct = document.getElementById('pct');
+  const progLabel = document.getElementById('progLabel');
+  const handoff = document.getElementById('handoff');
+
+  // Per-stage live status lines (human voice). Each stage owns a few beats;
+  // "Design the slides" carries the long, slide-by-slide tail of work.
+  const STAGES = [
+    { status: ["Reading your topic…", "Getting the goal and the audience…"] },
+    { status: ["Sketching the outline…", "Ordering the story so it builds…"] },
+    { status: [
+        "Designing the cover…",
+        "Writing the agenda…",
+        "Building the Q3 metrics slide…",
+        "Laying out the results…",
+        "Shaping the recommendation…"
+      ] },
+    { status: ["Finding images that fit…", "Color-matching to your theme…", "Tidying the spacing…"] }
+  ];
+
+  // Map each status beat to a slide-progress count so the bar moves honestly.
+  // 4 stages, 8 slides — the heavy "Design" stage advances the slide counter.
+  const TOTAL_SLIDES = 8;
+
+  // Build a flat timeline of beats: {stage, text, slide, pctTarget}
+  const timeline = [];
+  // stage 0 — understand (slides not yet counted): 0% → 12%
+  STAGES[0].status.forEach((t,k)=>timeline.push({stage:0,text:t,slide:0,pct:6+k*6}));
+  // stage 1 — plan: 12% → 24%
+  STAGES[1].status.forEach((t,k)=>timeline.push({stage:1,text:t,slide:0,pct:18+k*6}));
+  // stage 2 — design slides: 24% → 84%, advancing the slide counter
+  STAGES[2].status.forEach((t,k)=>{
+    const slide = Math.min(TOTAL_SLIDES, Math.round((k+1)/STAGES[2].status.length*TOTAL_SLIDES));
+    timeline.push({stage:2,text:t,slide,pct:24+Math.round((k+1)/STAGES[2].status.length*60)});
+  });
+  // stage 3 — visuals/polish: 84% → 100%
+  STAGES[3].status.forEach((t,k)=>timeline.push({stage:3,text:t,slide:TOTAL_SLIDES,pct:84+Math.round((k+1)/STAGES[3].status.length*16)}));
+
+  let idx = 0;
+  let phase = 'run'; // run → ready → handoff → reset
+
+  function paintStage(activeStage){
+    steps.forEach((s,si)=>{
+      s.classList.toggle('done', si < activeStage);
+      s.classList.toggle('active', si === activeStage);
+      s.classList.toggle('upcoming', si > activeStage);
+    });
+  }
+  function setStatus(stage, text){
+    const el = steps[stage].querySelector('.stxt');
+    if(!el) return;
+    el.style.opacity = 0;
+    setTimeout(()=>{ el.textContent = text; el.style.opacity = 1; }, 180);
+  }
+
+  function tick(){
+    if(phase === 'run'){
+      const beat = timeline[idx];
+      paintStage(beat.stage);
+      setStatus(beat.stage, beat.text);
+      bar.style.right = (100 - beat.pct) + '%';
+      pct.textContent = beat.pct + '%';
+      progLabel.textContent = beat.slide > 0
+        ? 'Designing slide ' + beat.slide + ' of ' + TOTAL_SLIDES
+        : (beat.stage === 0 ? 'Understanding your prompt' : 'Planning the structure');
+      idx++;
+      if(idx >= timeline.length){ phase = 'ready'; }
+      return;
+    }
+    if(phase === 'ready'){
+      // all four checked, clean "ready" beat
+      steps.forEach(s=>{ s.classList.remove('active','upcoming'); s.classList.add('done'); });
+      bar.style.right = '0%';
+      pct.textContent = '100%';
+      progLabel.textContent = 'All 8 slides ready';
+      // last stage status reads as a hand-off
+      const last = steps[3].querySelector('.stxt');
+      if(last){ last.style.opacity = 0; setTimeout(()=>{ last.textContent='Opening your deck…'; last.style.opacity=1; }, 180); }
+      steps[3].classList.add('active'); // keep the pulse on the final marker briefly
+      phase = 'handoff';
+      return;
+    }
+    if(phase === 'handoff'){
+      handoff.classList.add('show');           // soft white wipe — flows into the editor
+      setTimeout(()=>handoff.classList.remove('show'), 1500);
+      phase = 'reset';
+      return;
+    }
+    if(phase === 'reset'){
+      // restart the loop cleanly
+      idx = 0;
+      steps.forEach(s=>s.classList.remove('done','active','upcoming'));
+      bar.style.right = '100%';
+      pct.textContent = '0%';
+      progLabel.textContent = 'Understanding your prompt';
+      phase = 'run';
+      return;
+    }
+  }
+
+  // pacing: status beats are quick enough to feel alive, slow enough to read.
+  // Quick-generation grace: if real work finished early, the same loop just
+  // reaches 'ready' sooner — nothing is padded.
+  tick();
+  let beatMs = 1150;
+  const timer = setInterval(()=>{
+    // the 'ready' → 'handoff' → 'reset' beats hold a touch longer so they read
+    if(phase === 'ready' || phase === 'handoff') { /* handled by next ticks */ }
+    tick();
+  }, beatMs);
+
+  // rotating TIPS — slower, independent crossfade so they never race the status line
+  const tips = [
+    "Right-click a slide to try a different layout.",
+    "Add your real numbers and we'll build the charts.",
+    "Upload a reference deck and we'll match its style.",
+    "Press Present to rehearse full-screen.",
+    "Not loving a slide? Regenerate just that one.",
+    "Pick a theme any time — your content restyles instantly."
+  ];
+  const tipEl = document.getElementById('tip');
+  let ti = 1;
+  setInterval(()=>{
+    tipEl.style.opacity = 0;
+    setTimeout(()=>{ tipEl.textContent = tips[ti % tips.length]; tipEl.style.opacity = 1; ti++; }, 400);
+  }, 5200);
+})();
+</script>
+</body>
+</html>

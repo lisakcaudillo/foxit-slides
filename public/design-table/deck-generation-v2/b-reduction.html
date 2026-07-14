@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Foxit Slides · Deck Generation — B · One Beautiful Input</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;560;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,500;1,8..60,600&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   B · ONE BEAUTIFUL INPUT
+   Apple-class radical reduction. The resting screen is almost
+   empty: a greeting, a one-line gradient-italic headline, and
+   ONE exquisite prompt — Spotlight / Siri / Apple-Intelligence
+   energy. A single primary Generate. ALL customization lives
+   behind ONE understated "Tune" glyph that opens a focused,
+   large-tap-target sheet (iOS-sheet energy) ONLY when wanted.
+   No control row. No chips. No accordion. Just the input,
+   crafted so it feels expensive and alive on focus + typing.
+   Matches the approved home aesthetic (manager-v5): near-white
+   canvas, ONE violet accent #6B3FA0, gradient-italic accent
+   word, hairline borders, spring micro-motion.
+   ============================================================ */
+
+:root{
+  --ink:        #0B1220;
+  --ink-2:      #1E293B;
+  --body:       #475569;
+  --muted:      #94A3B8;
+  --faint:      #CBD5E1;
+  --canvas:     #FCFCFD;
+  --surface:    #FFFFFF;
+  --accent:     #6B3FA0;
+  --accent-ink: #57318A;
+  --accent-wash:rgba(107,63,160,0.06);
+  --accent-line:rgba(107,63,160,0.32);
+  --spark:      #C5A6EC;
+
+  --grad-violet:#6B3FA0;
+  --grad-indigo:#5B6CF0;
+  --grad-blue:  #4198FF;
+
+  --line:        rgba(15,23,42,0.08);
+  --line-strong: rgba(15,23,42,0.12);
+  --r-md:12px; --r-lg:16px; --r-xl:22px; --r-2xl:28px;
+
+  --shadow-card:0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.05);
+  --shadow-lift:0 2px 6px rgba(15,23,42,0.06), 0 22px 56px rgba(15,23,42,0.10);
+  --shadow-input:0 1px 1px rgba(15,23,42,0.03), 0 10px 30px rgba(33,18,64,0.06), 0 40px 80px rgba(33,18,64,0.05);
+  --shadow-input-focus:0 1px 1px rgba(15,23,42,0.04), 0 18px 44px rgba(33,18,64,0.10), 0 60px 120px rgba(33,18,64,0.10);
+  --shadow-sheet:0 2px 8px rgba(15,23,42,0.06), 0 40px 100px rgba(33,18,64,0.22);
+
+  --ease:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--canvas); color:var(--body);
+  font-size:16px; line-height:1.5; min-height:100vh;
+}
+button{ font-family:inherit; }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  .rise{ opacity:1 !important; transform:none !important; }
+  .shimmer{ display:none !important; }
+}
+
+/* ============================================================
+   STAGE — vast whitespace, content optically centered.
+   ============================================================ */
+.page{ position:relative; min-height:100vh; overflow:hidden; }
+/* the single calm intelligence aura behind the input */
+.page::before{
+  content:""; position:fixed; left:50%; top:34%;
+  width:1100px; height:760px; transform:translate(-50%,-50%);
+  background:radial-gradient(46% 50% at 50% 42%, rgba(107,63,160,0.07), transparent 70%);
+  pointer-events:none; z-index:0; filter:blur(8px);
+}
+.stage{
+  position:relative; z-index:1;
+  max-width:920px; margin:0 auto;
+  padding:0 40px;
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding-bottom:8vh;
+}
+
+/* ---- the only resting copy: greeting + one-line headline ---- */
+.greeting{
+  font-size:13px; font-weight:500; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:26px;
+}
+.greeting .dot{
+  display:inline-block; width:5px; height:5px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 0 3px var(--accent-wash);
+  vertical-align:2px; margin-right:9px;
+}
+.headline{
+  font-size:46px; font-weight:700; line-height:1.05; letter-spacing:-.032em;
+  color:var(--ink); margin-bottom:48px; max-width:760px;
+}
+.headline .accent{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-style:italic; font-weight:600; letter-spacing:-.012em;
+  background:linear-gradient(108deg, var(--grad-violet) 0%, var(--grad-indigo) 52%, var(--grad-blue) 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  padding-right:.04em;
+}
+
+/* ============================================================
+   ④ THE ONE BEAUTIFUL INPUT — the hero. Expensive + alive.
+   Translucent material, soft inner glow, an intelligence
+   shimmer that wakes on focus. One pill. One Generate.
+   ============================================================ */
+.inputwrap{ position:relative; width:100%; max-width:720px; }
+
+/* the living aura — a soft conic intelligence ring, off by default,
+   gently revealed on focus. Pure decoration, no layout cost. */
+.inputwrap::before{
+  content:""; position:absolute; inset:-2px; border-radius:calc(var(--r-2xl) + 2px);
+  background:conic-gradient(from 120deg,
+    rgba(107,63,160,0) 0deg, rgba(107,63,160,0.55) 70deg,
+    rgba(91,108,240,0.55) 150deg, rgba(65,152,255,0.45) 220deg,
+    rgba(107,63,160,0) 320deg);
+  opacity:0; filter:blur(7px);
+  transition:opacity .55s var(--ease);
+  pointer-events:none; z-index:0;
+}
+.inputwrap.is-focused::before{ opacity:.9; animation:spin 7s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+.input{
+  position:relative; z-index:1;
+  background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.86));
+  backdrop-filter:blur(18px) saturate(1.3); -webkit-backdrop-filter:blur(18px) saturate(1.3);
+  border:1px solid var(--line);
+  border-radius:var(--r-2xl);
+  box-shadow:var(--shadow-input), inset 0 1px 0 rgba(255,255,255,0.9);
+  transition:box-shadow .5s var(--ease), border-color .5s var(--ease), transform .5s var(--spring);
+  overflow:hidden;
+}
+.inputwrap.is-focused .input{
+  border-color:transparent;
+  box-shadow:var(--shadow-input-focus), inset 0 1px 0 rgba(255,255,255,0.95);
+  transform:translateY(-2px);
+}
+
+/* the field row — big calm text + a leading spark that breathes */
+.field{
+  display:flex; align-items:flex-start; gap:16px;
+  padding:26px 26px 4px 28px;
+}
+.spark{
+  flex-shrink:0; width:24px; height:24px; margin-top:5px;
+  color:var(--accent); opacity:.45;
+  transition:opacity .5s var(--ease), transform .5s var(--spring);
+}
+.inputwrap.is-focused .spark{ opacity:1; transform:scale(1.04); }
+.inputwrap.has-text .spark{ opacity:1; }
+.spark svg{ width:24px; height:24px; display:block; }
+
+.field-body{ position:relative; flex:1; min-width:0; }
+.field-body textarea{
+  position:relative; z-index:2;
+  width:100%; border:0; outline:0; resize:none; background:transparent;
+  font-family:inherit; font-size:21px; line-height:1.5; font-weight:450;
+  color:var(--ink-2); letter-spacing:-.008em; min-height:60px;
+}
+.field-body textarea::placeholder{ color:transparent; }
+
+/* cycling ghost example — sits exactly under the caret line */
+.ghost{
+  position:absolute; left:0; right:0; top:0; z-index:1;
+  font-size:21px; line-height:1.5; font-weight:450; letter-spacing:-.008em;
+  color:var(--muted); pointer-events:none; user-select:none;
+}
+.ghost .lead{ color:var(--faint); }
+.ghost #ghostCycle{ display:inline; transition:opacity .42s var(--ease); }
+.ghost.is-hidden{ display:none; }
+
+/* ---- footer of the input: ONE tune glyph + format + Generate ---- */
+.foot{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 18px 18px 24px;
+  border-top:1px solid transparent;
+  transition:border-color .3s var(--ease);
+}
+.inputwrap.is-focused .foot,
+.inputwrap.has-text .foot{ border-top-color:var(--line); }
+
+/* honest static format indicator — quiet, no chrome */
+.format{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:13px; font-weight:500; color:var(--muted); letter-spacing:-.003em;
+  user-select:none;
+}
+.format svg{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.7; opacity:.85; }
+.format b{ color:var(--ink-2); font-weight:560; }
+
+.foot .gap{ flex:1; }
+
+/* the SINGLE understated affordance — one perfectly-judged glyph.
+   No label by default; its meaning revealed on hover/focus only.
+   A dot rides it when any option has been touched. */
+.tune{
+  position:relative;
+  display:inline-flex; align-items:center; gap:0;
+  height:44px; padding:0 12px; border-radius:var(--r-md);
+  border:1px solid transparent; background:transparent; cursor:pointer;
+  color:var(--muted); transition:background .18s var(--ease), color .18s var(--ease),
+    border-color .18s var(--ease), padding .26s var(--ease), box-shadow .16s var(--ease);
+}
+.tune svg{ width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.7; }
+.tune .tune-label{
+  max-width:0; overflow:hidden; white-space:nowrap; opacity:0;
+  font-size:14px; font-weight:500; letter-spacing:-.004em; color:inherit;
+  transition:max-width .3s var(--ease), opacity .24s var(--ease), margin-left .3s var(--ease);
+}
+.tune:hover,.tune:focus-visible,.tune.is-active{ color:var(--accent-ink); background:var(--accent-wash); border-color:var(--accent-line); }
+.tune:hover .tune-label,.tune:focus-visible .tune-label,.tune.is-active .tune-label{ max-width:60px; opacity:1; margin-left:8px; }
+.tune:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); }
+.tune .tune-dot{
+  position:absolute; top:8px; right:8px; width:6px; height:6px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 0 2px var(--surface);
+  opacity:0; transform:scale(.4); transition:opacity .26s var(--spring), transform .26s var(--spring);
+}
+.tune.has-edits .tune-dot{ opacity:1; transform:scale(1); }
+
+/* attach — equally quiet, same family */
+.attach{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:44px; width:44px; border-radius:var(--r-md);
+  border:1px solid transparent; background:transparent; cursor:pointer;
+  color:var(--muted); transition:background .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease), box-shadow .16s var(--ease);
+}
+.attach svg{ width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.7; }
+.attach:hover,.attach:focus-visible{ color:var(--accent-ink); background:var(--accent-wash); border-color:var(--accent-line); }
+.attach:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); }
+
+.generate{
+  display:inline-flex; align-items:center; gap:10px;
+  height:44px; padding:0 22px; border-radius:var(--r-md);
+  border:0; cursor:pointer; background:var(--ink); color:#fff;
+  font-size:15px; font-weight:560; letter-spacing:-.005em; white-space:nowrap;
+  box-shadow:0 1px 2px rgba(15,23,42,.14), 0 8px 22px rgba(33,18,64,.16);
+  transition:transform .18s var(--spring), box-shadow .2s var(--ease), background .2s var(--ease), opacity .2s var(--ease);
+}
+.generate svg{ width:17px; height:17px; }
+.generate .g-spark{ color:var(--spark); }
+.generate:hover{ background:#000; transform:translateY(-1px); }
+.generate:active{ transform:translateY(0); }
+.generate:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); }
+.generate[disabled]{ background:#EEF0F3; color:var(--faint); cursor:not-allowed; box-shadow:none; }
+.generate[disabled] .g-spark{ color:var(--faint); }
+
+/* a single quiet line below — the only ambient guidance, fades on focus */
+.hint{
+  margin-top:22px; font-size:13.5px; font-weight:450; color:var(--muted);
+  letter-spacing:-.002em; transition:opacity .4s var(--ease);
+}
+.hint .kbd{
+  font-size:11px; font-weight:500; border:1px solid var(--line-strong); border-bottom-width:1.5px;
+  border-radius:5px; padding:1px 6px; color:var(--body); background:#FBFBFC; margin:0 1px;
+}
+.inputwrap.is-focused ~ .hint{ opacity:.55; }
+
+/* generating state — the input becomes a calm progress surface */
+.gen-status{ display:none; align-items:center; gap:16px; padding:30px 28px; text-align:left; }
+.inputwrap.is-generating .gen-status{ display:flex; }
+.inputwrap.is-generating .field,
+.inputwrap.is-generating .foot{ display:none; }
+.gen-orb{
+  width:20px; height:20px; border-radius:50%; flex-shrink:0;
+  border:2px solid var(--accent-line); border-top-color:var(--accent);
+  animation:orbspin .7s linear infinite;
+}
+@keyframes orbspin{ to{ transform:rotate(360deg); } }
+.gen-text b{ font-weight:600; color:var(--ink); }
+.gen-step{ font-size:13px; color:var(--muted); margin-top:3px; }
+
+/* ============================================================
+   THE SHEET — iOS-sheet energy. Focused, large, calm.
+   Opens ONLY from the single tune affordance.
+   ============================================================ */
+.scrim{
+  position:fixed; inset:0; z-index:40;
+  background:rgba(11,18,32,0.28); backdrop-filter:blur(3px);
+  opacity:0; pointer-events:none; transition:opacity .42s var(--ease);
+}
+.scrim.is-open{ opacity:1; pointer-events:auto; }
+
+.sheet{
+  position:fixed; z-index:50; left:50%; bottom:0;
+  width:min(540px, calc(100vw - 24px));
+  transform:translate(-50%, 100%);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-bottom:0;
+  border-radius:var(--r-2xl) var(--r-2xl) 0 0;
+  box-shadow:var(--shadow-sheet);
+  transition:transform .5s var(--ease);
+  max-height:86vh; display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.sheet.is-open{ transform:translate(-50%, 0); }
+/* on wide screens it floats as a centered card, still sheet-like */
+@media (min-width:760px){
+  .sheet{ bottom:auto; top:50%; border-bottom:1px solid var(--line); border-radius:var(--r-2xl);
+    transform:translate(-50%, calc(-50% + 16px)); opacity:0; }
+  .sheet.is-open{ transform:translate(-50%, -50%); opacity:1; }
+}
+
+.grabber{ display:flex; justify-content:center; padding:12px 0 2px; flex-shrink:0; }
+.grabber span{ width:40px; height:5px; border-radius:3px; background:var(--faint); }
+@media (min-width:760px){ .grabber{ display:none; } }
+
+.sheet-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 26px 18px; flex-shrink:0;
+  border-bottom:1px solid var(--line);
+}
+.sheet-head h2{ font-size:19px; font-weight:600; color:var(--ink); letter-spacing:-.018em; }
+.sheet-head .sub{ font-size:13px; font-weight:450; color:var(--muted); margin-top:3px; letter-spacing:-.002em; }
+.sheet-close{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:var(--r-md);
+  border:1px solid var(--line); background:var(--surface); cursor:pointer;
+  color:var(--ink-2); flex-shrink:0; margin-left:14px;
+  transition:background .16s var(--ease), border-color .16s var(--ease), color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.sheet-close:hover{ background:#FBFAFD; border-color:var(--line-strong); color:var(--ink); }
+.sheet-close:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); border-color:var(--accent-line); }
+.sheet-close svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.9; }
+
+.sheet-body{ overflow-y:auto; padding:8px 26px 8px; }
+
+/* each option = a generous, large-tap-target row */
+.opt{ border-bottom:1px solid var(--line); padding:20px 0 22px; }
+.opt:last-child{ border-bottom:0; }
+.opt-label{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  margin-bottom:14px;
+}
+.opt-label .name{ font-size:16px; font-weight:560; color:var(--ink); letter-spacing:-.006em; }
+.opt-label .val{ font-size:13px; font-weight:500; color:var(--accent-ink); letter-spacing:-.003em; }
+.opt-label .val.is-empty{ color:var(--faint); font-weight:450; }
+
+/* chip suggestions — large, airy, wrap-safe */
+.chips{ display:flex; flex-wrap:wrap; gap:9px; }
+.chip{
+  font-size:14px; font-weight:480; height:42px; padding:0 18px; border-radius:var(--r-md);
+  border:1px solid var(--line-strong); background:var(--surface); color:var(--ink-2);
+  cursor:pointer; white-space:nowrap;
+  transition:background .16s var(--ease), border-color .16s var(--ease), color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.chip:hover{ background:#FAFAFB; border-color:var(--line-strong); }
+.chip:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); border-color:var(--accent-line); }
+.chip.is-sel{ border-color:var(--accent-line); background:var(--accent-wash); color:var(--accent-ink); font-weight:540; }
+
+/* free-text field for Audience / Tone */
+.freetext{
+  margin-top:11px; width:100%; height:46px; padding:0 16px;
+  border:1px solid var(--line-strong); border-radius:var(--r-md);
+  background:var(--surface); font-family:inherit; font-size:15px; color:var(--ink-2);
+  letter-spacing:-.004em; transition:border-color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.freetext::placeholder{ color:var(--faint); }
+.freetext:focus{ outline:none; border-color:var(--accent-line); box-shadow:0 0 0 4px var(--accent-wash); }
+
+/* select-style row for Voice (long list) — a calm native-feel control */
+.selectwrap{ position:relative; }
+.selectwrap svg{ position:absolute; right:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; stroke:var(--muted); fill:none; stroke-width:1.8; pointer-events:none; }
+.selectwrap select{
+  width:100%; height:46px; padding:0 40px 0 16px; appearance:none; -webkit-appearance:none;
+  border:1px solid var(--line-strong); border-radius:var(--r-md); background:var(--surface);
+  font-family:inherit; font-size:15px; font-weight:500; color:var(--ink-2); letter-spacing:-.004em; cursor:pointer;
+  transition:border-color .16s var(--ease), box-shadow .16s var(--ease);
+}
+.selectwrap select:focus{ outline:none; border-color:var(--accent-line); box-shadow:0 0 0 4px var(--accent-wash); }
+
+.sheet-foot{
+  flex-shrink:0; padding:16px 26px; border-top:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.sheet-reset{
+  background:transparent; border:0; cursor:pointer; font-size:14px; font-weight:500;
+  color:var(--muted); padding:8px 4px; letter-spacing:-.003em;
+  transition:color .16s var(--ease);
+}
+.sheet-reset:hover{ color:var(--ink-2); }
+.sheet-done{
+  height:44px; padding:0 28px; border-radius:var(--r-md); border:0; cursor:pointer;
+  background:var(--accent); color:#fff; font-size:15px; font-weight:560; letter-spacing:-.005em;
+  box-shadow:0 1px 2px rgba(107,63,160,.2), 0 8px 20px rgba(107,63,160,.22);
+  transition:background .18s var(--ease), transform .16s var(--spring), box-shadow .2s var(--ease);
+}
+.sheet-done:hover{ background:var(--accent-ink); transform:translateY(-1px); }
+.sheet-done:active{ transform:translateY(0); }
+.sheet-done:focus-visible{ outline:none; box-shadow:0 0 0 4px var(--accent-wash); }
+
+/* ---- rise-in on load ---- */
+.rise{ opacity:0; transform:translateY(14px); animation:rise .65s var(--ease) forwards; }
+.r1{ animation-delay:.05s; } .r2{ animation-delay:.13s; } .r3{ animation-delay:.21s; } .r4{ animation-delay:.30s; }
+@keyframes rise{ to{ opacity:1; transform:none; } }
+
+.cornerlabel{
+  position:fixed; left:16px; bottom:16px; z-index:60;
+  background:var(--ink); color:#fff; font-size:11px; font-weight:600;
+  letter-spacing:.04em; padding:7px 12px; border-radius:8px;
+  box-shadow:0 4px 14px rgba(0,0,0,.22);
+}
+.cornerlabel b{ color:var(--spark); font-weight:600; }
+
+@media (max-width:600px){
+  .stage{ padding:0 22px 12vh; }
+  .headline{ font-size:34px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <main class="stage">
+
+    <div class="greeting rise r1"><span class="dot"></span>Good morning, Lisa</div>
+    <h1 class="headline rise r2">What should we <span class="accent">present</span>?</h1>
+
+    <!-- ④ THE ONE BEAUTIFUL INPUT -->
+    <div class="inputwrap rise r3" id="inputwrap">
+      <div class="input" id="input">
+
+        <!-- generating surface -->
+        <div class="gen-status">
+          <div class="gen-orb"></div>
+          <div>
+            <div class="gen-text"><b id="genTitle">Composing your deck</b></div>
+            <div class="gen-step" id="genStep">Outlining sections…</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="spark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2l1.85 5.55a3 3 0 0 0 1.9 1.9L21.8 11.5l-5.55 1.85a3 3 0 0 0-1.9 1.9L12 20.8l-1.85-5.55a3 3 0 0 0-1.9-1.9L2.2 11.5l5.55-1.85a3 3 0 0 0 1.9-1.9z"/></svg>
+          </span>
+          <div class="field-body">
+            <div class="ghost" id="ghost">
+              <span class="lead">Try “</span><span id="ghostCycle">a Series A pitch for a fintech startup</span><span class="lead">”</span>
+            </div>
+            <textarea id="ta" rows="1" aria-label="Describe the deck you want to create"></textarea>
+          </div>
+        </div>
+
+        <div class="foot">
+          <span class="format" aria-label="Format: Slides, 16 by 9">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+            <b>Slides</b> · 16:9
+          </span>
+
+          <span class="gap"></span>
+
+          <button class="attach" id="attachBtn" type="button" aria-label="Attach a file">
+            <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <!-- THE single understated affordance -->
+          <button class="tune" id="tuneBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Tune the deck — audience, tone, detail, voice">
+            <svg viewBox="0 0 24 24"><line x1="4" y1="8" x2="20" y2="8" stroke-linecap="round"/><circle cx="9" cy="8" r="2.4" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16" stroke-linecap="round"/><circle cx="15" cy="16" r="2.4" fill="#fff"/></svg>
+            <span class="tune-label">Tune</span>
+            <span class="tune-dot" aria-hidden="true"></span>
+          </button>
+
+          <button class="generate" id="genBtn" type="button" disabled>
+            <svg class="g-spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.7 5.1a3 3 0 0 0 1.9 1.9L20.7 11l-5.1 1.7a3 3 0 0 0-1.9 1.9L12 19.5l-1.7-5.1a3 3 0 0 0-1.9-1.9L3.3 11l5.1-1.7a3 3 0 0 0 1.9-1.9z"/></svg>
+            Generate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint rise r4">Press <span class="kbd">Tab</span> to use the example, or <span class="kbd">⌘</span><span class="kbd">↵</span> to generate.</p>
+
+  </main>
+
+  <!-- ============ THE SHEET (opens only from Tune) ============ -->
+  <div class="scrim" id="scrim"></div>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true">
+    <div class="grabber"><span></span></div>
+    <div class="sheet-head">
+      <div>
+        <h2 id="sheetTitle">Tune</h2>
+        <div class="sub">Optional. We choose sensible defaults if you skip this.</div>
+      </div>
+      <button class="sheet-close" id="sheetClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="sheet-body">
+
+      <!-- AUDIENCE — free text + suggestions -->
+      <div class="opt">
+        <div class="opt-label"><span class="name">Audience</span><span class="val is-empty" data-val="audience">Anyone</span></div>
+        <div class="chips" data-group="audience" data-mode="freetext">
+          <button class="chip" type="button">Executives</button>
+          <button class="chip" type="button">Engineers</button>
+          <button class="chip" type="button">Designers</button>
+          <button class="chip" type="button">Sales team</button>
+          <button class="chip" type="button">Customers</button>
+          <button class="chip" type="button">General public</button>
+          <button class="chip" type="button">Investors</button>
+          <button class="chip" type="button">Students</button>
+        </div>
+        <input class="freetext" type="text" data-field="audience" placeholder="…or type your own audience" aria-label="Type your own audience" />
+      </div>
+
+      <!-- TONE — free text + suggestions -->
+      <div class="opt">
+        <div class="opt-label"><span class="name">Tone</span><span class="val is-empty" data-val="tone">Balanced</span></div>
+        <div class="chips" data-group="tone" data-mode="freetext">
+          <button class="chip" type="button">Professional</button>
+          <button class="chip" type="button">Casual</button>
+          <button class="chip" type="button">Friendly</button>
+          <button class="chip" type="button">Authoritative</button>
+          <button class="chip" type="button">Inspirational</button>
+          <button class="chip" type="button">Educational</button>
+          <button class="chip" type="button">Conversational</button>
+          <button class="chip" type="button">Technical</button>
+        </div>
+        <input class="freetext" type="text" data-field="tone" placeholder="…or type your own tone" aria-label="Type your own tone" />
+      </div>
+
+      <!-- DETAIL — single-select -->
+      <div class="opt">
+        <div class="opt-label"><span class="name">Detail level</span><span class="val" data-val="detail">Detailed</span></div>
+        <div class="chips" data-group="detail" data-mode="select">
+          <button class="chip" type="button">Concise</button>
+          <button class="chip is-sel" type="button">Detailed</button>
+          <button class="chip" type="button">Extensive</button>
+        </div>
+      </div>
+
+      <!-- VOICE — long list → calm select -->
+      <div class="opt">
+        <div class="opt-label"><span class="name">Voice</span><span class="val" data-val="voice">Default</span></div>
+        <div class="selectwrap">
+          <select data-field="voice" aria-label="Voice">
+            <option>Default</option>
+            <option>No voice</option>
+            <option>Legal</option>
+            <option>Executive</option>
+            <option>Technical</option>
+            <option>Persuasive</option>
+            <option>Simple</option>
+            <option>HR</option>
+            <option>Research</option>
+            <option>Government</option>
+            <option>Educational</option>
+            <option>Financial</option>
+          </select>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- HOW TO TREAT MY TEXT — single-select -->
+      <div class="opt">
+        <div class="opt-label"><span class="name">How to treat my text</span><span class="val" data-val="treat">Inspire from this</span></div>
+        <div class="chips" data-group="treat" data-mode="select">
+          <button class="chip is-sel" type="button">Inspire from this</button>
+          <button class="chip" type="button">Build on this</button>
+          <button class="chip" type="button">Use as the text</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sheet-foot">
+      <button class="sheet-reset" id="sheetReset" type="button">Reset to defaults</button>
+      <button class="sheet-done" id="sheetDone" type="button">Done</button>
+    </div>
+  </section>
+
+</div>
+
+<div class="cornerlabel">B · <b>One Beautiful Input</b></div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = (s,r=document)=>r.querySelector(s);
+  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+
+  const inputwrap = $('#inputwrap');
+  const ta = $('#ta');
+  const ghost = $('#ghost');
+  const ghostCycle = $('#ghostCycle');
+  const genBtn = $('#genBtn');
+  const tuneBtn = $('#tuneBtn');
+
+  /* state mirrors GenerationPrompt.tsx */
+  const DEFAULTS = { audience:'', tone:'', detail:'Detailed', voice:'Default', treat:'Inspire from this' };
+  const state = Object.assign({}, DEFAULTS);
+
+  /* ---------- the alive input ---------- */
+  function showGhost(){ ghost.classList.toggle('is-hidden', ta.value.trim().length>0); }
+  function autosize(){ ta.style.height='auto'; ta.style.height=Math.max(60, ta.scrollHeight)+'px'; }
+  function syncText(){
+    const has = ta.value.trim().length>0;
+    inputwrap.classList.toggle('has-text', has);
+    genBtn.disabled = !has || inputwrap.classList.contains('is-generating');
+    showGhost();
+  }
+  ta.addEventListener('input', ()=>{ autosize(); syncText(); });
+  ta.addEventListener('focus', ()=> inputwrap.classList.add('is-focused'));
+  ta.addEventListener('blur',  ()=> inputwrap.classList.remove('is-focused'));
+
+  /* cycling example */
+  const EXAMPLES = [
+    'a Series A pitch for a fintech startup',
+    'a Q3 business review for the leadership team',
+    'a product launch narrative for a new app',
+    'brand guidelines for a design studio',
+    'an onboarding playbook for new hires',
+  ];
+  let exIdx = 0, exTimer = null;
+  function startCycle(){
+    stopCycle();
+    exTimer = setInterval(()=>{
+      if(ta.value.trim().length>0) return;
+      ghostCycle.style.opacity = '0';
+      setTimeout(()=>{ exIdx=(exIdx+1)%EXAMPLES.length; ghostCycle.textContent=EXAMPLES[exIdx]; ghostCycle.style.opacity='1'; }, 420);
+    }, 3400);
+  }
+  function stopCycle(){ if(exTimer){ clearInterval(exTimer); exTimer=null; } }
+
+  ta.addEventListener('keydown', e=>{
+    if(e.key==='Tab' && ta.value.trim().length===0){
+      e.preventDefault();
+      ta.value = EXAMPLES[exIdx];
+      autosize(); syncText();
+    }
+    if((e.metaKey||e.ctrlKey) && e.key==='Enter' && !genBtn.disabled){ e.preventDefault(); generate(); }
+  });
+
+  $('#attachBtn').addEventListener('click', ()=>{ /* demo: would open file picker */ });
+
+  /* ---------- the sheet ---------- */
+  const scrim = $('#scrim');
+  const sheet = $('#sheet');
+  let lastFocus = null;
+
+  function hasEdits(){
+    return state.audience!==DEFAULTS.audience || state.tone!==DEFAULTS.tone ||
+           state.detail!==DEFAULTS.detail || state.voice!==DEFAULTS.voice ||
+           state.treat!==DEFAULTS.treat;
+  }
+  function refreshTuneDot(){ tuneBtn.classList.toggle('has-edits', hasEdits()); }
+
+  function openSheet(){
+    lastFocus = document.activeElement;
+    scrim.classList.add('is-open');
+    sheet.classList.add('is-open');
+    sheet.setAttribute('aria-hidden','false');
+    tuneBtn.setAttribute('aria-expanded','true');
+    tuneBtn.classList.add('is-active');
+    document.body.style.overflow='hidden';
+    const first = sheet.querySelector('.chip, .freetext, select');
+    if(first) setTimeout(()=>first.focus(), 80);
+  }
+  function closeSheet(){
+    scrim.classList.remove('is-open');
+    sheet.classList.remove('is-open');
+    sheet.setAttribute('aria-hidden','true');
+    tuneBtn.setAttribute('aria-expanded','false');
+    tuneBtn.classList.remove('is-active');
+    document.body.style.overflow='';
+    refreshTuneDot();
+    if(lastFocus) lastFocus.focus();
+  }
+  tuneBtn.addEventListener('click', openSheet);
+  $('#sheetClose').addEventListener('click', closeSheet);
+  $('#sheetDone').addEventListener('click', closeSheet);
+  scrim.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && sheet.classList.contains('is-open')) closeSheet(); });
+
+  /* focus trap inside the sheet */
+  sheet.addEventListener('keydown', e=>{
+    if(e.key!=='Tab') return;
+    const f = $$('button, input, select, [tabindex]:not([tabindex="-1"])', sheet).filter(el=>!el.disabled && el.offsetParent!==null);
+    if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  });
+
+  function setSummary(key, text, isEmpty){
+    const el = sheet.querySelector('[data-val="'+key+'"]');
+    if(!el) return;
+    el.textContent = text;
+    el.classList.toggle('is-empty', !!isEmpty);
+  }
+
+  /* chip groups */
+  $$('.chips', sheet).forEach(grp=>{
+    const key = grp.dataset.group;
+    const mode = grp.dataset.mode;
+    grp.addEventListener('click', e=>{
+      const chip = e.target.closest('.chip'); if(!chip) return;
+      const label = chip.textContent.trim();
+      if(mode==='select'){
+        grp.querySelectorAll('.chip').forEach(c=>c.classList.remove('is-sel'));
+        chip.classList.add('is-sel');
+        state[key] = label;
+        setSummary(key, label, false);
+      } else { /* freetext groups: chip fills the value (toggleable) */
+        const already = chip.classList.contains('is-sel');
+        grp.querySelectorAll('.chip').forEach(c=>c.classList.remove('is-sel'));
+        const txt = grp.parentElement.querySelector('.freetext');
+        if(already){ state[key]=''; if(txt) txt.value=''; setSummary(key, key==='audience'?'Anyone':'Balanced', true); }
+        else { chip.classList.add('is-sel'); state[key]=label; if(txt) txt.value=''; setSummary(key, label, false); }
+      }
+      refreshTuneDot();
+    });
+  });
+
+  /* free-text fields (audience, tone) */
+  $$('.freetext', sheet).forEach(inp=>{
+    const key = inp.dataset.field;
+    inp.addEventListener('input', ()=>{
+      const v = inp.value.trim();
+      // typing clears chip selection in that group
+      const grp = inp.parentElement.querySelector('.chips');
+      if(grp) grp.querySelectorAll('.chip').forEach(c=>c.classList.remove('is-sel'));
+      state[key] = v;
+      setSummary(key, v || (key==='audience'?'Anyone':'Balanced'), !v);
+      refreshTuneDot();
+    });
+  });
+
+  /* voice select */
+  const voiceSel = sheet.querySelector('select[data-field="voice"]');
+  voiceSel.addEventListener('change', ()=>{ state.voice = voiceSel.value; setSummary('voice', voiceSel.value, false); refreshTuneDot(); });
+
+  /* reset */
+  $('#sheetReset').addEventListener('click', ()=>{
+    Object.assign(state, DEFAULTS);
+    $$('.chips[data-mode="freetext"] .chip', sheet).forEach(c=>c.classList.remove('is-sel'));
+    $$('.freetext', sheet).forEach(i=>i.value='');
+    // detail + treat selects → restore default chip
+    sheet.querySelectorAll('.chips[data-mode="select"]').forEach(grp=>{
+      const key = grp.dataset.group;
+      grp.querySelectorAll('.chip').forEach(c=>c.classList.toggle('is-sel', c.textContent.trim()===DEFAULTS[key]));
+    });
+    voiceSel.value = DEFAULTS.voice;
+    setSummary('audience','Anyone',true);
+    setSummary('tone','Balanced',true);
+    setSummary('detail',DEFAULTS.detail,false);
+    setSummary('voice',DEFAULTS.voice,false);
+    setSummary('treat',DEFAULTS.treat,false);
+    refreshTuneDot();
+  });
+
+  /* ---------- generate ---------- */
+  const steps = ['Outlining sections…','Designing layouts…','Writing your slides…','Polishing…'];
+  function generate(){
+    if(genBtn.disabled) return;
+    if(sheet.classList.contains('is-open')) closeSheet();
+    inputwrap.classList.add('is-generating');
+    genBtn.disabled = true;
+    let i=0; $('#genStep').textContent = steps[0];
+    const iv = setInterval(()=>{ i++; if(i<steps.length) $('#genStep').textContent=steps[i]; }, 720);
+    // demo payload — exactly what GenerationPrompt.tsx would submit
+    const payload = { prompt: ta.value.trim(), audience:state.audience, tone:state.tone, detail:state.detail, voice:state.voice, treat:state.treat };
+    console.log('[generate] payload', payload);
+    setTimeout(()=>{
+      clearInterval(iv);
+      inputwrap.classList.remove('is-generating');
+      ta.value=''; autosize(); syncText();
+    }, 2600);
+  }
+  genBtn.addEventListener('click', generate);
+
+  /* init */
+  autosize(); syncText(); startCycle(); refreshTuneDot();
+})();
+</script>
+</body>
+</html>

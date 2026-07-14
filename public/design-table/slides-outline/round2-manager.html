@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Outline review — Manager Recommendation · Plan Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --slate-900:#0f172a; --slate-800:#1e293b; --slate-700:#334155; --slate-600:#475569;
+    --slate-500:#64748b; --slate-400:#94a3b8; --slate-300:#cbd5e1; --slate-200:#e2e8f0;
+    --slate-100:#f1f5f9; --slate-50:#f8fafc; --surface:#fafbfc;
+    --violet-700:#6d28d9; --violet-600:#7c3aed; --violet-500:#8b5cf6;
+    --violet-100:#ede9fe; --violet-50:#f5f3ff;
+    --kit-bold: linear-gradient(135deg,#E267E4 0%,#9FC7FE 50%,#4198FF 100%);
+    --kit-text:#2e1065;
+    --shadow-pane:0 1px 2px rgba(15,23,42,.04), 0 22px 56px -18px rgba(15,23,42,.22);
+    --shadow-row:0 1px 2px rgba(15,23,42,.05);
+    --ring:0 0 0 3px rgba(124,58,237,.32);
+    --r:12px;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; height:100%; }
+  body {
+    font-family:'Inter', system-ui, sans-serif; color:var(--slate-900);
+    background:var(--surface); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    height:100vh; overflow:hidden; display:flex; flex-direction:column;
+  }
+  button { font-family:inherit; cursor:pointer; }
+  :focus-visible { outline:none; box-shadow:var(--ring); border-radius:10px; }
+
+  /* ═══════════ TOP BAR ═══════════ */
+  .topbar {
+    flex:0 0 auto; height:68px; display:flex; align-items:center; gap:16px;
+    padding:0 28px; background:#fff; border-bottom:1px solid var(--slate-200); z-index:6;
+  }
+  .brand { display:flex; align-items:center; gap:10px; padding-right:20px; border-right:1px solid var(--slate-200); height:36px; }
+  .brand-mark { width:30px; height:30px; border-radius:8px; background:var(--kit-bold); display:grid; place-items:center; }
+  .brand-name { font-size:15px; font-weight:700; letter-spacing:-.01em; }
+  .tb-eyebrow {
+    display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600;
+    letter-spacing:.05em; color:var(--violet-600); text-transform:uppercase;
+  }
+  .tb-eyebrow svg { width:15px; height:15px; }
+  .tb-spacer { flex:1 1 auto; }
+  /* view toggle (demo control to flip 5 ↔ 100 slides) */
+  .viewtoggle {
+    display:inline-flex; align-items:center; height:40px; padding:4px;
+    background:var(--slate-100); border-radius:11px; gap:2px;
+  }
+  .viewtoggle button {
+    height:32px; padding:0 14px; border:0; background:transparent; border-radius:8px;
+    font-size:13.5px; font-weight:600; color:var(--slate-500); transition:all .15s;
+  }
+  .viewtoggle button.on { background:#fff; color:var(--slate-900); box-shadow:var(--shadow-row); }
+  .viewtoggle .lbl { font-size:11px; font-weight:600; color:var(--slate-400); text-transform:uppercase; letter-spacing:.05em; padding:0 8px 0 4px; }
+  .btn-back {
+    display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 15px;
+    border:1px solid var(--slate-200); background:#fff; border-radius:11px;
+    font-size:14.5px; font-weight:600; color:var(--slate-600); transition:all .15s;
+  }
+  .btn-back:hover { background:var(--slate-50); border-color:var(--slate-300); }
+  .btn-back svg { width:16px; height:16px; color:var(--slate-400); }
+
+  /* ═══════════ WORKSPACE — 3 zones ═══════════ */
+  .workspace { flex:1 1 auto; display:flex; min-height:0; }
+
+  /* ── ZONE 1 · SETUP RAIL ── */
+  .rail {
+    flex:0 0 296px; max-width:296px; background:#fff; border-right:1px solid var(--slate-200);
+    display:flex; flex-direction:column; min-height:0; padding:30px 28px 24px;
+  }
+  .rail-eyebrow { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--violet-600); margin-bottom:18px; }
+  .meta-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:15px 0; border-bottom:1px solid var(--slate-100);
+  }
+  .meta-row:first-of-type { padding-top:0; }
+  .meta-label { font-size:15px; color:var(--slate-500); font-weight:500; }
+  .chip {
+    display:inline-flex; align-items:center; gap:8px; height:36px; padding:0 13px;
+    border:1px solid var(--slate-200); border-radius:10px; background:#fff;
+    font-size:14.5px; font-weight:600; color:var(--slate-700); transition:all .15s;
+  }
+  .chip:hover { border-color:var(--slate-300); background:var(--slate-50); }
+  .chip .swatch { width:16px; height:16px; border-radius:5px; background:linear-gradient(135deg,#1e293b,#475569); border:1px solid rgba(0,0,0,.08); }
+  .chip svg { width:15px; height:15px; color:var(--slate-400); }
+  .stepper { display:inline-flex; align-items:center; height:36px; border:1px solid var(--slate-200); border-radius:10px; overflow:hidden; background:#fff; }
+  .stepper button { width:36px; height:36px; border:0; background:#fff; font-size:19px; color:var(--slate-600); display:grid; place-items:center; transition:background .15s; }
+  .stepper button:hover { background:var(--slate-100); }
+  .stepper .count { min-width:38px; text-align:center; font-size:15px; font-weight:700; border-left:1px solid var(--slate-200); border-right:1px solid var(--slate-200); line-height:36px; }
+
+  .rail-spacer { flex:1 1 auto; }
+  .summary-card {
+    margin-top:22px; padding:16px 16px 14px; border-radius:14px;
+    background:linear-gradient(180deg,var(--violet-50),#fff); border:1px solid var(--violet-100);
+  }
+  .summary-card .big { font-size:24px; font-weight:800; letter-spacing:-.02em; color:var(--slate-900); }
+  .summary-card .big .x { color:var(--violet-600); }
+  .summary-card .sub { font-size:13.5px; color:var(--slate-500); font-weight:500; margin-top:2px; }
+  .helper { font-size:13.5px; color:var(--slate-500); line-height:1.55; margin:18px 0 14px; }
+  .btn-generate {
+    width:100%; height:48px; border:0; border-radius:var(--r); background:var(--kit-bold);
+    color:var(--kit-text); font-size:16px; font-weight:700; letter-spacing:-.01em;
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow:0 10px 24px -10px rgba(124,58,237,.5); transition:transform .12s, box-shadow .15s;
+  }
+  .btn-generate:hover { transform:translateY(-1px); box-shadow:0 14px 30px -10px rgba(124,58,237,.6); }
+  .btn-generate svg { width:19px; height:19px; }
+
+  /* ── ZONE 2 · OUTLINE ── */
+  .outline { flex:0 0 42%; max-width:42%; min-width:0; border-right:1px solid var(--slate-200); background:#fff; display:flex; flex-direction:column; min-height:0; }
+  .outline-head { flex:0 0 auto; padding:28px 32px 16px; }
+  .outline-head .kick { font-size:13px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--violet-600); display:inline-flex; align-items:center; gap:8px; margin-bottom:12px; }
+  .outline-head .kick .dot { width:7px; height:7px; border-radius:50%; background:var(--violet-600); }
+  .outline-head h1 { margin:0; font-size:27px; font-weight:800; letter-spacing:-.025em; line-height:1.12; color:var(--slate-900); max-width:18ch; }
+  .outline-head .lede { margin:10px 0 0; font-size:15.5px; color:var(--slate-500); line-height:1.5; max-width:46ch; }
+
+  /* search — only shown in big-deck mode */
+  .toolbar { flex:0 0 auto; padding:4px 32px 14px; display:flex; align-items:center; gap:12px; }
+  .search { flex:1 1 auto; position:relative; }
+  .search svg { position:absolute; left:13px; top:50%; transform:translateY(-50%); width:17px; height:17px; color:var(--slate-400); }
+  .search input {
+    width:100%; height:44px; padding:0 14px 0 40px; border:1px solid var(--slate-200); border-radius:11px;
+    font-family:inherit; font-size:15px; color:var(--slate-800); background:#fff; transition:border-color .15s, box-shadow .15s;
+  }
+  .search input::placeholder { color:var(--slate-400); }
+  .search input:focus-visible { box-shadow:var(--ring); border-color:transparent; }
+  .toolbar .collapse-all { display:inline-flex; align-items:center; gap:7px; height:44px; padding:0 14px; border:1px solid var(--slate-200); border-radius:11px; background:#fff; font-size:14px; font-weight:600; color:var(--slate-600); transition:all .15s; white-space:nowrap; }
+  .toolbar .collapse-all:hover { background:var(--slate-50); border-color:var(--slate-300); }
+  .toolbar .collapse-all svg { width:15px; height:15px; color:var(--slate-400); }
+
+  .outline-scroll { flex:1 1 auto; overflow-y:auto; padding:2px 22px 24px; scrollbar-width:thin; }
+  .outline-head .reorder-hint { font-size:13.5px; color:var(--slate-400); font-weight:500; margin-top:14px; }
+
+  /* SECTION group (chapter) */
+  .group { margin-bottom:10px; }
+  .group-head {
+    display:flex; align-items:center; gap:11px; width:100%; padding:11px 12px;
+    background:var(--slate-50); border:1px solid var(--slate-200); border-radius:11px;
+    text-align:left; transition:background .15s, border-color .15s;
+  }
+  .group-head:hover { background:var(--slate-100); }
+  .group-head .caret { width:18px; height:18px; color:var(--slate-400); flex:0 0 auto; transition:transform .18s; }
+  .group.collapsed .group-head .caret { transform:rotate(-90deg); }
+  .group-head .gname { font-size:15px; font-weight:700; color:var(--slate-800); letter-spacing:-.01em; flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .group-head .grange { font-size:13px; font-weight:600; color:var(--slate-400); flex:0 0 auto; }
+  .group-head .gcount { font-size:12px; font-weight:700; color:var(--violet-700); background:var(--violet-100); height:22px; min-width:22px; padding:0 7px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .group-body { padding:6px 0 4px 8px; }
+  .group.collapsed .group-body { display:none; }
+
+  /* ROW — comfortable (5-slide) default */
+  .row {
+    position:relative; display:flex; align-items:flex-start; gap:13px;
+    padding:16px 14px 16px 12px; border:1px solid transparent; border-radius:13px;
+    margin-bottom:7px; background:#fff; transition:background .14s, border-color .14s, box-shadow .14s; cursor:pointer;
+  }
+  .row:hover { background:var(--slate-50); }
+  .row.selected { background:var(--violet-50); border-color:rgba(124,58,237,.28); box-shadow:var(--shadow-row); }
+  .row.selected::before { content:""; position:absolute; left:0; top:13px; bottom:13px; width:4px; border-radius:0 4px 4px 0; background:var(--violet-600); }
+  .row .grip { flex:0 0 auto; margin-top:3px; color:var(--slate-300); width:16px; display:flex; align-items:center; justify-content:center; cursor:grab; }
+  .row:hover .grip, .row.selected .grip { color:var(--slate-400); }
+  .row .grip svg { width:15px; height:15px; }
+  .row .num { flex:0 0 auto; width:28px; height:28px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:13.5px; font-weight:700; background:var(--slate-100); color:var(--slate-500); margin-top:1px; }
+  .row.selected .num { background:var(--violet-600); color:#fff; }
+  .row .body { flex:1 1 auto; min-width:0; }
+  .row .r-title { font-size:16.5px; font-weight:600; letter-spacing:-.01em; color:var(--slate-900); line-height:1.3; margin-bottom:3px; }
+  .row .r-brief { font-size:14px; line-height:1.45; color:var(--slate-500); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; }
+  .row.selected .r-brief { -webkit-line-clamp:2; }
+  .row .meta { display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .lchip { display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 10px; border-radius:8px; font-size:12.5px; font-weight:600; background:var(--slate-100); color:var(--slate-600); }
+  .lchip svg { width:14px; height:14px; }
+  .imgdot { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--slate-500); }
+  .imgdot .pip { width:8px; height:8px; border-radius:50%; background:var(--violet-600); }
+  .imgdot.off { color:var(--slate-400); } .imgdot.off .pip { background:var(--slate-300); }
+  .row .remove { flex:0 0 auto; margin-top:1px; width:30px; height:30px; border-radius:8px; border:0; background:transparent; color:var(--slate-300); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .14s, background .14s, color .14s; }
+  .row:hover .remove { opacity:1; }
+  .row .remove:hover { background:#fee2e2; color:#dc2626; }
+  .row .remove svg { width:16px; height:16px; }
+
+  /* COMPACT row — used inside big-deck groups */
+  .row.compact { padding:9px 12px 9px 10px; gap:11px; margin-bottom:3px; border-radius:10px; }
+  .row.compact .num { width:24px; height:24px; font-size:12px; border-radius:7px; margin-top:0; }
+  .row.compact .grip { margin-top:1px; }
+  .row.compact .body { display:flex; align-items:center; gap:10px; min-width:0; }
+  .row.compact .r-title { font-size:14.5px; margin-bottom:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:0 1 auto; min-width:0; }
+  .row.compact .r-brief { display:none; }
+  .row.compact .meta { margin-top:0; flex:0 0 auto; }
+  .row.compact .lchip { height:22px; padding:0 8px; font-size:11.5px; background:transparent; color:var(--slate-400); }
+  .row.compact .imgdot { font-size:0; gap:0; }
+  .row.compact .imgdot .pip { width:7px; height:7px; }
+  .row.compact.selected::before { top:9px; bottom:9px; }
+
+  .add-slide { display:flex; align-items:center; justify-content:center; gap:9px; width:100%; height:50px; margin-top:4px; border:1.5px dashed var(--slate-300); border-radius:13px; background:transparent; font-size:14.5px; font-weight:600; color:var(--slate-500); transition:all .15s; }
+  .add-slide:hover { border-color:var(--violet-500); color:var(--violet-600); background:var(--violet-50); }
+  .add-slide svg { width:18px; height:18px; }
+
+  /* ── ZONE 3 · PREVIEW ── */
+  .preview { flex:1 1 auto; min-width:0; background:radial-gradient(1200px 620px at 72% -12%, rgba(124,58,237,.055), transparent 60%), var(--surface); display:flex; flex-direction:column; min-height:0; }
+  .preview-head { flex:0 0 auto; padding:28px 44px 0; display:flex; align-items:center; justify-content:space-between; }
+  .pv-left { display:flex; align-items:center; gap:12px; }
+  .pv-kicker { font-size:12.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--slate-400); }
+  .pv-slide { font-size:15.5px; font-weight:600; color:var(--slate-700); display:inline-flex; align-items:center; gap:9px; }
+  .pv-badge { width:24px; height:24px; border-radius:7px; background:var(--violet-600); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+  .pv-actions { display:flex; gap:10px; }
+  .pv-action { display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 15px; border-radius:11px; border:1px solid var(--slate-200); background:#fff; font-size:14.5px; font-weight:600; color:var(--slate-700); transition:all .15s; }
+  .pv-action:hover { border-color:var(--slate-300); background:var(--slate-50); }
+  .pv-action svg { width:16px; height:16px; color:var(--slate-500); }
+
+  .preview-stage { flex:1 1 auto; display:flex; align-items:center; justify-content:center; padding:26px 52px 14px; min-height:0; }
+  .slide { width:100%; max-width:820px; aspect-ratio:16/9; background:#fff; border-radius:18px; border:1px solid var(--slate-200); box-shadow:var(--shadow-pane); overflow:hidden; position:relative; display:flex; flex-direction:column; }
+  .slide-inner { flex:1 1 auto; display:flex; flex-direction:column; padding:7% 8%; }
+  .s-kicker { font-size:1.1vw; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--violet-600); margin-bottom:1.6%; }
+  .s-title { font-size:3.4vw; font-weight:800; letter-spacing:-.02em; line-height:1.05; color:var(--slate-900); margin:0 0 1.4%; }
+  .s-sub { font-size:1.35vw; font-weight:500; color:var(--slate-500); line-height:1.4; max-width:82%; }
+  .stat-row { display:flex; gap:4%; margin-top:auto; }
+  .stat { flex:1 1 0; border-top:3px solid var(--violet-600); padding-top:3%; }
+  .stat .v { font-size:3.6vw; font-weight:800; letter-spacing:-.03em; color:var(--slate-900); line-height:1; }
+  .stat .v .u { font-size:1.8vw; color:var(--violet-600); }
+  .stat .k { font-size:1.2vw; font-weight:500; color:var(--slate-500); margin-top:6%; }
+  .s-foot { position:absolute; bottom:4%; right:6%; font-size:1vw; font-weight:600; color:var(--slate-300); }
+
+  .preview-foot { flex:0 0 auto; padding:6px 52px 22px; display:flex; align-items:center; justify-content:center; gap:16px; }
+  .pv-thumbs { display:flex; gap:9px; }
+  .pv-thumb { width:54px; height:31px; border-radius:7px; border:1.5px solid var(--slate-200); background:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--slate-300); transition:all .14s; }
+  .pv-thumb:hover { transform:translateY(-1px); }
+  .pv-thumb.active { border-color:var(--violet-600); box-shadow:0 0 0 3px var(--violet-100); color:var(--violet-600); }
+  .pv-caption { font-size:13.5px; color:var(--slate-400); font-weight:500; }
+
+  /* view switching */
+  body[data-view="small"] .toolbar { display:none; }
+  body[data-view="small"] #pile-big { display:none; }
+  body[data-view="big"]   #pile-small { display:none; }
+  body[data-view="big"]   .outline-head h1 { font-size:25px; }
+</style>
+</head>
+<body data-view="small">
+
+  <!-- ═══ TOP BAR ═══ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+      <span class="brand-name">Compose</span>
+    </div>
+    <span class="tb-eyebrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.7L19.6 9 15 12.4l1.7 5.7L12 14.6 7.3 18l1.7-5.7L4.4 9l5.7-.3z"/></svg>
+      Review your outline
+    </span>
+    <div class="tb-spacer"></div>
+    <div class="viewtoggle" role="group" aria-label="Demo: deck size">
+      <span class="lbl">Demo size</span>
+      <button class="on" id="t-small" onclick="setView('small')">5 slides</button>
+      <button id="t-big" onclick="setView('big')">100 slides</button>
+    </div>
+    <button class="btn-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to prompt</button>
+  </header>
+
+  <!-- ═══ WORKSPACE ═══ -->
+  <main class="workspace">
+
+    <!-- ZONE 1 · SETUP RAIL -->
+    <aside class="rail" aria-label="Deck setup">
+      <div class="rail-eyebrow">Deck setup</div>
+      <div class="meta-row">
+        <span class="meta-label">Slides</span>
+        <div class="stepper" role="group" aria-label="Slide count"><button aria-label="Fewer slides">−</button><span class="count" id="rail-count">5</span><button aria-label="More slides">+</button></div>
+      </div>
+      <div class="meta-row"><span class="meta-label">Theme</span><button class="chip"><span class="swatch"></span>Midnight</button></div>
+      <div class="meta-row"><span class="meta-label">Audience</span><button class="chip">Existing customers</button></div>
+      <div class="meta-row"><span class="meta-label">Tone</span><button class="chip">Confident</button></div>
+
+      <div class="rail-spacer"></div>
+
+      <div class="summary-card">
+        <div class="big" id="rail-summary"><span class="x">5</span> slides · <span class="x">1</span> section</div>
+        <div class="sub" id="rail-sub">Planned from your prompt</div>
+      </div>
+      <p class="helper">This is the plan, not the deck yet. Edit anything here or in the outline, then build.</p>
+      <button class="btn-generate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.8L19 9.5l-4.1 2.4L13.5 17 12 12.2 10.5 17 9.1 11.9 5 9.5l5.1-1.7L12 3z"/></svg>
+        Generate deck
+      </button>
+    </aside>
+
+    <!-- ZONE 2 · OUTLINE -->
+    <section class="outline" aria-label="Slide outline">
+      <div class="outline-head">
+        <span class="kick"><span class="dot"></span>Outline ready</span>
+        <h1 id="ol-title">Here's your deck — review before we build it.</h1>
+        <p class="lede" id="ol-lede">Five slides planned. Reorder, rewrite a title, or swap a layout — then generate the full deck with images and content.</p>
+        <div class="reorder-hint" id="ol-hint">Drag to reorder · click a slide to preview it</div>
+      </div>
+
+      <!-- SEARCH + collapse (big-deck only) -->
+      <div class="toolbar">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" placeholder="Search 100 slides or jump to a section…" aria-label="Search slides" />
+        </div>
+        <button class="collapse-all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>Collapse all</button>
+      </div>
+
+      <div class="outline-scroll">
+
+        <!-- ── PILE A · 5-slide comfortable list ── -->
+        <div id="pile-small">
+          <div class="row" tabindex="0" onclick="sel(this)">
+            <span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span>
+            <span class="num">1</span>
+            <div class="body">
+              <div class="r-title">Aurora Solar Battery Launch</div>
+              <div class="r-brief">Set the stage — home energy independence for existing customers</div>
+              <div class="meta"><span class="lchip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>Cover</span><span class="imgdot"><span class="pip"></span>Image</span></div>
+            </div>
+            <button class="remove" aria-label="Remove slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+
+          <div class="row selected" tabindex="0" aria-current="true" onclick="sel(this)">
+            <span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span>
+            <span class="num">2</span>
+            <div class="body">
+              <div class="r-title">Q1 Performance</div>
+              <div class="r-brief">Lead with the numbers: 1,200 units, +40% growth, 2-hour installs</div>
+              <div class="meta"><span class="lchip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19V9M12 19V5M19 19v-7"/></svg>Stat trio</span><span class="imgdot off"><span class="pip"></span>No image</span></div>
+            </div>
+            <button class="remove" aria-label="Remove slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+
+          <div class="row" tabindex="0" onclick="sel(this)">
+            <span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span>
+            <span class="num">3</span>
+            <div class="body">
+              <div class="r-title">Why Now</div>
+              <div class="r-brief">The market shift that makes this the moment</div>
+              <div class="meta"><span class="lchip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 5v14"/></svg>Split image</span><span class="imgdot"><span class="pip"></span>Image</span></div>
+            </div>
+            <button class="remove" aria-label="Remove slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+
+          <div class="row" tabindex="0" onclick="sel(this)">
+            <span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span>
+            <span class="num">4</span>
+            <div class="body">
+              <div class="r-title">How It Works</div>
+              <div class="r-brief">Three steps from order to installed</div>
+              <div class="meta"><span class="lchip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h3M14 12h3"/></svg>Process row</span><span class="imgdot off"><span class="pip"></span>No image</span></div>
+            </div>
+            <button class="remove" aria-label="Remove slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+
+          <div class="row" tabindex="0" onclick="sel(this)">
+            <span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span>
+            <span class="num">5</span>
+            <div class="body">
+              <div class="r-title">The Ask</div>
+              <div class="r-brief">What we want the customer to do next</div>
+              <div class="meta"><span class="lchip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Closing</span><span class="imgdot off"><span class="pip"></span>No image</span></div>
+            </div>
+            <button class="remove" aria-label="Remove slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+
+          <button class="add-slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a slide</button>
+        </div>
+
+        <!-- ── PILE B · 100-slide grouped/compact list ── -->
+        <div id="pile-big">
+
+          <!-- Group 1 (expanded) -->
+          <div class="group" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)">
+              <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              <span class="gname">Introduction & Context</span><span class="grange">1–8</span><span class="gcount">8</span>
+            </button>
+            <div class="group-body">
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">1</span><div class="body"><div class="r-title">Annual Operating Review 2026</div><span class="lchip">Cover</span><span class="imgdot"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">2</span><div class="body"><div class="r-title">Letter from the CEO</div><span class="lchip">Quote</span><span class="imgdot"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">3</span><div class="body"><div class="r-title">The Year at a Glance</div><span class="lchip">Stat trio</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">4</span><div class="body"><div class="r-title">Our Mission & Mandate</div><span class="lchip">Text</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">5</span><div class="body"><div class="r-title">How to Read This Report</div><span class="lchip">Process row</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">6</span><div class="body"><div class="r-title">Market Landscape</div><span class="lchip">Split image</span><span class="imgdot"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+            </div>
+          </div>
+
+          <!-- Group 2 (expanded, contains the selected slide) -->
+          <div class="group" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)">
+              <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              <span class="gname">Financial Performance</span><span class="grange">9–22</span><span class="gcount">14</span>
+            </button>
+            <div class="group-body">
+              <div class="row compact selected" tabindex="0" aria-current="true" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">9</span><div class="body"><div class="r-title">Revenue Highlights</div><span class="lchip">Stat trio</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">10</span><div class="body"><div class="r-title">Revenue by Segment</div><span class="lchip">Chart</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">11</span><div class="body"><div class="r-title">Gross Margin Trend</div><span class="lchip">Chart</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">12</span><div class="body"><div class="r-title">Operating Expenses</div><span class="lchip">Text</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="row compact" tabindex="0" onclick="sel(this)"><span class="grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span><span class="num">13</span><div class="body"><div class="r-title">Cash Position</div><span class="lchip">Stat trio</span><span class="imgdot off"><span class="pip"></span></span></div><button class="remove" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+              <div class="add-slide" style="height:40px; margin:6px 0 2px; font-size:13.5px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add slide to this section · 9 more in Financial Performance</div>
+            </div>
+          </div>
+
+          <!-- Collapsed groups — just metadata, nothing rendered -->
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">Product & Innovation</span><span class="grange">23–38</span><span class="gcount">16</span></button>
+            <div class="group-body"></div>
+          </div>
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">Customers & Markets</span><span class="grange">39–52</span><span class="gcount">14</span></button>
+            <div class="group-body"></div>
+          </div>
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">Operations & Supply Chain</span><span class="grange">53–64</span><span class="gcount">12</span></button>
+            <div class="group-body"></div>
+          </div>
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">People & Culture</span><span class="grange">65–76</span><span class="gcount">12</span></button>
+            <div class="group-body"></div>
+          </div>
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">Sustainability & Impact</span><span class="grange">77–88</span><span class="gcount">12</span></button>
+            <div class="group-body"></div>
+          </div>
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">Outlook & 2027 Plan</span><span class="grange">89–96</span><span class="gcount">8</span></button>
+            <div class="group-body"></div>
+          </div>
+          <div class="group collapsed" data-grp>
+            <button class="group-head" onclick="toggleGrp(this)"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span class="gname">Appendix</span><span class="grange">97–100</span><span class="gcount">4</span></button>
+            <div class="group-body"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ZONE 3 · LARGE PREVIEW (one slide, on demand) -->
+    <section class="preview" aria-label="Slide preview">
+      <div class="preview-head">
+        <div class="pv-left">
+          <span class="pv-kicker">Live preview</span>
+          <span class="pv-slide"><span class="pv-badge" id="pv-num">2</span><span id="pv-name">Q1 Performance</span></span>
+        </div>
+        <div class="pv-actions">
+          <button class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>Change layout</button>
+          <button class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit content</button>
+        </div>
+      </div>
+
+      <div class="preview-stage">
+        <div class="slide" role="img" aria-label="Stat-trio layout preview for Q1 Performance">
+          <div class="slide-inner">
+            <div class="s-kicker" id="s-kicker">Q1 2026 · Results</div>
+            <h3 class="s-title" id="s-title">Q1 Performance</h3>
+            <p class="s-sub" id="s-sub">The first quarter set the pace — strong demand, fast installs, and momentum heading into the launch.</p>
+            <div class="stat-row">
+              <div class="stat"><div class="v">1,200</div><div class="k">units sold</div></div>
+              <div class="stat"><div class="v">+40<span class="u">%</span></div><div class="k">year-over-year growth</div></div>
+              <div class="stat"><div class="v">2<span class="u">hr</span></div><div class="k">average install time</div></div>
+            </div>
+          </div>
+          <div class="s-foot">Aurora Solar</div>
+        </div>
+      </div>
+
+      <div class="preview-foot">
+        <div class="pv-thumbs" role="tablist" aria-label="Jump to slide">
+          <button class="pv-thumb" aria-label="Slide 1">1</button>
+          <button class="pv-thumb active" aria-label="Slide 2, selected">2</button>
+          <button class="pv-thumb" aria-label="Slide 3">3</button>
+          <button class="pv-thumb" aria-label="Slide 4">4</button>
+          <button class="pv-thumb" aria-label="Slide 5">5</button>
+        </div>
+        <span class="pv-caption" id="pv-caption">Slide 2 of 5 — this is roughly how it will look</span>
+      </div>
+    </section>
+
+  </main>
+
+<script>
+  function setView(v){
+    document.body.setAttribute('data-view', v);
+    document.getElementById('t-small').classList.toggle('on', v==='small');
+    document.getElementById('t-big').classList.toggle('on', v==='big');
+    if(v==='big'){
+      document.getElementById('rail-count').textContent='100';
+      document.getElementById('rail-summary').innerHTML='<span class="x">100</span> slides · <span class="x">9</span> sections';
+      document.getElementById('rail-sub').textContent='Built from your 100-page upload';
+      document.getElementById('ol-title').textContent="Here's your outline — 100 slides, 9 sections.";
+      document.getElementById('ol-lede').textContent='We grouped your upload into sections. Open a section to edit its slides, or search to jump anywhere.';
+      document.getElementById('ol-hint').textContent='Collapse sections to scan · click a slide to preview · search to jump';
+      // preview reflects the selected big-deck slide
+      document.getElementById('pv-num').textContent='9';
+      document.getElementById('pv-name').textContent='Revenue Highlights';
+      document.getElementById('s-kicker').textContent='Financial Performance';
+      document.getElementById('s-title').textContent='Revenue Highlights';
+      document.getElementById('s-sub').textContent='A record year — broad-based growth across every reporting segment.';
+      document.getElementById('pv-caption').textContent='Slide 9 of 100 · Financial Performance — rendered on demand';
+    } else {
+      document.getElementById('rail-count').textContent='5';
+      document.getElementById('rail-summary').innerHTML='<span class="x">5</span> slides · <span class="x">1</span> section';
+      document.getElementById('rail-sub').textContent='Planned from your prompt';
+      document.getElementById('ol-title').textContent="Here's your deck — review before we build it.";
+      document.getElementById('ol-lede').textContent='Five slides planned. Reorder, rewrite a title, or swap a layout — then generate the full deck with images and content.';
+      document.getElementById('ol-hint').textContent='Drag to reorder · click a slide to preview it';
+      document.getElementById('pv-num').textContent='2';
+      document.getElementById('pv-name').textContent='Q1 Performance';
+      document.getElementById('s-kicker').textContent='Q1 2026 · Results';
+      document.getElementById('s-title').textContent='Q1 Performance';
+      document.getElementById('s-sub').textContent='The first quarter set the pace — strong demand, fast installs, and momentum heading into the launch.';
+      document.getElementById('pv-caption').textContent='Slide 2 of 5 — this is roughly how it will look';
+    }
+  }
+  function toggleGrp(btn){ btn.closest('[data-grp]').classList.toggle('collapsed'); }
+  function sel(row){
+    var pile = row.closest('#pile-small, #pile-big');
+    pile.querySelectorAll('.row.selected').forEach(function(r){ r.classList.remove('selected'); r.removeAttribute('aria-current'); });
+    row.classList.add('selected'); row.setAttribute('aria-current','true');
+    // light preview sync (title only, demo)
+    var t = row.querySelector('.r-title').textContent;
+    document.getElementById('pv-name').textContent=t;
+    document.getElementById('s-title').textContent=t;
+    document.getElementById('pv-num').textContent=row.querySelector('.num').textContent;
+  }
+</script>
+</body>
+</html>

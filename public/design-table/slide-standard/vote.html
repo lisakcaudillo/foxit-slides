@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slide Standard — Composition Vote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=DM+Sans:wght@400;700;800&family=Poppins:wght@400;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1e1b2e; --muted:#6b6580; --line:#e6e2f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink);
+         background:linear-gradient(180deg,#f9f6ff,#eef3ff); padding:36px 24px 130px; }
+  .wrap { max-width:1180px; margin:0 auto; }
+  h1 { font-size:30px; font-weight:800; margin:0 0 6px; }
+  .sub { color:var(--muted); font-size:16px; margin:0 0 24px; max-width:760px; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:26px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px;
+          box-shadow:0 1px 3px rgba(30,27,46,.05); }
+  .meta { display:flex; justify-content:space-between; align-items:center; margin:0 0 10px; }
+  .tag { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .slide { position:relative; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden;
+           container-type:inline-size; box-shadow:0 1px 4px rgba(0,0,0,.10); }
+  .pad { position:absolute; inset:0; padding:5cqw; display:flex; flex-direction:column; }
+  .eyebrow { font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:2.4cqw; }
+  .title { font-weight:800; line-height:1.06; font-size:7.2cqw; margin-top:1.4cqw; }
+  .body { font-size:3.1cqw; line-height:1.4; }
+  .vote { display:flex; gap:8px; margin-top:12px; }
+  .vote button { flex:1; font:inherit; font-weight:700; font-size:14px; padding:9px 0; border-radius:10px;
+                 border:1.5px solid var(--line); background:#fff; cursor:pointer; transition:.12s; }
+  .vote button:hover { border-color:#cbb; }
+  .card[data-v="cut"]  .b-cut  { background:#fee2e2; border-color:#ef4444; color:#b91c1c; }
+  .card[data-v="keep"] .b-keep { background:#dcfce7; border-color:#22c55e; color:#15803d; }
+  .card[data-v="love"] .b-love { background:#ede9fe; border-color:#8b5cf6; color:#6d28d9; }
+  .why { width:100%; margin-top:8px; font:inherit; font-size:13px; padding:8px 40px 8px 10px; border:1px solid var(--line);
+         border-radius:9px; resize:vertical; min-height:34px; }
+  .mic { position:absolute; top:8px; right:6px; width:30px; height:30px; border-radius:50%;
+         border:1px solid var(--line); background:#fff; cursor:pointer; font-size:14px; line-height:1; padding:0; }
+  .mic:hover { background:#f3f0fb; }
+  .mic.rec { background:#fee2e2; border-color:#ef4444; animation:pulse 1.1s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.45)} 50%{box-shadow:0 0 0 7px rgba(239,68,68,0)} }
+  .bar { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line);
+         padding:14px 24px; display:flex; gap:16px; align-items:center; justify-content:center; }
+  button.export { font:inherit; font-weight:700; color:#fff; background:linear-gradient(135deg,#E267E4,#4198FF);
+                  border:0; border-radius:12px; padding:12px 22px; cursor:pointer; }
+  .hint { color:var(--muted); font-size:14px; }
+  textarea#out { width:100%; height:140px; margin-top:14px; font-family:ui-monospace,monospace; font-size:12px;
+                 border:1px solid var(--line); border-radius:10px; padding:10px; display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Composition Vote</h1>
+  <p class="sub">Each is a real engine layout. <b>✗ Cut</b> the ones that need revising, <b>⭐ Keep</b> the solid ones, <b>★ Love</b> the ones that define "beautiful." Add a one-line <i>why</i> when you can — that becomes the rule the writer & judge learn from. Loved → gold examples. Cut → anti-examples.</p>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="bar">
+  <span class="hint" id="status">0 voted</span>
+  <button class="export" id="copy">Copy my votes</button>
+</div>
+<textarea id="out" readonly></textarea>
+
+<script>
+// Real tokens (subset of themes.ts) + real type roles. Each candidate is a faithful
+// engine composition; some are intentionally WEAK so cutting them labels anti-examples.
+const T = {
+  quartz:  { bg:'#FFFFFF', title:'#0B1F3A', body:'#475569', accent:'#1F4FAA', tf:"'DM Sans'", bf:"'DM Sans'" },
+  counsel: { bg:'#FAFAF7', title:'#14223C', body:'#5C6770', accent:'#B85C2E', tf:"'Inter'", bf:"'Inter'" },
+  obsidian:{ bg:'linear-gradient(135deg,#1A1612,#1F1A17)', title:'#F5EFE6', body:'#C9BFB2', accent:'#E8A857', tf:"'Space Grotesk'", bf:"'Inter'" },
+  cobalt:  { bg:'linear-gradient(135deg,#E8F0FF,#BCD0FF)', title:'#0F2654', body:'#3B4A6B', accent:'#1F3D8A', tf:"'Poppins'", bf:"'Inter'" },
+};
+function sl(theme, inner){ const t=T[theme]; return `<div class="slide" style="background:${t.bg}">${inner(t)}</div>`; }
+
+// composition builders (mirror card-engine/compositions.ts ideas)
+function cover(theme){ return sl(theme,t=>`<div class="pad">
+  <div class="eyebrow" style="color:${t.accent};font-family:${t.bf}">Q3 · INVESTOR UPDATE</div>
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:10cqw;margin-top:auto">Compounding,<br>quarter over quarter</div>
+  <div class="body" style="color:${t.body};font-family:${t.bf};margin-top:2cqw">Lisa Caudillo · June 2026</div></div>`); }
+
+function coverWeak(theme){ return sl(theme,t=>`<div class="pad" style="align-items:center;justify-content:center;text-align:center">
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:6cqw">A Comprehensive Strategic Overview of Our Quarterly Business Performance and Forward-Looking Initiatives</div></div>`); }
+
+function bigStat(theme){ return sl(theme,t=>`<div class="pad">
+  <div class="eyebrow" style="color:${t.accent};font-family:${t.bf}">NET REVENUE RETENTION</div>
+  <div style="color:${t.accent};font-family:${t.tf};font-weight:800;font-size:30cqw;line-height:.9;margin:auto 0">127%</div>
+  <div class="body" style="color:${t.body};font-family:${t.bf}">Up from 112% last quarter</div></div>`); }
+
+function comparison(theme){ return sl(theme,t=>`<div class="pad">
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:5.4cqw">Old way vs. our way</div>
+  <div style="display:flex;gap:3cqw;margin-top:auto;margin-bottom:auto;align-items:stretch">
+    <div style="flex:1;background:rgba(0,0,0,.04);border-radius:2cqw;padding:3cqw">
+      <div style="color:${t.body};font-weight:700;font-family:${t.bf};font-size:3cqw">Before</div>
+      <div class="body" style="color:${t.body};font-family:${t.bf};margin-top:1.5cqw">Six tools<br>Manual handoffs<br>Days to a draft</div></div>
+    <div style="align-self:center;background:${t.accent};color:#fff;font-weight:800;font-family:${t.tf};border-radius:50%;width:9cqw;height:9cqw;display:flex;align-items:center;justify-content:center;font-size:3cqw">VS</div>
+    <div style="flex:1;background:${t.accent}1a;border-radius:2cqw;padding:3cqw">
+      <div style="color:${t.accent};font-weight:700;font-family:${t.bf};font-size:3cqw">After</div>
+      <div class="body" style="color:${t.body};font-family:${t.bf};margin-top:1.5cqw">One workspace<br>Auto pipeline<br>Minutes to a draft</div></div>
+  </div></div>`); }
+
+function process(theme){ const steps=['Prompt','Blueprint','Generate','Polish'];
+  return sl(theme,t=>`<div class="pad">
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:5.4cqw">How a deck gets made</div>
+  <div style="display:flex;align-items:center;margin:auto 0;gap:0">
+   ${steps.map((s,i)=>`<div style="flex:1;text-align:center;position:relative">
+     <div style="width:7cqw;height:7cqw;border-radius:50%;background:${t.accent};color:#fff;font-weight:800;font-family:${t.tf};display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:3cqw">${i+1}</div>
+     <div class="body" style="color:${t.body};font-family:${t.bf};margin-top:1.5cqw;font-size:2.7cqw">${s}</div>
+     ${i<steps.length-1?`<div style="position:absolute;top:3.5cqw;left:60%;width:80%;height:.5cqw;background:${t.accent}55"></div>`:''}
+   </div>`).join('')}
+  </div></div>`); }
+
+function contentGood(theme){ return sl(theme,t=>`<div class="pad">
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:5.4cqw">What changed this quarter</div>
+  <div class="body" style="color:${t.body};font-family:${t.bf};margin-top:auto;display:flex;flex-direction:column;gap:2cqw">
+   ${['Pipeline unified end to end','Quality gate the team trusts','Templates carry real brand voice'].map(b=>
+     `<div style="display:flex;gap:2cqw"><span style="width:1.6cqw;height:1.6cqw;border-radius:50%;background:${t.accent};margin-top:1.4cqw;flex:none"></span><span>${b}</span></div>`).join('')}
+  </div></div>`); }
+
+function contentWall(theme){ return sl(theme,t=>`<div class="pad">
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:4.2cqw">Overview</div>
+  <div class="body" style="color:${t.body};font-family:${t.bf};margin-top:1.5cqw;font-size:2.6cqw">Our strategic approach this quarter focused on delivering a comprehensive set of robust, innovative initiatives across the organization. We leveraged synergies to drive holistic value, ensuring that every stakeholder benefited from our proven, world-class framework. Through dynamic collaboration and seamless execution, the team was able to achieve significant milestones that position us strongly for continued growth and success in the quarters ahead, while maintaining our commitment to excellence and customer-centricity throughout every layer of the funnel.</div></div>`); }
+
+function statCrowded(theme){ return sl(theme,t=>`<div class="pad">
+  <div class="title" style="color:${t.title};font-family:${t.tf};font-size:4cqw">The numbers</div>
+  <div style="display:flex;gap:2cqw;margin:auto 0;flex-wrap:wrap">
+   ${[['127%','NRR'],['$4.2M','ARR'],['+38%','QoQ'],['1,204','Logos'],['92','NPS'],['11d','Sales cycle']].map(([n,l])=>
+     `<div style="flex:1 0 28%;text-align:center"><div style="color:${t.accent};font-family:${t.tf};font-weight:800;font-size:6cqw">${n}</div><div class="body" style="color:${t.body};font-family:${t.bf};font-size:2.2cqw">${l}</div></div>`).join('')}
+  </div></div>`); }
+
+// Seed batch: type, theme, intended (hint to us, hidden from voter), builder
+const CANDIDATES = [
+  { id:'cover-1',     type:'cover',      theme:'counsel',  build:cover },
+  { id:'cover-2',     type:'cover',      theme:'obsidian', build:cover },
+  { id:'cover-weak',  type:'cover',      theme:'quartz',   build:coverWeak },
+  { id:'stat-1',      type:'stat',       theme:'cobalt',   build:bigStat },
+  { id:'stat-1b',     type:'stat',       theme:'obsidian', build:bigStat },
+  { id:'stat-crowd',  type:'stat',       theme:'quartz',   build:statCrowded },
+  { id:'compare-1',   type:'comparison', theme:'quartz',   build:comparison },
+  { id:'compare-1b',  type:'comparison', theme:'cobalt',   build:comparison },
+  { id:'process-1',   type:'process',    theme:'counsel',  build:process },
+  { id:'process-1b',  type:'process',    theme:'obsidian', build:process },
+  { id:'content-1',   type:'content',    theme:'cobalt',   build:contentGood },
+  { id:'content-wall',type:'content',    theme:'counsel',  build:contentWall },
+];
+
+const KEY='slide-standard-votes';
+const state = JSON.parse(localStorage.getItem(KEY)||'{}');
+
+const grid = document.getElementById('grid');
+grid.innerHTML = CANDIDATES.map(c=>`
+  <div class="card" id="c-${c.id}" data-id="${c.id}" data-v="${state[c.id]?.verdict||''}">
+    <div class="meta"><span class="tag">${c.type}</span><span class="tag">${c.theme}</span></div>
+    ${c.build(c.theme)}
+    <div class="vote">
+      <button class="b-cut"  data-act="cut">✗ Cut</button>
+      <button class="b-keep" data-act="keep">⭐ Keep</button>
+      <button class="b-love" data-act="love">★ Love</button>
+    </div>
+    <textarea class="why" placeholder="why? (optional — the rule we learn)">${state[c.id]?.why||''}</textarea>
+  </div>`).join('');
+
+function refresh(){
+  const n = Object.values(state).filter(v=>v.verdict).length;
+  document.getElementById('status').textContent = `${n} / ${CANDIDATES.length} voted`;
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+refresh();
+
+grid.addEventListener('click', e=>{
+  const btn=e.target.closest('button[data-act]'); if(!btn) return;
+  const card=btn.closest('.card'); const id=card.dataset.id;
+  state[id]=state[id]||{}; state[id].verdict=btn.dataset.act;
+  state[id].type=CANDIDATES.find(c=>c.id===id).type;
+  state[id].theme=CANDIDATES.find(c=>c.id===id).theme;
+  card.dataset.v=btn.dataset.act; refresh();
+});
+grid.addEventListener('input', e=>{
+  const ta=e.target.closest('.why'); if(!ta) return;
+  const id=ta.closest('.card').dataset.id; state[id]=state[id]||{}; state[id].why=ta.value; refresh();
+});
+
+// 🎤 dictation — Web Speech API (Chrome/Edge). Adds a mic to each "why" box.
+function enableDictation(selector){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  document.querySelectorAll(selector).forEach(ta=>{
+    if(ta.dataset.mic) return; ta.dataset.mic='1';
+    const wrap=document.createElement('div'); wrap.style.position='relative';
+    ta.parentNode.insertBefore(wrap, ta); wrap.appendChild(ta);
+    const btn=document.createElement('button'); btn.type='button'; btn.className='mic'; btn.textContent='🎤';
+    btn.title = SR ? 'Click to dictate' : 'Dictation needs Chrome or Edge';
+    wrap.appendChild(btn);
+    if(!SR){ btn.disabled=true; btn.style.opacity=.4; return; }
+    let rec=null, on=false;
+    btn.addEventListener('click', ()=>{
+      if(on){ rec&&rec.stop(); return; }
+      rec=new SR(); rec.lang='en-US'; rec.continuous=true; rec.interimResults=false;
+      rec.onresult=e=>{ let txt='';
+        for(let i=e.resultIndex;i<e.results.length;i++){ if(e.results[i].isFinal) txt+=e.results[i][0].transcript; }
+        if(txt){ ta.value=(ta.value?ta.value.trim()+' ':'')+txt.trim();
+                 ta.dispatchEvent(new Event('input',{bubbles:true})); } };
+      rec.onend=()=>{ on=false; btn.classList.remove('rec'); };
+      rec.onerror=()=>{ on=false; btn.classList.remove('rec'); };
+      rec.start(); on=true; btn.classList.add('rec');
+    });
+  });
+}
+enableDictation('textarea.why');
+
+document.getElementById('copy').addEventListener('click', ()=>{
+  const votes = Object.entries(state).filter(([,v])=>v.verdict)
+     .map(([id,v])=>({id, type:v.type, theme:v.theme, verdict:v.verdict, why:v.why||''}));
+  if(!votes.length){ alert('Vote on at least one slide first.'); return; }
+  const out = { exercise:'composition-vote', date:new Date().toISOString().slice(0,10), votes };
+  const txt = JSON.stringify(out,null,2);
+  const ta=document.getElementById('out'); ta.style.display='block'; ta.value=txt;
+  navigator.clipboard?.writeText(txt);
+  document.getElementById('status').textContent='Copied! Paste it back into the chat.';
+});
+</script>
+</body>
+</html>

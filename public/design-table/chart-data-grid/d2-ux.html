@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chart Data-Table Editor — D2 (Interaction & Flow lens)</title>
+<style>
+  :root {
+    --slate-900: #0f172a;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50:  #f8fafc;
+    --violet-600: #7c3aed;
+    --violet-500: #8b5cf6;
+    --violet-100: #ede9fe;
+    --violet-50:  #f5f3ff;
+    --foxit-orange: #FF5F00;
+    --s1: #7c3aed; /* series 2025 = violet */
+    --s2: #FF5F00; /* series 2026 = foxit orange, used sparingly as 2nd series */
+    --green-600: #16a34a;
+    --amber-600: #d97706;
+    --red-600: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--slate-900);
+    background: linear-gradient(180deg, #f9f6ff 0%, #f4f0ff 40%, #eef3ff 100%);
+    -webkit-font-smoothing: antialiased;
+  }
+  .stage {
+    display: flex; gap: 40px; align-items: flex-start;
+    padding: 40px 48px 80px; max-width: 1280px; margin: 0 auto;
+  }
+
+  /* ---------- left: editor canvas mock so the inspector has context ---------- */
+  .canvas-col { flex: 1 1 auto; min-width: 0; }
+  .lens-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: var(--violet-600);
+    background: var(--violet-50); border: 1px solid var(--violet-100);
+    padding: 6px 12px; border-radius: 10px; margin-bottom: 20px;
+  }
+  .lens-tag b { color: var(--slate-700); font-weight: 600; }
+  .slide-frame {
+    aspect-ratio: 16 / 9; background: #fff; border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 10px 40px rgba(0,0,0,0.06);
+    padding: 44px 52px; display: flex; flex-direction: column; gap: 8px;
+    position: relative;
+  }
+  .slide-eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--slate-400); }
+  .slide-title { font-size: 30px; font-weight: 700; line-height: 1.15; margin: 0; }
+  .slide-chart-host { margin-top: 18px; flex: 1; border: 2px dashed transparent; border-radius: 12px; position: relative; }
+  .slide-chart-host.selected { border-color: var(--violet-500); background: var(--violet-50); }
+  .sel-pill {
+    position: absolute; top: -12px; left: 14px; font-size: 12px; font-weight: 600;
+    color: #fff; background: var(--violet-600); padding: 3px 10px; border-radius: 8px;
+  }
+  .canvas-note { margin-top: 18px; font-size: 14px; color: var(--slate-500); }
+
+  /* ---------- right: the inspector ---------- */
+  .inspector {
+    flex: 0 0 348px; width: 348px;
+    background: #fff; border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 28px rgba(0,0,0,0.06);
+    overflow: visible; position: sticky; top: 24px;
+  }
+  .insp-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 18px 20px 14px; border-bottom: 1px solid var(--slate-100);
+  }
+  .insp-head .ico { width: 18px; height: 18px; color: var(--violet-600); }
+  .insp-head h2 { font-size: 16px; font-weight: 600; margin: 0; flex: 1; }
+  .insp-head .ctx { font-size: 13px; color: var(--slate-400); }
+  .insp-body { padding: 18px 20px 22px; }
+
+  /* select rows */
+  .row2 { display: flex; gap: 10px; margin-bottom: 16px; }
+  .field { flex: 1; min-width: 0; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: var(--slate-600); margin-bottom: 6px; }
+  .sel {
+    width: 100%; height: 38px; padding: 0 10px; font-size: 14px; color: var(--slate-900);
+    border: 1px solid var(--slate-200); border-radius: 10px; background: #fff;
+    appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+  }
+  .sel:focus { outline: 2px solid var(--violet-500); outline-offset: 1px; border-color: var(--violet-500); }
+
+  /* live preview */
+  .preview-wrap { margin-bottom: 18px; }
+  .preview-wrap .cap { font-size: 13px; font-weight: 600; color: var(--slate-600); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .preview-wrap .cap .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-600); display: inline-block; }
+  .preview-card {
+    background: var(--slate-50); border: 1px solid var(--slate-100);
+    border-radius: 12px; padding: 14px 14px 10px;
+  }
+  .legend { display: flex; gap: 14px; margin-top: 8px; padding-left: 2px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--slate-600); }
+  .legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+
+  /* grid */
+  .grid-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 10px; }
+  .grid-head .lbl { font-size: 13px; font-weight: 600; color: var(--slate-600); }
+  .paste-btn {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+    color: var(--violet-600); background: var(--violet-50); border: 1px solid var(--violet-100);
+    padding: 6px 10px; border-radius: 10px; cursor: pointer;
+  }
+  .paste-btn:hover { background: var(--violet-100); }
+  .paste-btn svg { width: 14px; height: 14px; }
+
+  .grid-scroll { overflow-x: auto; border-radius: 12px; }
+  table.grid { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 14px; }
+  table.grid th, table.grid td { border-bottom: 1px solid var(--slate-100); border-right: 1px solid var(--slate-100); }
+  table.grid tr td:last-child, table.grid tr th:last-child { border-right: none; }
+  /* corner */
+  .corner { width: 30px; background: var(--slate-50); }
+  /* column header cells */
+  th.colhead { background: var(--slate-50); padding: 0; position: relative; }
+  th.colhead .colwrap { display: flex; align-items: center; }
+  th.colhead input {
+    width: 100%; min-width: 64px; height: 34px; border: none; background: transparent;
+    font-size: 13px; font-weight: 600; color: var(--slate-700); text-align: center; padding: 0 6px;
+  }
+  th.colhead input:focus { outline: 2px solid var(--violet-500); outline-offset: -2px; border-radius: 6px; }
+  .colswatch { width: 8px; height: 8px; border-radius: 2px; margin-left: 8px; flex: 0 0 auto; }
+  .col-del {
+    position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 6px;
+    display: none; align-items: center; justify-content: center; cursor: pointer;
+    color: var(--slate-400); background: #fff; border: 1px solid var(--slate-200);
+  }
+  th.colhead:hover .col-del { display: inline-flex; }
+  .col-del:hover { color: var(--red-600); border-color: #fecaca; background: #fef2f2; }
+
+  /* row label cells */
+  td.rowlabel { background: var(--slate-50); padding: 0; position: relative; }
+  td.rowlabel input {
+    width: 100%; min-width: 56px; height: 36px; border: none; background: transparent;
+    font-size: 13px; font-weight: 600; color: var(--slate-700); padding: 0 8px;
+  }
+  td.rowlabel input:focus { outline: 2px solid var(--violet-500); outline-offset: -2px; border-radius: 6px; }
+
+  /* value cells */
+  td.cell { padding: 0; }
+  td.cell input {
+    width: 100%; min-width: 56px; height: 36px; border: none; background: transparent;
+    font-size: 14px; color: var(--slate-900); text-align: right; padding: 0 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  td.cell input:focus { outline: 2px solid var(--violet-500); outline-offset: -2px; border-radius: 6px; background: var(--violet-50); }
+  td.cell input.coerced { background: #fff7ed; }
+
+  /* row delete affordance — appears at row's right edge */
+  td.rowact { width: 28px; background: #fff; padding: 0; text-align: center; }
+  .row-del {
+    width: 22px; height: 22px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--slate-300); background: transparent; border: none;
+  }
+  tr:hover .row-del { color: var(--slate-400); }
+  .row-del:hover { color: var(--red-600); background: #fef2f2; }
+
+  /* add row / add col footers */
+  .add-row-bar {
+    display: flex; align-items: center; gap: 8px; width: 100%; height: 38px;
+    margin-top: 8px; padding: 0 10px; cursor: pointer;
+    border: 1px dashed var(--slate-300); border-radius: 10px; background: #fff;
+    font-size: 14px; font-weight: 600; color: var(--slate-600);
+  }
+  .add-row-bar:hover { border-color: var(--violet-500); color: var(--violet-600); background: var(--violet-50); }
+  .add-row-bar svg { width: 15px; height: 15px; }
+
+  .add-col-btn {
+    width: 30px; min-width: 30px; height: 34px; cursor: pointer; background: var(--slate-50);
+    border: none; border-bottom: 1px solid var(--slate-100); color: var(--slate-400);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .add-col-btn:hover { color: var(--violet-600); background: var(--violet-50); }
+  .add-col-btn svg { width: 15px; height: 15px; }
+
+  /* delete-confirm popover (inline, not a modal) */
+  .confirm {
+    position: absolute; z-index: 30; background: #fff; border: 1px solid var(--slate-200);
+    border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.14); padding: 12px 14px; width: 210px;
+    font-size: 13px; color: var(--slate-700);
+  }
+  .confirm p { margin: 0 0 10px; }
+  .confirm .acts { display: flex; gap: 8px; justify-content: flex-end; }
+  .confirm button { font-size: 13px; font-weight: 600; border-radius: 9px; padding: 7px 12px; cursor: pointer; border: 1px solid var(--slate-200); background: #fff; color: var(--slate-600); }
+  .confirm button.danger { background: var(--red-600); border-color: var(--red-600); color: #fff; }
+
+  /* toast */
+  .toast-host { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .toast {
+    display: flex; align-items: center; gap: 10px; background: var(--slate-900); color: #fff;
+    font-size: 14px; padding: 12px 16px; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+    animation: rise .22s ease-out;
+  }
+  .toast svg { width: 18px; height: 18px; flex: 0 0 auto; }
+  .toast .sub { color: #cbd5e1; font-size: 13px; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
+
+  /* empty state */
+  .empty {
+    display: none; flex-direction: column; align-items: center; text-align: center;
+    padding: 26px 18px; border: 1px dashed var(--slate-300); border-radius: 12px; background: var(--slate-50);
+  }
+  .empty.show { display: flex; }
+  .empty .icoCircle { width: 44px; height: 44px; border-radius: 12px; background: var(--violet-50); color: var(--violet-600); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .empty h3 { font-size: 15px; margin: 0 0 4px; }
+  .empty p { font-size: 14px; color: var(--slate-500); margin: 0 0 14px; line-height: 1.5; }
+  .empty .btn-create {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px;
+    border-radius: 10px; border: none; cursor: pointer;
+    background: linear-gradient(90deg, #F0A8F2 0%, #C8B6F4 50%, #9CC4FE 100%);
+    color: #3B2856; font-size: 14px; font-weight: 600;
+  }
+
+  /* hint strip */
+  .kbd-hint { margin-top: 14px; font-size: 13px; color: var(--slate-500); display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+  .kbd { display: inline-flex; align-items: center; gap: 4px; }
+  kbd {
+    font-family: inherit; font-size: 12px; font-weight: 600; color: var(--slate-600);
+    background: var(--slate-100); border: 1px solid var(--slate-200); border-bottom-width: 2px;
+    border-radius: 6px; padding: 2px 6px; min-width: 18px; text-align: center;
+  }
+
+  /* annotation callouts (around the inspector) */
+  .callout {
+    position: absolute; max-width: 230px; font-size: 13px; line-height: 1.45; color: var(--slate-700);
+    background: #fffef8; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+  .callout b { color: var(--amber-600); }
+  .callout::after { content: ""; position: absolute; width: 22px; height: 2px; background: #fbbf24; }
+  .c-kbd  { top: 314px;  left: -250px; }
+  .c-kbd::after  { right: -22px; top: 22px; }
+  .c-paste { top: -8px; right: -250px; }
+  .c-paste::after { left: -22px; top: 24px; }
+  .c-del  { top: 470px; right: -250px; }
+  .c-del::after  { left: -22px; top: 22px; }
+  .insp-stack { position: relative; }
+
+  .footnote { max-width: 1280px; margin: 0 auto; padding: 0 48px 60px; font-size: 14px; color: var(--slate-500); line-height: 1.6; }
+  .footnote h4 { color: var(--slate-700); font-size: 14px; margin: 0 0 6px; }
+  .toggle-empty { margin-top: 10px; font-size: 13px; color: var(--violet-600); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <!-- LEFT: slide context -->
+  <div class="canvas-col">
+    <div class="lens-tag">D2 · Lens: <b>Interaction &amp; Flow (ux-flow-designer)</b> — "best to actually use"</div>
+    <div class="slide-frame">
+      <div class="slide-eyebrow">Revenue</div>
+      <h1 class="slide-title">Quarterly growth, 2025 vs 2026</h1>
+      <div class="slide-chart-host selected" id="slideChart">
+        <div class="sel-pill">Chart block selected</div>
+        <!-- big mirror of the live preview -->
+        <div id="bigChart" style="height: 100%; padding-top: 26px;"></div>
+      </div>
+    </div>
+    <p class="canvas-note">Select a chart block → the inspector reveals the data editor (progressive disclosure, P-UX2). Selecting any non-chart block hides it.
+      <button class="toggle-empty" id="emptyToggle" type="button">Preview the empty state →</button>
+    </p>
+  </div>
+
+  <!-- RIGHT: the inspector -->
+  <div class="insp-stack">
+    <!-- callouts -->
+    <div class="callout c-kbd"><b>Keyboard nav.</b> <kbd>Tab</kbd>/<kbd>↵</kbd> move to next cell, <kbd>↑↓←→</kbd> jump between cells, <kbd>↵</kbd> on last cell adds nothing — the grid never traps you. Edits apply on blur/Enter → chart re-renders live.</div>
+    <div class="callout c-paste"><b>Paste from Excel.</b> Click the cell area and <kbd>Ctrl</kbd>+<kbd>V</kbd>, or use this button. First row = headers, first column = labels, rest = values. A toast reports coerced cells.</div>
+    <div class="callout c-del"><b>Delete is reversible &amp; confirmed.</b> Hover a row/column → trash affordance. Click → inline confirm popover (not a modal). Last row/column can't be deleted.</div>
+
+    <div class="inspector">
+      <div class="insp-head">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <h2>Chart data</h2>
+        <span class="ctx">Slide 4</span>
+      </div>
+      <div class="insp-body">
+
+        <!-- type + format selectors -->
+        <div class="row2">
+          <div class="field">
+            <label for="ctype">Chart type</label>
+            <select class="sel" id="ctype">
+              <option value="column" selected>Grouped column</option>
+              <option value="bar">Bar</option>
+              <option value="line">Line</option>
+              <option value="area">Area</option>
+              <option value="pie">Pie</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="nfmt">Number format</label>
+            <select class="sel" id="nfmt">
+              <option value="number" selected>Number</option>
+              <option value="currency">Currency</option>
+              <option value="percent">Percent</option>
+              <option value="compact">Compact</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- LIVE preview -->
+        <div class="preview-wrap">
+          <div class="cap"><span class="dot"></span> Live preview</div>
+          <div class="preview-card">
+            <div id="miniChart"></div>
+            <div class="legend" id="legend"></div>
+          </div>
+        </div>
+
+        <!-- grid header w/ paste affordance -->
+        <div class="grid-head">
+          <span class="lbl">Data</span>
+          <button class="paste-btn" id="pasteBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+            Paste from Excel
+          </button>
+        </div>
+
+        <!-- THE GRID -->
+        <div class="grid-scroll">
+          <table class="grid" id="grid"><!-- built by JS --></table>
+        </div>
+
+        <!-- add row -->
+        <button class="add-row-bar" id="addRow" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add row
+        </button>
+
+        <!-- EMPTY STATE (hidden by default) -->
+        <div class="empty" id="emptyState">
+          <div class="icoCircle"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <h3>No data yet</h3>
+          <p>Add a row to start, or paste a table straight from Excel or Google Sheets.</p>
+          <button class="btn-create" id="emptyAdd" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add first row
+          </button>
+        </div>
+
+        <!-- keyboard hint strip -->
+        <div class="kbd-hint" id="hintStrip">
+          <span class="kbd"><kbd>Tab</kbd> next</span>
+          <span class="kbd"><kbd>↵</kbd> apply</span>
+          <span class="kbd"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> move</span>
+          <span class="kbd"><kbd>Ctrl</kbd>+<kbd>V</kbd> paste</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footnote">
+  <h4>D2 — what's distinct in this take</h4>
+  Built for hands-on editing: cells are real inputs with full keyboard navigation, add-row works, paste fires a coercion toast, delete is confirmed inline (no modal), and the chart re-renders on every edit. Empty + coerced states are first-class, not afterthoughts.
+</div>
+
+<div class="toast-host" id="toastHost"></div>
+
+<script>
+(function(){
+  // ---- model (mirrors FreeformChartBlock) ----
+  var model = {
+    categories: ["Q1","Q2","Q3","Q4"],
+    series: [
+      { name: "2025", values: [120,135,150,162], color: "#7c3aed" },
+      { name: "2026", values: [140,158,171,195], color: "#FF5F00" }
+    ]
+  };
+
+  var grid = document.getElementById('grid');
+  var miniChart = document.getElementById('miniChart');
+  var bigChart = document.getElementById('bigChart');
+  var legend = document.getElementById('legend');
+  var emptyState = document.getElementById('emptyState');
+  var addRowBar = document.getElementById('addRow');
+  var hintStrip = document.getElementById('hintStrip');
+
+  function coerce(v){ var n = parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isNaN(n) ? 0 : n; }
+
+  // ---------- render grid ----------
+  function buildGrid(){
+    var cols = model.series.length, rows = model.categories.length;
+    var html = "";
+
+    // header row: corner + col headers + add-col + spacer
+    html += "<tr>";
+    html += "<th class='corner'></th>";
+    model.series.forEach(function(s, c){
+      html += "<th class='colhead'>"
+            + "<div class='colwrap'>"
+            + "<input data-col='"+c+"' data-kind='colhead' value='"+escapeHtml(s.name)+"' aria-label='Column header "+(c+1)+"' />"
+            + "<span class='colswatch' style='background:"+s.color+"'></span>"
+            + "</div>"
+            + "<button class='col-del' data-col='"+c+"' title='Remove column' aria-label='Remove column "+escapeHtml(s.name)+"'>"
+            + trashSvg(12) + "</button>"
+            + "</th>";
+    });
+    html += "<th class='colhead' style='padding:0'><button class='add-col-btn' id='addCol' title='Add column' aria-label='Add column'>"+plusSvg()+"</button></th>";
+    html += "<th class='rowact'></th>";
+    html += "</tr>";
+
+    // body rows
+    model.categories.forEach(function(cat, r){
+      html += "<tr>";
+      html += "<td class='rowlabel'><input data-row='"+r+"' data-kind='rowlabel' value='"+escapeHtml(cat)+"' aria-label='Row label "+(r+1)+"' /></td>";
+      model.series.forEach(function(s, c){
+        html += "<td class='cell'><input data-row='"+r+"' data-col='"+c+"' data-kind='cell' value='"+s.values[r]+"' inputmode='decimal' aria-label='"+escapeHtml(s.name)+" "+escapeHtml(cat)+"' /></td>";
+      });
+      html += "<td></td>"; // under add-col
+      html += "<td class='rowact'><button class='row-del' data-row='"+r+"' title='Remove row' aria-label='Remove row "+escapeHtml(cat)+"'>"+trashSvg(13)+"</button></td>";
+      html += "</tr>";
+    });
+
+    grid.innerHTML = html;
+    wireGrid();
+    toggleEmpty();
+  }
+
+  function toggleEmpty(){
+    var isEmpty = model.categories.length === 0;
+    emptyState.classList.toggle('show', isEmpty);
+    grid.parentElement.style.display = isEmpty ? 'none' : '';
+    addRowBar.style.display = isEmpty ? 'none' : '';
+    hintStrip.style.display = isEmpty ? 'none' : '';
+  }
+
+  // ---------- wiring ----------
+  function wireGrid(){
+    // value + label + header edits
+    grid.querySelectorAll('input').forEach(function(inp){
+      inp.addEventListener('change', applyInput);
+      inp.addEventListener('keydown', cellKeyNav);
+    });
+    // add column
+    var ac = document.getElementById('addCol');
+    if (ac) ac.addEventListener('click', addColumn);
+    // row deletes
+    grid.querySelectorAll('.row-del').forEach(function(b){
+      b.addEventListener('click', function(e){ confirmDelete(e.currentTarget, 'row', +b.dataset.row); });
+    });
+    // col deletes
+    grid.querySelectorAll('.col-del').forEach(function(b){
+      b.addEventListener('click', function(e){ confirmDelete(e.currentTarget, 'col', +b.dataset.col); });
+    });
+  }
+
+  function applyInput(e){
+    var el = e.target, kind = el.dataset.kind;
+    if (kind === 'cell'){
+      var raw = el.value.trim();
+      var n = coerce(raw);
+      var wasCoerced = raw !== "" && String(n) !== raw.replace(/[^0-9.\-]/g,'');
+      model.series[+el.dataset.col].values[+el.dataset.row] = n;
+      el.value = n;
+      el.classList.toggle('coerced', raw !== "" && isNaN(parseFloat(raw)));
+    } else if (kind === 'rowlabel'){
+      model.categories[+el.dataset.row] = el.value || ("Row " + (+el.dataset.row+1));
+    } else if (kind === 'colhead'){
+      model.series[+el.dataset.col].name = el.value || ("Series " + (+el.dataset.col+1));
+    }
+    render(); // live re-render on every edit
+  }
+
+  // keyboard navigation across the grid of inputs
+  function cellKeyNav(e){
+    var el = e.target;
+    var r = el.dataset.row !== undefined ? +el.dataset.row : null;
+    var c = el.dataset.col !== undefined ? +el.dataset.col : null;
+    var kind = el.dataset.kind;
+    var move = null;
+
+    if (e.key === 'Enter'){ e.preventDefault(); el.blur(); move = {dr:1, dc:0}; }
+    else if (e.key === 'ArrowDown'){ e.preventDefault(); move = {dr:1, dc:0}; }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); move = {dr:-1, dc:0}; }
+    else if (e.key === 'ArrowRight' && (el.selectionStart === el.value.length)){ move = {dr:0, dc:1}; }
+    else if (e.key === 'ArrowLeft' && el.selectionStart === 0){ move = {dr:0, dc:-1}; }
+    else if (e.key === 'Tab'){ /* native tab order already left→right, top→bottom */ return; }
+    if (!move) return;
+
+    // only navigate among value cells (kind === 'cell') for arrows/enter
+    if (kind === 'cell'){
+      var nr = r + move.dr, nc = c + move.dc;
+      var next = grid.querySelector("input[data-kind='cell'][data-row='"+nr+"'][data-col='"+nc+"']");
+      if (next){ e.preventDefault(); next.focus(); next.select(); }
+    }
+  }
+
+  // ---------- add / remove keeping the invariant ----------
+  function addRow(){
+    var idx = model.categories.length;
+    model.categories.push("Q" + (idx+1) > "Q4" ? ("Row " + (idx+1)) : ("Q" + (idx+1)));
+    model.series.forEach(function(s){ s.values.push(0); }); // invariant: every series gets a value
+    buildGrid(); render();
+    // focus the new row's first value
+    var f = grid.querySelector("input[data-kind='cell'][data-row='"+idx+"'][data-col='0']");
+    if (f){ f.focus(); f.select(); }
+  }
+  function addColumn(){
+    var n = model.series.length;
+    var palette = ["#7c3aed","#FF5F00","#0ea5e9","#16a34a","#d946ef"];
+    model.series.push({ name: "Series "+(n+1), values: model.categories.map(function(){return 0;}), color: palette[n % palette.length] });
+    buildGrid(); render();
+  }
+  function removeRow(r){
+    if (model.categories.length <= 1) { toast("Can't remove the last row", "A chart needs at least one row.", "warn"); return; }
+    model.categories.splice(r,1);
+    model.series.forEach(function(s){ s.values.splice(r,1); });
+    buildGrid(); render();
+  }
+  function removeCol(c){
+    if (model.series.length <= 1) { toast("Can't remove the last column", "A chart needs at least one series.", "warn"); return; }
+    model.series.splice(c,1);
+    buildGrid(); render();
+  }
+
+  // ---------- inline delete-confirm popover ----------
+  var openConfirm = null;
+  function confirmDelete(anchor, type, idx){
+    closeConfirm();
+    if (type === 'row' && model.categories.length <= 1) { removeRow(idx); return; }
+    if (type === 'col' && model.series.length <= 1) { removeCol(idx); return; }
+    var pop = document.createElement('div');
+    pop.className = 'confirm';
+    var name = type === 'row' ? model.categories[idx] : model.series[idx].name;
+    pop.innerHTML = "<p>Remove <b>"+escapeHtml(name)+"</b>? This clears its "+(type==='row'?"values across all series":"values")+".</p>"
+                  + "<div class='acts'><button data-act='cancel'>Cancel</button><button class='danger' data-act='ok'>Remove</button></div>";
+    document.body.appendChild(pop);
+    var rect = anchor.getBoundingClientRect();
+    pop.style.top = (window.scrollY + rect.bottom + 6) + 'px';
+    pop.style.left = (window.scrollX + Math.min(rect.left, window.innerWidth - 230)) + 'px';
+    openConfirm = pop;
+    pop.querySelector("[data-act='cancel']").onclick = closeConfirm;
+    pop.querySelector("[data-act='ok']").onclick = function(){
+      if (type === 'row') removeRow(idx); else removeCol(idx);
+      closeConfirm();
+    };
+  }
+  function closeConfirm(){ if (openConfirm){ openConfirm.remove(); openConfirm = null; } }
+  document.addEventListener('click', function(e){
+    if (openConfirm && !openConfirm.contains(e.target) && !e.target.closest('.row-del') && !e.target.closest('.col-del')) closeConfirm();
+  });
+
+  // ---------- paste flow ----------
+  function doPaste(text){
+    var rowsRaw = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.length; });
+    if (!rowsRaw.length) return;
+    var delim = rowsRaw[0].indexOf('\t') >= 0 ? '\t' : ',';
+    var table = rowsRaw.map(function(l){ return l.split(delim); });
+    var headers = table[0];
+    var bodyRows = table.slice(1);
+
+    var newCats = [], newSeries = [], coerced = 0, totalCells = 0;
+    var palette = ["#7c3aed","#FF5F00","#0ea5e9","#16a34a","#d946ef"];
+    for (var c = 1; c < headers.length; c++){
+      newSeries.push({ name: (headers[c]||"Series "+c).trim(), values: [], color: palette[(c-1)%palette.length] });
+    }
+    bodyRows.forEach(function(row){
+      newCats.push((row[0]||"").trim() || ("Row "+(newCats.length+1)));
+      for (var c = 1; c < headers.length; c++){
+        totalCells++;
+        var raw = (row[c]||"").trim();
+        var n = coerce(raw);
+        if (raw === "" || isNaN(parseFloat(raw))) { if (raw !== "" ) coerced++; else coerced++; }
+        newSeries[c-1].values.push(n);
+      }
+    });
+    // pad/truncate to keep invariant
+    newSeries.forEach(function(s){ while (s.values.length < newCats.length) s.values.push(0); s.values.length = newCats.length; });
+
+    model.categories = newCats;
+    model.series = newSeries.length ? newSeries : model.series;
+    buildGrid(); render();
+
+    if (coerced > 0) toast("Pasted — "+totalCells+" cells", coerced+" coerced to 0", "ok");
+    else toast("Pasted — "+totalCells+" cells", newCats.length+" rows × "+newSeries.length+" columns", "ok");
+  }
+
+  // demo paste: simulate a clipboard payload (real impl reads event.clipboardData)
+  var samplePaste = "Region\tStore A\tStore B\tStore C\nNorth\t140\t98\tn/a\nSouth\t132\t110\t77\nEast\t156\t—\t88\nWest\t121\t104\t95";
+  document.getElementById('pasteBtn').addEventListener('click', function(){ doPaste(samplePaste); });
+  // also catch real paste anywhere in the grid
+  grid.addEventListener('paste', function(e){
+    var t = (e.clipboardData || window.clipboardData).getData('text');
+    if (t && t.indexOf('\t') >= 0 || (t && t.split('\n').length > 1)){ e.preventDefault(); doPaste(t); }
+  });
+
+  // ---------- chart rendering (grouped column SVG) ----------
+  function chartSVG(w, h){
+    var rows = model.categories, series = model.series;
+    if (!rows.length || !series.length) return "";
+    var max = 0;
+    series.forEach(function(s){ s.values.forEach(function(v){ if (v > max) max = v; }); });
+    max = max || 1;
+    var padL = 8, padB = 22, padT = 8, padR = 8;
+    var iw = w - padL - padR, ih = h - padT - padB;
+    var groupW = iw / rows.length;
+    var barGap = 4, groupPad = groupW * 0.18;
+    var barsPer = series.length;
+    var barW = (groupW - groupPad*2 - barGap*(barsPer-1)) / barsPer;
+    var svg = "<svg width='100%' viewBox='0 0 "+w+" "+h+"' font-family='Inter' role='img' aria-label='Grouped column chart'>";
+    // baseline
+    svg += "<line x1='"+padL+"' y1='"+(padT+ih)+"' x2='"+(w-padR)+"' y2='"+(padT+ih)+"' stroke='#e2e8f0' stroke-width='1'/>";
+    rows.forEach(function(cat, ri){
+      var gx = padL + ri*groupW + groupPad;
+      series.forEach(function(s, si){
+        var v = s.values[ri] || 0;
+        var bh = (v/max) * ih;
+        var x = gx + si*(barW+barGap);
+        var y = padT + ih - bh;
+        svg += "<rect x='"+x.toFixed(1)+"' y='"+y.toFixed(1)+"' width='"+Math.max(barW,1).toFixed(1)+"' height='"+bh.toFixed(1)+"' rx='2' fill='"+s.color+"'><title>"+escapeHtml(s.name)+" · "+escapeHtml(cat)+": "+v+"</title></rect>";
+      });
+      svg += "<text x='"+(padL+ri*groupW+groupW/2).toFixed(1)+"' y='"+(h-7)+"' text-anchor='middle' font-size='11' fill='#64748b'>"+escapeHtml(cat)+"</text>";
+    });
+    svg += "</svg>";
+    return svg;
+  }
+
+  function renderLegend(){
+    legend.innerHTML = model.series.map(function(s){
+      return "<span><i style='background:"+s.color+"'></i>"+escapeHtml(s.name)+"</span>";
+    }).join('');
+  }
+
+  function render(){
+    miniChart.innerHTML = chartSVG(300, 130);
+    bigChart.innerHTML = chartSVG(640, 280);
+    renderLegend();
+  }
+
+  // ---------- helpers ----------
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function plusSvg(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='5' x2='12' y2='19'/><line x1='5' y1='12' x2='19' y2='12'/></svg>"; }
+  function trashSvg(sz){ return "<svg width='"+sz+"' height='"+sz+"' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/><path d='M10 11v6M14 11v6'/></svg>"; }
+
+  function toast(title, sub, kind){
+    var host = document.getElementById('toastHost');
+    var t = document.createElement('div'); t.className = 'toast';
+    var icon = kind === 'warn'
+      ? "<svg viewBox='0 0 24 24' fill='none' stroke='#fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/><line x1='12' y1='9' x2='12' y2='13'/><line x1='12' y1='17' x2='12.01' y2='17'/></svg>"
+      : "<svg viewBox='0 0 24 24' fill='none' stroke='#34d399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/><polyline points='22 4 12 14.01 9 11.01'/></svg>";
+    t.innerHTML = icon + "<div><div>"+escapeHtml(title)+"</div>"+(sub?"<div class='sub'>"+escapeHtml(sub)+"</div>":"")+"</div>";
+    host.appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity .3s, transform .3s'; t.style.opacity='0'; t.style.transform='translateY(8px)'; setTimeout(function(){ t.remove(); }, 320); }, 3200);
+  }
+
+  // ---------- wire static controls ----------
+  addRowBar.addEventListener('click', addRow);
+  document.getElementById('emptyAdd').addEventListener('click', addRow);
+
+  // empty-state demo toggle
+  var savedModel = null;
+  document.getElementById('emptyToggle').addEventListener('click', function(){
+    if (model.categories.length){
+      savedModel = JSON.parse(JSON.stringify(model));
+      model.categories = []; model.series = model.series.map(function(s){ return {name:s.name, values:[], color:s.color}; });
+      this.textContent = "← Back to populated state";
+    } else if (savedModel){
+      model = savedModel; savedModel = null;
+      this.textContent = "Preview the empty state →";
+    }
+    buildGrid(); render();
+  });
+
+  document.getElementById('ctype').addEventListener('change', function(){ /* demo: keeps column render; live impl swaps SVG */ });
+
+  // init
+  buildGrid();
+  render();
+})();
+</script>
+</body>
+</html>

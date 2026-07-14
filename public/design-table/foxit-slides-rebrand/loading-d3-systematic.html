@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foxit Slides — Generating (D3 · Systematized)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   FOXIT SLIDES — LOADING SYSTEM (D3 · systematized lens)
+   Everything the screen needs lives in tokens. The same
+   primitives drive the deck, the status line, and the tips.
+   ============================================================ */
+:root{
+  /* — BRAND GRADIENT TOKENS — the one earned color moment — */
+  --grad-brand: linear-gradient(135deg,#4776E6,#6D28D9,#A855F7);
+  --grad-logo:  linear-gradient(135deg,#4776E6,#A855F7);
+  --grad-pic:   linear-gradient(135deg,#9CC4FE,#C8B6F4);
+  --brand-violet:#6D28D9;
+  --brand-blue:#4776E6;
+  --brand-orchid:#A855F7;
+
+  /* — ON-DARK INK SCALE — opacity tiers, one source of truth — */
+  --ink-100: rgba(255,255,255,1);     /* hero          */
+  --ink-90:  rgba(255,255,255,.92);   /* live status   */
+  --ink-72:  rgba(255,255,255,.72);   /* tip body      */
+  --ink-58:  rgba(255,255,255,.58);   /* category lbl  */
+  --ink-44:  rgba(255,255,255,.44);   /* footer / meta */
+  --ink-16:  rgba(255,255,255,.16);   /* hairlines     */
+  --ink-10:  rgba(255,255,255,.10);   /* glass fill    */
+
+  /* — TYPE SCALE (on-dark) — */
+  --t-hero: 26px;   --t-chip: 13px;   --t-line: 15px;
+  --t-count:12.5px; --t-tip: 13.5px;  --t-lbl: 10px;  --t-foot:11px;
+
+  /* — SPACING SCALE — */
+  --s-1:6px; --s-2:10px; --s-3:14px; --s-4:22px; --s-5:34px; --s-6:48px;
+  --radius-tile:18px; --radius-card:14px; --radius-thumb:9px;
+
+  /* — MOTION SYSTEM — named durations — */
+  --dur-card:    900ms;   /* one slide materializes              */
+  --dur-shimmer: 1100ms;  /* active-slide light sweep            */
+  --dur-bob:     3200ms;  /* logo breathe                        */
+  --dur-halo:    3200ms;  /* logo glow                           */
+  --dur-pulse:   1300ms;  /* live status heartbeat               */
+  --dur-fade:    400ms;   /* status word fade-in                 */
+  --dur-tip:     5000ms;  /* tip dwell (calmer zone)             */
+  --dur-tip-x:   420ms;   /* tip crossfade                       */
+  --dur-drift:   14s;     /* backdrop life                       */
+
+  /* — EASING TOKENS — */
+  --ease-out:   cubic-bezier(.2,.7,.3,1);    /* entrances        */
+  --ease-in:    cubic-bezier(.4,0,1,1);      /* exits            */
+  --ease-soft:  ease-in-out;                 /* ambient loops    */
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Inter',-apple-system,'Segoe UI',sans-serif;color:var(--ink-100);
+  -webkit-font-smoothing:antialiased;overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;background:#1a0f40;
+}
+
+/* ── SATURATED BRAND BACKDROP — the earned color moment ── */
+.bg{position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(820px 560px at 18% 14%,rgba(71,118,230,.85),transparent 60%),
+    radial-gradient(880px 640px at 86% 86%,rgba(168,85,247,.80),transparent 60%),
+    radial-gradient(640px 520px at 72% 18%,rgba(109,40,217,.60),transparent 62%),
+    linear-gradient(155deg,#241a5e 0%,#1a1146 55%,#2a1452 100%);
+  animation:drift var(--dur-drift) var(--ease-soft) infinite alternate}
+@keyframes drift{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-1.5%,-1%)}}
+.bg::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(1200px 800px at 50% 40%,transparent 40%,rgba(12,5,30,.45))}
+
+.stage{position:relative;z-index:2;width:min(720px,90vw);text-align:center;
+  display:flex;flex-direction:column;align-items:center}
+
+/* ── LOGO — gradient tile, breathing via motion tokens ── */
+.logo{width:64px;height:64px;border-radius:var(--radius-tile);background:var(--grad-logo);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:0 10px 30px rgba(168,85,247,.5),inset 0 1px 0 rgba(255,255,255,.35);
+  animation:bob var(--dur-bob) var(--ease-soft) infinite}
+.logo::before{content:'';position:absolute;inset:-14px;border-radius:30px;
+  background:radial-gradient(circle,rgba(168,85,247,.45),transparent 70%);
+  animation:halo var(--dur-halo) var(--ease-soft) infinite;z-index:-1}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes halo{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.12)}}
+
+h1{font-size:var(--t-hero);font-weight:800;letter-spacing:-.02em;margin-top:var(--s-5);color:var(--ink-100)}
+.deckchip{margin-top:var(--s-2);font-size:var(--t-chip);font-weight:500;color:var(--ink-72);
+  background:var(--ink-10);border:1px solid var(--ink-16);
+  padding:5px 13px;border-radius:999px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+/* ── LIVE STATUS LINE — fast zone, heartbeat token ── */
+.line{margin-top:var(--s-4);height:22px;display:flex;align-items:center;gap:9px;
+  font-size:var(--t-line);color:var(--ink-90)}
+.line .dot{width:7px;height:7px;border-radius:50%;background:#fff;flex-shrink:0;
+  animation:pulse var(--dur-pulse) var(--ease-in) infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}100%{box-shadow:0 0 0 8px rgba(255,255,255,0)}}
+.line span{opacity:0;animation:fadein var(--dur-fade) var(--ease-out) forwards}
+@keyframes fadein{to{opacity:1}}
+
+/* ── MATERIALIZING DECK — thumbnails fill one-by-one ── */
+.deck{margin-top:var(--s-5);display:grid;grid-template-columns:repeat(8,1fr);gap:11px;width:100%}
+.thumb{aspect-ratio:16/10;border-radius:var(--radius-thumb);position:relative;overflow:hidden;
+  background:var(--ink-10);border:1px solid var(--ink-16);
+  transition:background var(--dur-card) var(--ease-out),
+             border-color var(--dur-card) var(--ease-out),
+             transform var(--dur-fade) var(--ease-out)}
+.thumb .fill{position:absolute;inset:0;opacity:0;transition:opacity var(--dur-card) var(--ease-out);
+  display:flex;flex-direction:column;gap:3px;padding:8px 7px}
+.thumb .fill .ln{height:3px;border-radius:2px;background:rgba(255,255,255,.55)}
+.thumb .fill .ln.t{width:62%;height:4px;background:#fff}
+.thumb .fill .ln.a{width:90%}.thumb .fill .ln.b{width:70%}
+.thumb .fill .pic{margin-top:auto;height:14px;border-radius:4px;background:var(--grad-pic)}
+.thumb.filled{background:rgba(255,255,255,.96);border-color:rgba(255,255,255,.7)}
+.thumb.filled .fill{opacity:1}
+.thumb.filled .ln{background:rgba(80,55,195,.30)}
+.thumb.filled .ln.t{background:rgba(80,55,195,.7)}
+.thumb.active{transform:translateY(-3px);
+  box-shadow:0 10px 24px rgba(0,0,0,.28),0 0 0 2px rgba(255,255,255,.55)}
+.thumb.active::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+  transform:translateX(-100%);animation:shimmer var(--dur-shimmer) var(--ease-soft) infinite}
+@keyframes shimmer{to{transform:translateX(100%)}}
+
+/* ── PROGRESS COUNT — concrete signal + a token-driven bar ── */
+.count{margin-top:var(--s-4);font-size:var(--t-count);color:var(--ink-72);letter-spacing:.01em}
+.bar{margin-top:var(--s-2);width:240px;height:4px;border-radius:999px;background:var(--ink-10);overflow:hidden}
+.bar i{display:block;height:100%;width:12.5%;border-radius:999px;background:var(--grad-brand);
+  transition:width var(--dur-card) var(--ease-out)}
+
+/* ── TIP CARD — calmer/slower zone; taxonomy-driven accent ── */
+.tipwrap{margin-top:var(--s-5);display:flex;justify-content:center;width:100%}
+.tip-card{display:flex;align-items:center;gap:12px;max-width:480px;
+  background:var(--ink-10);border:1px solid var(--ink-16);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-radius:var(--radius-card);padding:12px 16px;text-align:left}
+.tip-card .ic{width:30px;height:30px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--cat-accent,var(--ink-16));transition:background var(--dur-tip-x) var(--ease-soft)}
+.tip-card .ic svg{width:16px;height:16px;stroke:#fff;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  transition:opacity var(--dur-tip-x) var(--ease-soft)}
+.tip-card .body{min-width:0}
+.tip-card .lbl{font-size:var(--t-lbl);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-58);transition:opacity var(--dur-tip-x) var(--ease-soft)}
+.tip-card .txt{font-size:var(--t-tip);color:var(--ink-90);margin-top:2px;line-height:1.4;
+  transition:opacity var(--dur-tip-x) var(--ease-soft)}
+
+/* ── SYSTEM SIGNATURE FOOTER — the quiet "this is system output" strip ── */
+.sysbar{position:absolute;bottom:0;left:0;right:0;z-index:2;
+  display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;
+  padding:9px 16px;border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(10,4,28,.34);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.sysbar .grp{display:flex;align-items:center;gap:7px;padding:0 16px;
+  border-right:1px solid rgba(255,255,255,.10)}
+.sysbar .grp:last-child{border-right:none}
+.sysbar .k{font-size:9.5px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--ink-44)}
+.sysbar .v{font-size:var(--t-foot);color:var(--ink-72);font-variant-numeric:tabular-nums}
+.sysbar .swatch{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+
+.note{position:absolute;bottom:42px;left:0;right:0;text-align:center;z-index:2;
+  font-size:11px;color:var(--ink-44)}
+
+/* ============================================================
+   REDUCED-MOTION BRANCH — real, not a blanket kill.
+   Swap motion for honest instant states: the deck shows a
+   completed frame, the heartbeat stops, tips still rotate
+   (content, not movement) via opacity step with no transition.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  .bg{animation:none}
+  .logo{animation:none}
+  .logo::before{animation:none;opacity:.7}
+  .line .dot{animation:none;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+  .line span{animation:none;opacity:1}
+  .thumb{transition:none}
+  .thumb.active{transform:none;box-shadow:0 0 0 2px rgba(255,255,255,.55)}
+  .thumb.active::after{animation:none;display:none}
+  .bar i{transition:none}
+  .tip-card .ic,.tip-card .lbl,.tip-card .txt,.tip-card .ic svg{transition:none}
+}
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <div class="stage">
+    <div class="logo">
+      <svg width="34" height="34" viewBox="0 0 1024 1024" fill="none"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg>
+    </div>
+
+    <h1>Building your presentation</h1>
+    <div class="deckchip">Q3 Board Review · 8 slides</div>
+
+    <div class="line"><span class="dot"></span><span id="line">Reading your topic…</span></div>
+
+    <div class="deck" id="deck">
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+    </div>
+
+    <div class="count" id="count">Designing slide 1 of 8</div>
+    <div class="bar"><i id="bar"></i></div>
+
+    <div class="tipwrap">
+      <div class="tip-card" id="tipcard">
+        <span class="ic" id="tipic"><svg id="tipsvg" viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v10a1 1 0 0 1-1 1h-4v-7H8v7H4a1 1 0 0 1-1-1Z"/></svg></span>
+        <div class="body">
+          <div class="lbl" id="tiplbl">Feature</div>
+          <div class="txt" id="tip">Right-click a slide to try a different layout.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM SIGNATURE FOOTER — durations · easings · tip taxonomy -->
+  <div class="note">Prototype — loops continuously to show the full sequence. In the app this flows straight into the editor.</div>
+  <div class="sysbar">
+    <div class="grp"><span class="k">dur</span><span class="v">card 900 · shimmer 1100 · tip 5000</span></div>
+    <div class="grp"><span class="k">ease</span><span class="v">out (.2,.7,.3,1) · soft</span></div>
+    <div class="grp">
+      <span class="k">tips</span>
+      <span class="swatch" style="background:var(--grad-logo)"></span><span class="v">feature</span>
+      <span class="swatch" style="background:linear-gradient(135deg,#4776E6,#9CC4FE)"></span><span class="v">input</span>
+      <span class="swatch" style="background:linear-gradient(135deg,#A855F7,#F0A8F2)"></span><span class="v">encouragement</span>
+    </div>
+  </div>
+
+<script>
+/* ============================================================
+   One driver, token-aware. Status line = fast zone.
+   Tip rotation = calm zone, cycles the TAXONOMY in order.
+   ============================================================ */
+const TOK = getComputedStyle(document.documentElement);
+const DUR_CARD = parseFloat(TOK.getPropertyValue('--dur-card')) || 900;
+const DUR_TIP  = parseFloat(TOK.getPropertyValue('--dur-tip'))  || 5000;
+const DUR_TIPX = parseFloat(TOK.getPropertyValue('--dur-tip-x'))|| 420;
+const reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* — LIVE STATUS (fast zone) — human voice, one per slide — */
+const lines = [
+  "Reading your topic…",
+  "Sketching the outline…",
+  "Choosing a layout for the agenda…",
+  "Writing the opening…",
+  "Building the metrics slide…",
+  "Writing slide 5 — the results…",
+  "Finding images that fit…",
+  "Polishing the details…"
+];
+const thumbs = [...document.querySelectorAll('.thumb')];
+const lineEl  = document.getElementById('line');
+const countEl = document.getElementById('count');
+const barEl   = document.getElementById('bar');
+let i = 0;
+
+function frame(){
+  if (i > thumbs.length){
+    lineEl.innerHTML = '<span>Ready — opening your deck</span>';
+    countEl.textContent = 'All 8 slides designed';
+    barEl.style.width = '100%';
+    thumbs.forEach(t=>t.classList.remove('active'));
+    i = -2;
+    return;
+  }
+  if (i < 0){ i++; return; }
+  thumbs.forEach((t,idx)=>{
+    t.classList.toggle('filled', idx < i);
+    t.classList.toggle('active', idx === i && !reduced);
+  });
+  if (i < thumbs.length){
+    lineEl.innerHTML = '<span>'+lines[i]+'</span>';
+    countEl.textContent = 'Designing slide '+(i+1)+' of '+thumbs.length;
+    barEl.style.width = ((i+1)/thumbs.length*100).toFixed(1)+'%';
+  }
+  i++;
+}
+frame();
+setInterval(frame, DUR_CARD);
+
+/* — TIP TAXONOMY (calm zone) — categorize + cycle one of each —
+   feature       → what the editor can do
+   input-nudge   → what better input gets the user
+   encouragement → reassurance, no instruction                  */
+const ICON = {
+  feature:    '<path d="M3 9l9-6 9 6v10a1 1 0 0 1-1 1h-4v-7H8v7H4a1 1 0 0 1-1-1Z"/>',
+  input:      '<path d="M3 3v18h18"/><path d="M7 14l3-4 4 3 5-7"/>',
+  encourage:  '<path d="M12 3l2.2 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.8-.5Z"/>'
+};
+const ACCENT = {
+  feature:   'var(--grad-logo)',
+  input:     'linear-gradient(135deg,#4776E6,#9CC4FE)',
+  encourage: 'linear-gradient(135deg,#A855F7,#F0A8F2)'
+};
+const LABEL = { feature:'Feature', input:'Make it better', encourage:'Hang tight' };
+const tips = [
+  { cat:'feature',   txt:"Right-click a slide to try a different layout." },
+  { cat:'input',     txt:"Add your real numbers and we'll build the charts." },
+  { cat:'encourage', txt:"Almost there — this one's going to look sharp." },
+  { cat:'feature',   txt:"Drag any image straight onto a slide to place it." },
+  { cat:'input',     txt:"Upload a reference deck and we'll match its style." },
+  { cat:'encourage', txt:"Sit back — we're handling the design for you." }
+];
+const tipEl  = document.getElementById('tip');
+const lblEl  = document.getElementById('tiplbl');
+const icEl   = document.getElementById('tipic');
+const svgEl  = document.getElementById('tipsvg');
+
+function paintTip(t){
+  tipEl.textContent = t.txt;
+  lblEl.textContent = LABEL[t.cat];
+  svgEl.innerHTML   = ICON[t.cat] || ICON.feature;
+  icEl.style.setProperty('--cat-accent', ACCENT[t.cat]);
+}
+let ti = 0;
+paintTip(tips[0]);
+setInterval(() => {
+  ti = (ti + 1) % tips.length;
+  if (reduced){ paintTip(tips[ti]); return; }   // instant content swap, no fade
+  [tipEl,lblEl,icEl,svgEl].forEach(el=>el.style.opacity = 0);
+  setTimeout(() => {
+    paintTip(tips[ti]);
+    [tipEl,lblEl,icEl,svgEl].forEach(el=>el.style.opacity = 1);
+  }, DUR_TIPX);
+}, DUR_TIP);
+</script>
+</body>
+</html>

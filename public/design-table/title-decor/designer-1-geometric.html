@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Title Decor · Designer 1 — Geometric / Structured</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Dark violet reference theme */
+    --d-bg-0: #1a1033;
+    --d-bg-1: #2b1656;
+    --d-bg-2: #3a1d6e;
+    --d-ink: #FFFFFF;
+    --d-accent: #C8A8FF;   /* violet tint */
+    --d-accent-2: #FFB4D4; /* warm pink tint */
+
+    /* Light editorial theme (warm ivory + ink) */
+    --l-bg-0: #f7f4ee;
+    --l-bg-1: #efe9df;
+    --l-ink: #1c1830;
+    --l-accent: #6B3FA0;   /* purple tint */
+    --l-accent-2: #C0561E; /* warm amber tint */
+
+    --slate-50: #f8fafc;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-900: #0f172a;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #f3eeff 0%, rgba(243,238,255,0) 60%),
+      linear-gradient(160deg, #f9f6ff 0%, #f4f0ff 45%, #eef3ff 100%);
+    color: var(--slate-900);
+    -webkit-font-smoothing: antialiased;
+    padding: 48px clamp(24px, 5vw, 72px) 96px;
+  }
+
+  /* ---------- Page header ---------- */
+  .page-head { max-width: 1320px; margin: 0 auto 44px; }
+  .kicker {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #6B3FA0;
+  }
+  .page-head h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.08;
+    margin: 10px 0 12px;
+    color: var(--slate-900);
+  }
+  .page-head h1 em { font-style: italic; color: #6B3FA0; }
+  .page-head p {
+    font-size: 16px; line-height: 1.6; color: var(--slate-600);
+    max-width: 760px; margin: 0;
+  }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 18px 28px;
+    margin-top: 20px; font-size: 13px; color: var(--slate-500);
+  }
+  .legend b { color: var(--slate-700); font-weight: 600; }
+
+  /* ---------- Grid ---------- */
+  .grid {
+    max-width: 1320px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
+    gap: 36px 36px;
+  }
+  @media (max-width: 1240px) { .grid { grid-template-columns: 1fr; } }
+
+  .item { }
+  .item-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .item-head .num {
+    font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600;
+    color: #6B3FA0; letter-spacing: 0.04em;
+  }
+  .item-head .name {
+    font-size: 15px; font-weight: 700; color: var(--slate-900);
+  }
+  .item-head .tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--slate-500);
+    border: 1px solid var(--slate-300); border-radius: 6px;
+    padding: 2px 7px;
+  }
+  .item-head .star {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    color: #fff; background: linear-gradient(120deg, #E267E4, #4198FF);
+    border-radius: 6px; padding: 2px 8px;
+  }
+  .item-note { font-size: 13px; color: var(--slate-500); margin: 0 0 12px; line-height: 1.5; }
+
+  /* ---------- Slide card (16:9) ---------- */
+  .card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 18px 44px -20px rgba(20,10,50,0.45), 0 2px 6px rgba(20,10,50,0.10);
+  }
+  .card.dark {
+    background:
+      radial-gradient(120% 130% at 78% 18%, var(--d-bg-2) 0%, rgba(58,29,110,0) 55%),
+      linear-gradient(155deg, var(--d-bg-0) 0%, var(--d-bg-1) 60%, var(--d-bg-0) 100%);
+  }
+  .card.light {
+    background:
+      radial-gradient(120% 130% at 80% 12%, #fff 0%, rgba(255,255,255,0) 55%),
+      linear-gradient(155deg, var(--l-bg-0) 0%, var(--l-bg-1) 100%);
+  }
+
+  /* The decoration layer — always behind, never grabs pointer */
+  .deco { position: absolute; inset: 0; pointer-events: none; }
+  .deco svg { width: 100%; height: 100%; display: block; }
+
+  /* ---------- Title content (the hero) ---------- */
+  .content {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(28px, 5.5%, 56px) clamp(32px, 6%, 60px);
+    z-index: 2;
+  }
+  .c-eyebrow {
+    font-size: clamp(9px, 1.1vw, 11px); font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: clamp(12px, 2.4%, 20px);
+  }
+  .c-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(26px, 4.6vw, 46px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin: 0 0 clamp(12px, 2.4%, 18px);
+    max-width: 80%;
+  }
+  .c-title em { font-style: italic; }
+  .c-sub {
+    font-size: clamp(11px, 1.5vw, 14.5px);
+    line-height: 1.5; font-weight: 400;
+    max-width: 56%;
+    margin: 0;
+  }
+  .c-foot {
+    position: absolute; left: clamp(32px, 6%, 60px); right: clamp(32px, 6%, 60px);
+    bottom: clamp(22px, 4.5%, 38px);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .c-chip {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: clamp(9px, 1.1vw, 11px); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .c-chip .dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0;
+  }
+  .c-page {
+    font-size: clamp(9px, 1.1vw, 11px); font-weight: 600;
+    letter-spacing: 0.14em; font-variant-numeric: tabular-nums;
+  }
+
+  /* Dark-card text colors */
+  .card.dark .c-eyebrow { color: var(--d-accent); }
+  .card.dark .c-title { color: var(--d-ink); }
+  .card.dark .c-title em { color: var(--d-accent); }
+  .card.dark .c-sub { color: rgba(255,255,255,0.78); }
+  .card.dark .c-chip { color: rgba(255,255,255,0.9); }
+  .card.dark .c-chip .dot { background: var(--d-accent); color: #2b1656; }
+  .card.dark .c-page { color: rgba(255,255,255,0.6); }
+
+  /* Light-card text colors */
+  .card.light .c-eyebrow { color: var(--l-accent); }
+  .card.light .c-title { color: var(--l-ink); }
+  .card.light .c-title em { color: var(--l-accent); }
+  .card.light .c-sub { color: rgba(28,24,48,0.66); }
+  .card.light .c-chip { color: rgba(28,24,48,0.85); }
+  .card.light .c-chip .dot { background: var(--l-accent); color: #fff; }
+  .card.light .c-page { color: rgba(28,24,48,0.5); }
+
+  .pair-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--slate-400);
+    margin: 14px 0 8px;
+  }
+
+  footer.note {
+    max-width: 1320px; margin: 56px auto 0;
+    font-size: 13px; color: var(--slate-500); line-height: 1.6;
+    border-top: 1px solid var(--slate-200); padding-top: 22px;
+  }
+  footer.note b { color: var(--slate-700); }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <div class="kicker">Design Table · Designer 1</div>
+  <h1>Geometric &amp; structured <em>title</em> decoration</h1>
+  <p>Six vector motifs that extend the existing <code>CoverArt</code> vocabulary — subtle, theme-tinted SVG built to sit behind a cover title without fighting legibility. Every motif renders at 6–16% opacity, anchors to a corner or edge so the center stays clear for the headline, and carries <b>pointer-events: none</b>. Each tints to the active theme; nothing is hardcoded to one palette.</p>
+  <div class="legend">
+    <span><b>Sample content is identical on every card</b> so options compare directly.</span>
+    <span><b>Decoration is theme-tint only</b> — independent of the photo-image toggle.</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <!-- ============ 1. DOT GRID ============ -->
+  <div class="item">
+    <div class="item-head">
+      <span class="num">01</span>
+      <span class="name">Fine dot grid</span>
+      <span class="tag">Geometric</span>
+      <span class="star">Strongest</span>
+    </div>
+    <p class="item-note">A whisper of regular dots, fading toward the title. The quietest motif — reads as premium texture, never pattern.</p>
+
+    <div class="card dark">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="dot-fade-d" cx="0.72" cy="0.30" r="0.85">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="45%" stop-color="white" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="white" stop-opacity="1"/>
+            </radialGradient>
+            <mask id="dot-mask-d"><rect width="320" height="180" fill="url(#dot-fade-d)"/></mask>
+            <pattern id="dots-d" width="11" height="11" patternUnits="userSpaceOnUse">
+              <circle cx="1.4" cy="1.4" r="1.0" fill="#C8A8FF"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#dots-d)" opacity="0.20" mask="url(#dot-mask-d)"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pair-label">Same motif · light theme</div>
+    <div class="card light">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="dot-fade-l" cx="0.72" cy="0.30" r="0.85">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="45%" stop-color="white" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="white" stop-opacity="1"/>
+            </radialGradient>
+            <mask id="dot-mask-l"><rect width="320" height="180" fill="url(#dot-fade-l)"/></mask>
+            <pattern id="dots-l" width="11" height="11" patternUnits="userSpaceOnUse">
+              <circle cx="1.4" cy="1.4" r="1.0" fill="#6B3FA0"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#dots-l)" opacity="0.16" mask="url(#dot-mask-l)"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2. LINE GRID / GRAPH ============ -->
+  <div class="item">
+    <div class="item-head">
+      <span class="num">02</span>
+      <span class="name">Thin line grid / graph</span>
+      <span class="tag">Geometric</span>
+    </div>
+    <p class="item-note">Graph-paper ruling banked to the right edge, with two emphasized rules. Editorial, data-forward — strong for QBRs and reports.</p>
+
+    <div class="card dark">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMaxYMid slice">
+          <defs>
+            <linearGradient id="grid-fade-d" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="55%" stop-color="white" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="white" stop-opacity="1"/>
+            </linearGradient>
+            <mask id="grid-mask-d"><rect width="320" height="180" fill="url(#grid-fade-d)"/></mask>
+          </defs>
+          <g mask="url(#grid-mask-d)" opacity="0.22">
+            <g stroke="#C8A8FF" stroke-width="0.5">
+              <line x1="120" y1="0" x2="120" y2="180"/><line x1="135" y1="0" x2="135" y2="180"/>
+              <line x1="150" y1="0" x2="150" y2="180"/><line x1="165" y1="0" x2="165" y2="180"/>
+              <line x1="180" y1="0" x2="180" y2="180"/><line x1="195" y1="0" x2="195" y2="180"/>
+              <line x1="210" y1="0" x2="210" y2="180"/><line x1="225" y1="0" x2="225" y2="180"/>
+              <line x1="240" y1="0" x2="240" y2="180"/><line x1="255" y1="0" x2="255" y2="180"/>
+              <line x1="270" y1="0" x2="270" y2="180"/><line x1="285" y1="0" x2="285" y2="180"/>
+              <line x1="300" y1="0" x2="300" y2="180"/>
+              <line x1="120" y1="15" x2="320" y2="15"/><line x1="120" y1="30" x2="320" y2="30"/>
+              <line x1="120" y1="45" x2="320" y2="45"/><line x1="120" y1="60" x2="320" y2="60"/>
+              <line x1="120" y1="75" x2="320" y2="75"/><line x1="120" y1="90" x2="320" y2="90"/>
+              <line x1="120" y1="105" x2="320" y2="105"/><line x1="120" y1="120" x2="320" y2="120"/>
+              <line x1="120" y1="135" x2="320" y2="135"/><line x1="120" y1="150" x2="320" y2="150"/>
+              <line x1="120" y1="165" x2="320" y2="165"/>
+            </g>
+          </g>
+          <g opacity="0.5"><line x1="150" y1="60" x2="320" y2="60" stroke="#FFB4D4" stroke-width="0.8"/>
+            <line x1="150" y1="120" x2="320" y2="120" stroke="#FFB4D4" stroke-width="0.8"/></g>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3. CONCENTRIC ARCS / RINGS ============ -->
+  <div class="item">
+    <div class="item-head">
+      <span class="num">03</span>
+      <span class="name">Concentric arcs / rings</span>
+      <span class="tag">Geometric</span>
+      <span class="star">Strongest</span>
+    </div>
+    <p class="item-note">Wide radial rings rising from a corner — echoes the reference hexagon's quiet geometry but more versatile. Carries motion without busyness.</p>
+
+    <div class="card dark">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMaxYMin slice">
+          <g transform="translate(320,0)" fill="none" opacity="0.28">
+            <circle r="40"  stroke="#FFB4D4" stroke-width="0.5"/>
+            <circle r="70"  stroke="#C8A8FF" stroke-width="0.6"/>
+            <circle r="100" stroke="#C8A8FF" stroke-width="0.6"/>
+            <circle r="130" stroke="#C8A8FF" stroke-width="0.5"/>
+            <circle r="160" stroke="#C8A8FF" stroke-width="0.4"/>
+            <circle r="195" stroke="#C8A8FF" stroke-width="0.35"/>
+          </g>
+          <circle cx="320" cy="0" r="22" fill="#C8A8FF" opacity="0.14"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pair-label">Same motif · light theme</div>
+    <div class="card light">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMaxYMin slice">
+          <g transform="translate(320,0)" fill="none" opacity="0.30">
+            <circle r="40"  stroke="#C0561E" stroke-width="0.5"/>
+            <circle r="70"  stroke="#6B3FA0" stroke-width="0.6"/>
+            <circle r="100" stroke="#6B3FA0" stroke-width="0.6"/>
+            <circle r="130" stroke="#6B3FA0" stroke-width="0.5"/>
+            <circle r="160" stroke="#6B3FA0" stroke-width="0.4"/>
+            <circle r="195" stroke="#6B3FA0" stroke-width="0.35"/>
+          </g>
+          <circle cx="320" cy="0" r="22" fill="#6B3FA0" opacity="0.10"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 4. HEX TESSELLATION ============ -->
+  <div class="item">
+    <div class="item-head">
+      <span class="num">04</span>
+      <span class="name">Hex tessellation</span>
+      <span class="tag">Geometric</span>
+    </div>
+    <p class="item-note">A honeycomb field, masked to fade into the corner — directly extends the reference's single hexagon into a structured tile. Tech / product register.</p>
+
+    <div class="card dark">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMaxYMax slice">
+          <defs>
+            <radialGradient id="hex-fade-d" cx="1" cy="1" r="0.95">
+              <stop offset="0%" stop-color="white" stop-opacity="1"/>
+              <stop offset="55%" stop-color="white" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </radialGradient>
+            <mask id="hex-mask-d"><rect width="320" height="180" fill="url(#hex-fade-d)"/></mask>
+            <pattern id="hexp-d" width="26" height="30" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+              <path d="M13 0 L26 7.5 L26 22.5 L13 30 L0 22.5 L0 7.5 Z" fill="none" stroke="#C8A8FF" stroke-width="0.6"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#hexp-d)" opacity="0.22" mask="url(#hex-mask-d)"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 5. ISOMETRIC MESH ============ -->
+  <div class="item">
+    <div class="item-head">
+      <span class="num">05</span>
+      <span class="name">Isometric mesh</span>
+      <span class="tag">Geometric</span>
+    </div>
+    <p class="item-note">Triangular iso lattice banked to a corner, fading toward the title. Adds quiet depth and dimensionality — feels engineered, premium.</p>
+
+    <div class="card dark">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMaxYMin slice">
+          <defs>
+            <radialGradient id="iso-fade-d" cx="1" cy="0" r="0.9">
+              <stop offset="0%" stop-color="white" stop-opacity="1"/>
+              <stop offset="55%" stop-color="white" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </radialGradient>
+            <mask id="iso-mask-d"><rect width="320" height="180" fill="url(#iso-fade-d)"/></mask>
+            <pattern id="isop-d" width="24" height="14" patternUnits="userSpaceOnUse">
+              <path d="M0 14 L12 0 L24 14 M0 0 L12 14 L24 0" fill="none" stroke="#C8A8FF" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#isop-d)" opacity="0.24" mask="url(#iso-mask-d)"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pair-label">Same motif · light theme</div>
+    <div class="card light">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMaxYMin slice">
+          <defs>
+            <radialGradient id="iso-fade-l" cx="1" cy="0" r="0.9">
+              <stop offset="0%" stop-color="white" stop-opacity="1"/>
+              <stop offset="55%" stop-color="white" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </radialGradient>
+            <mask id="iso-mask-l"><rect width="320" height="180" fill="url(#iso-fade-l)"/></mask>
+            <pattern id="isop-l" width="24" height="14" patternUnits="userSpaceOnUse">
+              <path d="M0 14 L12 0 L24 14 M0 0 L12 14 L24 0" fill="none" stroke="#6B3FA0" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#isop-l)" opacity="0.16" mask="url(#iso-mask-l)"/>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 6. BLUEPRINT / TECHNICAL LINEWORK ============ -->
+  <div class="item">
+    <div class="item-head">
+      <span class="num">06</span>
+      <span class="name">Blueprint linework</span>
+      <span class="tag">Geometric</span>
+    </div>
+    <p class="item-note">Technical-drawing vocabulary: a faint baseline grid plus crosshairs, dimension ticks, and corner registration marks. Precise, considered, architectural.</p>
+
+    <div class="card dark">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="bp-grid-d" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0 L0 0 L0 20" fill="none" stroke="#C8A8FF" stroke-width="0.35"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#bp-grid-d)" opacity="0.14"/>
+          <g stroke="#FFB4D4" opacity="0.5" stroke-width="0.6" fill="none">
+            <!-- crosshair upper-right -->
+            <circle cx="262" cy="44" r="11"/>
+            <line x1="244" y1="44" x2="280" y2="44"/>
+            <line x1="262" y1="26" x2="262" y2="62"/>
+            <!-- dimension line -->
+            <line x1="262" y1="120" x2="300" y2="120"/>
+            <line x1="262" y1="116" x2="262" y2="124"/>
+            <line x1="300" y1="116" x2="300" y2="124"/>
+          </g>
+          <!-- corner registration marks -->
+          <g stroke="#C8A8FF" opacity="0.45" stroke-width="0.7" fill="none">
+            <path d="M14 14 L14 28 M14 14 L28 14"/>
+            <path d="M306 166 L306 152 M306 166 L292 166"/>
+          </g>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pair-label">Same motif · light theme</div>
+    <div class="card light">
+      <div class="deco">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="bp-grid-l" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0 L0 0 L0 20" fill="none" stroke="#6B3FA0" stroke-width="0.35"/>
+            </pattern>
+          </defs>
+          <rect width="320" height="180" fill="url(#bp-grid-l)" opacity="0.12"/>
+          <g stroke="#C0561E" opacity="0.5" stroke-width="0.6" fill="none">
+            <circle cx="262" cy="44" r="11"/>
+            <line x1="244" y1="44" x2="280" y2="44"/>
+            <line x1="262" y1="26" x2="262" y2="62"/>
+            <line x1="262" y1="120" x2="300" y2="120"/>
+            <line x1="262" y1="116" x2="262" y2="124"/>
+            <line x1="300" y1="116" x2="300" y2="124"/>
+          </g>
+          <g stroke="#6B3FA0" opacity="0.4" stroke-width="0.7" fill="none">
+            <path d="M14 14 L14 28 M14 14 L28 14"/>
+            <path d="M306 166 L306 152 M306 166 L292 166"/>
+          </g>
+        </svg>
+      </div>
+      <div class="content">
+        <div class="c-eyebrow">A PRESENTATION · Q1 2026</div>
+        <h2 class="c-title">Strategic <em>Review</em><br/>&amp; Forward Plan</h2>
+        <p class="c-sub">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+        <div class="c-foot">
+          <span class="c-chip"><span class="dot">LC</span> Lisa Caudillo</span>
+          <span class="c-page">01 / 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="note">
+  <p><b>How these stay subtle &amp; theme-adaptive.</b> Every motif draws with 1–2 theme palette colors (here violet <code>#C8A8FF</code> / pink <code>#FFB4D4</code> on dark; purple <code>#6B3FA0</code> / amber <code>#C0561E</code> on light) at 6–16% effective opacity, with a radial or linear mask pulling the decoration <em>away</em> from the title's optical center toward a corner or edge — so the headline always clears WCAG AA (≥4.5:1). Swapping the two stroke colors is the only change needed to retheme any motif; nothing is hardcoded. All layers are <code>pointer-events: none</code> and sit at z-index 1 behind the content at z-index 2.</p>
+  <p style="margin-bottom:0"><b>Implementation note.</b> Each becomes a new <code>case</code> in <code>CoverArt.tsx</code> (or a small <code>GeometricDecor</code> map keyed by motif id) — same <code>viewBox</code> + <code>preserveAspectRatio</code> slice contract already used there, with <code>ink</code>/accent driven by the theme instead of literal hexes.</p>
+</footer>
+
+</body>
+</html>

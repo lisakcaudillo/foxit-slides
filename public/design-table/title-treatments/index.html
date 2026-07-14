@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design Table — Dynamic Title Treatments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Inter', system-ui, sans-serif; color: #1e293b;
+    background: linear-gradient(135deg, #f9f6ff 0%, #f4f0ff 50%, #eef3ff 100%);
+    padding: 56px 24px; line-height: 1.5;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 30px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .sub { font-size: 16px; color: #475569; margin: 0 0 14px; max-width: 64ch; }
+  .note { font-size: 14px; color: #64748b; margin: 0 0 32px; max-width: 64ch; }
+  h3.section { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #6B3FA0; margin: 28px 0 14px; }
+  h3.section.muted { color: #94a3b8; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  a.card {
+    display: block; text-decoration: none; color: inherit; background: #fff;
+    border: 1px solid #e7e3f3; border-radius: 16px; padding: 24px;
+    box-shadow: 0 4px 16px rgba(60,40,86,0.06); transition: transform .15s ease, box-shadow .15s ease;
+  }
+  a.card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(60,40,86,0.12); }
+  a.card.muted { background: #fbfaff; box-shadow: none; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+         color: #6B3FA0; background: #f1ebfb; padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; }
+  .tag.rec { color: #b3360f; background: #ffe9df; }
+  .tag.old { color: #94a3b8; background: #f1f5f9; }
+  h2 { font-size: 19px; font-weight: 600; margin: 0 0 6px; }
+  p.desc { font-size: 14.5px; color: #475569; margin: 0; }
+  .foot { margin-top: 40px; font-size: 14px; color: #64748b; }
+  .foot b { color: #1e293b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Design Table — Dynamic Title Treatments</h1>
+  <p class="sub"><strong>Round 2.</strong> The title slide is <strong>dynamic</strong>: the deck engine generates an image and drops it in different forms (vertical half, diagonal split, top/bottom band, full-bleed), and the title treatment <strong>adapts to the space left</strong> so image and title co-exist. Every example uses a <strong>real generated image</strong> from the library.</p>
+  <p class="note">Round 1 (type-only, no images) is kept below for the typographic ideas, but it's superseded — Lisa's call was that title + image must be designed together.</p>
+
+  <h3 class="section">Round 2 — Image + Title Composition (the real answer)</h3>
+  <div class="grid">
+    <a class="card" href="./composition-manager-recommendation.html">
+      <span class="tag rec">Manager · Recommendation</span>
+      <h2>Recommended Composition Set (6)</h2>
+      <p class="desc">Synthesis: vertical half · diagonal split · image-top band · image-bottom band · full-bleed+scrim · type-only fallback — with the one selection rule (image + theme + headline → form + opposite-side title + scrim) and overridable swap. Real images throughout.</p>
+    </a>
+    <a class="card" href="./composition-designer-1.html">
+      <span class="tag">Designer 1 · Composition craft</span>
+      <h2>Dynamic Image + Title Composition</h2>
+      <p class="desc">9 covers across all 6 forms — the editorial title kit (eyebrow + rule + italic-accent headline + byline) re-anchors top / bottom / column / scrim-overlay to fit the open region the image leaves.</p>
+    </a>
+    <a class="card" href="./composition-designer-2.html" style="border-color:#b3360f; box-shadow:0 8px 24px rgba(179,54,15,0.14);">
+      <span class="tag rec">★ Approved · Designer 2</span>
+      <h2>Dynamic Composition Engine</h2>
+      <p class="desc"><b>Locked direction.</b> Inputs (image aspect, brightness, theme, headline length) decide composition form + title position (opposite the image) + scrim. Plus <b>multi-select + per-slide override</b>, the <b>italic-accent-word</b> title style (one word italic in a contrasting color), and the <b>diagonal split</b> form.</p>
+    </a>
+    <a class="card" href="./composition-designer-3.html">
+      <span class="tag">Designer 3 · Spec</span>
+      <h2>Composition Spec Library</h2>
+      <p class="desc">6 layouts as buildable spec cards — exact split ratios, clip-path polygons for the diagonal, band heights, title bounds, scrim contract, token mapping, WCAG pairing, reconcile to cover-tiers imageRole.</p>
+    </a>
+  </div>
+
+  <h3 class="section muted">Round 1 — Type-only (superseded, kept for the typography)</h3>
+  <div class="grid">
+    <a class="card muted" href="./manager-recommendation.html"><span class="tag old">R1 · Manager</span><h2>Recommended Set (type)</h2><p class="desc">Anchor + Drop-Cap + Chapter Divider + Statement + Folio Masthead + Spotlight.</p></a>
+    <a class="card muted" href="./designer-1-editorial.html"><span class="tag old">R1 · Designer 1</span><h2>8 Editorial Treatments</h2><p class="desc">Drop-cap, stacked baseline, masthead, chapter numeral, colophon — typographic grammars worth pulling forward.</p></a>
+    <a class="card muted" href="./designer-2-system.html"><span class="tag old">R1 · Designer 2</span><h2>Treatment System</h2><p class="desc">6 archetypes + theme→treatment mapping rule + swap.</p></a>
+    <a class="card muted" href="./designer-3-spec.html"><span class="tag old">R1 · Designer 3</span><h2>Spec Library</h2><p class="desc">Token-traced anatomy per treatment.</p></a>
+  </div>
+
+  <p class="foot"><b>Next:</b> pick a Round-2 option or mix ("Manager's 6 forms + Designer 2's engine rule + Designer 1's italic-accent kit"). The chosen direction becomes the approved prototype, then I build it into <b>cover-tiers.ts</b> (composition selection + title position + scrim) and the cover renderer.</p>
+</div>
+</body>
+</html>

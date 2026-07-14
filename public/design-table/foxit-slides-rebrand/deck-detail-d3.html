@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foxit Slides — Deck Detail · D3 "Living Deck"</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;530;590;680;730&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --label:    #1d1d1f;
+    --label-2:  #6e6e73;
+    --label-3:  #8e8e93;
+    --label-4:  #b0b0b6;
+
+    --accent:        #5037C3;
+    --accent-tint:   rgba(80, 55, 195, 0.10);
+    --accent-wash:   rgba(80, 55, 195, 0.06);
+    --accent-edge:   rgba(80, 55, 195, 0.16);
+
+    --separator:      rgba(0, 0, 0, 0.07);
+    --separator-soft: rgba(0, 0, 0, 0.045);
+    --fill-quiet:     rgba(120, 120, 128, 0.10);
+
+    --grad-brand: linear-gradient(135deg, #4776E6, #A855F7);
+
+    --rad-panel: 16px; --rad-card: 14px; --rad-control: 11px; --rad-thumb: 10px;
+
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+
+    /* saturated expressive wash (per spec) */
+    --bg:
+      radial-gradient(680px 480px at 14% 10%, rgba(71,118,230,0.40), transparent 60%),
+      radial-gradient(700px 540px at 90% 92%, rgba(168,85,247,0.38), transparent 60%),
+      radial-gradient(520px 420px at 72% 14%, rgba(240,128,200,0.28), transparent 62%),
+      linear-gradient(155deg,#e7ecff,#efe6fb,#fbe9f4);
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    background-attachment: fixed;
+    color: var(--label);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    padding: 40px 28px 64px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ── floating translucent content panel ── */
+  .panel {
+    width: 100%;
+    max-width: 1100px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    border-radius: var(--rad-panel);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 24px 70px -28px rgba(40, 24, 90, 0.42),
+      0 2px 10px -4px rgba(40, 24, 90, 0.18);
+    overflow: hidden;
+  }
+
+  /* ── breadcrumb / top bar ── */
+  .topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 24px 14px;
+    border-bottom: 1px solid var(--separator-soft);
+  }
+  .logo {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--grad-brand);
+    box-shadow: 0 2px 6px -1px rgba(80,55,195,0.5);
+    flex-shrink: 0;
+  }
+  .crumb { font-size: 13px; color: var(--label-2); font-weight: 450; }
+  .crumb a { color: var(--label-2); text-decoration: none; }
+  .crumb a:hover { color: var(--accent); }
+  .crumb .sep { color: var(--label-4); margin: 0 7px; }
+  .crumb .here { color: var(--label); font-weight: 530; }
+  .topbar .spacer { flex: 1; }
+  .topbar .back {
+    font-size: 12.5px; color: var(--label-2); text-decoration: none; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .topbar .back:hover { color: var(--accent); }
+
+  /* ============ HERO ============ */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.18fr 1fr;
+    gap: 36px;
+    padding: 36px 40px 34px;
+    align-items: center;
+    position: relative;
+  }
+  /* a single brand flourish behind the hero cover */
+  .hero::before {
+    content: "";
+    position: absolute; right: 30px; top: 18px; bottom: 18px; width: 52%;
+    background: var(--grad-brand);
+    filter: blur(60px); opacity: 0.16; border-radius: 40px;
+    pointer-events: none;
+  }
+
+  .hero-text { position: relative; z-index: 1; }
+  .resurface {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 530; color: var(--accent);
+    background: var(--accent-tint);
+    padding: 5px 11px; border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .resurface .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(80,55,195,0.18);
+  }
+
+  .title-row { display: flex; align-items: flex-start; gap: 8px; }
+  .deck-title {
+    font-size: 34px; font-weight: 730; line-height: 1.1; letter-spacing: -0.025em;
+    color: var(--label);
+    border: 1.5px solid transparent; border-radius: 8px;
+    margin: 0 -8px; padding: 2px 8px;
+    transition: border-color .15s, background .15s;
+    cursor: text; max-width: 100%;
+  }
+  .deck-title:hover { border-color: var(--separator); background: rgba(255,255,255,0.5); }
+  .deck-title:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .edit-hint {
+    font-size: 11px; color: var(--label-4); margin-top: 8px; font-weight: 450;
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .meta {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0;
+    margin-top: 18px; font-size: 13px; color: var(--label-2); font-weight: 450;
+  }
+  .meta .m { display: inline-flex; align-items: center; gap: 6px; }
+  .meta .dot-sep { margin: 0 12px; color: var(--label-4); }
+  .meta .swatch {
+    width: 12px; height: 12px; border-radius: 3px;
+    background: linear-gradient(135deg, #f3f1fb, #e9ecfb);
+    box-shadow: inset 0 0 0 1px var(--separator), inset 0 0 0 2.5px #fff;
+  }
+
+  /* primary actions */
+  .actions { display: flex; align-items: center; gap: 10px; margin-top: 26px; }
+  .btn {
+    font-family: var(--font); font-size: 13.5px; font-weight: 530;
+    border-radius: 11px; cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 42px; padding: 0 18px; transition: transform .12s, box-shadow .2s, background .15s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 8px 18px -8px rgba(80,55,195,0.7), 0 1px 0 rgba(255,255,255,0.2) inset;
+  }
+  .btn-primary:hover { background: #4530ad; box-shadow: 0 10px 22px -8px rgba(80,55,195,0.8); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.7); color: var(--label);
+    box-shadow: inset 0 0 0 1px var(--separator);
+  }
+  .btn-secondary:hover { background: #fff; box-shadow: inset 0 0 0 1px var(--accent-edge); }
+  .btn-icon {
+    width: 42px; height: 42px; padding: 0; justify-content: center;
+    background: rgba(255,255,255,0.7); color: var(--label-2);
+    box-shadow: inset 0 0 0 1px var(--separator); font-size: 18px; line-height: 1;
+  }
+  .btn-icon:hover { background: #fff; color: var(--label); }
+
+  /* hero cover slide */
+  .hero-cover { position: relative; z-index: 1; }
+  .cover {
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    background: linear-gradient(155deg, #ffffff 0%, #f6f4fd 60%, #eef0fc 100%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 22px 50px -20px rgba(40,24,90,0.45),
+      inset 0 0 0 1px rgba(255,255,255,0.6);
+    padding: 30px 32px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .hero-cover:hover .cover { transform: translateY(-3px); box-shadow: 0 30px 60px -20px rgba(40,24,90,0.5); }
+  .cover .accent-orb {
+    position: absolute; right: -40px; top: -40px; width: 180px; height: 180px;
+    background: var(--grad-brand); opacity: 0.16; filter: blur(8px); border-radius: 50%;
+  }
+  .cover .c-eyebrow {
+    font-size: 11px; font-weight: 590; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px; position: relative;
+  }
+  .cover .c-title {
+    font-size: 21px; font-weight: 680; letter-spacing: -0.02em; line-height: 1.18;
+    color: var(--label); max-width: 88%; position: relative;
+  }
+  .cover .c-rule { width: 44px; height: 3px; border-radius: 2px; background: var(--accent); margin: 16px 0 14px; position: relative; }
+  .cover .c-foot { font-size: 11.5px; color: var(--label-2); font-weight: 450; position: relative; }
+  .cover .play-badge {
+    position: absolute; left: 30px; bottom: 26px;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 11px; color: var(--label-3); font-weight: 500;
+  }
+  .cover-cap {
+    text-align: center; font-size: 11.5px; color: var(--label-2); margin-top: 12px; font-weight: 450;
+  }
+
+  /* ============ WHAT'S NEXT suggestion ============ */
+  .next-wrap { padding: 4px 40px 6px; }
+  .next {
+    display: flex; align-items: center; gap: 18px;
+    background: linear-gradient(135deg, rgba(71,118,230,0.10), rgba(168,85,247,0.10));
+    border: 1px solid var(--accent-edge);
+    border-radius: 16px; padding: 18px 20px;
+    position: relative; overflow: hidden;
+  }
+  .next .spark {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 13px;
+    background: var(--grad-brand); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    box-shadow: 0 8px 18px -8px rgba(80,55,195,0.7);
+  }
+  .next .ncopy { flex: 1; }
+  .next .nkicker {
+    font-size: 11px; font-weight: 590; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .next .ntitle { font-size: 15px; font-weight: 590; color: var(--label); letter-spacing: -0.01em; }
+  .next .nsub { font-size: 12.5px; color: var(--label-2); margin-top: 3px; line-height: 1.45; max-width: 560px; }
+  .next .nactions { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+  .btn-sm { height: 38px; padding: 0 16px; font-size: 13px; }
+  .next .dismiss {
+    background: none; border: none; cursor: pointer; color: var(--label-3);
+    font-size: 12.5px; font-weight: 450; padding: 0 4px;
+  }
+  .next .dismiss:hover { color: var(--label); }
+
+  /* tiny secondary suggestion chips */
+  .more-next {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 14px 40px 4px;
+  }
+  .more-next .label { font-size: 12px; color: var(--label-3); font-weight: 500; margin-right: 2px; }
+  .chip {
+    font-size: 12.5px; font-weight: 500; color: var(--label);
+    background: rgba(255,255,255,0.7); border: 1px solid var(--separator);
+    border-radius: 999px; padding: 7px 14px; cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .chip:hover { background: #fff; border-color: var(--accent-edge); color: var(--accent); }
+  .chip .ci { font-size: 13px; }
+
+  /* ============ SLIDE STRIP ============ */
+  .slides-section { padding: 26px 40px 38px; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 18px; }
+  .sec-head h2 { font-size: 16px; font-weight: 590; letter-spacing: -0.01em; }
+  .sec-head .count { font-size: 13px; color: var(--label-3); font-weight: 450; }
+  .sec-head .spacer { flex: 1; }
+  .sec-head .hint { font-size: 12px; color: var(--label-3); font-weight: 450; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px 20px;
+  }
+
+  .slide-card { cursor: pointer; }
+  .thumb {
+    aspect-ratio: 16 / 9; border-radius: 10px; position: relative; overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--separator), 0 6px 16px -10px rgba(40,24,90,0.4);
+    transition: transform .16s, box-shadow .2s;
+  }
+  .slide-card:hover .thumb {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px var(--accent-edge), 0 14px 26px -12px rgba(80,55,195,0.5);
+  }
+  .thumb .num {
+    position: absolute; top: 7px; left: 7px; z-index: 3;
+    width: 19px; height: 19px; border-radius: 6px;
+    background: rgba(29,29,31,0.62); color: #fff;
+    font-size: 10.5px; font-weight: 590;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  /* hover open affordance */
+  .thumb .open {
+    position: absolute; inset: 0; z-index: 2;
+    background: rgba(80,55,195,0.0);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .16s;
+  }
+  .slide-card:hover .thumb .open { opacity: 1; background: rgba(80,55,195,0.14); }
+  .thumb .open .pill {
+    background: rgba(255,255,255,0.95); color: var(--accent);
+    font-size: 11px; font-weight: 590; padding: 6px 12px; border-radius: 999px;
+    box-shadow: 0 4px 12px -4px rgba(40,24,90,0.4);
+  }
+  .slide-card .cap { margin-top: 9px; font-size: 12.5px; font-weight: 500; color: var(--label); letter-spacing: -0.005em; }
+
+  /* mini-slide internals (the realistic CSS slide) */
+  .ms { position: absolute; inset: 0; padding: 13px 14px; display: flex; flex-direction: column; }
+  .ms .eyebrow { font-size: 6px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 5px; }
+  .ms .htitle { font-weight: 680; letter-spacing: -0.01em; color: var(--label); line-height: 1.12; }
+  .ms .rule { height: 2px; width: 22px; background: var(--accent); border-radius: 2px; margin: 6px 0; }
+  .ms .bar { height: 4px; border-radius: 2px; background: rgba(29,29,31,0.13); margin-bottom: 4px; }
+  .ms .bar.s { width: 55%; } .ms .bar.m { width: 78%; } .ms .bar.l { width: 92%; }
+  .ms .bars { margin-top: auto; }
+
+  /* theme tints — light Quartz family, varied */
+  .t-cover { background: linear-gradient(150deg, #f4f2fd, #eaecfb); }
+  .t-light { background: linear-gradient(160deg, #ffffff, #f7f6fd); }
+  .t-tintb { background: linear-gradient(160deg, #f3f6ff, #eef1fe); }
+  .t-tintp { background: linear-gradient(160deg, #faf3fc, #f4ecfb); }
+  .t-dark  { background: linear-gradient(155deg, #2b2745, #1f1c34); }
+
+  /* stat row mini */
+  .ms .stat-row { display: flex; gap: 7px; margin-top: auto; }
+  .ms .stat { flex: 1; }
+  .ms .stat .big { font-size: 13px; font-weight: 730; color: var(--accent); letter-spacing: -0.02em; }
+  .ms .stat .lbl { height: 3px; width: 70%; background: rgba(29,29,31,0.13); border-radius: 2px; margin-top: 3px; }
+  .ms.on-dark .htitle, .ms.on-dark .stat .big { color: #fff; }
+  .ms.on-dark .eyebrow { color: #b9a8ff; }
+  .ms.on-dark .bar, .ms.on-dark .stat .lbl { background: rgba(255,255,255,0.22); }
+  .ms.on-dark .rule { background: #b9a8ff; }
+
+  /* two-column mini */
+  .ms .cols { display: flex; gap: 8px; margin-top: auto; }
+  .ms .cols .col { flex: 1; }
+  .ms .chip-row { display: flex; gap: 4px; margin-top: auto; flex-wrap: wrap; }
+  .ms .mchip { height: 9px; border-radius: 3px; background: var(--accent-tint); flex: 0 0 auto; padding: 0 9px; }
+
+  .panel-foot { padding: 0 40px 30px; }
+  .panel-foot .row {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 12.5px; color: var(--label-3); font-weight: 450;
+  }
+</style>
+</head>
+<body>
+  <div class="panel">
+
+    <!-- top bar / breadcrumb -->
+    <div class="topbar">
+      <div class="logo"></div>
+      <div class="crumb">
+        <a href="#">Studio</a><span class="sep">›</span><span class="here">Q3 go-to-market review</span>
+      </div>
+      <div class="spacer"></div>
+      <a href="#" class="back">← Back to Studio</a>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-text">
+        <div class="resurface"><span class="dot"></span>You started this 3 days ago — welcome back</div>
+
+        <div class="title-row">
+          <h1 class="deck-title" contenteditable="true" spellcheck="false">Q3 go-to-market review for an enterprise SaaS product</h1>
+        </div>
+        <div class="edit-hint">✎ Click the title to rename it</div>
+
+        <div class="meta">
+          <span class="m">10 slides</span>
+          <span class="dot-sep">·</span>
+          <span class="m">Edited 2 hours ago</span>
+          <span class="dot-sep">·</span>
+          <span class="m"><span class="swatch"></span> Quartz theme</span>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary">Open in editor</button>
+          <button class="btn btn-secondary">▶ Present</button>
+          <button class="btn btn-icon" title="More — Rename, Duplicate, Delete">⋯</button>
+        </div>
+      </div>
+
+      <div class="hero-cover">
+        <div class="cover">
+          <div class="accent-orb"></div>
+          <div class="c-eyebrow">Quarterly business review</div>
+          <div class="c-title">Q3 go-to-market review</div>
+          <div class="c-rule"></div>
+          <div class="c-foot">Enterprise SaaS · Revenue &amp; Pipeline · FY26</div>
+          <div class="play-badge">▶ Cover slide</div>
+        </div>
+        <div class="cover-cap">This is your cover — the first thing your audience sees</div>
+      </div>
+    </div>
+
+    <!-- WHAT'S NEXT suggestion (signature element) -->
+    <div class="next-wrap">
+      <div class="next">
+        <div class="spark">✦</div>
+        <div class="ncopy">
+          <div class="nkicker">What's next</div>
+          <div class="ntitle">Your cover could carry more weight</div>
+          <div class="nsub">Most QBR decks open on an image — a clean cover sets the tone before you say a word. Want a cover image that fits this deck?</div>
+        </div>
+        <div class="nactions">
+          <button class="btn btn-primary btn-sm">Generate a cover image</button>
+          <button class="dismiss">Not now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- secondary suggestions -->
+    <div class="more-next">
+      <span class="label">Or:</span>
+      <button class="chip"><span class="ci">▶</span> Rehearse before the meeting</button>
+      <button class="chip"><span class="ci">📄</span> Turn this into a one-pager</button>
+      <button class="chip"><span class="ci">🔗</span> Share a view-only link</button>
+    </div>
+
+    <!-- SLIDE STRIP -->
+    <div class="slides-section">
+      <div class="sec-head">
+        <h2>Every slide</h2>
+        <span class="count">10 slides</span>
+        <span class="spacer"></span>
+        <span class="hint">Click any slide to jump straight in</span>
+      </div>
+
+      <div class="grid">
+
+        <!-- 1 Title cover -->
+        <div class="slide-card">
+          <div class="thumb t-cover">
+            <span class="num">1</span>
+            <div class="open"><span class="pill">Open slide 1</span></div>
+            <div class="ms" style="justify-content:center;">
+              <div class="eyebrow">Quarterly business review</div>
+              <div class="htitle" style="font-size:12px;">Q3 go-to-market review</div>
+              <div class="rule"></div>
+              <div class="bar s" style="height:3px;"></div>
+            </div>
+          </div>
+          <div class="cap">Title cover</div>
+        </div>
+
+        <!-- 2 Executive summary -->
+        <div class="slide-card">
+          <div class="thumb t-light">
+            <span class="num">2</span>
+            <div class="open"><span class="pill">Open slide 2</span></div>
+            <div class="ms">
+              <div class="eyebrow">Summary</div>
+              <div class="htitle" style="font-size:9px;">Executive summary</div>
+              <div class="rule"></div>
+              <div class="bars">
+                <div class="bar l"></div><div class="bar m"></div><div class="bar l"></div><div class="bar s"></div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">Executive summary</div>
+        </div>
+
+        <!-- 3 Market opportunity -->
+        <div class="slide-card">
+          <div class="thumb t-tintb">
+            <span class="num">3</span>
+            <div class="open"><span class="pill">Open slide 3</span></div>
+            <div class="ms">
+              <div class="eyebrow">Market</div>
+              <div class="htitle" style="font-size:9px;">The market opportunity</div>
+              <div class="rule"></div>
+              <div class="stat-row">
+                <div class="stat"><div class="big">$48B</div><div class="lbl"></div></div>
+                <div class="stat"><div class="big">+19%</div><div class="lbl"></div></div>
+                <div class="stat"><div class="big">3.2k</div><div class="lbl"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">The market opportunity</div>
+        </div>
+
+        <!-- 4 Where we are today -->
+        <div class="slide-card">
+          <div class="thumb t-light">
+            <span class="num">4</span>
+            <div class="open"><span class="pill">Open slide 4</span></div>
+            <div class="ms">
+              <div class="eyebrow">Status</div>
+              <div class="htitle" style="font-size:9px;">Where we are today</div>
+              <div class="rule"></div>
+              <div class="cols">
+                <div class="col"><div class="bar l"></div><div class="bar m"></div><div class="bar s"></div></div>
+                <div class="col"><div class="bar m"></div><div class="bar l"></div><div class="bar s"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">Where we are today</div>
+        </div>
+
+        <!-- 5 Q3 results -->
+        <div class="slide-card">
+          <div class="thumb t-tintp">
+            <span class="num">5</span>
+            <div class="open"><span class="pill">Open slide 5</span></div>
+            <div class="ms">
+              <div class="eyebrow">Results</div>
+              <div class="htitle" style="font-size:9px;">Q3 results</div>
+              <div class="rule"></div>
+              <div class="stat-row" style="align-items:flex-end;">
+                <div class="stat"><div class="bar" style="height:14px;width:60%;"></div></div>
+                <div class="stat"><div class="bar" style="height:24px;width:60%;background:var(--accent);opacity:.55;"></div></div>
+                <div class="stat"><div class="bar" style="height:30px;width:60%;background:var(--accent);"></div></div>
+                <div class="stat"><div class="bar" style="height:20px;width:60%;"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">Q3 results</div>
+        </div>
+
+        <!-- 6 Pipeline & revenue -->
+        <div class="slide-card">
+          <div class="thumb t-tintb">
+            <span class="num">6</span>
+            <div class="open"><span class="pill">Open slide 6</span></div>
+            <div class="ms">
+              <div class="eyebrow">Forecast</div>
+              <div class="htitle" style="font-size:9px;">Pipeline &amp; revenue</div>
+              <div class="rule"></div>
+              <div class="stat-row">
+                <div class="stat"><div class="big">$12M</div><div class="lbl"></div></div>
+                <div class="stat"><div class="big">68%</div><div class="lbl"></div></div>
+              </div>
+              <div class="bars" style="margin-top:8px;"><div class="bar l"></div><div class="bar m"></div></div>
+            </div>
+          </div>
+          <div class="cap">Pipeline &amp; revenue</div>
+        </div>
+
+        <!-- 7 Competitive landscape -->
+        <div class="slide-card">
+          <div class="thumb t-light">
+            <span class="num">7</span>
+            <div class="open"><span class="pill">Open slide 7</span></div>
+            <div class="ms">
+              <div class="eyebrow">Landscape</div>
+              <div class="htitle" style="font-size:9px;">Competitive landscape</div>
+              <div class="rule"></div>
+              <div class="chip-row">
+                <span class="mchip"></span><span class="mchip"></span><span class="mchip"></span>
+                <span class="mchip"></span><span class="mchip"></span>
+              </div>
+            </div>
+          </div>
+          <div class="cap">Competitive landscape</div>
+        </div>
+
+        <!-- 8 Customer wins -->
+        <div class="slide-card">
+          <div class="thumb t-tintp">
+            <span class="num">8</span>
+            <div class="open"><span class="pill">Open slide 8</span></div>
+            <div class="ms">
+              <div class="eyebrow">Proof</div>
+              <div class="htitle" style="font-size:9px;">Customer wins</div>
+              <div class="rule"></div>
+              <div class="cols">
+                <div class="col"><div class="bar l"></div><div class="bar s"></div></div>
+                <div class="col"><div class="bar m"></div><div class="bar s"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">Customer wins</div>
+        </div>
+
+        <!-- 9 What's next -->
+        <div class="slide-card">
+          <div class="thumb t-cover">
+            <span class="num">9</span>
+            <div class="open"><span class="pill">Open slide 9</span></div>
+            <div class="ms">
+              <div class="eyebrow">Roadmap</div>
+              <div class="htitle" style="font-size:9px;">What's next</div>
+              <div class="rule"></div>
+              <div class="bars"><div class="bar m"></div><div class="bar l"></div><div class="bar s"></div></div>
+            </div>
+          </div>
+          <div class="cap">What's next</div>
+        </div>
+
+        <!-- 10 Appendix (dark) -->
+        <div class="slide-card">
+          <div class="thumb t-dark">
+            <span class="num">10</span>
+            <div class="open"><span class="pill">Open slide 10</span></div>
+            <div class="ms on-dark">
+              <div class="eyebrow">Reference</div>
+              <div class="htitle" style="font-size:9px;">Appendix</div>
+              <div class="rule"></div>
+              <div class="bars"><div class="bar m"></div><div class="bar s"></div></div>
+            </div>
+          </div>
+          <div class="cap">Appendix</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel-foot">
+      <div class="row">Autosaved · last edit 2 hours ago — nothing to lose here.</div>
+    </div>
+
+  </div>
+</body>
+</html>

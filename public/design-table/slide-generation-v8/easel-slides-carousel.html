@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  EASEL BASE + 3 CHANGES
+  Base: slide-generation-v2/designer-C-canvas-workspace.html ("The Easel")
+  ----------------------------------------------------------------------------
+  Easel base + 3 changes: 16:9 slide cards with real text, carousel ‹ ›/←→ nav,
+  editable titles.
+  ----------------------------------------------------------------------------
+  Everything else (band, brief, tool tray, dial, switch, swatches, drawer,
+  plunger, palette, fonts, copy, annotations) is preserved from the base.
+
+  CHANGE 1 — Cards are real 16:9 SLIDES with real, legible text on OPAQUE
+             surfaces (front card fully occludes those behind it). Each card
+             carries an example Q1 board-review slide: real title + lede /
+             bullets / metric, composed like a designed slide.
+  CHANGE 2 — Carousel nav: Prev (‹) / Next (›) buttons + keyboard ← / →.
+             Active card comes forward; others shift. Arrow keys ignored while
+             a title is being edited. Position dots + readout. No looping ring —
+             steps and stops at the ends. ≥44px hit areas, focus rings,
+             reduced-motion safe.
+  CHANGE 3 — Each card's title is contentEditable with a pencil affordance on
+             the active card + visible focus ring. Editing steers generation.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Easel — slide cards + carousel + editable titles (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  :root{
+    /* ── the studio's deliberate palette ── */
+    --ink:        #6B3FA0;   /* house ink — violet */
+    --ink-2:      #8B5CF6;   /* violet light */
+    --armed:      #FF5F00;   /* Foxit orange — "live / armed" only */
+    --armed-soft: #ff7d33;
+    --linen:      #F3EDE2;   /* canvas / wood neutral */
+    --linen-2:    #EAE1D2;
+    --linen-deep: #DCCFBA;
+    --slate-900:  #1c1a26;
+    --slate-700:  #44414f;
+    --slate-500:  #6b6878;
+    --slate-300:  #c3bfce;
+    --paper:      #ffffff;
+    --shadow-warm: rgba(74,55,40,0.18);
+    --shadow-soft: rgba(74,55,40,0.10);
+    --focus:      #6B3FA0;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--slate-900);
+    background:
+      radial-gradient(1200px 700px at 18% -8%, #fbf7ef 0%, transparent 60%),
+      radial-gradient(900px 600px at 110% 120%, #efe7d8 0%, transparent 55%),
+      linear-gradient(160deg, #F6F0E6 0%, #ECE2D1 100%);
+    min-height:100vh;
+  }
+
+  /* ── header rationale band ── */
+  .band{
+    background:linear-gradient(135deg, #2a2236 0%, #3b2b52 60%, #4a2d6e 100%);
+    color:#f3eefb; padding:22px 30px;
+  }
+  .band h1{ margin:0 0 6px; font-size:1.18rem; font-weight:800; letter-spacing:.2px;
+    display:flex; align-items:center; gap:10px; }
+  .band .pill{ font-size:.72rem; font-weight:700; background:var(--armed); color:#fff;
+    padding:3px 9px; border-radius:999px; letter-spacing:.4px; }
+  .band p{ margin:5px 0 0; font-size:.92rem; line-height:1.55; max-width:1100px; color:#ded4f0; }
+  .band b{ color:#fff; }
+
+  /* ── the workbench ── */
+  .studio{
+    position:relative; max-width:1320px; margin:0 auto; padding:40px 32px 70px;
+  }
+  /* soft directional light wash from top-left to sell the "lit easel" depth */
+  .studio::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(700px 500px at 8% 4%, rgba(255,255,255,.55), transparent 60%);
+  }
+
+  .studio-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:10px; position:relative; }
+  .studio-head h2{ margin:0; font-size:1.65rem; font-weight:800; color:var(--slate-900); letter-spacing:-.4px; }
+  .studio-head .sub{ font-size:.95rem; color:var(--slate-500); font-weight:500; }
+
+  /* layout: easel (cards + brief) on the left, bolted tool tray on the right */
+  .bench{
+    position:relative; display:grid; grid-template-columns: 1fr 312px; gap:30px;
+    align-items:start; margin-top:18px;
+  }
+
+  /* ===== EASEL (left) ===== */
+  .easel{ position:relative; min-height:540px; padding:26px 10px 18px; }
+  /* the canvas plane the cards sit on */
+  .easel-plane{
+    position:absolute; inset:0; border-radius:26px;
+    background:linear-gradient(150deg, #fbf7f0 0%, #efe6d6 100%);
+    border:1px solid rgba(120,95,60,.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 30px 60px -30px var(--shadow-warm);
+  }
+  /* faint canvas-grain texture */
+  .easel-plane::after{
+    content:""; position:absolute; inset:0; border-radius:26px; opacity:.5;
+    background-image:radial-gradient(rgba(120,95,60,.05) 1px, transparent 1px);
+    background-size:7px 7px;
+  }
+
+  .easel-label{
+    position:relative; display:inline-flex; align-items:center; gap:7px;
+    font-size:.78rem; font-weight:700; color:var(--slate-500); letter-spacing:.6px;
+    text-transform:uppercase; margin:2px 0 8px 16px;
+  }
+
+  /* THE BRIEF — pinned paper note (the prompt) */
+  .brief{
+    position:relative; margin:0 16px 26px; padding:20px 22px 18px;
+    background:linear-gradient(180deg,#ffffff 0%,#fffdf8 100%);
+    border-radius:14px; border:1px solid rgba(120,95,60,.16);
+    box-shadow:0 14px 30px -16px var(--shadow-warm), 0 2px 0 rgba(255,255,255,.9) inset;
+    transform:rotate(-.5deg);
+  }
+  .brief .clip{  /* brass clip pinning the brief to the easel */
+    position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+    width:74px; height:24px; border-radius:7px;
+    background:linear-gradient(180deg,#8B5CF6,#6B3FA0);
+    box-shadow:0 4px 10px -3px rgba(107,63,160,.6), inset 0 1px 0 rgba(255,255,255,.5);
+    border:1px solid rgba(255,255,255,.35);
+  }
+  .brief .clip::after{ content:""; position:absolute; top:7px; left:50%; transform:translateX(-50%);
+    width:40px; height:4px; border-radius:3px; background:rgba(255,255,255,.45); }
+  .brief-eyebrow{ font-size:.74rem; font-weight:700; color:var(--ink); letter-spacing:.5px;
+    text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .brief textarea{
+    width:100%; border:none; outline:none; resize:none; background:transparent;
+    font-family:inherit; font-size:1.06rem; line-height:1.55; color:var(--slate-900);
+    min-height:60px;
+  }
+  .brief textarea::placeholder{ color:#a59f93; }
+  .brief-foot{ display:flex; align-items:center; gap:10px; margin-top:12px;
+    padding-top:12px; border-top:1px dashed rgba(120,95,60,.22); }
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; font-size:.84rem; font-weight:600;
+    color:var(--slate-700); background:#fff; border:1px solid rgba(120,95,60,.2);
+    padding:8px 12px; border-radius:10px; cursor:pointer; min-height:40px;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .chip:hover{ transform:translateY(-1px); box-shadow:0 6px 14px -8px var(--shadow-warm); border-color:var(--ink); }
+  .chip svg{ width:15px; height:15px; }
+  .file-chip{ color:var(--ink); border-color:rgba(107,63,160,.35); background:rgba(107,63,160,.05); }
+
+  /* ============================================================
+     CHANGE 1 — THE FLOATING CARD ROW, real 16:9 OPAQUE slide cards.
+     Cards are equal-size 16:9 slides carrying real text — but they
+     FLOAT on the easel plane like the original easel: each sits at
+     its own subtle tilt (a few deg, alternating sign), at a slightly
+     varied height, gently drifting, casting a warm shadow. NOT a
+     rigid straight aligned row, NOT a coverflow (no enlarged active
+     card, no receding stack). The carousel SLIDES this floating row
+     sideways (filmstrip) to reveal cards that don't fit; cards keep
+     their tilt/offset/drift while the group slides.
+     ============================================================ */
+  /* viewport: clips the row; sliding the track reveals the rest */
+  .fan{
+    position:relative; margin:14px 22px 0;
+    overflow:hidden;          /* filmstrip clip */
+    padding:34px 4px 38px;    /* extra room so tilted/lifted cards never clip */
+  }
+  /* the row itself — flex track of equal, floating cards */
+  .fan-track{
+    display:flex; gap:20px; align-items:center;
+    transition:transform .45s cubic-bezier(.2,.8,.2,1);
+    will-change:transform;
+  }
+  .card{
+    /* equal peers in the row — fixed width, 16:9. Same SIZE for all;
+       only the resting tilt + vertical offset varies, supplied by the
+       per-card drift keyframes so each card bobs around its own pose. */
+    flex:0 0 300px; width:300px;
+    aspect-ratio:16 / 9; border-radius:14px;
+    background:#ffffff;                 /* OPAQUE — legible text */
+    border:1px solid rgba(120,95,60,.18);
+    /* warm layered shadow — each card reads as lifted above the lit plane */
+    box-shadow:
+      0 2px 6px rgba(74,55,40,.16),
+      0 22px 40px -20px var(--shadow-warm),
+      0 2px 0 rgba(255,255,255,.85) inset;
+    padding:16px 18px 14px; overflow:hidden;
+    position:relative;
+    display:flex; flex-direction:column;
+    transform-origin:50% 92%;
+    /* floats: gentle drift orbiting each card's own resting tilt + offset
+       (ported from the original easel's per-card rotate + translateY + drift) */
+    animation:drift1 7.2s ease-in-out infinite;
+  }
+  /* Per-card resting pose + drift — alternating tilt sign, varied heights.
+     Each card has its OWN keyframe set so its bob orbits its own rest pose.
+     (Original easel used .c1..c5 rotate(-7..+7deg)+translateY+scale+drift; here
+     we keep equal size — only rotate + translateY vary.) */
+  .card:nth-child(6n+1){ animation-name:drift1; animation-duration:7.2s; animation-delay:-0.4s; }
+  .card:nth-child(6n+2){ animation-name:drift2; animation-duration:8.1s; animation-delay:-1.9s; }
+  .card:nth-child(6n+3){ animation-name:drift3; animation-duration:6.6s; animation-delay:-3.1s; }
+  .card:nth-child(6n+4){ animation-name:drift4; animation-duration:7.8s; animation-delay:-0.9s; }
+  .card:nth-child(6n+5){ animation-name:drift5; animation-duration:8.4s; animation-delay:-2.6s; }
+  .card:nth-child(6n+6){ animation-name:drift6; animation-duration:6.9s; animation-delay:-1.3s; }
+
+  /* rest poses: tilt (deg) + vertical offset (px); drift adds a small +/- bob */
+  @keyframes drift1{ 0%,100%{ transform:translateY(-14px) rotate(-2.4deg); } 50%{ transform:translateY(-22px) rotate(-1.4deg); } }
+  @keyframes drift2{ 0%,100%{ transform:translateY(10px)  rotate(1.8deg);  } 50%{ transform:translateY(2px)  rotate(2.7deg);  } }
+  @keyframes drift3{ 0%,100%{ transform:translateY(-6px)  rotate(-1.1deg); } 50%{ transform:translateY(-15px) rotate(-0.3deg); } }
+  @keyframes drift4{ 0%,100%{ transform:translateY(16px)  rotate(2.6deg);  } 50%{ transform:translateY(8px)  rotate(1.7deg);  } }
+  @keyframes drift5{ 0%,100%{ transform:translateY(-10px) rotate(-2.0deg); } 50%{ transform:translateY(-19px) rotate(-2.9deg); } }
+  @keyframes drift6{ 0%,100%{ transform:translateY(6px)   rotate(1.3deg);  } 50%{ transform:translateY(-2px) rotate(0.5deg);  } }
+  .card .num{ position:absolute; top:10px; right:13px; font-size:.7rem; font-weight:700;
+    color:#bcae97; }
+  /* CHANGE 3 — editable title region */
+  .card .card-title-wrap{ display:flex; align-items:flex-start; gap:6px; }
+  .card h4{
+    margin:2px 0 8px; font-size:1.02rem; font-weight:800; color:var(--slate-900);
+    line-height:1.18; letter-spacing:-.2px; flex:1;
+    border-radius:6px; padding:1px 4px; margin-left:-4px;
+    outline:none; transition:background .15s ease, box-shadow .15s ease;
+  }
+  /* pencil affordance — shown on hover/focus (every card is editable) */
+  .card .edit-hint{ display:none; flex:0 0 auto; margin-top:4px;
+    width:22px; height:22px; align-items:center; justify-content:center;
+    color:var(--ink); opacity:.55; }
+  .card .edit-hint svg{ width:14px; height:14px; }
+  /* pencil affordance shows on hover/focus of any card (every card is editable) */
+  .card:hover .edit-hint,
+  .card:focus-within .edit-hint{ display:flex; }
+  /* editable title focus + hover affordance */
+  .card h4:hover{ background:rgba(107,63,160,.06); }
+  .card h4:focus-visible,
+  .card h4:focus{ background:rgba(107,63,160,.08); box-shadow:0 0 0 2px var(--focus); }
+
+  /* real slide body content */
+  .card .lede{ font-size:.8rem; line-height:1.4; color:var(--slate-700); font-weight:500;
+    margin:0 0 8px; }
+  .card ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .card li{ font-size:.78rem; line-height:1.32; color:var(--slate-700); position:relative;
+    padding-left:16px; }
+  .card li::before{ content:""; position:absolute; left:2px; top:7px; width:6px; height:6px;
+    border-radius:2px; background:var(--ink-2); }
+  .card .metric{ display:flex; align-items:baseline; gap:8px; margin:2px 0 6px; }
+  .card .metric .big{ font-size:2rem; font-weight:800; color:var(--ink); line-height:1;
+    letter-spacing:-1px; }
+  .card .metric .cap{ font-size:.74rem; font-weight:600; color:var(--slate-500); }
+  .card .metric-row{ display:flex; gap:14px; margin-top:2px; }
+  .card .metric-row .mr{ display:flex; flex-direction:column; }
+  .card .metric-row .mr b{ font-size:1.15rem; font-weight:800; color:var(--slate-900); line-height:1.1; }
+  .card .metric-row .mr span{ font-size:.66rem; font-weight:600; color:var(--slate-500); letter-spacing:.2px; }
+  .card .accent-bar{ height:4px; width:44px; border-radius:3px; margin:0 0 9px;
+    background:linear-gradient(90deg,var(--ink),var(--ink-2)); }
+
+  /* image band — only appears when Auto art is ON */
+  .card .imgband{
+    height:0; opacity:0; border-radius:9px; margin:0; overflow:hidden;
+    background:linear-gradient(120deg,#efe2ff,#ffe2d0 70%);
+    border:1px dashed rgba(107,63,160,.35);
+    display:flex; align-items:center; justify-content:center;
+    transition:height .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease, margin .35s ease;
+  }
+  .card .imgband svg{ width:20px; height:20px; color:var(--ink); }
+  body.autoon .card .imgband{ height:48px; opacity:1; margin:0 0 8px; }
+
+  @keyframes drift{ 0%,100%{ translate:0 0; } 50%{ translate:0 -7px; } }
+
+  /* card enter / exit when the dial changes count */
+  .card.adding{ animation:cardIn .55s cubic-bezier(.2,.9,.2,1.2); }
+  .card.removing{ animation:cardOut .4s ease forwards; pointer-events:none; }
+  @keyframes cardIn{ 0%{ opacity:0; transform:translateY(40px) scale(.7) rotate(0); }
+    100%{ opacity:1; } }
+  @keyframes cardOut{ 0%{ opacity:1; } 100%{ opacity:0; transform:translateY(46px) scale(.6) rotate(0); } }
+
+  /* ============================================================
+     CHANGE 2 — CAROUSEL NAV controls (‹ / ›) + position dots.
+     ============================================================ */
+  .carousel-nav{
+    position:relative; display:flex; align-items:center; justify-content:center;
+    gap:16px; margin:18px 22px 0;
+  }
+  .nav-btn{
+    width:48px; height:48px; min-width:48px; min-height:48px; border-radius:14px;
+    border:1px solid rgba(120,95,60,.22);
+    background:linear-gradient(180deg,#ffffff,#f7f3ec);
+    color:var(--ink); cursor:pointer; font-family:inherit;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 18px -10px var(--shadow-warm), 0 1px 0 rgba(255,255,255,.85) inset;
+    transition:transform .14s ease, box-shadow .2s ease, opacity .2s ease;
+  }
+  .nav-btn svg{ width:24px; height:24px; }
+  .nav-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 26px -10px var(--shadow-warm); }
+  .nav-btn:active{ transform:translateY(0) scale(.95); }
+  .nav-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .nav-btn[disabled]{ opacity:.4; cursor:default; transform:none; box-shadow:none; }
+
+  .nav-readout{ display:flex; flex-direction:column; align-items:center; gap:7px; min-width:120px; }
+  .nav-pos{ font-size:.82rem; font-weight:700; color:var(--slate-700); letter-spacing:.2px; }
+  .nav-pos b{ color:var(--ink); }
+  .dots{ display:flex; gap:7px; }
+  .dot{ width:9px; height:9px; border-radius:50%; background:var(--linen-deep);
+    border:none; padding:0; cursor:pointer; transition:transform .15s ease, background .15s ease; }
+  .dot:hover{ transform:scale(1.25); }
+  .dot[aria-current="true"]{ background:var(--ink); transform:scale(1.25); }
+  .dot:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  /* ===== TOOL TRAY (right) — bolted to the rail ===== */
+  .tray{
+    position:relative; background:linear-gradient(180deg,#3a2f48 0%,#2a2236 100%);
+    border-radius:20px; padding:18px 16px 20px;
+    box-shadow:0 30px 60px -28px rgba(40,28,60,.7), inset 0 1px 0 rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.07);
+  }
+  /* "bolts" anchoring the tray to the easel rail */
+  .tray::before, .tray::after{ content:""; position:absolute; left:-7px; width:14px; height:14px;
+    border-radius:50%; background:radial-gradient(circle at 35% 35%, #cdbfd9, #6b5a7e);
+    box-shadow:0 2px 5px rgba(0,0,0,.4); }
+  .tray::before{ top:34px; } .tray::after{ bottom:34px; }
+  .tray-title{ color:#cfc3e0; font-size:.74rem; font-weight:700; letter-spacing:.7px;
+    text-transform:uppercase; margin:2px 4px 14px; display:flex; align-items:center; gap:7px; }
+  .tool{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+    border-radius:14px; padding:13px 13px 14px; margin-bottom:12px; }
+  .tool-label{ display:flex; align-items:center; gap:8px; color:#e8e0f4;
+    font-size:.8rem; font-weight:700; letter-spacing:.2px; margin-bottom:11px; }
+  .tool-label svg{ width:16px; height:16px; color:#bda9e0; }
+
+  /* — brass DIAL: slide count — turns / steps add+remove ghost cards — */
+  .dial{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .dial-readout{ display:flex; flex-direction:column; align-items:center; gap:1px;
+    width:78px; height:78px; border-radius:50%;
+    background:conic-gradient(from 220deg, #8B5CF6, #6B3FA0 60%, #4a2d6e);
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.4), 0 6px 14px -6px rgba(107,63,160,.7);
+    color:#fff; justify-content:center; border:2px solid rgba(255,255,255,.18);
+    position:relative;
+  }
+  .dial-readout b{ font-size:1.7rem; font-weight:800; line-height:1; }
+  .dial-readout span{ font-size:.62rem; font-weight:600; letter-spacing:.5px; opacity:.85; }
+  .dial-readout .tick{ position:absolute; top:5px; left:50%; width:3px; height:9px; border-radius:2px;
+    background:rgba(255,255,255,.85); transform-origin:50% 34px; transition:transform .4s cubic-bezier(.2,.9,.2,1.4); }
+  .step{ width:46px; height:46px; border-radius:13px; border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.07); color:#fff; font-size:1.4rem; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .12s ease, background .15s ease; }
+  .step:hover{ background:rgba(255,255,255,.16); }
+  .step:active{ transform:scale(.9); }
+
+  /* — physical TOGGLE SWITCH: auto art — */
+  .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .switch-meta{ display:flex; flex-direction:column; gap:2px; }
+  .switch-state{ font-size:.86rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px; }
+  .switch-state svg{ width:14px; height:14px; }
+  .switch-hint{ font-size:.72rem; color:#b7aacb; }
+  .toggle{
+    position:relative; width:62px; height:34px; border-radius:999px; cursor:pointer;
+    background:#544a63; border:1px solid rgba(255,255,255,.12); flex-shrink:0;
+    box-shadow:inset 0 2px 5px rgba(0,0,0,.45);
+    transition:background .3s ease;
+    min-height:34px;
+  }
+  .toggle .knob{
+    position:absolute; top:3px; left:3px; width:28px; height:28px; border-radius:50%;
+    background:linear-gradient(180deg,#fff,#e6e0ee);
+    box-shadow:0 3px 7px rgba(0,0,0,.4);
+    transition:left .32s cubic-bezier(.34,1.56,.64,1);  /* spring */
+    display:flex; align-items:center; justify-content:center;
+  }
+  .toggle .knob svg{ width:14px; height:14px; color:#8a7fa0; }
+  body.autoon .toggle{ background:linear-gradient(135deg, var(--armed-soft), var(--armed)); }
+  body.autoon .toggle .knob{ left:31px; }
+  body.autoon .toggle .knob svg{ color:var(--armed); }
+  .toggle:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+  /* — paint-swatch THEME tray — */
+  .swatches{ display:flex; gap:8px; flex-wrap:wrap; }
+  .sw{ width:38px; height:38px; border-radius:10px; cursor:pointer; border:2px solid transparent;
+    box-shadow:0 3px 8px -3px rgba(0,0,0,.5); transition:transform .14s ease;
+    position:relative; }
+  .sw:hover{ transform:translateY(-2px) scale(1.06); }
+  .sw[aria-pressed="true"]{ border-color:#fff; }
+  .sw[aria-pressed="true"]::after{ content:""; position:absolute; inset:-6px; border-radius:13px;
+    border:1.5px solid rgba(255,255,255,.55); }
+  .sw.t1{ background:linear-gradient(135deg,#6B3FA0,#8B5CF6); }
+  .sw.t2{ background:linear-gradient(135deg,#1e293b,#475569); }
+  .sw.t3{ background:linear-gradient(135deg,#FF5F00,#ffb27a); }
+  .sw.t4{ background:linear-gradient(135deg,#0e7490,#67e8f9); }
+  .sw.t5{ background:linear-gradient(135deg,#f8fafc,#e2e8f0); border:2px solid #cbd2dd; }
+  .more-link{ background:none; border:none; color:#bda9e0; font-size:.78rem; font-weight:600;
+    cursor:pointer; padding:9px 2px 2px; text-decoration:underline; }
+
+  /* — the tool DRAWER (Customize) — slides open — */
+  .drawer-btn{ width:100%; display:flex; align-items:center; justify-content:space-between;
+    background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:13px;
+    padding:13px 14px; color:#e8e0f4; font-size:.84rem; font-weight:700; cursor:pointer;
+    min-height:46px; transition:background .15s ease; font-family:inherit; }
+  .drawer-btn:hover{ background:rgba(255,255,255,.1); }
+  .drawer-btn .lz{ display:flex; align-items:center; gap:8px; }
+  .drawer-btn svg{ width:16px; height:16px; color:#bda9e0; }
+  .drawer-btn .chev{ transition:transform .3s ease; }
+  body.draweropen .drawer-btn .chev{ transform:rotate(180deg); }
+  .drawer{ max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.2,.8,.2,1); }
+  body.draweropen .drawer{ max-height:260px; }
+  .drawer-inner{ padding:12px 4px 2px; display:flex; flex-direction:column; gap:11px; }
+  .micro-label{ font-size:.7rem; font-weight:700; color:#b7aacb; letter-spacing:.4px; text-transform:uppercase; }
+  .seg{ display:flex; gap:6px; }
+  .seg button{ flex:1; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+    color:#cfc7df; border-radius:9px; padding:9px 6px; font-size:.74rem; font-weight:600; cursor:pointer;
+    min-height:40px; transition:all .14s ease; font-family:inherit; }
+  .seg button[aria-pressed="true"]{ background:linear-gradient(135deg,#8B5CF6,#6B3FA0);
+    color:#fff; border-color:transparent; }
+
+  /* — GENERATE: brass START plunger — */
+  .plunger{
+    width:100%; margin-top:16px; border:none; cursor:pointer; border-radius:16px;
+    padding:0; background:transparent; font-family:inherit;
+  }
+  .plunger .cap{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:16px; border-radius:16px; font-size:1.05rem; font-weight:800; color:#fff;
+    letter-spacing:.3px; min-height:56px;
+    background:linear-gradient(135deg, var(--armed) 0%, var(--armed-soft) 100%);
+    box-shadow:0 10px 22px -8px rgba(255,95,0,.6), inset 0 2px 0 rgba(255,255,255,.35),
+      inset 0 -4px 0 rgba(140,45,0,.4);
+    transition:transform .12s ease, box-shadow .2s ease;
+  }
+  .plunger .cap svg{ width:20px; height:20px; }
+  .plunger:hover .cap{ transform:translateY(-2px); box-shadow:0 16px 30px -8px rgba(255,95,0,.7), inset 0 2px 0 rgba(255,255,255,.4), inset 0 -4px 0 rgba(140,45,0,.4); }
+  .plunger:active .cap{ transform:translateY(2px); box-shadow:0 4px 10px -4px rgba(255,95,0,.6), inset 0 2px 4px rgba(140,45,0,.5); }
+  .plunger:focus-visible .cap{ outline:3px solid #fff; outline-offset:3px; }
+
+  /* focus rings for keyboard users on light surfaces */
+  .chip:focus-visible, .step:focus-visible, .sw:focus-visible, .more-link:focus-visible,
+  .drawer-btn:focus-visible, .seg button:focus-visible, .brief textarea:focus-visible{
+    outline:2px solid var(--focus); outline-offset:2px;
+  }
+
+  /* inline annotation callouts */
+  .anno{ position:absolute; z-index:30; font-size:.72rem; line-height:1.4; color:#3b2b52;
+    background:rgba(255,255,255,.94); border:1px dashed var(--ink); border-radius:10px;
+    padding:8px 11px; max-width:212px; box-shadow:0 10px 24px -12px var(--shadow-warm); }
+  .anno b{ color:var(--ink); }
+  .anno.a1{ top:84px; right:-6px; }
+  .anno.a2{ bottom:-58px; left:14px; }
+
+  @media (max-width: 1000px){
+    .bench{ grid-template-columns:1fr; }
+    .anno{ display:none; }
+  }
+
+  /* ── RESPECT REDUCED MOTION: kill all float / spring / drift / slide.
+        Cards keep their resting tilt + offset (from the keyframe 0% pose)
+        but stop bobbing; the sideways slide transition is disabled too. ── */
+  @media (prefers-reduced-motion: reduce){
+    .card, .card.adding, .card.removing{ animation-play-state:paused !important; transition:opacity .01s linear, box-shadow .01s linear !important; }
+    .card.adding, .card.removing{ animation:none !important; }
+    .fan-track{ transition:none !important; }
+    .toggle .knob{ transition:left .01s linear !important; }
+    .dial-readout .tick{ transition:none !important; }
+    .drawer{ transition:none !important; }
+    .imgband, .plunger .cap, .nav-btn, .dot, .card h4{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ====== RATIONALE BAND ====== -->
+  <div class="band">
+    <h1><span class="pill">EASEL + 3</span> The Easel · 16:9 slide cards, carousel nav, editable titles</h1>
+    <p>
+      Floating cards restored (subtle per-card tilt + varied heights + drift + warm shadow), 16:9 real-text, editable titles, sideways carousel scroll — not a rigid row, not coverflow.
+      The preview cards <b>float on the easel plane</b> — each sits at its own subtle tilt and slightly varied height, gently
+      drifting and casting a warm shadow, ported from the original easel. They stay <b>all the same size</b> and fully readable
+      (no coverflow, no enlarged active card). ‹ / › buttons and the keyboard ← / → arrows <b>slide the floating row sideways</b>
+      like a filmstrip to reveal cards that don't fit; cards keep their tilt/offset/drift while the group slides. Each card's
+      <b>title is editable</b> (contentEditable, pencil affordance, focus ring). Everything else from the easel — the brief, the
+      bolted tool tray (dial, switch, swatches, drawer, plunger), palette, copy — is unchanged.
+    </p>
+  </div>
+
+  <!-- ====== THE STUDIO ====== -->
+  <div class="studio">
+    <div class="studio-head">
+      <h2>Create a presentation</h2>
+      <span class="sub">Arrange your deck on the easel — then pull START.</span>
+    </div>
+
+    <div class="bench">
+
+      <!-- ===== EASEL (cards + brief) ===== -->
+      <div class="easel">
+        <div class="easel-plane"></div>
+
+        <div class="easel-label">
+          <span data-lucide="layout-template"></span> Your deck, taking shape
+        </div>
+
+        <!-- THE BRIEF (prompt) -->
+        <div class="brief">
+          <div class="clip"></div>
+          <div class="brief-eyebrow"><span data-lucide="pin"></span> The brief</div>
+          <textarea placeholder="Describe the presentation you want — topic, audience, the story you're telling…">Q1 board review: how we beat our revenue target and what it means for the year ahead.</textarea>
+          <div class="brief-foot">
+            <button class="chip file-chip"><span data-lucide="paperclip"></span> Attach a reference</button>
+            <button class="chip"><span data-lucide="wand-sparkles"></span> Inspire me</button>
+          </div>
+        </div>
+
+        <!-- THE CARD ROW — even row of equal 16:9 slide cards (CHANGE 1) -->
+        <div class="fan" id="fan">
+         <div class="fan-track" id="track">
+
+          <div class="card" data-slide="1">
+            <span class="num">1</span>
+            <div class="card-title-wrap">
+              <h4 contenteditable="true" spellcheck="false" aria-label="Slide 1 title — editable">Q1 Board Review</h4>
+              <span class="edit-hint" data-lucide="pencil" aria-hidden="true"></span>
+            </div>
+            <div class="imgband"><span data-lucide="image"></span></div>
+            <div class="accent-bar"></div>
+            <p class="lede">How we beat our revenue target — and what it means for the year ahead.</p>
+            <p class="lede" style="color:var(--slate-500);font-size:.74rem;margin:0;">Prepared for the Board · Q1 FY26</p>
+          </div>
+
+          <div class="card" data-slide="2">
+            <span class="num">2</span>
+            <div class="card-title-wrap">
+              <h4 contenteditable="true" spellcheck="false" aria-label="Slide 2 title — editable">The Q1 Result</h4>
+              <span class="edit-hint" data-lucide="pencil" aria-hidden="true"></span>
+            </div>
+            <div class="imgband"><span data-lucide="image"></span></div>
+            <div class="metric"><span class="big">$14.2M</span><span class="cap">revenue · +18% vs target</span></div>
+            <p class="lede" style="margin:0;">Strongest first quarter on record, led by enterprise renewals.</p>
+          </div>
+
+          <div class="card" data-slide="3">
+            <span class="num">3</span>
+            <div class="card-title-wrap">
+              <h4 contenteditable="true" spellcheck="false" aria-label="Slide 3 title — editable">What Made the Difference</h4>
+              <span class="edit-hint" data-lucide="pencil" aria-hidden="true"></span>
+            </div>
+            <div class="imgband"><span data-lucide="image"></span></div>
+            <ul>
+              <li>Enterprise renewals closed two weeks ahead of plan</li>
+              <li>New pricing tier lifted average deal size 22%</li>
+              <li>Churn held at a record-low 3.1%</li>
+            </ul>
+          </div>
+
+          <div class="card" data-slide="4">
+            <span class="num">4</span>
+            <div class="card-title-wrap">
+              <h4 contenteditable="true" spellcheck="false" aria-label="Slide 4 title — editable">Looking Ahead</h4>
+              <span class="edit-hint" data-lucide="pencil" aria-hidden="true"></span>
+            </div>
+            <div class="imgband"><span data-lucide="image"></span></div>
+            <p class="lede">Momentum carries into Q2 — but hiring and pipeline need attention.</p>
+            <div class="metric-row">
+              <div class="mr"><b>$60M</b><span>FY REVENUE GOAL</span></div>
+              <div class="mr"><b>+12</b><span>PLANNED HIRES</span></div>
+              <div class="mr"><b>3</b><span>NEW MARKETS</span></div>
+            </div>
+          </div>
+
+          <div class="card" data-slide="5">
+            <span class="num">5</span>
+            <div class="card-title-wrap">
+              <h4 contenteditable="true" spellcheck="false" aria-label="Slide 5 title — editable">The Ask</h4>
+              <span class="edit-hint" data-lucide="pencil" aria-hidden="true"></span>
+            </div>
+            <div class="imgband"><span data-lucide="image"></span></div>
+            <ul>
+              <li>Approve the $4M go-to-market budget increase</li>
+              <li>Sign off on the EMEA expansion plan</li>
+            </ul>
+          </div>
+
+         </div>
+        </div>
+
+        <!-- CHANGE 2 — carousel navigation -->
+        <div class="carousel-nav">
+          <button class="nav-btn" id="prev" aria-label="Previous slide">
+            <span data-lucide="chevron-left"></span>
+          </button>
+          <div class="nav-readout">
+            <span class="nav-pos" aria-live="polite">Slide <b id="posnow">1</b> of <span id="postotal">5</span></span>
+            <div class="dots" id="dots" role="tablist" aria-label="Jump to slide"></div>
+          </div>
+          <button class="nav-btn" id="next" aria-label="Next slide">
+            <span data-lucide="chevron-right"></span>
+          </button>
+        </div>
+
+        <!-- annotations -->
+        <div class="anno a2"><b>Floating cards, all equal size.</b> Each tilts &amp; drifts on the lit plane (warm shadow) — spatial, not a rigid row. ‹ › or ← / → slide the floating row sideways like a filmstrip. Edit a title to steer generation.</div>
+      </div>
+
+      <!-- ===== TOOL TRAY ===== -->
+      <div class="tray">
+        <div class="tray-title"><span data-lucide="palette"></span> Tool tray</div>
+
+        <!-- DIAL: slide count -->
+        <div class="tool">
+          <div class="tool-label"><span data-lucide="layers"></span> Slides on the easel</div>
+          <div class="dial">
+            <button class="step" id="minus" aria-label="Remove a slide">−</button>
+            <div class="dial-readout" aria-live="polite">
+              <span class="tick" id="tick"></span>
+              <b id="count">5</b><span>SLIDES</span>
+            </div>
+            <button class="step" id="plus" aria-label="Add a slide">+</button>
+          </div>
+        </div>
+
+        <!-- PHYSICAL TOGGLE: auto art -->
+        <div class="tool">
+          <div class="tool-label"><span data-lucide="sparkles"></span> Auto art</div>
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="switch-state" id="swstate">
+                <span data-lucide="hand"></span> Auto art · Off
+              </span>
+              <span class="switch-hint" id="swhint">You'll add images yourself.</span>
+            </div>
+            <div class="toggle" id="toggle" role="switch" aria-checked="false" tabindex="0"
+                 aria-label="Auto art — let AI add a fitting image to slides that benefit">
+              <div class="knob"><span data-lucide="hand" id="knobicon"></span></div>
+            </div>
+          </div>
+          <!-- ANNOTATION: explains the BOTH-states toggle decision -->
+          <div style="margin-top:9px; font-size:.7rem; color:#b7aacb; line-height:1.4;">
+            Flip ON → knob springs right, track lights <b style="color:var(--armed-soft)">Foxit-orange</b> (“armed”),
+            slide cards grow image bands. State = position + label + glyph, never color alone.
+          </div>
+        </div>
+
+        <!-- PAINT SWATCHES: theme -->
+        <div class="tool">
+          <div class="tool-label"><span data-lucide="paintbrush"></span> Theme palette</div>
+          <div class="swatches" id="swatches" role="group" aria-label="Theme">
+            <button class="sw t1" aria-pressed="true"  aria-label="Counsel violet"></button>
+            <button class="sw t2" aria-pressed="false" aria-label="Slate"></button>
+            <button class="sw t3" aria-pressed="false" aria-label="Foxit warm"></button>
+            <button class="sw t4" aria-pressed="false" aria-label="Aqua"></button>
+            <button class="sw t5" aria-pressed="false" aria-label="Paper light"></button>
+          </div>
+          <button class="more-link">Open full palette →</button>
+        </div>
+
+        <!-- TOOL DRAWER: customize -->
+        <div class="tool" style="padding-bottom:8px;">
+          <button class="drawer-btn" id="drawerbtn" aria-expanded="false">
+            <span class="lz"><span data-lucide="sliders-horizontal"></span> Fine-tune</span>
+            <span class="chev" data-lucide="chevron-down"></span>
+          </button>
+          <div class="drawer" id="drawer">
+            <div class="drawer-inner">
+              <div>
+                <div class="micro-label">Detail</div>
+                <div class="seg" role="group" aria-label="Detail level">
+                  <button aria-pressed="false">Concise</button>
+                  <button aria-pressed="true">Detailed</button>
+                  <button aria-pressed="false">Extensive</button>
+                </div>
+              </div>
+              <div>
+                <div class="micro-label">Voice</div>
+                <div class="seg" role="group" aria-label="Voice">
+                  <button aria-pressed="true">Executive</button>
+                  <button aria-pressed="false">Persuasive</button>
+                  <button aria-pressed="false">Plain</button>
+                </div>
+              </div>
+              <div>
+                <div class="micro-label">My text</div>
+                <div class="seg" role="group" aria-label="How to treat my text">
+                  <button aria-pressed="true">Inspire</button>
+                  <button aria-pressed="false">Build on</button>
+                  <button aria-pressed="false">Verbatim</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GENERATE: brass plunger -->
+        <button class="plunger" id="generate">
+          <span class="cap"><span data-lucide="zap"></span> START — build my deck</span>
+        </button>
+
+        <div class="anno a1"><b>Tool tray, not a pill row.</b> Each control is a tactile object: brass dial, physical switch, paint swatches, a drawer, a plunger.</div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  lucide.createIcons();
+
+  const fan = document.getElementById('fan');
+  const titles = ['Title & agenda','The Q1 result','What made the difference','Looking ahead','The ask',
+                  'Deep dive','Case study','Appendix','Next steps','Thank you'];
+  let count = 5;
+  let active = 0;              // CHANGE 2 — index of the leftmost visible card in the row
+  const MIN = 3, MAX = 8;
+
+  const countEl = document.getElementById('count');
+  const tick = document.getElementById('tick');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const posNow = document.getElementById('posnow');
+  const posTotal = document.getElementById('postotal');
+  const dotsEl = document.getElementById('dots');
+
+  const track = document.getElementById('track');
+  function cards(){ return [...track.querySelectorAll('.card:not(.removing)')]; }
+
+  // ── CHANGE 2 — FILMSTRIP carousel: cards stay an even row of equal peers;
+  //    nav SLIDES the row sideways. Cards never resize, rotate, or overlap.
+  //    `active` here = index of the leftmost card shown in the viewport. ──
+  function step(){
+    const list = cards();
+    if(!list.length) return 320;
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    return list[0].getBoundingClientRect().width + gap;
+  }
+  function perView(){
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    return Math.max(1, Math.floor((fan.clientWidth + gap) / step()));
+  }
+  function maxIndex(){
+    return Math.max(0, cards().length - perView());
+  }
+
+  function layout(){
+    const n = cards().length;
+    active = Math.min(Math.max(0, active), maxIndex());
+    // slide the whole row; every card keeps its size and spacing
+    track.style.transform = `translateX(${-active * step()}px)`;
+
+    posNow.textContent = String(active + 1);
+    posTotal.textContent = String(n);
+    prevBtn.disabled = active <= 0;
+    nextBtn.disabled = active >= maxIndex();
+    renderDots(n);
+  }
+
+  function renderDots(n){
+    dotsEl.innerHTML = '';
+    for(let i=0;i<n;i++){
+      const d = document.createElement('button');
+      d.className = 'dot';
+      d.setAttribute('role','tab');
+      d.setAttribute('aria-label', 'Go to slide ' + (i+1));
+      d.setAttribute('aria-current', i === active ? 'true' : 'false');
+      d.addEventListener('click', ()=>{ active = i; layout(); });
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function go(delta){
+    active = Math.max(0, Math.min(maxIndex(), active + delta));  // step, no looping
+    layout();
+  }
+  prevBtn.addEventListener('click', ()=>go(-1));
+  nextBtn.addEventListener('click', ()=>go(1));
+
+  // keyboard ← / → — slide the row; ignored while a title is being edited
+  document.addEventListener('keydown', e=>{
+    if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const el = document.activeElement;
+    if(el && el.isContentEditable) return;     // don't hijack arrows during title edit
+    e.preventDefault();
+    go(e.key === 'ArrowRight' ? 1 : -1);
+  });
+
+  // ── DIAL: slide count physically adds / removes slide cards ──
+  function setTick(){
+    const frac = (count-MIN)/(MAX-MIN);
+    tick.style.transform = `rotate(${ -60 + frac*120 }deg)`;
+  }
+  function addCard(){
+    const c = document.createElement('div');
+    c.className = 'card adding';
+    c.setAttribute('data-slide', String(count));
+    c.innerHTML =
+      `<span class="num">${count}</span>
+       <div class="card-title-wrap">
+         <h4 contenteditable="true" spellcheck="false" aria-label="Slide ${count} title — editable">${titles[count-1]||'New slide'}</h4>
+         <span class="edit-hint" data-lucide="pencil" aria-hidden="true"></span>
+       </div>
+       <div class="imgband"><span data-lucide="image"></span></div>
+       <p class="lede">Add a lede sentence, or edit the title to steer what gets generated.</p>
+       <ul><li>Supporting point one</li><li>Supporting point two</li></ul>`;
+    track.appendChild(c);
+    lucide.createIcons();
+    active = maxIndex();          // scroll the row to reveal the new slide
+    layout(); setTick();
+    setTimeout(()=>c.classList.remove('adding'), 600);
+  }
+  function removeCard(){
+    const list = cards();
+    const last = list[list.length-1];
+    if(!last) return;
+    last.classList.add('removing');
+    setTimeout(()=>{ last.remove(); layout(); }, 420);
+    setTick();
+  }
+  document.getElementById('plus').addEventListener('click', ()=>{
+    if(count>=MAX) return; count++; countEl.textContent=count; addCard();
+  });
+  document.getElementById('minus').addEventListener('click', ()=>{
+    if(count<=MIN) return; count--; countEl.textContent=count; removeCard();
+  });
+
+  // ── CHANGE 3 — editable titles: pressing Enter commits (blur), not newline ──
+  fan.addEventListener('keydown', e=>{
+    const t = e.target;
+    if(t.isContentEditable && e.key === 'Enter'){ e.preventDefault(); t.blur(); }
+  });
+
+  layout(); setTick();
+  window.addEventListener('resize', layout);
+
+  // ── PHYSICAL TOGGLE: auto art (role=switch, both states) ──
+  const toggle = document.getElementById('toggle');
+  const swstate = document.getElementById('swstate');
+  const swhint = document.getElementById('swhint');
+  function flip(){
+    const on = toggle.getAttribute('aria-checked') !== 'true';
+    toggle.setAttribute('aria-checked', on ? 'true':'false');
+    document.body.classList.toggle('autoon', on);
+    swstate.innerHTML = on
+      ? '<span data-lucide="sparkles"></span> Auto art · On'
+      : '<span data-lucide="hand"></span> Auto art · Off';
+    swhint.textContent = on
+      ? 'AI adds a fitting image where it helps.'
+      : "You'll add images yourself.";
+    lucide.createIcons();
+  }
+  toggle.addEventListener('click', flip);
+  toggle.addEventListener('keydown', e=>{
+    if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flip(); }
+  });
+
+  // ── PAINT SWATCHES: single-select theme ──
+  document.getElementById('swatches').addEventListener('click', e=>{
+    const b = e.target.closest('.sw'); if(!b) return;
+    document.querySelectorAll('.sw').forEach(s=>s.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+  });
+
+  // ── TOOL DRAWER: customize open/close ──
+  const drawerbtn = document.getElementById('drawerbtn');
+  drawerbtn.addEventListener('click', ()=>{
+    const open = !document.body.classList.contains('draweropen');
+    document.body.classList.toggle('draweropen', open);
+    drawerbtn.setAttribute('aria-expanded', open?'true':'false');
+  });
+  // segmented single-select inside drawer
+  document.querySelectorAll('.seg').forEach(seg=>{
+    seg.addEventListener('click', e=>{
+      const b = e.target.closest('button'); if(!b) return;
+      seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+    });
+  });
+
+  // ── PLUNGER: tactile press feedback ──
+  document.getElementById('generate').addEventListener('click', function(){
+    const cap = this.querySelector('.cap');
+    cap.textContent = 'Building…';
+    const z = document.createElement('span'); z.setAttribute('data-lucide','loader');
+    cap.prepend(z); lucide.createIcons();
+    setTimeout(()=>{ cap.innerHTML='<span data-lucide="zap"></span> START — build my deck'; lucide.createIcons(); }, 1400);
+  });
+</script>
+</body>
+</html>

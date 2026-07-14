@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--
+  DESIGNER 1 — VISUAL DESIGN LENS · Slide-generation page redesign
+  ===============================================================================
+  RATIONALE (color strategy + toggle form):
+  1. ONE-ACCENT SYSTEM. The clutter comes from four competing accent systems in
+     the control row (blue Upload, neutral Slides, violet Customize, tri-color
+     Theme, slate/violet Auto-images). I collapse ALL secondary controls to a
+     single monochrome "ghost glass" treatment — slate ink on translucent white,
+     no colored icon badges. Color is removed from every control that is NOT the
+     primary action.
+  2. VIOLET IS RESERVED. The only saturated color on the page is the violet AI
+     accent, and it appears on exactly ONE thing: the Generate CTA (kit gradient).
+     Per CLAUDE.md the kit gradient is "for the primary CTA only." This makes the
+     eye land on Generate instantly — the focal point the page was missing.
+  3. SEMANTIC, NOT DECORATIVE. The auto-image control is the ONE place a second
+     hint of violet survives, because it toggles an AI behavior — but only when ON,
+     and never via color alone (switch position + "On" label + violet track).
+  4. TOGGLE FORM = a real iOS-style SWITCH with an inline label, not a pill. Lisa
+     pictured "an enabler you flip." Off = calm slate track (P-UX10). On = violet
+     track + knob slides right + the word "On". State is conveyed by POSITION first,
+     color second — colorblind-safe.
+  5. P-UX10 CALM DEFAULT: on entry the page is near-monochrome — prompt + Generate
+     dominate, secondary controls recede. ACCESSIBILITY: all control text is
+     slate-700 (#334155) on glass >= 4.5:1; touch targets >= 44px via padding;
+     switch has role=switch + visible focus ring; Generate CTA text is violet-950
+     (#2e1065) on the kit gradient (WCAG AA per CLAUDE.md kit note).
+  ===============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Designer 1 — Visual · Slide Generation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Neutral ink scale — the ENTIRE control row lives here */
+    --ink-900:#0f172a; --ink-700:#334155; --ink-600:#475569; --ink-500:#64748b;
+    --ink-400:#94a3b8; --ink-300:#cbd5e1; --ink-200:#e2e8f0;
+    /* The one accent — AI violet, reserved for Generate + the auto-image ON state */
+    --violet-600:#7c3aed; --violet-700:#6d28d9; --violet-950:#2e1065;
+    /* Kit CTA gradient (CLAUDE.md "Compose Design System") — primary action ONLY */
+    --cta-pink:#E267E4; --cta-lblue:#9FC7FE; --cta-blue:#4198FF;
+    --glass-bg:rgba(255,255,255,0.62);
+    --glass-border:rgba(148,163,184,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink-900);
+    /* Compose lavender wash */
+    background:linear-gradient(160deg,#f9f6ff 0%,#f4f0ff 50%,#eef3ff 100%);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ── rationale band (prototype only) ── */
+  .rationale{
+    max-width:1080px;margin:0 auto;padding:18px 28px;
+    background:rgba(124,58,237,0.05);
+    border-bottom:1px solid rgba(124,58,237,0.12);
+    font-size:12.5px;line-height:1.55;color:var(--ink-700);
+  }
+  .rationale b{color:var(--violet-700)}
+  .rationale .tag{
+    display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--violet-700);
+    background:rgba(124,58,237,0.10);border-radius:6px;padding:3px 8px;margin-bottom:8px;
+  }
+
+  /* ── page shell ── */
+  .stage{max-width:1080px;margin:0 auto;padding:64px 28px 80px;text-align:center;}
+
+  .eyebrow{
+    font-size:12px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;
+    color:var(--ink-400);margin-bottom:14px;
+  }
+  h1{
+    font-size:44px;font-weight:700;line-height:1.12;letter-spacing:-0.02em;
+    color:var(--ink-900);margin-bottom:40px;
+  }
+
+  /* ── prompt card ── */
+  .prompt-card{
+    max-width:720px;margin:0 auto;text-align:left;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    box-shadow:0 8px 36px rgba(76,29,149,0.07),0 1px 2px rgba(0,0,0,0.03);
+    padding:22px 24px 16px;
+  }
+  .prompt-card textarea{
+    width:100%;border:none;outline:none;resize:none;background:transparent;
+    font-family:inherit;font-size:16px;line-height:1.55;color:var(--ink-900);
+    min-height:72px;
+  }
+  .prompt-card textarea::placeholder{color:var(--ink-400)}
+
+  /* ── control row ── one neutral system ── */
+  .control-row{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    margin-top:14px;padding-top:14px;
+    border-top:1px solid rgba(148,163,184,0.16);
+  }
+  .spacer{flex:1 1 auto}
+
+  /* the unified ghost-glass control — slate ink, NO color badge */
+  .ctrl{
+    display:inline-flex;align-items:center;gap:7px;
+    height:38px;padding:0 13px;
+    border-radius:11px;
+    border:1px solid rgba(148,163,184,0.22);
+    background:var(--glass-bg);
+    backdrop-filter:blur(14px) saturate(1.05);-webkit-backdrop-filter:blur(14px) saturate(1.05);
+    font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-700);
+    cursor:pointer;transition:all 150ms ease;
+    /* touch target: visual 38px, hit-area padded to >=44px */
+  }
+  .ctrl::before{content:"";position:absolute}
+  .ctrl-wrap{position:relative;display:inline-flex}
+  .ctrl:hover{
+    border-color:rgba(100,116,139,0.40);
+    color:var(--ink-900);
+    transform:translateY(-1px);
+    box-shadow:0 3px 10px rgba(15,23,42,0.06);
+  }
+  .ctrl:focus-visible{outline:2px solid var(--violet-600);outline-offset:2px}
+  .ctrl svg{width:15px;height:15px;stroke:var(--ink-500);stroke-width:2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round}
+  .ctrl:hover svg{stroke:var(--ink-700)}
+  .ctrl .chev{width:12px;height:12px;stroke:var(--ink-400)}
+
+  /* slides stepper — same neutral skin */
+  .stepper{
+    display:inline-flex;align-items:center;gap:4px;height:38px;padding:0 6px 0 12px;
+    border-radius:11px;border:1px solid rgba(148,163,184,0.22);background:var(--glass-bg);
+    backdrop-filter:blur(14px) saturate(1.05);-webkit-backdrop-filter:blur(14px) saturate(1.05);
+  }
+  .stepper .lbl{font-size:13px;font-weight:600;color:var(--ink-700);margin-right:4px}
+  .stepper button{
+    width:26px;height:26px;border:none;border-radius:7px;background:transparent;
+    font-size:17px;line-height:1;color:var(--ink-500);cursor:pointer;font-family:inherit;
+    display:inline-flex;align-items:center;justify-content:center;transition:background 120ms;
+  }
+  .stepper button:hover{background:rgba(15,23,42,0.06);color:var(--ink-900)}
+  .stepper .num{min-width:20px;text-align:center;font-size:14.5px;font-weight:700;color:var(--ink-900)}
+
+  /* ── the auto-image ENABLER (true switch + inline label) ── */
+  .switch-ctrl{
+    display:inline-flex;align-items:center;gap:9px;height:38px;padding:0 12px 0 13px;
+    border-radius:11px;border:1px solid rgba(148,163,184,0.22);background:var(--glass-bg);
+    backdrop-filter:blur(14px) saturate(1.05);-webkit-backdrop-filter:blur(14px) saturate(1.05);
+    font-size:13.5px;font-weight:600;color:var(--ink-700);cursor:pointer;
+    transition:all 150ms ease;
+  }
+  .switch-ctrl svg{width:15px;height:15px;stroke:var(--ink-500);stroke-width:2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round}
+  .switch-ctrl:focus-within{outline:2px solid var(--violet-600);outline-offset:2px}
+  .switch-ctrl .sw-label{display:inline-flex;align-items:center;gap:6px}
+  .switch-ctrl .sw-state{font-size:12px;font-weight:700;color:var(--ink-400);min-width:22px;text-align:left}
+  /* the track */
+  .track{
+    position:relative;width:38px;height:22px;border-radius:999px;
+    background:var(--ink-300);transition:background 180ms ease;flex-shrink:0;
+  }
+  .track .knob{
+    position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:transform 200ms cubic-bezier(.4,0,.2,1);
+  }
+  /* ON state — the ONE secondary use of violet, position-led */
+  .switch-ctrl.on{border-color:rgba(124,58,237,0.32)}
+  .switch-ctrl.on .track{background:var(--violet-600)}
+  .switch-ctrl.on .track .knob{transform:translateX(16px)}
+  .switch-ctrl.on .sw-state{color:var(--violet-700)}
+  .switch-ctrl.on svg{stroke:var(--violet-600)}
+
+  /* ── primary Generate CTA — the ONLY saturated color on the page ── */
+  .generate{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    height:44px;padding:0 26px;border:none;border-radius:12px;
+    font-family:inherit;font-size:15px;font-weight:700;letter-spacing:-0.01em;
+    color:var(--violet-950);cursor:pointer;
+    background:linear-gradient(100deg,var(--cta-pink) 0%,var(--cta-lblue) 50%,var(--cta-blue) 100%);
+    box-shadow:0 6px 20px rgba(124,58,237,0.22);
+    transition:transform 150ms ease,box-shadow 150ms ease;
+  }
+  .generate:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(124,58,237,0.30)}
+  .generate svg{width:18px;height:18px;stroke:var(--violet-950);stroke-width:2.2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round}
+  /* the Generate row sits BELOW the secondary controls — clear visual rank */
+  .cta-row{display:flex;justify-content:flex-end;margin-top:16px}
+
+  /* ── inspire / framework cards ── */
+  .inspire-head{
+    margin:48px auto 16px;font-size:12px;font-weight:600;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--ink-400);max-width:760px;text-align:left;
+  }
+  .inspire-grid{
+    max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  }
+  .inspire-card{
+    text-align:left;background:rgba(255,255,255,0.55);
+    border:1px solid transparent;border-radius:14px;padding:16px 18px;cursor:pointer;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    transition:border-color 200ms ease,transform 200ms ease,box-shadow 200ms ease;
+  }
+  .inspire-card:hover{
+    border-color:rgba(124,58,237,0.22);transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(76,29,149,0.08);
+  }
+  .inspire-card .ic-icon{
+    width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    background:rgba(124,58,237,0.07);margin-bottom:10px;
+  }
+  .inspire-card .ic-icon svg{width:16px;height:16px;stroke:var(--violet-600);stroke-width:2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round}
+  .inspire-card .ic-title{font-size:13.5px;font-weight:600;color:var(--ink-900);margin-bottom:3px}
+  .inspire-card .ic-sub{font-size:12.5px;color:var(--ink-500);line-height:1.45}
+
+  /* ── annotation chips (prototype only) ── */
+  .ann{
+    position:relative;font-size:11px;color:var(--violet-700);font-weight:600;
+    background:rgba(124,58,237,0.07);border:1px dashed rgba(124,58,237,0.30);
+    border-radius:8px;padding:6px 10px;margin:10px auto 0;max-width:720px;line-height:1.5;
+  }
+  .ann b{color:var(--ink-900)}
+
+  /* before/after states block */
+  .states{
+    max-width:760px;margin:44px auto 0;display:flex;gap:20px;align-items:flex-start;
+    text-align:left;
+  }
+  .state-box{
+    flex:1;background:rgba(255,255,255,0.55);border:1px solid var(--glass-border);
+    border-radius:14px;padding:18px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  .state-box h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin-bottom:12px;font-weight:700}
+</style>
+</head>
+<body>
+
+  <!-- VISIBLE RATIONALE BAND -->
+  <div class="rationale">
+    <span class="tag">Designer 1 · Visual Design lens</span><br>
+    <b>Color strategy:</b> one-accent system. Every secondary control (Upload, Slides, Customize, Theme, auto-image) drops to a single
+    <b>neutral ghost-glass skin</b> — slate ink on translucent white, no colored icon badges. This kills the four-way color fight
+    (blue / neutral / violet / tri-color gradient) that made the row feel cluttered.<br>
+    <b>The only saturated color</b> on the page is the violet AI accent, reserved for the <b>Generate CTA</b> (kit gradient) — so the eye lands on the
+    one thing that matters. <b>Toggle form:</b> a real iOS-style <b>switch with an inline label</b> — OFF is calm slate (P-UX10 Calm Default),
+    ON slides the knob right + turns the track violet + shows the word "On" (state by position first, color second — colorblind-safe).
+    <b>A11y:</b> control text slate-700 ≥ 4.5:1 on glass; CTA text violet-950 on the kit gradient (WCAG AA per CLAUDE.md); switch is role=switch with a focus ring; hit-areas ≥ 44px.
+  </div>
+
+  <div class="stage">
+    <div class="eyebrow">New presentation</div>
+    <h1>From an idea to slides in&nbsp;minutes</h1>
+
+    <!-- PROMPT CARD -->
+    <div class="prompt-card">
+      <textarea placeholder="Describe the presentation you want to create…">Q1 marketing review for the leadership team — what we shipped, the pipeline impact, and where we're focusing next quarter.</textarea>
+
+      <!-- CONTROL ROW — one neutral system -->
+      <div class="control-row">
+
+        <!-- Upload (neutral) -->
+        <div class="ctrl-wrap">
+          <button class="ctrl" type="button">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <!-- Slides stepper (neutral) -->
+        <div class="stepper">
+          <span class="lbl">Slides</span>
+          <button type="button" aria-label="Fewer slides">−</button>
+          <span class="num">8</span>
+          <button type="button" aria-label="More slides">+</button>
+        </div>
+
+        <!-- AUTO-IMAGE ENABLER — true switch (shown ON here) -->
+        <label class="switch-ctrl on" role="switch" aria-checked="true" tabindex="0" title="On: the AI picks the slides that need a picture and makes one for each.">
+          <span class="sw-label">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            Auto images
+          </span>
+          <span class="track"><span class="knob"></span></span>
+          <span class="sw-state">On</span>
+        </label>
+
+        <!-- Customize (neutral) -->
+        <div class="ctrl-wrap">
+          <button class="ctrl" type="button">
+            <svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            Customize
+            <svg class="chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+
+        <!-- Theme (neutral text + small swatch trio kept tiny, no full pill gradient) -->
+        <div class="ctrl-wrap">
+          <button class="ctrl" type="button">
+            <span style="display:inline-flex;gap:2px">
+              <span style="width:9px;height:9px;border-radius:50%;background:#0f172a;display:inline-block"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#cbd5e1;display:inline-block"></span>
+            </span>
+            Theme
+            <svg class="chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- PRIMARY ACTION — alone on its own row, the only color on the page -->
+      <div class="cta-row">
+        <button class="generate" type="button">
+          <svg viewBox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4"/><path d="M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>
+          Generate
+        </button>
+      </div>
+
+      <div class="ann">
+        <b>Why this row reads calm:</b> every secondary control shares ONE skin (slate ink · glass · no colored badges). The Theme control shows a tiny 3-dot
+        swatch instead of a full multi-color gradient pill, so it states "color picker" without competing for attention. The Generate CTA is physically separated
+        onto its own row and carries the only saturated color — unmistakable focal point.
+      </div>
+    </div>
+
+    <!-- AUTO-IMAGE SWITCH — both states side by side -->
+    <div class="states">
+      <div class="state-box">
+        <h4>Auto-image enabler — OFF (default)</h4>
+        <label class="switch-ctrl" role="switch" aria-checked="false" tabindex="0">
+          <span class="sw-label">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            Auto images
+          </span>
+          <span class="track"><span class="knob"></span></span>
+          <span class="sw-state">Off</span>
+        </label>
+        <p style="font-size:12.5px;color:var(--ink-500);margin-top:12px;line-height:1.5">
+          Calm slate track, knob left. Opt-in, defaults OFF (P-UX10). No violet, no badge — it sits quietly with its neutral siblings.
+        </p>
+      </div>
+      <div class="state-box">
+        <h4>Auto-image enabler — ON</h4>
+        <label class="switch-ctrl on" role="switch" aria-checked="true" tabindex="0">
+          <span class="sw-label">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            Auto images
+          </span>
+          <span class="track"><span class="knob"></span></span>
+          <span class="sw-state">On</span>
+        </label>
+        <p style="font-size:12.5px;color:var(--ink-500);margin-top:12px;line-height:1.5">
+          Knob slides right, track turns violet (the AI behavior), the word "On" appears. State is read by POSITION first — works without color.
+        </p>
+      </div>
+    </div>
+
+    <!-- INSPIRE / FRAMEWORK CARDS -->
+    <div class="inspire-head">Need a starting point?</div>
+    <div class="inspire-grid">
+      <div class="inspire-card">
+        <div class="ic-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+        <div class="ic-title">Quarterly review</div>
+        <div class="ic-sub">Results, pipeline, and next-quarter focus for leadership.</div>
+      </div>
+      <div class="inspire-card">
+        <div class="ic-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="ic-title">New-hire onboarding</div>
+        <div class="ic-sub">Orientation, training steps, and first-week goals.</div>
+      </div>
+      <div class="inspire-card">
+        <div class="ic-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="ic-title">Investor pitch</div>
+        <div class="ic-sub">Problem, solution, traction, and the ask — for a board meeting.</div>
+      </div>
+    </div>
+
+    <div class="ann" style="margin-top:18px">
+      <b>Inspire cards stay quiet too:</b> near-transparent glass tiles, a single faint-violet icon chip each. They suggest, they don't shout — the violet only
+      blooms on hover, echoing the AI accent without adding a fifth competing color at rest.
+    </div>
+
+  </div>
+
+</body>
+</html>

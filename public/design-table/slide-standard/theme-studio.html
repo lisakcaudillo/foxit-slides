@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slide Standard — Theme & Accessory Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=DM+Sans:wght@400;700;800&family=Poppins:wght@400;700;800&family=Work+Sans:wght@500;800&family=Space+Grotesk:wght@500;700&family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+  :root { --ink:#1e1b2e; --muted:#6b6580; --line:#e6e2f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink);
+         background:linear-gradient(180deg,#f9f6ff,#eef3ff); padding:32px 24px 130px; }
+  .wrap { max-width:1240px; margin:0 auto; }
+  h1 { font-size:30px; font-weight:800; margin:0 0 6px; }
+  .sub { color:var(--muted); font-size:16px; margin:0 0 16px; max-width:840px; }
+  .nav { position:sticky; top:0; background:rgba(249,246,255,.92); backdrop-filter:blur(6px); z-index:5;
+         padding:10px 0; display:flex; flex-wrap:wrap; gap:7px; border-bottom:1px solid var(--line); margin-bottom:18px; }
+  .nav a { text-decoration:none; font-size:12.5px; font-weight:700; color:#6d28d9; background:#fff;
+           border:1px solid var(--line); border-radius:8px; padding:5px 10px; }
+  .cat { grid-column:1/-1; font-size:14px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+         color:#8b5cf6; margin:18px 0 2px; scroll-margin-top:64px; }
+  .cat span { color:var(--muted); font-weight:600; text-transform:none; letter-spacing:0; margin-left:8px; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px;
+          box-shadow:0 1px 3px rgba(30,27,46,.05); }
+  .meta { display:flex; justify-content:space-between; align-items:center; margin:0 0 10px; }
+  .name { font-size:16px; font-weight:800; }
+  .desc { font-size:12px; color:var(--muted); }
+  .slide { position:relative; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden;
+           container-type:inline-size; box-shadow:0 1px 4px rgba(0,0,0,.10); }
+  .pad { position:absolute; inset:0; padding:8cqw 6.5cqw 6cqw 7cqw; display:flex; flex-direction:column; z-index:1; }
+  .eyebrow { font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:2.4cqw; }
+  .ttl { font-weight:800; line-height:1.06; }
+  .iconify { display:inline-block; }
+  .vote { display:flex; gap:8px; margin-top:12px; }
+  .vote button { flex:1; font:inherit; font-weight:700; font-size:14px; padding:9px 0; border-radius:10px;
+                 border:1.5px solid var(--line); background:#fff; cursor:pointer; transition:.12s; }
+  .vote button:hover { border-color:#cbb; }
+  .card[data-v="cut"]  .b-cut  { background:#fee2e2; border-color:#ef4444; color:#b91c1c; }
+  .card[data-v="keep"] .b-keep { background:#dcfce7; border-color:#22c55e; color:#15803d; }
+  .card[data-v="love"] .b-love { background:#ede9fe; border-color:#8b5cf6; color:#6d28d9; }
+  .save { display:flex; align-items:center; gap:7px; margin-top:9px; font-size:14px; font-weight:700; color:#6d28d9;
+          cursor:pointer; user-select:none; }
+  .save input { width:17px; height:17px; accent-color:#8b5cf6; }
+  .why { width:100%; margin-top:8px; font:inherit; font-size:13px; padding:8px 40px 8px 10px; border:1px solid var(--line);
+         border-radius:9px; resize:vertical; min-height:34px; }
+  .mic { position:absolute; top:8px; right:6px; width:30px; height:30px; border-radius:50%;
+         border:1px solid var(--line); background:#fff; cursor:pointer; font-size:14px; line-height:1; padding:0; }
+  .mic:hover { background:#f3f0fb; } .mic.rec { background:#fee2e2; border-color:#ef4444; animation:pulse 1.1s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.45)} 50%{box-shadow:0 0 0 7px rgba(239,68,68,0)} }
+  .bar { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line);
+         padding:14px 24px; display:flex; gap:16px; align-items:center; justify-content:center; z-index:6; }
+  button.export { font:inherit; font-weight:700; color:#fff; background:linear-gradient(135deg,#E267E4,#4198FF);
+                  border:0; border-radius:12px; padding:12px 22px; cursor:pointer; }
+  .hint { color:var(--muted); font-size:14px; }
+  textarea#out { width:100%; height:160px; margin-top:14px; font-family:ui-monospace,monospace; font-size:12px;
+                 border:1px solid var(--line); border-radius:10px; padding:10px; display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Theme & Accessory Studio</h1>
+  <p class="sub">The <b>visual layer</b>. Section 1: brand-new themes (palette + fonts + a signature motif) — ✗/⭐/★ and tick <b>💾 Save</b> on any you want kept; I'll add those to the real theme system. Section 2: the same clean slide with different <b>creative accessories</b> — so we calibrate what decoration elevates vs. clutters. <i>why</i> by type or 🎤.</p>
+  <div class="nav" id="nav"></div>
+  <div class="grid" id="grid"></div>
+</div>
+<div class="bar"><span class="hint" id="status">0 rated</span><button class="export" id="copy">Copy my picks</button></div>
+<textarea id="out" readonly></textarea>
+
+<script>
+const ic=(n,c,sz)=>`<span class="iconify" data-icon="material-symbols:${n}" style="color:${c};font-size:${sz||4.4}cqw"></span>`;
+
+// ── creative-accessory motif layers (subtle, behind content) ──
+const M = {
+  none:   ()=>'',
+  dots:   a=>`<div style="position:absolute;inset:0;background-image:radial-gradient(${a}33 1.1px,transparent 1.1px);background-size:18px 18px;opacity:.55;z-index:0"></div>`,
+  mesh:   a=>`<div style="position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 100% 0%, ${a}30 0%, transparent 46%),radial-gradient(ellipse at 0% 100%, ${a}22 0%, transparent 44%)"></div>`,
+  lines:  a=>`<div style="position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(135deg, ${a}14 0 2px, transparent 2px 22px)"></div>`,
+  shapes: a=>`<div style="position:absolute;inset:0;overflow:hidden;z-index:0"><div style="position:absolute;top:-12%;right:-6%;width:40%;height:64%;background:${a}2e;border-radius:52% 40% 60% 48%;filter:blur(7px)"></div><div style="position:absolute;bottom:-14%;left:-8%;width:34%;height:52%;background:${a}22;border-radius:60% 50% 42% 52%;filter:blur(9px)"></div></div>`,
+  editorial: a=>`<div style="position:absolute;left:0;top:0;width:1.4cqw;height:100%;background:${a};z-index:0"></div><div style="position:absolute;right:2cqw;bottom:-4cqw;font-family:inherit;font-weight:800;font-size:34cqw;line-height:1;color:${a}14;z-index:0">03</div>`,
+  icon:   (a,icon)=>`<div style="position:absolute;right:-3cqw;bottom:-4cqw;opacity:.07;z-index:0">${ic(icon||'auto-awesome',a,46)}</div>`,
+  particles: a=>`<div style="position:absolute;inset:0;z-index:0">${[[12,18],[28,72],[52,12],[70,60],[84,30],[40,88],[90,80]].map(([x,y],i)=>`<span style="position:absolute;left:${x}%;top:${y}%;width:${1.4+(i%3)}cqw;height:${1.4+(i%3)}cqw;border-radius:50%;background:${a}${i%2?'33':'22'}"></span>`).join('')}</div>`,
+  panel:  a=>`<div style="position:absolute;right:0;top:0;width:30%;height:100%;background:${a}14;z-index:0"></div>`,
+};
+
+// sample slide that exercises palette + fonts + motif
+function sample(t, motifLayer){ return `<div class="slide" style="background:${t.bg}">${motifLayer}
+  <div class="pad">
+    <div class="eyebrow" style="color:${t.accent};font-family:${t.bf}">PRODUCT · Q3</div>
+    <div class="ttl" style="color:${t.title};font-family:${t.tf};font-size:6.2cqw;margin-top:1cqw">The shifts</div>
+    <div style="color:${t.accent};font-family:${t.bf};font-weight:700;font-size:2.9cqw;margin-top:.8cqw">Three changes that moved the numbers</div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:2cqw;font-family:${t.bf};color:${t.body};font-size:3cqw">
+     ${['Unified pipeline','A gate you can trust','On-brand templates'].map(b=>`<div style="display:flex;gap:2cqw"><span style="width:1.5cqw;height:1.5cqw;border-radius:50%;background:${t.accent};margin-top:1.3cqw;flex:none"></span><span>${b}</span></div>`).join('')}</div>
+  </div></div>`; }
+
+// ── NEW THEMES (invented for this program) ──
+const THEMES_NEW = [
+  { id:'halo',     name:'Halo',     desc:'Clean tech · electric indigo · dot grid', motif:'dots',
+    t:{ bg:'#FBFCFF', title:'#0E1B45', body:'#5A6485', accent:'#3D5AFE', tf:"'Poppins'", bf:"'Inter'" } },
+  { id:'lilac',    name:'Lilac',    desc:'Soft lavender · violet · corner mesh', motif:'mesh',
+    t:{ bg:'linear-gradient(135deg,#F3EEFF,#E7E0FB)', title:'#3B1E73', body:'#5E5680', accent:'#7C4DFF', tf:"'DM Sans'", bf:"'DM Sans'" } },
+  { id:'bloom',    name:'Bloom',    desc:'Warm blush · magenta · soft shapes', motif:'shapes',
+    t:{ bg:'linear-gradient(135deg,#FFF0F3,#FFE3EC 60%,#FBE0FF)', title:'#7A1F4F', body:'#6E4A5C', accent:'#E63E8A', tf:"'Poppins'", bf:"'Open Sans'" } },
+  { id:'coral',    name:'Coral',    desc:'Peach · coral · floating particles', motif:'particles',
+    t:{ bg:'linear-gradient(135deg,#FFF2EA,#FFE0D6)', title:'#2A1A28', body:'#6B5258', accent:'#FF5A5F', tf:"'Poppins'", bf:"'Inter'" } },
+  { id:'teal',     name:'Tide Pool',desc:'Fresh light · teal · line texture', motif:'lines',
+    t:{ bg:'#F4FBFB', title:'#0B3A40', body:'#4A6066', accent:'#0FB5AE', tf:"'Work Sans'", bf:"'Inter'" } },
+  { id:'paper',    name:'Paper',    desc:'Editorial · Foxit orange · accent rule', motif:'editorial',
+    t:{ bg:'#FAF8F4', title:'#1A1A1A', body:'#55524C', accent:'#FF5F00', tf:"'Poppins'", bf:"'Inter'" } },
+  { id:'ink',      name:'Ink',      desc:'Mono · Foxit purple · side panel', motif:'panel',
+    t:{ bg:'#FFFFFF', title:'#111418', body:'#5B636E', accent:'#6B3FA0', tf:"'Inter'", bf:"'Inter'" } },
+  { id:'midnight', name:'Midnight', desc:'Dark tech · blue · icon watermark', motif:'icon', dark:true,
+    t:{ bg:'linear-gradient(160deg,#0B1020,#141B33)', title:'#EAF0FF', body:'#9FB0D0', accent:'#4D7CFF', tf:"'Space Grotesk'", bf:"'Inter'" } },
+  { id:'nocturne', name:'Nocturne', desc:'Dark creative · violet glow · mesh', motif:'mesh', dark:true,
+    t:{ bg:'radial-gradient(ellipse at 30% 15%,rgba(180,120,255,.22),transparent 55%),linear-gradient(160deg,#1A1030,#241640)', title:'#F0D9FF', body:'#C9B8E0', accent:'#C77DFF', tf:"'Poppins'", bf:"'Inter'" } },
+];
+
+// ── ACCESSORY STUDIO (same slide, fixed theme, different motif) ──
+const BASE = THEMES_NEW[0].t; // Halo (clean) as the neutral base
+const ACCESSORIES = [
+  { id:'acc-none',      name:'No accessory',   desc:'Baseline — clean', motif:'none' },
+  { id:'acc-dots',      name:'Dot grid',       desc:'Faint repeating dots', motif:'dots' },
+  { id:'acc-mesh',      name:'Gradient mesh',  desc:'Soft corner glow', motif:'mesh' },
+  { id:'acc-lines',     name:'Line texture',   desc:'Thin diagonal lines', motif:'lines' },
+  { id:'acc-shapes',    name:'Soft shapes',    desc:'Blurred organic color shapes', motif:'shapes' },
+  { id:'acc-editorial', name:'Editorial rule', desc:'Accent rule + oversized number', motif:'editorial' },
+  { id:'acc-icon',      name:'Icon watermark', desc:'Large faint topic icon', motif:'icon' },
+  { id:'acc-particles', name:'Particles',      desc:'Scattered accent dots', motif:'particles' },
+  { id:'acc-panel',     name:'Side panel',     desc:'Vertical accent block', motif:'panel' },
+];
+
+const KEY='slide-standard-themes';
+const state=JSON.parse(localStorage.getItem(KEY)||'{}');
+
+document.getElementById('nav').innerHTML=`<a href="#cat-themes">New themes (${THEMES_NEW.length})</a><a href="#cat-acc">Accessories (${ACCESSORIES.length})</a>`;
+
+function motifFor(name, t, dark){ const f=M[name]; return f ? f(t.accent, 'auto-awesome') : ''; }
+
+let html=`<div class="cat" id="cat-themes">New themes<span>vote + 💾 save the keepers</span></div>`;
+html+=THEMES_NEW.map(th=>`<div class="card" id="c-${th.id}" data-id="${th.id}" data-v="${state[th.id]?.verdict||''}">
+   <div class="meta"><div><div class="name">${th.name}</div><div class="desc">${th.desc}</div></div></div>
+   ${sample(th.t, motifFor(th.motif, th.t, th.dark))}
+   <div class="vote"><button class="b-cut" data-act="cut">✗ Cut</button><button class="b-keep" data-act="keep">⭐ Keep</button><button class="b-love" data-act="love">★ Love</button></div>
+   <label class="save"><input type="checkbox" data-save="${th.id}" ${state[th.id]?.save?'checked':''}> 💾 Save this theme</label>
+   <textarea class="why" placeholder="why? what works / what's off (type or 🎤)">${state[th.id]?.why||''}</textarea>
+ </div>`).join('');
+
+html+=`<div class="cat" id="cat-acc">Creative accessories<span>same slide, different decoration</span></div>`;
+html+=ACCESSORIES.map(a=>`<div class="card" id="c-${a.id}" data-id="${a.id}" data-v="${state[a.id]?.verdict||''}">
+   <div class="meta"><div><div class="name">${a.name}</div><div class="desc">${a.desc}</div></div></div>
+   ${sample(BASE, motifFor(a.motif, BASE))}
+   <div class="vote"><button class="b-cut" data-act="cut">✗ Cut</button><button class="b-keep" data-act="keep">⭐ Keep</button><button class="b-love" data-act="love">★ Love</button></div>
+   <textarea class="why" placeholder="why? (type or 🎤)">${state[a.id]?.why||''}</textarea>
+ </div>`).join('');
+document.getElementById('grid').innerHTML=html;
+
+function refresh(){const n=Object.values(state).filter(v=>v.verdict).length;
+  const saved=Object.values(state).filter(v=>v.save).length;
+  document.getElementById('status').textContent=`${n} rated · ${saved} to save`;localStorage.setItem(KEY,JSON.stringify(state));}
+refresh();
+const grid=document.getElementById('grid');
+grid.addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;
+  const card=b.closest('.card'),id=card.dataset.id;state[id]=state[id]||{};state[id].verdict=b.dataset.act;card.dataset.v=b.dataset.act;refresh();});
+grid.addEventListener('change',e=>{const cb=e.target.closest('input[data-save]');if(!cb)return;
+  const id=cb.dataset.save;state[id]=state[id]||{};state[id].save=cb.checked;refresh();});
+grid.addEventListener('input',e=>{const ta=e.target.closest('.why');if(!ta)return;
+  const id=ta.closest('.card').dataset.id;state[id]=state[id]||{};state[id].why=ta.value;refresh();});
+(function(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  document.querySelectorAll('textarea.why').forEach(ta=>{const wrap=document.createElement('div');wrap.style.position='relative';ta.parentNode.insertBefore(wrap,ta);wrap.appendChild(ta);
+    const btn=document.createElement('button');btn.type='button';btn.className='mic';btn.textContent='🎤';btn.title=SR?'Click to dictate':'Needs Chrome/Edge';wrap.appendChild(btn);
+    if(!SR){btn.disabled=true;btn.style.opacity=.4;return;}let rec=null,on=false;
+    btn.addEventListener('click',()=>{if(on){rec&&rec.stop();return;}rec=new SR();rec.lang='en-US';rec.continuous=true;rec.interimResults=false;
+      rec.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)t+=e.results[i][0].transcript;}if(t){ta.value=(ta.value?ta.value.trim()+' ':'')+t.trim();ta.dispatchEvent(new Event('input',{bubbles:true}));}};
+      rec.onend=()=>{on=false;btn.classList.remove('rec');};rec.onerror=()=>{on=false;btn.classList.remove('rec');};rec.start();on=true;btn.classList.add('rec');});});})();
+document.getElementById('copy').addEventListener('click',()=>{
+  const themes=THEMES_NEW.filter(t=>state[t.id]?.verdict).map(t=>({id:t.id,name:t.name,verdict:state[t.id].verdict,save:!!state[t.id].save,why:state[t.id].why||''}));
+  const accessories=ACCESSORIES.filter(a=>state[a.id]?.verdict).map(a=>({id:a.id,name:a.name,verdict:state[a.id].verdict,why:state[a.id].why||''}));
+  if(!themes.length&&!accessories.length){alert('Rate at least one first.');return;}
+  const out={exercise:'theme-accessory-studio',date:new Date().toISOString().slice(0,10),themes,accessories};
+  const txt=JSON.stringify(out,null,2);const ta=document.getElementById('out');ta.style.display='block';ta.value=txt;
+  navigator.clipboard?.writeText(txt);document.getElementById('status').textContent='Copied! Paste it back into the chat.';});
+</script>
+</body>
+</html>

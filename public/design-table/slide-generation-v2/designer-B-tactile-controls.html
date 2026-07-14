@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ============================================================================
+  Compose · Slide Generation surface — ROUND 2 · Designer B
+  CONCEPT: TACTILE / PHYSICAL CONTROLS — "The Composer's Desk"
+  ============================================================================
+
+  WHY THIS IS ORIGINAL (vs Round 1's rejected safe answer):
+  Round 1 flattened every control into the same quiet neutral glass pill with one
+  violet accent — the generic SaaS form. The clutter never went away; it just went
+  grey. This surface solves clutter the OPPOSITE way: each control gets a DISTINCT
+  PHYSICAL FORM so you read its purpose by feel, not by reading a label.
+  Slide count is a real notched DIAL you nudge. Auto-image is a chunky hardware
+  ROCKER you flip with a "thunk". Theme is a tray of physical PAINT CHIPS. Upload
+  and Customize are pressable KEYS. They look like different objects because they
+  DO different things — that's the de-cluttering.
+
+  HOW IT STAYS COHESIVE (one toolkit, not a junk drawer):
+  Every object is milled from ONE material system — the same "machined panel":
+  a 1px top light-line (--bevel-hi), a soft inner bottom shadow (--bevel-lo), the
+  same corner radius family, the same drop shadow, the same press physics
+  (translateY + shadow compresses on :active). The colourful glassmorphism orbs
+  from the Digital Wallet inspo sit BEHIND a frosted desk, so colour is rich but
+  unified through the material — not random per-control hues.
+
+  THE TOGGLE (showcase piece): a real rocker switch — bevelled well, travelling
+  thumb, OFF seats LEFT (recessed, slate), ON seats RIGHT (raised, lit violet)
+  with a spring on the thumb travel and a tactile label change. State reads by
+  POSITION + LABEL + icon, never colour alone.
+
+  ACCESSIBILITY: contrast >=4.5:1 on all text; >=44px hit areas (pad extends the
+  click area on the dial buttons + key buttons); visible focus rings on every
+  control; role="switch" + aria-checked on the rocker. prefers-reduced-motion
+  removes all travel/spring/lift and snaps states instantly.
+  PROTOTYPE ONLY — no production code touched.
+-->
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Compose · Slide Generation · Tactile Controls (Designer B)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    /* ── ONE material system — every object obeys these tokens ───────────── */
+    --panel:        #f4f1fb;                 /* milled surface (light) */
+    --panel-deep:   #e9e4f6;                 /* recessed well */
+    --bevel-hi:     rgba(255,255,255,0.95);  /* top light-line (extrusion) */
+    --bevel-lo:     rgba(80,55,130,0.16);    /* bottom inner shadow */
+    --rim:          rgba(80,55,130,0.14);    /* edge of every object */
+    --drop:         0 2px 5px rgba(60,40,110,0.12), 0 8px 22px rgba(60,40,110,0.10);
+    --drop-press:   0 1px 2px rgba(60,40,110,0.18);
+    --press-travel: 2px;
+
+    /* Foxit / kit palette — used through the material, not as random hues */
+    --violet:    #6B3FA0;
+    --violet-deep:#401842;
+    --ink:       #241636;   /* >=4.5:1 body text on panel */
+    --ink-soft:  #5a4a72;
+    --blue:      #4198FF;
+    --pink:      #E267E4;
+
+    --radius-obj: 14px;
+    --radius-sm:  10px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    /* The "desk": frosted surface over colourful orbs (Digital Wallet inspo) */
+    background: #ece7f6;
+  }
+
+  /* ── Colourful glassmorphism orbs behind a frosted desk ─────────────────
+     Lifted straight from docs/uiux/UIUX inspo/Digital Wallet -
+     Glassmorphism Explorations.svg — blurred saturated circles read through
+     a heavy backdrop-blur veil. This is the shared "material" backdrop. */
+  .orb { position: fixed; border-radius: 50%; filter: blur(90px); opacity: 0.55; z-index: 0; }
+  .orb.a { width: 360px; height: 360px; background: #5E44FF; top: -90px; right: 8%; }
+  .orb.b { width: 520px; height: 520px; background: #E548FF; bottom: -160px; left: -60px; }
+  .orb.c { width: 300px; height: 300px; background: #FFDC82; top: 30%; left: 22%; }
+  .orb.d { width: 420px; height: 420px; background: #45D6FF; bottom: 5%; right: -80px; }
+  .desk-veil {
+    position: fixed; inset: 0; z-index: 1;
+    background: rgba(236,231,246,0.62);
+    backdrop-filter: blur(60px) saturate(1.15);
+    -webkit-backdrop-filter: blur(60px) saturate(1.15);
+  }
+
+  .wrap { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: 2.6rem 1.5rem 5rem; }
+
+  /* ── Rationale band (visible) ───────────────────────────────────────── */
+  .rationale {
+    position: relative; z-index: 2;
+    max-width: 760px; margin: 1.6rem auto 0; padding: 1.1rem 1.3rem;
+    border-radius: var(--radius-obj);
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--rim);
+    box-shadow: var(--drop);
+    font-size: 0.92rem; line-height: 1.55; color: var(--ink-soft);
+  }
+  .rationale b { color: var(--violet); }
+  .rationale h2 { margin: 0 0 0.4rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--violet-deep); }
+
+  /* ── Hero / studio header ───────────────────────────────────────────── */
+  .hero { text-align: center; margin-bottom: 2rem; }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.35rem 0.8rem; border-radius: 999px;
+    background: rgba(255,255,255,0.6); border: 1px solid var(--rim);
+    font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--violet);
+    box-shadow: 0 1px 2px rgba(60,40,110,0.08);
+  }
+  .hero h1 { margin: 0.9rem 0 0.4rem; font-size: 2.1rem; font-weight: 800; letter-spacing: -0.02em; color: #1a1230; }
+  .hero p { margin: 0; font-size: 1rem; color: var(--ink-soft); }
+
+  /* ── THE PANEL: the milled composing tray that holds the controls ─────── */
+  .tray {
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(244,241,251,0.72));
+    backdrop-filter: blur(28px) saturate(1.2);
+    -webkit-backdrop-filter: blur(28px) saturate(1.2);
+    border: 1px solid var(--rim);
+    box-shadow:
+      inset 0 1px 0 var(--bevel-hi),       /* top extrusion light-line */
+      0 10px 30px rgba(60,40,110,0.16),
+      0 2px 6px rgba(60,40,110,0.10);
+    padding: 1.5rem;
+  }
+
+  /* The prompt is the "score sheet" — recessed paper inset into the tray */
+  .score {
+    border-radius: var(--radius-obj);
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--rim);
+    box-shadow: inset 0 2px 6px var(--bevel-lo), inset 0 1px 0 var(--bevel-hi);
+    padding: 1.1rem 1.2rem 0.9rem;
+  }
+  .score textarea {
+    width: 100%; min-height: 92px; border: 0; background: transparent; resize: none;
+    font-family: inherit; font-size: 1rem; line-height: 1.6; color: var(--ink); outline: none;
+  }
+  .score textarea::placeholder { color: #8a7ba0; }
+
+  /* The bottom rail of the tray that holds the physical objects */
+  .rail {
+    display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+    margin-top: 1.1rem;
+  }
+  .rail .spacer { flex: 1 1 auto; }
+
+  /* ════════════════════════════════════════════════════════════════════
+     SHARED PHYSICAL FORM — .key
+     Every pressable object is "extruded" from the tray: top light-line +
+     bottom inner shadow + drop shadow. Press = sinks (translateY) + shadow
+     compresses. This is the single press physic shared by ALL controls so
+     the toolkit reads as one material even though forms differ.
+     ════════════════════════════════════════════════════════════════════ */
+  .key {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    min-height: 44px;                         /* >=44px hit area */
+    padding: 0.55rem 0.85rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--rim);
+    background: linear-gradient(180deg, #fbfaff 0%, var(--panel) 100%);
+    box-shadow: inset 0 1px 0 var(--bevel-hi), var(--drop);
+    font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--ink);
+    cursor: pointer;
+    transition: transform 120ms cubic-bezier(.2,.8,.3,1), box-shadow 120ms ease, border-color 150ms ease;
+  }
+  .key:hover { transform: translateY(-1px); border-color: rgba(107,63,160,0.32); }
+  .key:active { transform: translateY(var(--press-travel)); box-shadow: inset 0 2px 4px var(--bevel-lo), var(--drop-press); }
+  .key:focus-visible { outline: 3px solid rgba(107,63,160,0.55); outline-offset: 2px; }
+
+  /* Each key wears a coloured "cap" so it's identifiable — colour rides on
+     the same extruded chip, so it stays in the material system. */
+  .cap {
+    width: 26px; height: 26px; border-radius: 7px;
+    display: inline-flex; align-items: center; justify-content: center; color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .cap.upload   { background: linear-gradient(135deg, #4198FF, #2563eb); }
+  .cap.customize{ background: linear-gradient(135deg, #8b5cf6, #6B3FA0); }
+  .cap.inspire  { background: linear-gradient(135deg, #E267E4, #b13fb0); }
+
+  /* ── INSPIRE: a small lit "spark" key, sits above the tray ──────────── */
+  .preamble { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 1rem; }
+
+  /* ════════════════════════════════════════════════════════════════════
+     OBJECT 1 — SLIDE COUNT DIAL (notched counter knob)
+     Not a flat pill. A recessed well in the tray holds a raised numbered
+     "puck"; the −/+ are physical thumbwheels that sink when pressed. The
+     number sits on a darker recessed window like a mechanical counter.
+     ════════════════════════════════════════════════════════════════════ */
+  .dial {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.35rem 0.5rem 0.35rem 0.8rem;
+    border-radius: var(--radius-sm);
+    background: var(--panel-deep);
+    border: 1px solid var(--rim);
+    box-shadow: inset 0 2px 5px var(--bevel-lo), inset 0 1px 0 var(--bevel-hi);
+  }
+  .dial .lbl { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); letter-spacing: 0.02em; }
+  .dial .window {
+    min-width: 2.1rem; text-align: center;
+    padding: 0.2rem 0.35rem; border-radius: 7px;
+    background: linear-gradient(180deg, #2a1d44, #1a1230); /* mechanical counter window */
+    color: #f3edff; font-weight: 800; font-size: 1.05rem; font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.45);
+  }
+  .thumb {
+    width: 32px; height: 32px; min-width: 32px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--rim);
+    background: linear-gradient(180deg, #fbfaff, var(--panel));
+    box-shadow: inset 0 1px 0 var(--bevel-hi), 0 1px 3px rgba(60,40,110,0.18);
+    color: var(--violet); font-size: 1.2rem; font-weight: 700; cursor: pointer;
+    transition: transform 110ms cubic-bezier(.2,.8,.3,1), box-shadow 110ms ease;
+    /* hit-area extender to reach >=44px without bloating visual size */
+    position: relative;
+  }
+  .thumb::before { content:''; position:absolute; inset:-6px; } /* 44px touch target */
+  .thumb:hover { transform: translateY(-1px); }
+  .thumb:active { transform: translateY(2px); box-shadow: inset 0 2px 4px var(--bevel-lo); }
+  .thumb:focus-visible { outline: 3px solid rgba(107,63,160,0.55); outline-offset: 2px; }
+  .thumb:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ════════════════════════════════════════════════════════════════════
+     OBJECT 2 — AUTO-IMAGE HARDWARE ROCKER  (the showcase piece)
+     A bevelled well with a travelling thumb. OFF: thumb seated LEFT, well
+     recessed slate, label "Auto-images Off". ON: thumb springs RIGHT, well
+     lights violet, label "Auto-images On" + check icon. State = position +
+     label + icon, never colour alone. role="switch".
+     ════════════════════════════════════════════════════════════════════ */
+  .rocker {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    min-height: 44px; padding: 0.3rem 0.8rem 0.3rem 0.35rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, #fbfaff, var(--panel));
+    border: 1px solid var(--rim);
+    box-shadow: inset 0 1px 0 var(--bevel-hi), var(--drop);
+    cursor: pointer; font: inherit;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  .rocker:hover { border-color: rgba(107,63,160,0.32); }
+  .rocker:focus-visible { outline: 3px solid rgba(107,63,160,0.55); outline-offset: 2px; }
+  .rocker[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+
+  /* the bevelled WELL the thumb travels in */
+  .rocker .well {
+    position: relative; width: 58px; height: 30px; border-radius: 999px;
+    background: var(--panel-deep);
+    box-shadow: inset 0 2px 5px rgba(80,55,130,0.30), inset 0 -1px 0 var(--bevel-hi);
+    transition: background 220ms ease, box-shadow 220ms ease;
+  }
+  /* the travelling THUMB — chunky, bevelled, with a centre grip line */
+  .rocker .knob {
+    position: absolute; top: 3px; left: 3px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: linear-gradient(180deg, #ffffff, #ded6ef);
+    box-shadow: inset 0 1px 0 #fff, 0 2px 4px rgba(40,20,80,0.40);
+    display: flex; align-items: center; justify-content: center;
+    /* spring travel */
+    transition: left 260ms cubic-bezier(.34,1.56,.5,1), background 220ms ease;
+  }
+  .rocker .knob::after { /* grip line */
+    content:''; width: 2px; height: 10px; border-radius: 2px;
+    background: rgba(80,55,130,0.30);
+  }
+  .rocker .txt { display: flex; flex-direction: column; line-height: 1.15; }
+  .rocker .txt .t1 { font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+  .rocker .txt .t2 { font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); display:flex; align-items:center; gap:0.2rem; }
+
+  /* ON state — toggled via aria-checked */
+  .rocker[aria-checked="true"] .well {
+    background: linear-gradient(180deg, #7c4ec0, #6B3FA0);
+    box-shadow: inset 0 2px 5px rgba(40,20,80,0.45), 0 0 0 1px rgba(107,63,160,0.3), 0 0 14px rgba(139,92,246,0.5);
+  }
+  .rocker[aria-checked="true"] .knob { left: 31px; background: linear-gradient(180deg, #ffffff, #efe7ff); }
+  .rocker[aria-checked="true"] .t2 { color: var(--violet); }
+
+  /* ════════════════════════════════════════════════════════════════════
+     OBJECT 3 — THEME PAINT-CHIP TRAY
+     Themes as physical paint samples seated in a recessed tray. Each chip
+     is a raised swatch; the active one pops UP out of the tray (translateY
+     -2px) with a ring, like lifting a sample. Tactile, not a rainbow badge.
+     ════════════════════════════════════════════════════════════════════ */
+  .swatch-tray {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.4rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: var(--panel-deep);
+    border: 1px solid var(--rim);
+    box-shadow: inset 0 2px 5px var(--bevel-lo), inset 0 1px 0 var(--bevel-hi);
+  }
+  .swatch-tray .lbl { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); margin-right: 0.1rem; }
+  .chip {
+    position: relative; width: 26px; height: 26px; border-radius: 7px; cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.8);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 3px rgba(40,20,80,0.30);
+    transition: transform 150ms cubic-bezier(.2,.8,.3,1), box-shadow 150ms ease;
+  }
+  .chip::before { content:''; position:absolute; inset:-7px; } /* 44px touch target */
+  .chip:hover { transform: translateY(-2px); }
+  .chip:focus-visible { outline: 3px solid rgba(107,63,160,0.6); outline-offset: 2px; }
+  .chip[aria-pressed="true"] {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 2px var(--violet), inset 0 1px 0 rgba(255,255,255,0.5), 0 4px 8px rgba(40,20,80,0.35);
+  }
+  .chip.counsel  { background: linear-gradient(135deg,#2a3a5e,#16233f); }
+  .chip.aurora   { background: linear-gradient(135deg,#ff8fb0,#9c7bff); }
+  .chip.volt     { background: linear-gradient(135deg,#7b5cff,#3a1f7a); }
+  .chip.foxit    { background: linear-gradient(135deg,#ffb066,#ff5f00); }
+  .chip.mint     { background: linear-gradient(135deg,#7fe0c0,#2f9e7e); }
+  .chip.more     { background: var(--panel); color: var(--violet); display:flex; align-items:center; justify-content:center; }
+
+  /* ── GENERATE — the big actuator: a chunky lit key with real depth ──── */
+  .actuator-row { display: flex; justify-content: center; margin-top: 1.4rem; }
+  .actuator {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    min-height: 56px; padding: 0.95rem 2.2rem;
+    border-radius: 16px; border: 0; cursor: pointer;
+    font: inherit; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em;
+    color: var(--violet-deep);
+    background: linear-gradient(135deg, #F0A8F2 0%, #C8B6F4 50%, #9CC4FE 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.7),
+      inset 0 -3px 0 rgba(90,50,150,0.25),   /* the "thickness" of the key */
+      0 6px 0 rgba(120,70,180,0.35),          /* base of the key (extrusion) */
+      0 14px 28px rgba(120,70,180,0.30);
+    transition: transform 120ms cubic-bezier(.2,.8,.3,1), box-shadow 120ms ease;
+  }
+  .actuator:hover { transform: translateY(-1px); }
+  .actuator:active {
+    transform: translateY(5px);              /* press sinks the whole key */
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(90,50,150,0.25), 0 1px 0 rgba(120,70,180,0.35), 0 4px 10px rgba(120,70,180,0.25);
+  }
+  .actuator:focus-visible { outline: 3px solid var(--violet); outline-offset: 3px; }
+  .actuator:disabled { filter: grayscale(0.5) opacity(0.6); cursor: not-allowed; box-shadow: var(--drop); transform: none; }
+
+  /* framework chip (selected template) — a clipped-in physical tag */
+  .fw-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 0.55rem 0.4rem 0.7rem; border-radius: var(--radius-sm);
+    background: linear-gradient(180deg,#fbfaff,var(--panel));
+    border: 1px solid var(--rim);
+    box-shadow: inset 0 1px 0 var(--bevel-hi), 0 1px 3px rgba(60,40,110,0.14);
+    font-size: 0.82rem; font-weight: 700; color: var(--ink);
+  }
+  .fw-tag button { background: none; border: 0; cursor: pointer; color: var(--ink-soft); display: flex; padding: 2px; border-radius: 4px; }
+  .fw-tag button:hover { color: var(--violet); }
+
+  .picked { font-size: 0.78rem; font-weight: 600; color: var(--violet); }
+
+  /* annotation callouts */
+  .annot {
+    position: relative; z-index: 2; max-width: 760px; margin: 1.5rem auto 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem;
+  }
+  .annot .note {
+    background: rgba(255,255,255,0.66); border: 1px solid var(--rim); border-radius: 12px;
+    padding: 0.75rem 0.9rem; font-size: 0.82rem; line-height: 1.45; color: var(--ink-soft);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  }
+  .annot .note b { color: var(--violet); }
+
+  .state-label { text-align:center; font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.5rem; }
+
+  /* ── prefers-reduced-motion: kill all travel/spring/lift ────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .key, .thumb, .chip, .actuator, .rocker .knob, .rocker .well { transition: none !important; }
+    .key:hover, .thumb:hover, .chip:hover, .actuator:hover { transform: none !important; }
+    .key:active, .thumb:active, .actuator:active { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="orb a"></div>
+  <div class="orb b"></div>
+  <div class="orb c"></div>
+  <div class="orb d"></div>
+  <div class="desk-veil"></div>
+
+  <!-- Visible rationale band -->
+  <div class="rationale">
+    <h2>Round 2 · Designer B · Tactile / Physical Controls — "The Composer's Desk"</h2>
+    <b>Original vs Round 1:</b> Round 1 went neutral — identical quiet glass pills, one violet accent, the generic SaaS form. Clutter just turned grey. This goes the other way: each control gets a <b>distinct physical form</b> so you read its job by feel, not by reading a label. <b>Material concept:</b> every object is milled from one machined-panel system — same top light-line, bottom inner shadow, drop shadow, and press physics — sitting on a frosted desk over the Digital-Wallet glassmorphism orbs, so colour stays rich but unified. <b>The toggle</b> is a real hardware rocker: a bevelled well with a travelling thumb that springs right and lights violet when ON — state reads by position + label + check, never colour alone. <b>Accessibility:</b> &ge;4.5:1 text, &ge;44px hit areas, visible focus rings, role="switch", and <code>prefers-reduced-motion</code> snaps every state with no travel.
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <span class="badge"><i data-lucide="wand-2" style="width:14px;height:14px"></i> Slide Studio</span>
+      <h1>Compose your deck</h1>
+      <p>Lay out your idea, dial in the controls, pull the lever.</p>
+    </div>
+
+    <!-- Inspire spark + framework tag float above the tray -->
+    <div class="preamble">
+      <button class="key" type="button" id="inspire">
+        <span class="cap inspire" aria-hidden="true"><i data-lucide="sparkles" style="width:14px;height:14px"></i></span>
+        Inspire me
+      </button>
+      <span class="fw-tag">
+        <i data-lucide="layout-template" style="width:13px;height:13px;color:var(--violet)"></i>
+        Quarterly Review
+        <button type="button" aria-label="Clear template"><i data-lucide="x" style="width:13px;height:13px"></i></button>
+      </span>
+      <span class="picked">5 slides picked</span>
+    </div>
+
+    <!-- THE TRAY -->
+    <div class="tray">
+      <!-- recessed score sheet (prompt) -->
+      <div class="score">
+        <textarea placeholder="Paste your notes, outline, or describe the deck you want to build…">Q1 marketing results for the leadership team — pipeline, MQLs, and the campaigns that drove the beat.</textarea>
+      </div>
+
+      <!-- the rail of physical objects -->
+      <div class="rail">
+        <!-- Upload key -->
+        <button class="key" type="button" id="upload">
+          <span class="cap upload" aria-hidden="true"><i data-lucide="upload" style="width:13px;height:13px"></i></span>
+          Upload
+        </button>
+
+        <span class="spacer"></span>
+
+        <!-- OBJECT 1 — slide-count DIAL -->
+        <div class="dial" role="group" aria-label="Slide count">
+          <span class="lbl">Slides</span>
+          <button class="thumb" type="button" id="dec" aria-label="Fewer slides">&minus;</button>
+          <span class="window" id="count" aria-live="polite">5</span>
+          <button class="thumb" type="button" id="inc" aria-label="More slides">&plus;</button>
+        </div>
+
+        <!-- OBJECT 2 — auto-image ROCKER (showcase) -->
+        <button class="rocker" type="button" id="rocker" role="switch" aria-checked="false"
+                aria-label="Auto-generate images during slide creation"
+                title="On: the AI picks the slides that need a picture and makes one for each. Uses AI credits.">
+          <span class="well" aria-hidden="true"><span class="knob"></span></span>
+          <span class="txt">
+            <span class="t1">Auto-images</span>
+            <span class="t2" id="rockerState"><i data-lucide="circle" style="width:11px;height:11px"></i> Off</span>
+          </span>
+        </button>
+
+        <!-- OBJECT 3 — theme PAINT-CHIP tray -->
+        <div class="swatch-tray" role="group" aria-label="Theme">
+          <span class="lbl">Theme</span>
+          <button class="chip counsel" type="button" aria-label="Counsel theme" aria-pressed="true"></button>
+          <button class="chip aurora"  type="button" aria-label="Aurora theme"  aria-pressed="false"></button>
+          <button class="chip volt"    type="button" aria-label="Volt theme"    aria-pressed="false"></button>
+          <button class="chip foxit"   type="button" aria-label="Foxit theme"   aria-pressed="false"></button>
+          <button class="chip mint"    type="button" aria-label="Mint theme"    aria-pressed="false"></button>
+          <button class="chip more"    type="button" aria-label="More themes"><i data-lucide="plus" style="width:14px;height:14px"></i></button>
+        </div>
+
+        <!-- Customize key -->
+        <button class="key" type="button" id="customize">
+          <span class="cap customize" aria-hidden="true"><i data-lucide="sliders-horizontal" style="width:13px;height:13px"></i></span>
+          Customize
+        </button>
+      </div>
+    </div>
+
+    <!-- GENERATE — the lever -->
+    <div class="actuator-row">
+      <button class="actuator" type="button" id="generate">
+        <i data-lucide="wand-2" style="width:18px;height:18px"></i>
+        Generate deck
+      </button>
+    </div>
+    <div class="state-label">Press-depth on the key, spring on the rocker, lift on the chips — every object shares one material.</div>
+
+    <!-- inline annotations explaining the physics -->
+    <div class="annot">
+      <div class="note"><b>Dial (slide count):</b> a recessed well + raised thumbwheels + a darkened mechanical counter window. The −/+ sink on press; the number reads like an odometer. Not a flat pill — you can feel "increment" before you read it.</div>
+      <div class="note"><b>Rocker (auto-images):</b> a bevelled well with a chunky travelling thumb. OFF seats left & recessed-slate; ON springs right, lights violet, swaps the label to "On" + check. Position + label carry the state, not colour.</div>
+      <div class="note"><b>Paint chips (theme):</b> physical samples seated in a tray. Active chip lifts out (−3px) with a violet ring like you've picked it up. Reads as choosing a material, not tapping a rainbow badge.</div>
+      <div class="note"><b>One material system:</b> every object shares the same top light-line, inner-shadow well, drop shadow, and press travel. Distinct forms, one toolkit — that's how clutter resolves without going neutral.</div>
+    </div>
+  </div>
+
+<script>
+  lucide.createIcons();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Slide-count dial ─────────────────────────────────────────────────
+  const countEl = document.getElementById('count');
+  const dec = document.getElementById('dec');
+  const inc = document.getElementById('inc');
+  let count = 5;
+  function render() {
+    countEl.textContent = count;
+    dec.disabled = count <= 3;
+    inc.disabled = count >= 15;
+  }
+  dec.addEventListener('click', () => { count = Math.max(3, count - 1); render(); });
+  inc.addEventListener('click', () => { count = Math.min(15, count + 1); render(); });
+  render();
+
+  // ── Auto-image rocker (role=switch) ──────────────────────────────────
+  const rocker = document.getElementById('rocker');
+  const rockerState = document.getElementById('rockerState');
+  function setRocker(on) {
+    rocker.setAttribute('aria-checked', String(on));
+    rockerState.innerHTML = on
+      ? '<i data-lucide="check" style="width:11px;height:11px"></i> On'
+      : '<i data-lucide="circle" style="width:11px;height:11px"></i> Off';
+    lucide.createIcons();
+  }
+  rocker.addEventListener('click', () => setRocker(rocker.getAttribute('aria-checked') !== 'true'));
+  rocker.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); rocker.click(); }
+  });
+
+  // ── Theme paint chips ────────────────────────────────────────────────
+  document.querySelectorAll('.chip').forEach((c) => {
+    if (c.classList.contains('more')) return;
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach((o) => o.setAttribute('aria-pressed', 'false'));
+      c.setAttribute('aria-pressed', 'true');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chart Data Grid — Manager Recommendation</title>
+<style>
+  :root {
+    --slate-50:#f8fafc; --slate-100:#f1f5f9; --slate-200:#e2e8f0; --slate-300:#cbd5e1;
+    --slate-400:#94a3b8; --slate-500:#64748b; --slate-600:#475569; --slate-700:#334155;
+    --slate-800:#1e293b; --slate-900:#0f172a;
+    --violet-50:#f5f3ff; --violet-100:#ede9fe; --violet-200:#ddd6fe; --violet-500:#8b5cf6;
+    --violet-600:#7c3aed; --violet-700:#6d28d9;
+    --foxit:#FF5F00;
+    --series-1:#7c3aed; --series-2:#60a5fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(180deg,#f9f6ff 0%,#f4f0ff 40%,#eef3ff 100%);
+    color: var(--slate-900);
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Inspector shell (right rail) ---- */
+  .inspector {
+    width: 348px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px) saturate(1.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 10px 40px rgba(99,102,241,0.10);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 48px);
+  }
+  .inspector-head {
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--slate-200);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .inspector-head .ico {
+    width: 30px; height: 30px; border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--violet-50); color: var(--violet-600);
+    flex: 0 0 auto;
+  }
+  .inspector-head h2 { margin: 0; font-size: 16px; font-weight: 600; color: var(--slate-900); }
+  .inspector-head p { margin: 2px 0 0; font-size: 13px; color: var(--slate-500); }
+
+  .scroll { overflow-y: auto; padding: 18px; }
+  .scroll::-webkit-scrollbar { width: 8px; }
+  .scroll::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 8px; }
+
+  .section { margin-bottom: 22px; }
+  .section:last-child { margin-bottom: 4px; }
+  .label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--slate-400); margin: 0 0 9px; display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ---- Live preview ---- */
+  .preview {
+    background: #fff;
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    padding: 14px 12px 10px;
+    margin-bottom: 6px;
+  }
+  .preview svg { display: block; width: 100%; height: auto; }
+  .legend { display: flex; gap: 14px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--slate-600); }
+  .legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+
+  /* ---- Controls row (chart type + number format) ---- */
+  .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field label { display: block; font-size: 13px; color: var(--slate-600); margin-bottom: 6px; font-weight: 500; }
+  select {
+    width: 100%; height: 38px; padding: 0 10px;
+    font-family: inherit; font-size: 14px; color: var(--slate-800);
+    background: #fff; border: 1px solid var(--slate-300); border-radius: 10px;
+    cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  select:focus { outline: none; border-color: var(--violet-500); box-shadow: 0 0 0 3px var(--violet-100); }
+
+  /* ---- Data grid ---- */
+  .grid-wrap { border: 1px solid var(--slate-200); border-radius: 12px; overflow: hidden; }
+  table.grid { border-collapse: collapse; width: 100%; font-size: 14px; table-layout: fixed; }
+  table.grid th, table.grid td { border: 1px solid var(--slate-100); padding: 0; position: relative; }
+  .corner { background: var(--slate-50); width: 30px; }
+
+  /* header (series name) cells */
+  .colhead { background: var(--slate-50); }
+  .colhead-inner { display: flex; align-items: center; }
+  .colhead .dot { width: 9px; height: 9px; border-radius: 3px; margin: 0 6px; flex: 0 0 auto; }
+
+  /* row-label gutter cells */
+  .rowhead { background: var(--slate-50); width: 78px; }
+
+  /* the editable inputs */
+  .cell-in {
+    width: 100%; border: none; background: transparent;
+    font-family: inherit; font-size: 14px; color: var(--slate-800);
+    padding: 8px 9px; outline: none;
+  }
+  .cell-in.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .cell-in.hdr { font-weight: 600; color: var(--slate-700); }
+  .cell-in.rowlbl { font-weight: 500; color: var(--slate-600); }
+  td.cell:focus-within, th.colhead:focus-within, td.rowhead:focus-within {
+    box-shadow: inset 0 0 0 2px var(--violet-500);
+    border-radius: 4px;
+  }
+  td.cell.coerced { background: #fff7ed; }
+
+  /* remove buttons appear on row/col hover */
+  .rm {
+    position: absolute; border: none; background: #fff; cursor: pointer;
+    width: 18px; height: 18px; border-radius: 6px; display: grid; place-items: center;
+    color: var(--slate-400); box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    opacity: 0; transition: opacity .12s, color .12s, background .12s;
+  }
+  .rm:hover { color: #ef4444; background: #fef2f2; }
+  .rm-col { top: -8px; right: 4px; }
+  .rm-row { left: -9px; top: 50%; transform: translateY(-50%); }
+  tr:hover .rm-row, th.colhead:hover .rm-col { opacity: 1; }
+  .rm[disabled] { display: none; }
+
+  /* add row / add col */
+  .grid-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-ghost {
+    flex: 1; height: 36px; border: 1px dashed var(--slate-300); background: #fff;
+    border-radius: 10px; color: var(--slate-600); font-family: inherit; font-size: 13px;
+    font-weight: 500; cursor: pointer; display: inline-flex; align-items: center;
+    justify-content: center; gap: 6px; transition: all .15s;
+  }
+  .btn-ghost:hover { border-color: var(--violet-400, #a78bfa); color: var(--violet-600); background: var(--violet-50); }
+
+  /* paste affordance */
+  .paste-card {
+    margin-top: 12px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 12px; border-radius: 10px;
+    background: var(--slate-50); border: 1px solid var(--slate-200);
+  }
+  .paste-card .pico { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: #fff; border: 1px solid var(--slate-200); color: var(--violet-600); flex: 0 0 auto; }
+  .paste-card .ptxt { flex: 1; }
+  .paste-card .ptxt b { font-size: 13px; color: var(--slate-700); font-weight: 600; display: block; }
+  .paste-card .ptxt small { font-size: 12px; color: var(--slate-500); }
+  .btn-paste {
+    height: 32px; padding: 0 12px; border: none; border-radius: 9px; cursor: pointer;
+    font-family: inherit; font-size: 13px; font-weight: 600; color: #2e1065;
+    background: linear-gradient(90deg,#E267E4 0%,#9FC7FE 50%,#4198FF 100%);
+    box-shadow: 0 2px 10px rgba(65,152,255,0.25);
+    transition: transform .15s;
+  }
+  .btn-paste:hover { transform: translateY(-1px); }
+
+  /* toast */
+  .toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translate(-50%, 14px);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--slate-900); color: #fff; padding: 12px 16px;
+    border-radius: 12px; font-size: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast .tico { color: var(--foxit); display: grid; place-items: center; }
+  .toast b { font-weight: 600; }
+
+  .hint { font-size: 12px; color: var(--slate-400); margin: 10px 2px 0; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <aside class="inspector">
+    <div class="inspector-head">
+      <span class="ico">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </span>
+      <div>
+        <h2>Chart data</h2>
+        <p>Edit cells to update the chart</p>
+      </div>
+    </div>
+
+    <div class="scroll">
+      <!-- LIVE PREVIEW -->
+      <div class="section">
+        <div class="preview">
+          <svg id="chart" viewBox="0 0 300 168" role="img" aria-label="Live chart preview"></svg>
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+
+      <!-- CHART TYPE + NUMBER FORMAT -->
+      <div class="section">
+        <p class="label">Chart</p>
+        <div class="control-grid">
+          <div class="field">
+            <label for="chartType">Type</label>
+            <select id="chartType">
+              <option value="column" selected>Grouped column</option>
+              <option value="bar">Bar</option>
+              <option value="line">Line</option>
+              <option value="area">Area</option>
+              <option value="pie">Pie</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="numFmt">Number format</label>
+            <select id="numFmt">
+              <option value="number" selected>Number</option>
+              <option value="currency">Currency</option>
+              <option value="percent">Percent</option>
+              <option value="compact">Compact</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA GRID -->
+      <div class="section">
+        <p class="label">Data</p>
+        <div class="grid-wrap">
+          <table class="grid" id="grid"></table>
+        </div>
+        <div class="grid-actions">
+          <button class="btn-ghost" id="addRow">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add row
+          </button>
+          <button class="btn-ghost" id="addCol">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add column
+          </button>
+        </div>
+
+        <!-- PASTE -->
+        <div class="paste-card">
+          <span class="pico">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          </span>
+          <div class="ptxt">
+            <b>Paste from Excel</b>
+            <small>Replace all data with your spreadsheet</small>
+          </div>
+          <button class="btn-paste" id="pasteBtn">Paste</button>
+        </div>
+        <p class="hint">Tip: copy a block of cells in Excel or Google Sheets, then Paste. First row becomes column headers, first column becomes row labels.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="tico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+    <span id="toastMsg"></span>
+  </div>
+
+<script>
+/* ============================================================
+   Mirror of FreeformChartBlock:
+   categories: string[]  (rows)
+   series: { name, values:number[] }[]  (columns)
+   Invariant: every series.values.length === categories.length
+   ============================================================ */
+const PALETTE = ['#7c3aed','#60a5fa','#FF5F00','#10b981','#f43f5e','#f59e0b'];
+
+const model = {
+  chartType: 'column',
+  numberFormat: 'number',
+  categories: ['Q1','Q2','Q3','Q4'],
+  series: [
+    { name: '2025', values: [120,135,150,162] },
+    { name: '2026', values: [140,158,171,195] },
+  ],
+};
+
+/* ---------- defensive mutations (keep the invariant) ---------- */
+function addRow() {
+  model.categories.push('Row ' + (model.categories.length + 1));
+  model.series.forEach(s => s.values.push(0));
+  render();
+}
+function removeRow(r) {
+  if (model.categories.length <= 1) return;
+  model.categories.splice(r, 1);
+  model.series.forEach(s => s.values.splice(r, 1));
+  render();
+}
+function addCol() {
+  model.series.push({
+    name: 'Series ' + (model.series.length + 1),
+    values: Array(model.categories.length).fill(0),
+  });
+  render();
+}
+function removeCol(c) {
+  if (model.series.length <= 1) return;
+  model.series.splice(c, 1);
+  render();
+}
+
+/* ---------- number formatting ---------- */
+function fmt(v) {
+  const n = Number(v) || 0;
+  switch (model.numberFormat) {
+    case 'currency': return '$' + n.toLocaleString();
+    case 'percent':  return n + '%';
+    case 'compact':  return n >= 1000 ? (n/1000).toFixed(1).replace(/\.0$/,'') + 'k' : String(n);
+    default:         return n.toLocaleString();
+  }
+}
+
+/* ---------- paste (TSV / CSV from Excel) ---------- */
+async function doPaste() {
+  let text = '';
+  try { text = await navigator.clipboard.readText(); } catch (e) {}
+  if (!text) {
+    // Prototype fallback so the affordance is demonstrable without clipboard perms.
+    text = "Region\tNorth\tSouth\nJan\t40\t18\nFeb\t52\t29\nMar\t61\tnot avail\nApr\t73\t41";
+  }
+  coerceAndApply(text);
+}
+function coerceAndApply(text) {
+  const delim = text.indexOf('\t') > -1 ? '\t' : ',';
+  const rows = text.trim().split(/\r?\n/).map(r => r.split(delim));
+  if (rows.length < 2 || rows[0].length < 2) {
+    showToast('Could not read that — needs headers + at least one data row.');
+    return;
+  }
+  let coerced = 0;
+  const header = rows[0];
+  const width = header.length - 1;                 // header-defined column count
+  const newCats = [];
+  const newSeries = Array.from({length: width}, (_, c) => ({ name: (header[c+1] || 'Series ' + (c+1)).trim(), values: [] }));
+  for (let r = 1; r < rows.length; r++) {
+    newCats.push((rows[r][0] || 'Row ' + r).trim());
+    for (let c = 0; c < width; c++) {
+      const raw = rows[r][c+1];
+      const num = parseFloat(String(raw ?? '').replace(/[^0-9.\-]/g, ''));
+      if (raw === undefined || isNaN(num)) coerced++;
+      newSeries[c].values.push(isNaN(num) ? 0 : num);  // pad/coerce → keep invariant
+    }
+  }
+  model.categories = newCats;
+  model.series = newSeries;
+  render();
+  if (coerced > 0) {
+    showToast(coerced + (coerced === 1 ? ' non-numeric cell was' : ' non-numeric cells were') + ' set to 0.');
+    flashCoerced();
+  } else {
+    showToast('Pasted ' + newCats.length + '×' + width + ' from clipboard.');
+  }
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function flashCoerced() {
+  document.querySelectorAll('td.cell').forEach(td => {
+    if (td.querySelector('input').value === '0') {
+      td.classList.add('coerced');
+      setTimeout(() => td.classList.remove('coerced'), 1600);
+    }
+  });
+}
+
+/* ============================================================
+   RENDER: grid + chart from the model
+   ============================================================ */
+function render() {
+  renderGrid();
+  renderChart();
+  renderLegend();
+}
+
+function renderGrid() {
+  const cats = model.categories, ser = model.series;
+  let html = '';
+  // header row: corner + series-name inputs
+  html += '<tr><th class="corner"></th>';
+  ser.forEach((s, c) => {
+    const color = s.color || PALETTE[c % PALETTE.length];
+    html += `<th class="colhead">
+      <div class="colhead-inner">
+        <span class="dot" style="background:${color}"></span>
+        <input class="cell-in hdr" data-type="name" data-c="${c}" value="${escapeAttr(s.name)}" aria-label="Series ${c+1} name" />
+      </div>
+      <button class="rm rm-col" data-rmcol="${c}" ${ser.length<=1?'disabled':''} aria-label="Remove column" title="Remove column">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </th>`;
+  });
+  html += '</tr>';
+  // data rows
+  cats.forEach((cat, r) => {
+    html += `<tr><th class="rowhead">
+      <input class="cell-in rowlbl" data-type="cat" data-r="${r}" value="${escapeAttr(cat)}" aria-label="Row ${r+1} label" />
+      <button class="rm rm-row" data-rmrow="${r}" ${cats.length<=1?'disabled':''} aria-label="Remove row" title="Remove row">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </th>`;
+    ser.forEach((s, c) => {
+      html += `<td class="cell">
+        <input class="cell-in num" data-type="val" data-r="${r}" data-c="${c}"
+               inputmode="decimal" value="${s.values[r]}" aria-label="${escapeAttr(s.name)} ${escapeAttr(cat)}" />
+      </td>`;
+    });
+    html += '</tr>';
+  });
+  document.getElementById('grid').innerHTML = html;
+}
+
+function renderLegend() {
+  document.getElementById('legend').innerHTML = model.series.map((s,c) =>
+    `<span><i style="background:${s.color||PALETTE[c%PALETTE.length]}"></i>${escapeHtml(s.name)}</span>`
+  ).join('');
+}
+
+/* ---- inline SVG grouped-column chart (also degrades for line/bar/pie/area) ---- */
+function renderChart() {
+  const W=300, H=168, padL=30, padR=10, padT=12, padB=26;
+  const cats=model.categories, ser=model.series;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const all=ser.flatMap(s=>s.values);
+  const max=Math.max(1, ...all);
+  const niceMax=Math.ceil(max/10)*10;
+  let svg='';
+
+  // gridlines + y labels
+  for(let i=0;i<=2;i++){
+    const y=padT+plotH-(plotH*i/2);
+    const val=Math.round(niceMax*i/2);
+    svg+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#f1f5f9" stroke-width="1"/>`;
+    svg+=`<text x="${padL-5}" y="${y+3}" font-size="8" fill="#94a3b8" text-anchor="end">${val}</text>`;
+  }
+
+  const type=model.chartType;
+
+  if(type==='pie'){
+    const vals=ser[0]?ser[0].values:[];
+    const total=vals.reduce((a,b)=>a+(Number(b)||0),0)||1;
+    const cx=W/2, cy=H/2-2, rr=58; let a0=-Math.PI/2;
+    vals.forEach((v,i)=>{
+      const a1=a0+(Number(v)||0)/total*Math.PI*2;
+      const x0=cx+rr*Math.cos(a0), y0=cy+rr*Math.sin(a0);
+      const x1=cx+rr*Math.cos(a1), y1=cy+rr*Math.sin(a1);
+      const large=(a1-a0)>Math.PI?1:0;
+      svg+=`<path d="M${cx},${cy} L${x0.toFixed(1)},${y0.toFixed(1)} A${rr},${rr} 0 ${large} 1 ${x1.toFixed(1)},${y1.toFixed(1)} Z" fill="${PALETTE[i%PALETTE.length]}" opacity="0.92"/>`;
+      a0=a1;
+    });
+    document.getElementById('chart').innerHTML=svg;
+    return;
+  }
+
+  const groupW=plotW/cats.length;
+  if(type==='line'||type==='area'){
+    ser.forEach((s,si)=>{
+      const color=s.color||PALETTE[si%PALETTE.length];
+      const pts=s.values.map((v,r)=>{
+        const x=padL+groupW*r+groupW/2;
+        const y=padT+plotH-(Number(v)||0)/niceMax*plotH;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      if(type==='area'){
+        const x0=padL+groupW/2, xN=padL+groupW*(cats.length-1)+groupW/2;
+        svg+=`<polygon points="${x0},${padT+plotH} ${pts.join(' ')} ${xN},${padT+plotH}" fill="${color}" opacity="0.14"/>`;
+      }
+      svg+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+      pts.forEach(p=>{const[x,y]=p.split(',');svg+=`<circle cx="${x}" cy="${y}" r="2.6" fill="#fff" stroke="${color}" stroke-width="1.8"/>`;});
+    });
+  } else {
+    // column (grouped) and bar both render as grouped columns here
+    const n=ser.length, gap=4, inner=groupW-gap*2;
+    const bw=inner/n;
+    cats.forEach((cat,r)=>{
+      ser.forEach((s,si)=>{
+        const v=Number(s.values[r])||0;
+        const bh=v/niceMax*plotH;
+        const x=padL+groupW*r+gap+bw*si;
+        const y=padT+plotH-bh;
+        svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-1.5).toFixed(1)}" height="${Math.max(0,bh).toFixed(1)}" rx="2" fill="${s.color||PALETTE[si%PALETTE.length]}"/>`;
+      });
+    });
+  }
+
+  // x labels
+  cats.forEach((cat,r)=>{
+    const x=padL+groupW*r+groupW/2;
+    svg+=`<text x="${x.toFixed(1)}" y="${H-8}" font-size="8.5" fill="#64748b" text-anchor="middle">${escapeHtml(String(cat).slice(0,6))}</text>`;
+  });
+
+  document.getElementById('chart').innerHTML=svg;
+}
+
+/* ---------- helpers ---------- */
+function escapeAttr(s){return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ============================================================
+   EVENTS — delegated so re-render keeps bindings
+   ============================================================ */
+document.getElementById('grid').addEventListener('input', (e) => {
+  const el = e.target;
+  if (!el.matches('.cell-in')) return;
+  const t = el.dataset.type;
+  if (t === 'val') {
+    const r=+el.dataset.r, c=+el.dataset.c;
+    let n = parseFloat(el.value);
+    if (isNaN(n)) n = 0;                       // empty/invalid → 0, never break number[]
+    model.series[c].values[r] = n;
+    renderChart(); renderLegend();             // live, without rebuilding the grid (keeps focus)
+  } else if (t === 'name') {
+    model.series[+el.dataset.c].name = el.value;
+    renderChart(); renderLegend();
+  } else if (t === 'cat') {
+    model.categories[+el.dataset.r] = el.value;
+    renderChart();
+  }
+});
+// normalize numeric cells on blur (e.g. "12.5x" → 12.5, "" → 0)
+document.getElementById('grid').addEventListener('blur', (e) => {
+  const el=e.target;
+  if(el.matches('.cell-in.num')){
+    let n=parseFloat(el.value); if(isNaN(n))n=0;
+    el.value=n; model.series[+el.dataset.c].values[+el.dataset.r]=n; renderChart();
+  }
+}, true);
+// keyboard: Enter on last row adds a row (Excel-feel)
+document.getElementById('grid').addEventListener('keydown',(e)=>{
+  if(e.key==='Enter' && e.target.matches('.cell-in.num')){
+    e.preventDefault();
+    if(+e.target.dataset.r === model.categories.length-1) addRow();
+  }
+});
+
+document.getElementById('grid').addEventListener('click', (e) => {
+  const rmCol = e.target.closest('[data-rmcol]');
+  const rmRow = e.target.closest('[data-rmrow]');
+  if (rmCol) removeCol(+rmCol.dataset.rmcol);
+  if (rmRow) removeRow(+rmRow.dataset.rmrow);
+});
+
+document.getElementById('addRow').addEventListener('click', addRow);
+document.getElementById('addCol').addEventListener('click', addCol);
+document.getElementById('pasteBtn').addEventListener('click', doPaste);
+document.getElementById('chartType').addEventListener('change', (e)=>{ model.chartType=e.target.value; renderChart(); });
+document.getElementById('numFmt').addEventListener('change', (e)=>{ model.numberFormat=e.target.value; renderChart(); });
+
+render();
+</script>
+</body>
+</html>

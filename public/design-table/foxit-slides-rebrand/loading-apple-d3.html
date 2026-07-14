@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foxit Slides — Generating</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================================
+     FOXIT SLIDES — LOADING SYSTEM  ·  d3 "token-driven minimal shimmer"
+     A small, reusable motion/ink/type system. One restrained living signal:
+     an ultra-thin indeterminate hairline that glides on the brand gradient.
+     Everything below is derived from the :root tokens — no ad-hoc values.
+     ========================================================================= */
+  :root {
+    /* — Brand progress gradient (single source of truth) — */
+    --grad-progress: linear-gradient(135deg, #4776E6, #6D28D9, #A855F7);
+
+    /* — Field tint (calm light, never a takeover) — */
+    --field-top: #FBFAFE;
+    --field-bot: #F4F2FB;
+
+    /* — On-light ink opacity tiers — */
+    --ink: 18, 16, 28;            /* near-black violet base, as RGB triplet */
+    --ink-1: rgba(var(--ink), 0.92);  /* primary line   */
+    --ink-2: rgba(var(--ink), 0.46);  /* secondary line */
+    --ink-3: rgba(var(--ink), 0.20);  /* hairline track */
+    --ink-4: rgba(var(--ink), 0.085); /* footer rule    */
+
+    /* — Type scale (Inter) — */
+    --font: "Inter", system-ui, -apple-system, sans-serif;
+    --t-lead: 1.0625rem;   /* 17px primary line   */
+    --t-sub:  0.875rem;    /* 14px secondary line */
+    --t-foot: 0.625rem;    /* 10px token footer   */
+    --w-lead: 500;
+    --w-sub:  450;
+    --tracking-lead: -0.011em;
+    --tracking-foot: 0.06em;
+
+    /* — Spacing scale (4-step) — */
+    --sp-1: 8px;
+    --sp-2: 16px;
+    --sp-3: 28px;
+    --sp-4: 48px;
+
+    /* — Motion tokens — */
+    --shimmer-dur: 2200ms;                       /* hairline glide period   */
+    --shimmer-ease: cubic-bezier(0.45, 0, 0.25, 1);
+    --fade-dur: 700ms;                           /* copy crossfade          */
+    --fade-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* — Geometry — */
+    --rail-w: 176px;        /* hairline rail width */
+    --rail-h: 1.5px;        /* "ultra-thin"        */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--font);
+    background:
+      radial-gradient(120% 120% at 50% 8%, var(--field-top) 0%, var(--field-bot) 100%);
+    color: var(--ink-1);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* — Peripheral comet mark: small, top-left, quiet — */
+  .mark {
+    position: fixed;
+    top: var(--sp-4);
+    left: var(--sp-4);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    opacity: 0.5;
+  }
+  .mark .disc {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: var(--grad-progress);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mark .disc svg { transform: scale(0.72); }
+  .mark .name {
+    font-size: var(--t-sub);
+    font-weight: var(--w-sub);
+    letter-spacing: 0.01em;
+    color: var(--ink-2);
+  }
+
+  /* — Center stage: vast negative space, one signal + two text lines — */
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+
+  /* THE single living element: an indeterminate gliding hairline. */
+  .rail {
+    position: relative;
+    width: var(--rail-w);
+    height: var(--rail-h);
+    border-radius: 999px;
+    background: var(--ink-3);          /* faint static track */
+    overflow: hidden;
+  }
+  .rail::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 42%;
+    border-radius: 999px;
+    background: var(--grad-progress);
+    background-size: 240px 100%;
+    /* glide left→right, indeterminate — no percentage, no count */
+    animation: glide var(--shimmer-dur) var(--shimmer-ease) infinite;
+  }
+  @keyframes glide {
+    0%   { transform: translateX(-115%); }
+    100% { transform: translateX(265%); }
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-1);
+    text-align: center;
+  }
+  .lead {
+    font-size: var(--t-lead);
+    font-weight: var(--w-lead);
+    letter-spacing: var(--tracking-lead);
+    color: var(--ink-1);
+    /* slow crossfade between phrases */
+    animation: breathe calc(var(--shimmer-dur) * 2) var(--fade-ease) infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.62; }
+    50%      { opacity: 1; }
+  }
+  .sub {
+    font-size: var(--t-sub);
+    font-weight: var(--w-sub);
+    letter-spacing: 0.005em;
+    color: var(--ink-2);
+  }
+
+  /* — Quiet token-footer: signs this as system output — */
+  .footer {
+    position: fixed;
+    bottom: var(--sp-3);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: var(--sp-1);
+    font-size: var(--t-foot);
+    font-weight: 450;
+    letter-spacing: var(--tracking-foot);
+    text-transform: uppercase;
+    color: var(--ink-2);
+    opacity: 0.55;
+  }
+  .footer .tok { color: var(--ink-2); }
+  .footer .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-3); }
+
+  /* =========================================================================
+     REDUCED MOTION — motion becomes instant. The hairline rests as a
+     centered static segment on the brand gradient; copy holds at full ink.
+     ========================================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .rail::after {
+      animation: none;
+      transform: none;
+      position: absolute;
+      left: 29%;
+      width: 42%;
+    }
+    .lead { animation: none; opacity: 1; }
+    .footer .tok::after { content: " (static)"; opacity: 0.7; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- peripheral mark (small, never central) -->
+  <div class="mark" aria-hidden="true">
+    <span class="disc">
+      <svg width="20" height="20" viewBox="0 0 1024 1024" fill="none"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg>
+    </span>
+    <span class="name">Foxit Slides</span>
+  </div>
+
+  <!-- center stage: one living signal + two quiet lines -->
+  <main class="stage">
+    <div class="rail" role="progressbar" aria-label="Generating" aria-busy="true"></div>
+    <div class="copy">
+      <div class="lead" id="lead">Creating your presentation</div>
+      <div class="sub">This takes a moment</div>
+    </div>
+  </main>
+
+  <!-- token footer: system signature -->
+  <footer class="footer" aria-hidden="true">
+    <span class="tok">shimmer&nbsp;2200ms</span>
+    <span class="dot"></span>
+    <span class="tok">ease&nbsp;.45 0 .25 1</span>
+    <span class="dot"></span>
+    <span class="tok">d3&nbsp;·&nbsp;system</span>
+  </footer>
+
+  <script>
+    // Single slowly-changing copy line — generic, never a deck name.
+    // Driven by the shimmer period so cadence stays inside the token system.
+    (function () {
+      var lead = document.getElementById('lead');
+      var phrases = [
+        'Creating your presentation',
+        'Designing your slides',
+        'Almost ready'
+      ];
+      var i = 0;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (reduce.matches) return; // static copy when motion is reduced
+
+      var period = 2200 * 2; // matches --shimmer-dur * 2 (the breathe cycle)
+      setInterval(function () {
+        i = (i + 1) % phrases.length;
+        // crossfade at the trough of the breathe animation
+        lead.style.transition = 'opacity 350ms cubic-bezier(0.4,0,0.2,1)';
+        lead.style.opacity = '0';
+        setTimeout(function () {
+          lead.textContent = phrases[i];
+          lead.style.opacity = '';
+          lead.style.transition = '';
+        }, 350);
+      }, period);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Title Decor — Designer 2 · Organic / Atmospheric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Compose kit neutrals */
+    --ink: #0B1F3A;
+    --slate: #475569;
+    --line: #e2e8f0;
+    --wash-a: #f9f6ff;
+    --wash-b: #eef3ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, var(--wash-a), var(--wash-b));
+    color: var(--ink);
+    padding: 48px 40px 80px;
+  }
+  .page-head { max-width: 1280px; margin: 0 auto 36px; }
+  .page-head .kicker {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #7c5cbf; margin: 0 0 8px;
+  }
+  .page-head h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600; font-size: 34px; margin: 0 0 10px; line-height: 1.1;
+  }
+  .page-head p {
+    font-size: 15px; line-height: 1.6; color: var(--slate);
+    max-width: 760px; margin: 0;
+  }
+
+  .section-label {
+    max-width: 1280px; margin: 44px auto 18px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--slate);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+  .grid {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+  .card-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .card-meta { display: flex; align-items: baseline; gap: 10px; padding: 0 2px; }
+  .card-meta .num {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px;
+    color: #7c5cbf; font-variant-numeric: tabular-nums;
+  }
+  .card-meta .name { font-size: 14px; font-weight: 600; }
+  .card-meta .desc { font-size: 13px; color: var(--slate); }
+
+  /* ---- The 16:9 title slide ---- */
+  .slide {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.35), 0 2px 6px rgba(15,23,42,0.08);
+    display: flex;
+    isolation: isolate;
+  }
+  .deco { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .deco svg { width: 100%; height: 100%; display: block; }
+
+  .slide-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 7% 8%;
+    width: 100%;
+  }
+  .eyebrow {
+    font-size: 0.78vw; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; margin: 0 0 2.4%;
+  }
+  .title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600; font-size: 3.6vw; line-height: 1.04;
+    margin: 0 0 2.2%; max-width: 84%;
+    letter-spacing: -0.01em;
+  }
+  .title em { font-style: italic; }
+  .subtitle {
+    font-size: 1.05vw; line-height: 1.5; font-weight: 400;
+    max-width: 62%; margin: 0;
+  }
+  .slide-foot {
+    position: absolute; z-index: 2; left: 8%; right: 8%; bottom: 6%;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .author-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.72vw; font-weight: 700; letter-spacing: 0.14em;
+    padding: 0.55vw 1vw; border-radius: 10px;
+  }
+  .author-chip .dot { width: 0.55vw; height: 0.55vw; border-radius: 50%; }
+  .page-no {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 0.85vw; letter-spacing: 0.06em; font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- DARK THEME (violet/purple reference) ---- */
+  .t-dark { background: linear-gradient(150deg, #2a1245 0%, #3a1a5e 45%, #1d1036 100%); }
+  .t-dark .eyebrow { color: #c8a8ff; }
+  .t-dark .title { color: #ffffff; }
+  .t-dark .subtitle { color: rgba(233, 224, 255, 0.82); }
+  .t-dark .author-chip { color: #efe7ff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); }
+  .t-dark .author-chip .dot { background: #c8a8ff; }
+  .t-dark .page-no { color: rgba(233, 224, 255, 0.6); }
+
+  /* ---- LIGHT THEME (warm editorial) ---- */
+  .t-light { background: linear-gradient(150deg, #fbf7f2 0%, #f4ece2 55%, #efe6f5 100%); }
+  .t-light .eyebrow { color: #b06a3a; }
+  .t-light .title { color: #1d1526; }
+  .t-light .subtitle { color: #5b5366; }
+  .t-light .author-chip { color: #3d2a52; background: rgba(176,106,58,0.08); border: 1px solid rgba(176,106,58,0.18); }
+  .t-light .author-chip .dot { background: #b06a3a; }
+  .t-light .page-no { color: #8a7e95; }
+
+  /* light gives every dark motif a tinted counterpart via CSS var --tint */
+  .t-dark  { --tint: #c8a8ff; --tint2: #ff9ed1; --neutral: #ffffff; }
+  .t-light { --tint: #b06a3a; --tint2: #7c5cbf; --neutral: #1d1526; }
+
+  .closing {
+    max-width: 1280px; margin: 56px auto 0; padding: 26px 28px;
+    background: rgba(255,255,255,0.6); border: 1px solid var(--line);
+    border-radius: 16px; font-size: 14px; line-height: 1.65; color: var(--slate);
+  }
+  .closing strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <p class="kicker">Design Table · Title Slide Decoration</p>
+  <h1>Designer 2 — Organic / Atmospheric</h1>
+  <p>Six subtle vector decorations that extend the PM's beloved "light rays" cover energy into a calmer, broader vocabulary: flowing ribbons, topographic contours, an aurora gradient-mesh glow, drifting bokeh, a fine grain wash, and an abstract fluid field. All are pure SVG/CSS, theme-tinted via 1–2 palette colors at 8–18% opacity, sit behind the title, and render independent of the photo toggle. The title always stays the legible hero.</p>
+</div>
+
+<!-- ============ DARK THEME SET ============ -->
+<div class="section-label">Dark theme · violet / purple</div>
+<div class="grid" id="grid-dark"></div>
+
+<!-- ============ LIGHT THEME SET ============ -->
+<div class="section-label">Light theme · warm editorial (same motifs, tinted to palette)</div>
+<div class="grid" id="grid-light"></div>
+
+<div class="closing">
+  <p><strong>How they stay subtle &amp; theme-adaptive:</strong> every motif draws with the theme's tint color (<code>--tint</code> / <code>--tint2</code>) and a neutral (<code>--neutral</code>) at 8–18% opacity, never a hardcoded hue — so the exact same SVG re-tints from violet-on-dark to warm-ochre-on-light with one CSS variable swap, mirroring the <code>currentColor</code> + <code>dark</code> pattern in <code>CoverArt.tsx</code>. Strokes are hairline (0.4–1px), fills sit under 0.18, and all decoration is anchored to edges/corners away from the title block, so it reads as atmosphere behind the words rather than competition with them.</p>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   Each motif is a function returning the inner SVG markup for a 16:9 slide.
+   Coordinates use a 1600×900 viewBox so geometry is resolution-independent.
+   Colors are driven by CSS vars resolved at render via getComputedStyle so
+   the SAME function re-tints per theme — exactly like CoverArt's dark flag.
+--------------------------------------------------------------------------- */
+
+const MOTIFS = [
+  {
+    name: 'Flowing Ribbons',
+    desc: 'layered silk waves, the refined "light rays" successor',
+    svg: (t, n) => `
+      <defs>
+        <linearGradient id="rib-g" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"  stop-color="${t}" stop-opacity="0"/>
+          <stop offset="55%" stop-color="${t}" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="${t}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <g opacity="0.5" fill="none" stroke="url(#rib-g)">
+        ${[0,1,2,3,4,5,6].map(i=>{
+          const y = 120 + i*120;
+          return `<path d="M -40 ${y} C 400 ${y-90}, 1100 ${y+110}, 1640 ${y-40}" stroke-width="${1.4 - i*0.08}"/>`;
+        }).join('')}
+      </g>
+      <g opacity="0.14" fill="${t}">
+        <path d="M 900 0 C 1100 200, 1300 260, 1640 180 L 1640 0 Z"/>
+        <path d="M 1640 900 C 1300 760, 1100 880, 980 900 Z"/>
+      </g>`
+  },
+  {
+    name: 'Topographic Contours',
+    desc: 'nested elevation rings drifting off the right edge',
+    svg: (t, n) => {
+      const rings = [];
+      for (let i = 0; i < 9; i++) {
+        const r = 110 + i * 78;
+        rings.push(`<circle cx="1520" cy="640" r="${r}" fill="none" stroke="${t}" stroke-width="${i%2? 0.7:1.1}" stroke-opacity="${0.42 - i*0.03}"/>`);
+      }
+      return `<g>${rings.join('')}
+        <circle cx="1520" cy="640" r="46" fill="${t}" opacity="0.12"/>
+      </g>`;
+    }
+  },
+  {
+    name: 'Aurora Gradient Mesh',
+    desc: 'soft overlapping glows, blurred light fields',
+    svg: (t, t2) => `
+      <defs>
+        <radialGradient id="aur-1" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stop-color="${t}"  stop-opacity="0.50"/>
+          <stop offset="100%" stop-color="${t}" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="aur-2" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stop-color="${t2}" stop-opacity="0.42"/>
+          <stop offset="100%" stop-color="${t2}" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="aur-blur"><feGaussianBlur stdDeviation="34"/></filter>
+      </defs>
+      <g filter="url(#aur-blur)" opacity="0.85">
+        <ellipse cx="1280" cy="220" rx="520" ry="300" fill="url(#aur-1)"/>
+        <ellipse cx="1480" cy="760" rx="420" ry="280" fill="url(#aur-2)"/>
+        <ellipse cx="320"  cy="780" rx="380" ry="240" fill="url(#aur-1)" opacity="0.6"/>
+      </g>`
+  },
+  {
+    name: 'Drifting Bokeh',
+    desc: 'scattered soft orbs at varied depth & blur',
+    svg: (t, t2) => {
+      const orbs = [
+        [1300,180,90,0.10,t],[1480,360,52,0.14,t2],[1180,520,34,0.12,t],
+        [1540,640,120,0.07,t],[1010,250,22,0.16,t2],[1350,720,46,0.10,t],
+        [1230,90,28,0.13,t2],[1560,200,40,0.09,t],[1100,780,60,0.08,t2],
+        [880,640,24,0.12,t],[1430,520,18,0.18,t2],[1000,560,14,0.16,t]
+      ];
+      return `<defs><filter id="bok-soft"><feGaussianBlur stdDeviation="3"/></filter></defs>
+        <g filter="url(#bok-soft)">
+          ${orbs.map(([x,y,r,o,c],i)=>`
+            <circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity="${o}"/>
+            ${i%3===0?`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${c}" stroke-opacity="${o+0.06}" stroke-width="1"/>`:''}
+          `).join('')}
+        </g>`;
+    }
+  },
+  {
+    name: 'Grain Wash',
+    desc: 'fine fractal noise veil + faint vignette',
+    svg: (t, n) => `
+      <defs>
+        <filter id="grain-f">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0"/>
+        </filter>
+        <radialGradient id="grain-vig" cx="0.5" cy="0.42" r="0.75">
+          <stop offset="55%" stop-color="${t}" stop-opacity="0"/>
+          <stop offset="100%" stop-color="${t}" stop-opacity="0.14"/>
+        </radialGradient>
+      </defs>
+      <rect x="0" y="0" width="1600" height="900" fill="url(#grain-vig)"/>
+      <rect x="0" y="0" width="1600" height="900" filter="url(#grain-f)" opacity="0.10"/>
+      <g opacity="0.3" stroke="${t}" stroke-width="1">
+        <line x1="120" y1="120" x2="120" y2="180"/><line x1="120" y1="120" x2="180" y2="120"/>
+        <line x1="1480" y1="780" x2="1480" y2="720"/><line x1="1480" y1="780" x2="1420" y2="780"/>
+      </g>`
+  },
+  {
+    name: 'Fluid Field',
+    desc: 'organic blob morphing off-canvas, hand-drawn calm',
+    svg: (t, t2) => `
+      <defs>
+        <linearGradient id="flu-g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${t}"  stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="${t2}" stop-opacity="0.06"/>
+        </linearGradient>
+        <filter id="flu-soft"><feGaussianBlur stdDeviation="6"/></filter>
+      </defs>
+      <g filter="url(#flu-soft)">
+        <path d="M 1180 -60 C 1460 60, 1560 300, 1440 480 C 1340 640, 1520 760, 1660 700 L 1700 -100 Z"
+              fill="url(#flu-g)"/>
+      </g>
+      <path d="M 1180 40 C 1380 140, 1460 340, 1380 500 C 1320 620, 1440 740, 1560 740"
+            fill="none" stroke="${t}" stroke-opacity="0.22" stroke-width="1.2"/>
+      <path d="M 1260 0 C 1440 120, 1500 320, 1420 470"
+            fill="none" stroke="${t2}" stroke-opacity="0.18" stroke-width="0.9"/>`
+  }
+];
+
+const CONTENT = `
+  <div class="slide-content">
+    <p class="eyebrow">A Presentation · Q1 2026</p>
+    <h2 class="title">Strategic <em>Review</em> &amp; Forward Plan</h2>
+    <p class="subtitle">Where we stand, what we've learned, and the three bets we are making this quarter.</p>
+  </div>
+  <div class="slide-foot">
+    <span class="author-chip"><span class="dot"></span>LISA CAUDILLO</span>
+    <span class="page-no">01 / 14</span>
+  </div>`;
+
+function buildGrid(targetId, themeClass) {
+  const grid = document.getElementById(targetId);
+  // probe theme colors from a temp element
+  const probe = document.createElement('div');
+  probe.className = themeClass;
+  document.body.appendChild(probe);
+  const cs = getComputedStyle(probe);
+  const tint  = cs.getPropertyValue('--tint').trim();
+  const tint2 = cs.getPropertyValue('--tint2').trim();
+  const neutral = cs.getPropertyValue('--neutral').trim();
+  document.body.removeChild(probe);
+
+  MOTIFS.forEach((m, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'card-wrap';
+    wrap.innerHTML = `
+      <div class="card-meta">
+        <span class="num">${String(i+1).padStart(2,'0')}</span>
+        <span class="name">${m.name}</span>
+        <span class="desc">— ${m.desc}</span>
+      </div>
+      <div class="slide ${themeClass}">
+        <div class="deco">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+            ${m.svg(tint, tint2 || neutral)}
+          </svg>
+        </div>
+        ${CONTENT}
+      </div>`;
+    grid.appendChild(wrap);
+  });
+}
+
+buildGrid('grid-dark', 't-dark');
+buildGrid('grid-light', 't-light');
+</script>
+</body>
+</html>

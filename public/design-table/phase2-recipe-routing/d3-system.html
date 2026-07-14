@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Compose · Recipe→Layout Routing · D3 System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     DESIGN SYSTEM TOKENS — single source of truth
+     ============================================================ */
+  :root {
+    /* palette (FIXED) */
+    --page:    #FFFFFF;
+    --title:   #14142B;
+    --body:    #45495E;
+    --accent:  #6B3FA0;   /* primary */
+    --accent2: #818cf8;   /* secondary */
+
+    /* tints derived from palette only */
+    --accent-08: rgba(107,63,160,0.08);
+    --accent-14: rgba(107,63,160,0.14);
+    --accent2-10: rgba(129,140,248,0.10);
+    --hair:    rgba(20,20,43,0.10);
+    --hair-strong: rgba(20,20,43,0.16);
+    --body-60: rgba(69,73,94,0.62);
+
+    /* ---- THE GRID (applied to every slide) ----
+       Slide canvas: 960 × 540.
+       Margins:  M = 64px L/R/T/B  → safe area 64–896 (x), 64–476 (y) = 832×412.
+       Columns:  12 cols, gutter 24px.
+         col width = (832 - 11*24) / 12 = 47.33px
+       Vertical rhythm: 12px base unit. */
+    --M: 64px;          /* uniform margin */
+    --safe-w: 832px;    /* 960 - 2*64 */
+    --safe-h: 412px;    /* 540 - 2*64 */
+    --gutter: 24px;
+    --u: 12px;          /* vertical rhythm unit */
+
+    /* type scale */
+    --t-cover:  72px;
+    --t-h1:     34px;
+    --t-h2:     27px;
+    --t-stat:   56px;
+    --t-quote:  38px;
+    --t-body:   17px;
+    --t-sm:     14px;
+    --t-label:  11px;   /* eyebrows / step index */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #EEF0F4;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--body);
+    padding: 40px 0 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .deck-title {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--title);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .deck-sub { font-size: 13px; color: var(--body-60); margin-bottom: 28px; }
+
+  .caption {
+    width: 960px;
+    font-family: 'Inter', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    text-transform: none;
+    margin: 22px 0 8px;
+  }
+  .caption .geom { color: var(--body-60); font-weight: 500; }
+
+  /* ============================================================
+     SLIDE SHELL — the universal frame.
+     Every slide = .slide (960×540) → .safe (the 64px-margin content box).
+     ============================================================ */
+  .slide {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    background: var(--page);
+    overflow: hidden;
+    box-shadow: 0 1px 0 var(--hair), 0 18px 40px -24px rgba(20,20,43,0.30);
+    border-radius: 4px;
+  }
+  .safe {
+    position: absolute;
+    inset: var(--M);            /* 64px all sides → the shared grid box */
+    /* debug grid optional via .show-grid on body */
+  }
+
+  /* ---- PRIMITIVE: title-block (eyebrow + heading [+ subhead]) ---- */
+  .pb-title .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pb-title .eyebrow::before {
+    content: "";
+    width: 18px; height: 2px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .pb-title h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--t-h1);
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--title);
+    letter-spacing: -0.01em;
+  }
+  .pb-title .subhead {
+    font-size: var(--t-body);
+    color: var(--body);
+    margin-top: 12px;
+    max-width: 640px;
+    line-height: 1.5;
+  }
+
+  /* ---- PRIMITIVE: stat-cell ---- */
+  .stat-cell .num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--t-stat);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-cell .lbl {
+    font-size: var(--t-sm);
+    color: var(--body);
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+  .stat-cell .rule {
+    width: 32px; height: 3px; background: var(--accent2);
+    margin-top: 14px; border-radius: 2px;
+  }
+
+  /* ---- PRIMITIVE: step-node ---- */
+  .step-node .idx {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent-14);
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .step-node .st-h {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 600; color: var(--title);
+    margin-bottom: 6px;
+  }
+  .step-node .st-b { font-size: var(--t-sm); color: var(--body); line-height: 1.45; }
+
+  /* ---- PRIMITIVE: image-block (CSS placeholder) ---- */
+  .img-block {
+    position: relative;
+    background:
+      linear-gradient(135deg, var(--accent-14), var(--accent2-10)),
+      repeating-linear-gradient(45deg, rgba(20,20,43,0.03) 0 14px, transparent 14px 28px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .img-block::after {
+    content: "image";
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(20,20,43,0.34);
+  }
+  /* scrim + forced-light treatment for text-on-image */
+  .img-block.scrim::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(20,20,43,0.62) 0%, rgba(20,20,43,0.30) 55%, rgba(20,20,43,0) 100%);
+  }
+
+  /* ============================================================
+     RECIPE GEOMETRIES — each = a deterministic region map.
+     Coordinates expressed inside .safe (0–832 x, 0–412 y) unless
+     noted as full-canvas (0–960 / 0–540).
+     ============================================================ */
+
+  /* S1 cover-editorial: full-canvas type. Text safe-zone LEFT.
+     accent rule + title block anchored to left margin, vertically centered. */
+  .r-cover .safe { display: flex; flex-direction: column; justify-content: center; }
+  .r-cover .ttl {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--t-cover); font-weight: 700; color: var(--title);
+    line-height: 0.98; letter-spacing: -0.03em;
+  }
+  .r-cover .sub {
+    font-size: 20px; color: var(--body); margin-top: 18px; max-width: 520px; line-height: 1.45;
+  }
+  .r-cover .eyebrow {
+    font-size: var(--t-label); font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+  }
+  .r-cover .corner-rule {
+    position: absolute; left: var(--M); bottom: var(--M);
+    width: 120px; height: 4px; background: var(--accent);
+  }
+
+  /* S2 top-band: image strip 0–28% height (full width), content region below. */
+  .r-topband .band {
+    position: absolute; top: 0; left: 0; right: 0; height: 151px; /* 28% of 540 */
+  }
+  .r-topband .content {
+    position: absolute; left: var(--M); right: var(--M); top: 187px; bottom: var(--M);
+  }
+  .r-topband h1 {
+    font-family: 'Space Grotesk', sans-serif; font-size: var(--t-h1);
+    color: var(--title); font-weight: 700; line-height: 1.1; max-width: 620px;
+  }
+  .r-topband p { font-size: var(--t-body); color: var(--body); margin-top: 16px; max-width: 620px; line-height: 1.55; }
+
+  /* S3 pull-quote: full-canvas, centered. Quote 12–88% width, centered block. */
+  .r-quote .safe { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .r-quote .mark { font-family: 'Space Grotesk', sans-serif; font-size: 64px; color: var(--accent-14); line-height: 0.6; margin-bottom: 4px; color: var(--accent); opacity: 0.22; }
+  .r-quote blockquote {
+    font-family: 'Space Grotesk', sans-serif; font-size: var(--t-quote);
+    color: var(--title); font-weight: 600; line-height: 1.28; max-width: 720px; letter-spacing: -0.01em;
+  }
+  .r-quote .attr { font-size: var(--t-sm); color: var(--body-60); margin-top: 24px; font-weight: 500; }
+  .r-quote .attr::before { content: ""; display:inline-block; width: 24px; height: 2px; background: var(--accent2); vertical-align: middle; margin-right: 10px; }
+
+  /* S4 stat-trio: title-block top (0–~30%), 3 equal cells row below.
+     each cell = 4 cols. gutters = 24. */
+  .r-trio .safe { display: flex; flex-direction: column; }
+  .r-trio .row { display: flex; gap: var(--gutter); margin-top: auto; }
+  .r-trio .stat-cell { flex: 1; padding-top: 8px; border-top: 1px solid var(--hair); }
+
+  /* S5 compare-2col: title-block top, two columns split at 50% (gutter centered),
+     vertical divider on axis. */
+  .r-compare .safe { display: flex; flex-direction: column; }
+  .r-compare .cols { display: flex; gap: 0; margin-top: 24px; flex: 1; position: relative; }
+  .r-compare .col { flex: 1; padding-top: 6px; }
+  .r-compare .col.left { padding-right: 40px; }
+  .r-compare .col.right { padding-left: 40px; }
+  .r-compare .divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--hair-strong); }
+  .r-compare .col-tag {
+    font-size: var(--t-label); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 16px; display: inline-block;
+  }
+  .r-compare .col.left .col-tag { color: var(--body-60); }
+  .r-compare .col.right .col-tag { color: var(--accent); }
+  .r-compare ul { list-style: none; }
+  .r-compare li {
+    font-size: var(--t-body); color: var(--body); padding: 12px 0; line-height: 1.4;
+    border-bottom: 1px solid var(--hair); display: flex; align-items: baseline; gap: 10px;
+  }
+  .r-compare li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .r-compare .col.left li::before { background: var(--body-60); }
+  .r-compare .col.right li::before { background: var(--accent); }
+
+  /* S6 process-row: title-block top, 4 step-nodes in a row, connector line.
+     each node = 3 cols. */
+  .r-process .safe { display: flex; flex-direction: column; }
+  .r-process .track { display: flex; gap: var(--gutter); margin-top: auto; position: relative; }
+  .r-process .step-node { flex: 1; position: relative; }
+  .r-process .track::before {
+    content: ""; position: absolute; left: 15px; right: 15px; top: 15px;
+    height: 2px; background: var(--accent-14); z-index: 0;
+  }
+  .r-process .step-node > * { position: relative; z-index: 1; }
+
+  /* S7 split-image: image 0–46% width (full height), text 52–100% (safe-padded).
+     text region = ONE idea + ≤3 points. */
+  .r-split .img-block { position: absolute; left: 0; top: 0; bottom: 0; width: 442px; } /* 46% of 960 */
+  .r-split .text {
+    position: absolute; left: 500px; right: var(--M); top: var(--M); bottom: var(--M);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .r-split h1 { font-family:'Space Grotesk',sans-serif; font-size: var(--t-h2); color: var(--title); font-weight: 700; line-height: 1.15; }
+  .r-split .lede { font-size: var(--t-body); color: var(--body); margin-top: 16px; line-height: 1.55; }
+  .r-split .pts { list-style: none; margin-top: 20px; }
+  .r-split .pts li { font-size: var(--t-sm); color: var(--body); padding: 8px 0; display: flex; gap: 10px; align-items: baseline; }
+  .r-split .pts li::before { content: ""; width: 7px; height: 7px; background: var(--accent2); border-radius: 2px; flex: none; transform: translateY(4px); }
+
+  /* S8 stat-grid: title-block top, 2×2 cells. each cell = 6 cols / 2 rows. */
+  .r-grid .safe { display: flex; flex-direction: column; }
+  .r-grid .matrix { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0; margin-top: 20px; flex: 1; }
+  .r-grid .stat-cell { padding: 22px 24px; border-top: 1px solid var(--hair); border-left: 1px solid var(--hair); display: flex; flex-direction: column; justify-content: center; }
+  .r-grid .stat-cell:nth-child(odd) { border-left: none; padding-left: 0; }
+  .r-grid .stat-cell:nth-child(1), .r-grid .stat-cell:nth-child(2) { border-top: none; }
+</style>
+</head>
+<body>
+
+  <div class="deck-title">Pulse · recipe→layout routing (D3 — system / spec lens)</div>
+  <div class="deck-sub">One grid (64px margins · 12 cols · 24px gutters · 12px rhythm). Each slide = a deterministic region map built from 5 primitives.</div>
+
+  <!-- ===================== S1 ===================== -->
+  <div class="caption">S1 · cover-editorial <span class="geom">— full-canvas type · text-block anchored left, vertical-center · primitive: title-block(XL)</span></div>
+  <div class="slide r-cover">
+    <div class="safe">
+      <div class="eyebrow">Pulse</div>
+      <div class="ttl">Pulse</div>
+      <div class="sub">Real-time analytics for operations teams</div>
+    </div>
+    <div class="corner-rule"></div>
+  </div>
+
+  <!-- ===================== S2 ===================== -->
+  <div class="caption">S2 · top-band <span class="geom">— image band y 0–28% (full-w) · content below, safe-margins · primitives: image-block, title-block</span></div>
+  <div class="slide r-topband">
+    <div class="band img-block"></div>
+    <div class="content">
+      <h1>Reports are always a step behind</h1>
+      <p>Ops teams act on data that's already six days old. The decision window closes before the numbers arrive.</p>
+    </div>
+  </div>
+
+  <!-- ===================== S3 ===================== -->
+  <div class="caption">S3 · pull-quote <span class="geom">— full-canvas centered · quote ≤720px, vertical+horizontal center · primitive: quote-block</span></div>
+  <div class="slide r-quote">
+    <div class="safe">
+      <div class="mark">&ldquo;</div>
+      <blockquote>By the time the report lands, the moment's already gone.</blockquote>
+      <div class="attr">Head of Ops, pilot customer</div>
+    </div>
+  </div>
+
+  <!-- ===================== S4 ===================== -->
+  <div class="caption">S4 · stat-trio <span class="geom">— title-block top · 3 equal cells (4 cols each) on baseline row · primitives: title-block, stat-cell ×3</span></div>
+  <div class="slide r-trio">
+    <div class="safe">
+      <div class="pb-title">
+        <div class="eyebrow">By the numbers</div>
+        <h1>What live data changes</h1>
+      </div>
+      <div class="row">
+        <div class="stat-cell"><div class="num">6d&rarr;30s</div><div class="lbl">data latency</div><div class="rule"></div></div>
+        <div class="stat-cell"><div class="num">3&times;</div><div class="lbl">faster incident response</div><div class="rule"></div></div>
+        <div class="stat-cell"><div class="num">92%</div><div class="lbl">of pilot teams check daily</div><div class="rule"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== S5 ===================== -->
+  <div class="caption">S5 · compare-2col <span class="geom">— title-block top · split 50/50 with centered divider · primitives: title-block, region-split(2)</span></div>
+  <div class="slide r-compare">
+    <div class="safe">
+      <div class="pb-title"><h1>Before vs. with Pulse</h1></div>
+      <div class="cols">
+        <div class="divider"></div>
+        <div class="col left">
+          <span class="col-tag">Before</span>
+          <ul>
+            <li>Weekly static reports</li>
+            <li>Manual CSV exports</li>
+            <li>Siloed dashboards</li>
+          </ul>
+        </div>
+        <div class="col right">
+          <span class="col-tag">With Pulse</span>
+          <ul>
+            <li>Live streaming metrics</li>
+            <li>Automatic alerts</li>
+            <li>One shared view</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== S6 ===================== -->
+  <div class="caption">S6 · process-row <span class="geom">— title-block top · 4 step-nodes (3 cols each) on connector track · primitives: title-block, step-node ×4</span></div>
+  <div class="slide r-process">
+    <div class="safe">
+      <div class="pb-title"><h1>How it works</h1></div>
+      <div class="track">
+        <div class="step-node"><div class="idx">1</div><div class="st-h">Connect</div><div class="st-b">Link your sources in minutes.</div></div>
+        <div class="step-node"><div class="idx">2</div><div class="st-h">Stream</div><div class="st-b">Metrics flow in continuously.</div></div>
+        <div class="step-node"><div class="idx">3</div><div class="st-h">Detect</div><div class="st-b">Anomalies surface automatically.</div></div>
+        <div class="step-node"><div class="idx">4</div><div class="st-h">Alert</div><div class="st-b">The right person gets paged.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== S7 ===================== -->
+  <div class="caption">S7 · split-image <span class="geom">— image x 0–46% (full-h) · text x 52–100% safe-padded, vertical-center · primitives: image-block, title-block, ≤3 points</span></div>
+  <div class="slide r-split">
+    <div class="img-block"></div>
+    <div class="text">
+      <h1>Anomaly detection that pages you first</h1>
+      <div class="lede">Pulse watches every metric and escalates the one that matters &mdash; before your customers notice.</div>
+      <ul class="pts">
+        <li>Watches every metric, continuously</li>
+        <li>Escalates only what matters</li>
+        <li>Beats the customer to the issue</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===================== S8 ===================== -->
+  <div class="caption">S8 · stat-grid <span class="geom">— title-block top · 2×2 matrix (6 cols × 2 rows) · primitives: title-block, stat-cell ×4</span></div>
+  <div class="slide r-grid">
+    <div class="safe">
+      <div class="pb-title"><div class="eyebrow">Roadmap</div><h1>Launching June 15</h1></div>
+      <div class="matrix">
+        <div class="stat-cell"><div class="num">12</div><div class="lbl">data sources</div></div>
+        <div class="stat-cell"><div class="num">&lt;30s</div><div class="lbl">latency</div></div>
+        <div class="stat-cell"><div class="num">SOC2</div><div class="lbl">compliant</div></div>
+        <div class="stat-cell"><div class="num">40</div><div class="lbl">design partners</div></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

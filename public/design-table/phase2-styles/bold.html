@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>STYLE · Bold — Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Archivo+Expanded:wght@600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     STYLE · BOLD / EXPRESSIVE — creative-agency keynote.
+       Layout GEOMETRY is constant (region positions inherited from
+       manager-composite): cover anchored left vertical-center with
+       a right panel; stat-trio = 3 cells on a baseline row; pull-quote
+       = centered full-bleed. Only the SKIN changes:
+         • saturated color blocking — hot coral on deep ink + off-white
+         • full-bleed color fields, type-as-graphic, type that bleeds
+         • Archivo black/expanded oversized display
+         • enormous numerals knocked out of color blocks
+     ============================================================ */
+  :root{
+    /* palette (FIXED — Bold) */
+    --hot:#FF4D6D;        /* electric coral — the loud primary */
+    --ink:#161118;        /* deep near-black */
+    --paper:#FFF7F2;      /* warm off-white */
+    --ink-70:rgba(22,17,24,.70);
+    --ink-45:rgba(22,17,24,.45);
+    --paper-70:rgba(255,247,242,.70);
+    --paper-55:rgba(255,247,242,.55);
+
+    /* grid (inherited geometry) */
+    --M:64px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#0d0a0f;
+    font-family:'Archivo',system-ui,sans-serif;
+    color:var(--ink);
+    padding:0 0 96px;
+    display:flex;flex-direction:column;align-items:center;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---- BANNER HEADER ---- */
+  .banner{
+    width:100%;background:var(--hot);
+    padding:30px 0;margin-bottom:44px;
+    display:flex;flex-direction:column;align-items:center;
+    border-bottom:6px solid var(--ink);
+  }
+  .banner .tag{
+    font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:900;
+    font-size:46px;letter-spacing:-.01em;color:var(--ink);text-transform:uppercase;
+    line-height:.9;
+  }
+  .banner .tag .dot{color:var(--paper);}
+  .banner .sub{
+    font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
+    letter-spacing:.34em;text-transform:uppercase;color:var(--ink);
+    opacity:.7;margin-top:10px;
+  }
+
+  /* ---- CAPTION LABEL (above each frame) ---- */
+  .cap{
+    width:960px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--hot);margin:38px 0 12px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .cap::before{content:"";width:26px;height:4px;background:var(--hot);flex:none;}
+  .cap .geom{color:var(--paper-55);font-weight:500;letter-spacing:.05em;text-transform:none;}
+
+  /* ============================================================
+     SLIDE SHELL — 960×540, hard edges (no soft shadows — Bold).
+     ============================================================ */
+  .slide{
+    position:relative;width:960px;height:540px;overflow:hidden;
+    background:var(--paper);
+    box-shadow:0 0 0 5px var(--ink), 0 30px 60px -30px rgba(0,0,0,.9);
+  }
+
+  /* ============================================================
+     S1 — COVER-EDITORIAL  (geometry: title anchored left,
+     vertical-center; accent panel on the right)
+     SKIN: poster. "Pulse" bleeds off the left edge in Archivo black,
+     huge. Right panel = solid hot color field with knocked-out wordmark.
+     ============================================================ */
+  .r-cover{display:grid;grid-template-columns:1fr 340px;background:var(--ink);}
+  .r-cover .left{
+    position:relative;padding:var(--M) 0 var(--M) var(--M);
+    display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+  }
+  .r-cover .eyebrow{
+    font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;
+    letter-spacing:.28em;text-transform:uppercase;color:var(--hot);margin-bottom:18px;
+  }
+  .r-cover .ttl{
+    font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:900;
+    font-size:230px;line-height:.82;letter-spacing:-.05em;
+    color:var(--paper);text-transform:uppercase;
+    margin-left:-8px;        /* bleed toward the left edge */
+  }
+  .r-cover .ttl em{font-style:normal;color:var(--hot);}
+  .r-cover .sub{
+    font-size:22px;line-height:1.35;color:var(--paper-70);max-width:430px;
+    margin-top:24px;font-weight:600;
+  }
+  /* oversized ghost glyph bleeding behind, type-as-graphic */
+  .r-cover .ghost{
+    position:absolute;right:-40px;bottom:-130px;
+    font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:900;
+    font-size:340px;line-height:1;color:rgba(255,77,109,.10);
+    pointer-events:none;user-select:none;
+  }
+  .r-cover .panel{position:relative;background:var(--hot);overflow:hidden;}
+  /* big knocked-out vertical wordmark in the color field */
+  .r-cover .panel .stamp{
+    position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%) rotate(-90deg);transform-origin:center;
+    font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:900;
+    font-size:90px;letter-spacing:.04em;color:var(--ink);text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .r-cover .panel .ring{
+    position:absolute;width:520px;height:520px;border:30px solid var(--ink);
+    border-radius:50%;right:-280px;top:-160px;opacity:.18;
+  }
+
+  /* ============================================================
+     S2 — STAT-TRIO  (geometry: title-block top; 3 equal cells on a
+     baseline row)  SKIN: full-bleed ink field; ENORMOUS numerals,
+     each cell a hard color block, knocked-out scale contrast.
+     ============================================================ */
+  .r-trio{background:var(--ink);display:flex;flex-direction:column;}
+  .r-trio .head{
+    padding:46px var(--M) 0;display:flex;flex-direction:column;
+  }
+  .r-trio .eyebrow{
+    font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;
+    letter-spacing:.26em;text-transform:uppercase;color:var(--hot);margin-bottom:12px;
+  }
+  .r-trio h1{
+    font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:900;
+    font-size:58px;line-height:.9;letter-spacing:-.03em;
+    color:var(--paper);text-transform:uppercase;
+  }
+  .r-trio .row{display:flex;flex:1;margin-top:34px;}
+  .r-trio .cell{
+    flex:1;position:relative;padding:34px 30px 30px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    border-top:5px solid var(--paper);
+  }
+  /* alternating hard color blocks */
+  .r-trio .cell:nth-child(1){background:var(--hot);}
+  .r-trio .cell:nth-child(2){background:var(--paper);}
+  .r-trio .cell:nth-child(3){background:var(--hot);}
+  .r-trio .num{
+    font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:900;
+    font-size:96px;line-height:.82;letter-spacing:-.05em;
+  }
+  /* knocked-out: number color is the field's contrast */
+  .r-trio .cell:nth-child(1) .num,
+  .r-trio .cell:nth-child(3) .num{color:var(--ink);}
+  .r-trio .cell:nth-child(2) .num{color:var(--hot);}
+  .r-trio .num .small{font-size:46px;letter-spacing:-.03em;}
+  .r-trio .num .arr{
+    display:block;font-family:'Archivo','sans-serif';font-weight:800;
+    font-size:40px;line-height:1;margin-bottom:2px;
+  }
+  .r-trio .lbl{
+    margin-top:18px;font-size:16px;font-weight:700;line-height:1.25;
+    letter-spacing:.01em;max-width:215px;text-transform:uppercase;
+  }
+  .r-trio .cell:nth-child(1) .lbl,
+  .r-trio .cell:nth-child(3) .lbl{color:rgba(22,17,24,.75);}
+  .r-trio .cell:nth-child(2) .lbl{color:var(--ink-70);}
+
+  /* ============================================================
+     S3 — PULL-QUOTE  (geometry: centered full-bleed)
+     SKIN: hot coral full-bleed field, oversized ink quote that bleeds,
+     type-as-graphic giant quotation mark.
+     ============================================================ */
+  .r-quote{background:var(--hot);}
+  .r-quote .frame{
+    position:absolute;inset:28px;border:5px solid var(--ink);
+    pointer-events:none;
+  }
+  .r-quote .inner{
+    position:absolute;inset:0;padding:0 92px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .r-quote .mark{
+    font-family:'Archivo','sans-serif';font-weight:900;
+    font-size:300px;line-height:.42;color:var(--ink);opacity:.16;
+    margin-bottom:-30px;margin-left:-14px;
+  }
+  .r-quote blockquote{
+    font-family:'Archivo','sans-serif';font-weight:800;font-style:italic;
+    font-size:58px;line-height:1.02;letter-spacing:-.03em;
+    color:var(--ink);max-width:780px;
+  }
+  .r-quote .attr{
+    margin-top:34px;font-family:'Space Grotesk',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink);display:inline-flex;align-items:center;gap:14px;
+  }
+  .r-quote .attr::before{content:"";width:46px;height:5px;background:var(--ink);}
+
+  /* footer note */
+  .foot{
+    width:960px;margin-top:42px;
+    font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--paper-55);
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===================== BANNER ===================== -->
+  <div class="banner">
+    <div class="tag">Style<span class="dot"> · </span>Bold</div>
+    <div class="sub">Pulse — creative-agency keynote</div>
+  </div>
+
+  <!-- ===================== S1 ===================== -->
+  <div class="cap">S1 · cover-editorial <span class="geom">— title anchored left, vertical-center · accent panel right</span></div>
+  <div class="slide r-cover">
+    <div class="left">
+      <div class="eyebrow">Real-time operations intelligence</div>
+      <div class="ttl">Pul<em>s</em>e</div>
+      <div class="sub">Real-time analytics for operations teams.</div>
+      <div class="ghost">P</div>
+    </div>
+    <div class="panel">
+      <div class="ring"></div>
+      <div class="stamp">Live data</div>
+    </div>
+  </div>
+
+  <!-- ===================== S2 ===================== -->
+  <div class="cap">S2 · stat-trio <span class="geom">— title-block top · 3 cells on a baseline row · enormous knocked-out numerals</span></div>
+  <div class="slide r-trio">
+    <div class="head">
+      <div class="eyebrow">By the numbers</div>
+      <h1>What live data changes</h1>
+    </div>
+    <div class="row">
+      <div class="cell">
+        <div class="num"><span class="small">6 days</span><span class="arr">&darr;</span>30s</div>
+        <div class="lbl">Data latency, report to live stream</div>
+      </div>
+      <div class="cell">
+        <div class="num">3&times;</div>
+        <div class="lbl">Faster incident response</div>
+      </div>
+      <div class="cell">
+        <div class="num">92<span class="small">%</span></div>
+        <div class="lbl">Of pilot teams check daily</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== S3 ===================== -->
+  <div class="cap">S3 · pull-quote <span class="geom">— centered full-bleed · oversized ink quote on a hot field</span></div>
+  <div class="slide r-quote">
+    <div class="frame"></div>
+    <div class="inner">
+      <div class="mark">&ldquo;</div>
+      <blockquote>By the time the report lands, the moment&rsquo;s already gone.</blockquote>
+      <div class="attr">Head of Ops, pilot customer</div>
+    </div>
+  </div>
+
+  <div class="foot">Bold — saturated color blocking · oversized Archivo display · type-as-graphic</div>
+
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Designer 3 — Editorial / Minimal Title Decorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* dark editorial — violet/purple per the reference */
+    --d-bg-1: #1a1233;
+    --d-bg-2: #2a1a4f;
+    --d-bg-3: #3b2470;
+    --d-accent: #c8a8ff;      /* lilac tint */
+    --d-ink: #ffffff;
+    --d-muted: rgba(255,255,255,0.62);
+
+    /* light editorial — warm paper / slate */
+    --l-bg-1: #f7f5f0;
+    --l-bg-2: #efebe2;
+    --l-accent: #6b3fa0;      /* Foxit purple */
+    --l-ink: #1a1530;
+    --l-muted: rgba(26,21,48,0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #ece8f4;
+    color: #2a2440;
+    padding: 56px 48px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-head { max-width: 1320px; margin: 0 auto 40px; }
+  .page-head h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    color: #20183a;
+  }
+  .page-head p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #5a5270;
+    max-width: 740px;
+    margin: 0;
+  }
+  .page-head .meta {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a7fb0;
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+
+  .theme-band { max-width: 1320px; margin: 0 auto; }
+  .theme-band + .theme-band { margin-top: 56px; }
+  .theme-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6f6493;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theme-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(111,100,147,0.35), transparent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 740px)  { .grid { grid-template-columns: 1fr; } }
+
+  .cell { display: flex; flex-direction: column; gap: 10px; }
+  .cell .caption {
+    font-size: 12px;
+    color: #5a5270;
+    line-height: 1.45;
+  }
+  .cell .caption b {
+    color: #2a2440;
+    font-weight: 600;
+    display: block;
+    font-size: 12.5px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ---- the slide ---- */
+  .slide {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px -20px rgba(30,18,60,0.5), 0 2px 8px -4px rgba(30,18,60,0.3);
+  }
+  .slide.dark {
+    background:
+      radial-gradient(120% 130% at 78% 12%, var(--d-bg-3) 0%, var(--d-bg-2) 42%, var(--d-bg-1) 100%);
+    --ink: var(--d-ink);
+    --muted: var(--d-muted);
+    --accent: var(--d-accent);
+  }
+  .slide.light {
+    background:
+      radial-gradient(120% 130% at 82% 8%, #ffffff 0%, var(--l-bg-1) 46%, var(--l-bg-2) 100%);
+    --ink: var(--l-ink);
+    --muted: var(--l-muted);
+    --accent: var(--l-accent);
+  }
+
+  /* base diagonal light rays — present on every cover, very subtle, echoes the reference */
+  .rays { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; }
+
+  .decor { position: absolute; inset: 0; pointer-events: none; }
+
+  /* ---- title content (hero) ---- */
+  .content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 8.5% 9% 7.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .eyebrow {
+    font-size: clamp(8px, 1.15vw, 11px);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 4.5%;
+  }
+  .title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    font-size: clamp(20px, 3.05vw, 36px);
+    margin: 0 0 4%;
+    max-width: 86%;
+  }
+  .title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(9px, 1.18vw, 12.5px);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 62%;
+    margin: 0;
+  }
+  .footer {
+    position: absolute;
+    left: 9%; right: 9%; bottom: 7%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .author {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(7px, 0.95vw, 10px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .author .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  .page-num {
+    font-family: 'Inter', sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(7px, 0.95vw, 10px);
+    letter-spacing: 0.14em;
+    font-weight: 500;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <p class="meta">Design Table · Title / Cover Decorations · Designer 3</p>
+  <h1>Editorial &amp; Minimal</h1>
+  <p>Six restrained, premium-print decorations for title slides. Each is pure vector (SVG/CSS), theme-tinted through 1–2 palette colors at low opacity, and decorative-only (pointer-events: none). The title stays the hero; the decoration is an accent in a field of negative space. All six render independent of the photo toggle, and adapt to dark and light themes via a single <code>currentColor</code>-style ink token.</p>
+</div>
+
+<!-- =================== DARK THEME BAND =================== -->
+<div class="theme-band">
+  <p class="theme-label">Dark theme — violet / purple</p>
+  <div class="grid" id="grid-dark"></div>
+</div>
+
+<!-- =================== LIGHT THEME BAND =================== -->
+<div class="theme-band">
+  <p class="theme-label">Light theme — warm paper / slate</p>
+  <div class="grid" id="grid-light"></div>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * Shared title content — identical on every card.
+ * ------------------------------------------------------------------ */
+const CONTENT = `
+  <div class="content">
+    <p class="eyebrow">A Presentation · Q1 2026</p>
+    <h2 class="title">Strategic <em>Review</em> &amp; Forward Plan</h2>
+    <p class="subtitle">Where we stand, what we&rsquo;ve learned, and the three bets we are making this quarter.</p>
+  </div>
+  <div class="footer">
+    <span class="author"><span class="dot"></span>Lisa Caudillo</span>
+    <span class="page-num">01 / 14</span>
+  </div>
+`;
+
+/* Base diagonal light rays — subtle, on every cover (echoes the reference). */
+function rays(ink) {
+  return `
+  <svg class="rays" viewBox="0 0 320 180" preserveAspectRatio="xMaxYMin slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="ray-g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${ink}" stop-opacity="0.14"/>
+        <stop offset="100%" stop-color="${ink}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <g stroke="url(#ray-g)" stroke-width="0.6">
+      <line x1="190" y1="-20" x2="360" y2="60"/>
+      <line x1="210" y1="-20" x2="360" y2="40"/>
+      <line x1="230" y1="-20" x2="360" y2="20"/>
+      <line x1="250" y1="-20" x2="360" y2="0"/>
+    </g>
+  </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * The 6 EDITORIAL motifs. Each takes the ink color (white on dark,
+ * ink on light) + an accent. All low-opacity, pointer-events:none.
+ * ------------------------------------------------------------------ */
+const MOTIFS = [
+  {
+    name: 'Hairline Rule Frame',
+    note: 'An inset hairline border with notched corner ticks and a short divider rule under the eyebrow. The classic editorial frame — quiet structure, all negative space.',
+    svg: (ink, accent) => `
+    <svg class="decor" viewBox="0 0 320 180" preserveAspectRatio="none" aria-hidden="true">
+      <!-- inset frame -->
+      <rect x="12" y="12" width="296" height="156" fill="none" stroke="${ink}" stroke-opacity="0.22" stroke-width="0.6"/>
+      <!-- corner ticks -->
+      <g stroke="${accent}" stroke-opacity="0.7" stroke-width="1">
+        <path d="M 12 24 L 12 12 L 24 12"/>
+        <path d="M 296 12 L 308 12 L 308 24"/>
+        <path d="M 308 156 L 308 168 L 296 168"/>
+        <path d="M 24 168 L 12 168 L 12 156"/>
+      </g>
+      <!-- short divider rule under eyebrow position -->
+      <line x1="28.8" y1="62" x2="74" y2="62" stroke="${accent}" stroke-opacity="0.85" stroke-width="1"/>
+    </svg>`,
+  },
+  {
+    name: 'Corner Brackets + Registration',
+    note: 'Print crop-marks at two corners plus a small crosshair registration mark — the language of a press sheet. Confident, technical, barely there.',
+    svg: (ink, accent) => `
+    <svg class="decor" viewBox="0 0 320 180" preserveAspectRatio="none" aria-hidden="true">
+      <g stroke="${ink}" stroke-opacity="0.5" stroke-width="0.8">
+        <!-- top-left crop bracket -->
+        <path d="M 20 40 L 20 20 L 40 20" fill="none"/>
+        <!-- bottom-right crop bracket -->
+        <path d="M 300 140 L 300 160 L 280 160" fill="none"/>
+      </g>
+      <!-- registration crosshair, top-right -->
+      <g transform="translate(288, 34)" stroke="${accent}" stroke-opacity="0.65" stroke-width="0.8">
+        <circle cx="0" cy="0" r="6.5" fill="none"/>
+        <circle cx="0" cy="0" r="2.4" fill="none"/>
+        <line x1="-11" y1="0" x2="-3" y2="0"/>
+        <line x1="3" y1="0" x2="11" y2="0"/>
+        <line x1="0" y1="-11" x2="0" y2="-3"/>
+        <line x1="0" y1="3" x2="0" y2="11"/>
+      </g>
+      <!-- tiny tick scale, bottom-left -->
+      <g stroke="${ink}" stroke-opacity="0.35" stroke-width="0.6">
+        ${Array.from({length:7}).map((_,i)=>`<line x1="${24+i*5}" y1="158" x2="${24+i*5}" y2="${i%2?153:150}"/>`).join('')}
+      </g>
+    </svg>`,
+  },
+  {
+    name: 'Oversized Ghost Numeral',
+    note: 'A huge translucent "Q1" ghosted into the corner behind the title — an editorial scale-play that signals the period without competing for attention.',
+    svg: (ink, accent) => `
+    <svg class="decor" viewBox="0 0 320 180" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
+      <text x="318" y="172" text-anchor="end"
+        font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500"
+        font-size="150" fill="${accent}" fill-opacity="0.10">Q1</text>
+      <text x="318" y="172" text-anchor="end"
+        font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="500"
+        font-size="150" fill="none" stroke="${ink}" stroke-opacity="0.07" stroke-width="0.5">Q1</text>
+    </svg>`,
+  },
+  {
+    name: 'Halftone Dot Gradient',
+    note: 'A graduated dot field anchored to the top-right corner, fading into the page — the gentlest possible texture. A nod to risograph / newsprint, kept faint.',
+    svg: (ink, accent) => {
+      let dots = '';
+      const cols = 14, rows = 9, x0 = 150, y0 = 4, gap = 12;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cx = x0 + c * gap;
+          const cy = y0 + r * gap;
+          // density/size grows toward the top-right corner
+          const dx = (cx - 318) / 170;
+          const dy = (cy - 4) / 130;
+          const dist = Math.min(1, Math.sqrt(dx*dx + dy*dy));
+          const rad = (1 - dist) * 1.9;
+          if (rad < 0.25) continue;
+          const op = (1 - dist) * 0.4;
+          dots += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(2)}" fill="${ink}" fill-opacity="${op.toFixed(3)}"/>`;
+        }
+      }
+      return `
+      <svg class="decor" viewBox="0 0 320 180" preserveAspectRatio="none" aria-hidden="true">
+        <g>${dots}</g>
+        <circle cx="300" cy="20" r="2.4" fill="${accent}" fill-opacity="0.55"/>
+      </svg>`;
+    },
+  },
+  {
+    name: 'Single-Line Arc',
+    note: 'One elegant sweeping hairline that arcs across the upper field, with a single dot terminal. Maximum restraint — a single confident gesture.',
+    svg: (ink, accent) => `
+    <svg class="decor" viewBox="0 0 320 180" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M -10 26 C 110 6, 230 18, 350 96"
+        fill="none" stroke="${ink}" stroke-opacity="0.30" stroke-width="0.7"/>
+      <path d="M -10 38 C 120 22, 240 34, 350 112"
+        fill="none" stroke="${ink}" stroke-opacity="0.12" stroke-width="0.5"/>
+      <circle cx="266" cy="48.5" r="2.6" fill="${accent}" fill-opacity="0.85"/>
+      <circle cx="266" cy="48.5" r="6" fill="none" stroke="${accent}" stroke-opacity="0.35" stroke-width="0.6"/>
+    </svg>`,
+  },
+  {
+    name: 'Refined Thin Hexagon',
+    note: 'The reference outline-shape, refined: two concentric hairline hexagons with a faceting line, anchored to the corner. The motif that started this — made quieter and more deliberate.',
+    svg: (ink, accent) => `
+    <svg class="decor" viewBox="0 0 320 180" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+      <g transform="translate(262, 90)">
+        <polygon points="0,-58 50,-29 50,29 0,58 -50,29 -50,-29"
+          fill="none" stroke="${ink}" stroke-opacity="0.26" stroke-width="0.7"/>
+        <polygon points="0,-40 35,-20 35,20 0,40 -35,20 -35,-20"
+          fill="none" stroke="${accent}" stroke-opacity="0.5" stroke-width="0.6"/>
+        <polygon points="0,-22 19,-11 19,11 0,22 -19,11 -19,-11"
+          fill="${accent}" fill-opacity="0.07"/>
+        <line x1="0" y1="-58" x2="0" y2="58" stroke="${ink}" stroke-opacity="0.12" stroke-width="0.4"/>
+        <line x1="-50" y1="-29" x2="50" y2="29" stroke="${ink}" stroke-opacity="0.12" stroke-width="0.4"/>
+      </g>
+    </svg>`,
+  },
+];
+
+/* ------------------------------------------------------------------ */
+function build(gridId, mode) {
+  const grid = document.getElementById(gridId);
+  const ink = mode === 'dark' ? '#FFFFFF' : '#1A1530';
+  const accent = mode === 'dark' ? '#C8A8FF' : '#6B3FA0';
+  MOTIFS.forEach((m, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.innerHTML = `
+      <div class="slide ${mode}">
+        ${rays(ink)}
+        ${m.svg(ink, accent)}
+        ${CONTENT}
+      </div>
+      <p class="caption"><b>${i + 1}. ${m.name}</b>${m.note}</p>
+    `;
+    grid.appendChild(cell);
+  });
+}
+build('grid-dark', 'dark');
+build('grid-light', 'light');
+</script>
+</body>
+</html>

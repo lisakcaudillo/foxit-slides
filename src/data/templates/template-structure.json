@@ -1,0 +1,2938 @@
+{
+  "id": "template-structure",
+  "name": "Template structure",
+  "source": "pptx-import",
+  "canvas": {
+    "w": 960,
+    "h": 540
+  },
+  "slides": [
+    {
+      "index": 0,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 67.6,
+          "w": 75,
+          "h": 16.156,
+          "size": 36,
+          "align": "left",
+          "example": "PITCH DECK"
+        },
+        {
+          "role": "body",
+          "group": "13",
+          "x": 6.9,
+          "y": 83.733,
+          "w": 65.234,
+          "h": 6.667,
+          "size": 19,
+          "align": "left",
+          "example": "Mirjam Nilsson"
+        },
+        {
+          "role": "image",
+          "group": "background",
+          "x": 0.013,
+          "y": 0,
+          "w": 99.975,
+          "h": 100,
+          "image": true
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 69.157,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "date",
+          "group": "cover",
+          "x": 6.9,
+          "y": 91.2,
+          "w": 65.234,
+          "h": 5,
+          "size": 15,
+          "align": "left",
+          "example": "7/14/20XX"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 32.5,
+          "w": 35.25,
+          "h": 13.333,
+          "size": 36,
+          "align": "left",
+          "example": "ABOUT US"
+        },
+        {
+          "role": "body",
+          "group": "1",
+          "x": 6.875,
+          "y": 49.167,
+          "w": 35.25,
+          "h": 33.333,
+          "size": 18,
+          "align": "left",
+          "example": "At Contoso, we empower businesses to foster collaborative thinking to further drive workplace innovation. By closing the loop on investment management and using the latest technology, we help businesses grow and expand their portfolio funds."
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 34.057,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "image-side",
+          "group": "right",
+          "x": 49,
+          "y": 0,
+          "w": 51,
+          "h": 100,
+          "image": true
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 7.5,
+          "y": 8,
+          "w": 70.23,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "PROBLEM"
+        },
+        {
+          "role": "body",
+          "group": "25",
+          "x": 7.499,
+          "y": 21.366,
+          "w": 82.24,
+          "h": 69.329,
+          "size": 28,
+          "align": "left",
+          "example": "Market Gap"
+        },
+        {
+          "role": "body",
+          "group": "15",
+          "x": 7.499,
+          "y": 32.697,
+          "w": 85.501,
+          "h": 13.333,
+          "size": 15,
+          "align": "left",
+          "example": "Businesses need new investment opportunities but are using old or outdated tools and services"
+        },
+        {
+          "role": "body",
+          "group": "16",
+          "x": 13.326,
+          "y": 46.933,
+          "w": 32.474,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "CUSTOMERS"
+        },
+        {
+          "role": "body",
+          "group": "17",
+          "x": 13.326,
+          "y": 51.706,
+          "w": 32.474,
+          "h": 11.148,
+          "size": 14.5,
+          "align": "left",
+          "example": "25% increase of investment inquiries prove that there's consumer interest for simpler portfolio management"
+        },
+        {
+          "role": "body",
+          "group": "22",
+          "x": 13.326,
+          "y": 71.054,
+          "w": 32.474,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "FINANCIALS"
+        },
+        {
+          "role": "body",
+          "group": "23",
+          "x": 13.326,
+          "y": 75.826,
+          "w": 32.474,
+          "h": 7.926,
+          "size": 14.5,
+          "align": "left",
+          "example": "Investing in the stock market increased business portfolios by $20 million in 2019"
+        },
+        {
+          "role": "body",
+          "group": "18",
+          "x": 57.826,
+          "y": 46.933,
+          "w": 32.474,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "COSTS"
+        },
+        {
+          "role": "body",
+          "group": "19",
+          "x": 57.826,
+          "y": 51.69,
+          "w": 32.474,
+          "h": 7.926,
+          "size": 14.5,
+          "align": "left",
+          "example": "Loss of potential income by not offering investment opportunities for businesses"
+        },
+        {
+          "role": "body",
+          "group": "20",
+          "x": 57.826,
+          "y": 71.054,
+          "w": 32.474,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "USABILITY"
+        },
+        {
+          "role": "body",
+          "group": "21",
+          "x": 57.826,
+          "y": 75.827,
+          "w": 32.474,
+          "h": 7.926,
+          "size": 14.5,
+          "align": "left",
+          "example": "Customers want something that’s easy to adopt and simple to use"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 9.701,
+          "y": 46.933,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 9.701,
+          "y": 71.054,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 54.201,
+          "y": 46.933,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 54.201,
+          "y": 71.054,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 7.501,
+          "y": 44.333,
+          "w": 40.5,
+          "h": 21.121,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 7.501,
+          "y": 68.454,
+          "w": 40.5,
+          "h": 21.121,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 52,
+          "y": 44.333,
+          "w": 40.5,
+          "h": 21.121,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 52,
+          "y": 68.454,
+          "w": 40.5,
+          "h": 21.121,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.9,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 50.487,
+          "y": 8,
+          "w": 41.855,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "SOLUTION"
+        },
+        {
+          "role": "body",
+          "group": "14",
+          "x": 54.194,
+          "y": 21.102,
+          "w": 38.275,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "CLOSE THE GAP"
+        },
+        {
+          "role": "body",
+          "group": "15",
+          "x": 54.193,
+          "y": 25.895,
+          "w": 38.275,
+          "h": 10.148,
+          "size": 13,
+          "align": "left",
+          "example": "Our product makes investing and portfolio management easier, and no other product on the market offers the same benefits"
+        },
+        {
+          "role": "body",
+          "group": "16",
+          "x": 54.195,
+          "y": 42.235,
+          "w": 38.275,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "TARGET AUDIENCE"
+        },
+        {
+          "role": "body",
+          "group": "17",
+          "x": 54.194,
+          "y": 47.068,
+          "w": 38.275,
+          "h": 4.37,
+          "size": 13,
+          "align": "left",
+          "example": "Professional investors"
+        },
+        {
+          "role": "body",
+          "group": "18",
+          "x": 54.161,
+          "y": 57.63,
+          "w": 38.275,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "COST SAVINGS"
+        },
+        {
+          "role": "body",
+          "group": "19",
+          "x": 54.16,
+          "y": 62.416,
+          "w": 38.275,
+          "h": 7.259,
+          "size": 13,
+          "align": "left",
+          "example": "Reduce costs for client by helping businesses increase their profits in the stock market"
+        },
+        {
+          "role": "body",
+          "group": "20",
+          "x": 54.162,
+          "y": 75.867,
+          "w": 38.275,
+          "h": 4.667,
+          "size": 11,
+          "align": "left",
+          "example": "EASY TO USE"
+        },
+        {
+          "role": "body",
+          "group": "21",
+          "x": 54.161,
+          "y": 80.716,
+          "w": 38.275,
+          "h": 7.259,
+          "size": 13,
+          "align": "left",
+          "example": "A simple product that gives businesses the information they need in order to make informed financial decisions"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "image",
+          "group": "13",
+          "x": 7.658,
+          "y": 8,
+          "w": 36,
+          "h": 84,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 50.469,
+          "y": 21.102,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 50.47,
+          "y": 42.235,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 50.436,
+          "y": 57.63,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 50.437,
+          "y": 75.867,
+          "w": 2.625,
+          "h": 4.667,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 48.887,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.9,
+          "y": 8,
+          "w": 86.2,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "PRODUCT OVERVIEW"
+        },
+        {
+          "role": "body",
+          "group": "14",
+          "x": 12.913,
+          "y": 30.464,
+          "w": 32.887,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "UNIQUE"
+        },
+        {
+          "role": "body",
+          "group": "15",
+          "x": 12.913,
+          "y": 35.554,
+          "w": 32.887,
+          "h": 8.148,
+          "size": 15,
+          "align": "left",
+          "example": "Only product specifically dedicated to investment tools for business"
+        },
+        {
+          "role": "body",
+          "group": "16",
+          "x": 12.913,
+          "y": 68.214,
+          "w": 32.887,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "FIRST TO MARKET"
+        },
+        {
+          "role": "body",
+          "group": "17",
+          "x": 12.913,
+          "y": 73.026,
+          "w": 32.887,
+          "h": 8.148,
+          "size": 15,
+          "align": "left",
+          "example": "First beautifully designed product that's both stylish and functional"
+        },
+        {
+          "role": "body",
+          "group": "18",
+          "x": 58.012,
+          "y": 30.464,
+          "w": 32.887,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "TESTED"
+        },
+        {
+          "role": "body",
+          "group": "19",
+          "x": 58.012,
+          "y": 35.554,
+          "w": 32.887,
+          "h": 8.148,
+          "size": 15,
+          "align": "left",
+          "example": "Conducted testing with businesses in the area"
+        },
+        {
+          "role": "body",
+          "group": "20",
+          "x": 58.012,
+          "y": 68.214,
+          "w": 32.887,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "AUTHENTIC"
+        },
+        {
+          "role": "body",
+          "group": "21",
+          "x": 58.012,
+          "y": 73.026,
+          "w": 32.887,
+          "h": 8.148,
+          "size": 15,
+          "align": "left",
+          "example": "Designed with the help and input of investment experts in the field"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 9.1,
+          "y": 30.464,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 9.1,
+          "y": 68.214,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 54.2,
+          "y": 30.464,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 54.2,
+          "y": 68.214,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 6.9,
+          "y": 19.778,
+          "w": 41.1,
+          "h": 34.611,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 6.9,
+          "y": 57.389,
+          "w": 41.1,
+          "h": 34.611,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 52,
+          "y": 19.778,
+          "w": 41.1,
+          "h": 34.611,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 52,
+          "y": 57.389,
+          "w": 41.1,
+          "h": 34.611,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.3,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 7.5,
+          "y": 8,
+          "w": 52.5,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "PRODUCT BENEFITS"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "subtitle",
+          "group": "takeaway",
+          "x": 7.5,
+          "y": 19.778,
+          "w": 85,
+          "h": 5.88,
+          "size": 19,
+          "weight": 500,
+          "example": "Designed to make investing simple, supported, and worth it."
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 18.927,
+          "y": 51.735,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "body",
+          "group": "b0",
+          "x": 10,
+          "y": 59.735,
+          "w": 20.667,
+          "h": 9.185,
+          "size": 16,
+          "align": "center",
+          "example": "Simple and efficient to use"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 7.5,
+          "y": 35.327,
+          "w": 25.667,
+          "h": 50,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 48.594,
+          "y": 51.735,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "body",
+          "group": "b1",
+          "x": 39.667,
+          "y": 59.735,
+          "w": 20.667,
+          "h": 9.185,
+          "size": 16,
+          "align": "center",
+          "example": "Quick customer service assistance"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 37.167,
+          "y": 35.327,
+          "w": 25.667,
+          "h": 50,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "image",
+          "group": "icon",
+          "x": 78.26,
+          "y": 51.735,
+          "w": 2.813,
+          "h": 5,
+          "image": true,
+          "slotKind": "icon"
+        },
+        {
+          "role": "body",
+          "group": "b2",
+          "x": 69.333,
+          "y": 59.735,
+          "w": 20.667,
+          "h": 9.185,
+          "size": 16,
+          "align": "center",
+          "example": "Free 90-day investment help for new customers"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 66.833,
+          "y": 35.327,
+          "w": 25.667,
+          "h": 50,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.9,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.823,
+          "y": 74.133,
+          "w": 68.175,
+          "h": 15.3,
+          "size": 36,
+          "align": "left",
+          "example": "COMPANY OVERVIEW"
+        },
+        {
+          "role": "image",
+          "group": "background",
+          "x": 0.013,
+          "y": 0,
+          "w": 99.974,
+          "h": 100,
+          "image": true
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.223,
+          "y": 75.69,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "BUSINESS MODEL"
+        },
+        {
+          "role": "slide-number",
+          "group": "11",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 12.725,
+          "y": 34.667,
+          "w": 23.025,
+          "h": 36.133,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 38.75,
+          "y": 34.667,
+          "w": 23.025,
+          "h": 36.133,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "card",
+          "x": 64.775,
+          "y": 34.667,
+          "w": 23.025,
+          "h": 36.133,
+          "shape": "rectangle",
+          "fillToken": "surface"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "num0",
+          "x": 14.325,
+          "y": 36.867,
+          "w": 19.825,
+          "h": 8,
+          "size": 30,
+          "weight": 800,
+          "example": "01"
+        },
+        {
+          "role": "body",
+          "group": "lbl0",
+          "x": 14.325,
+          "y": 46.167,
+          "w": 19.825,
+          "h": 4.2,
+          "size": 14,
+          "weight": 700,
+          "example": "RESEARCH"
+        },
+        {
+          "role": "decoration",
+          "group": "rule",
+          "x": 14.325,
+          "y": 51.067,
+          "w": 5,
+          "h": 0.4,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "desc0",
+          "x": 14.325,
+          "y": 53.167,
+          "w": 19.825,
+          "h": 16.133,
+          "size": 13,
+          "example": "We based our research on market trends and stock market historical performance data"
+        },
+        {
+          "role": "body",
+          "group": "num1",
+          "x": 40.35,
+          "y": 36.867,
+          "w": 19.825,
+          "h": 8,
+          "size": 30,
+          "weight": 800,
+          "example": "02"
+        },
+        {
+          "role": "body",
+          "group": "lbl1",
+          "x": 40.35,
+          "y": 46.167,
+          "w": 19.825,
+          "h": 4.2,
+          "size": 14,
+          "weight": 700,
+          "example": "ABSTRACT"
+        },
+        {
+          "role": "decoration",
+          "group": "rule",
+          "x": 40.35,
+          "y": 51.067,
+          "w": 5,
+          "h": 0.4,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "desc1",
+          "x": 40.35,
+          "y": 53.167,
+          "w": 19.825,
+          "h": 16.133,
+          "size": 13,
+          "example": "We believe people need new investment tools to help businesses grow their funds"
+        },
+        {
+          "role": "body",
+          "group": "num2",
+          "x": 66.375,
+          "y": 36.867,
+          "w": 19.825,
+          "h": 8,
+          "size": 30,
+          "weight": 800,
+          "example": "03"
+        },
+        {
+          "role": "body",
+          "group": "lbl2",
+          "x": 66.375,
+          "y": 46.167,
+          "w": 19.825,
+          "h": 4.2,
+          "size": 14,
+          "weight": 700,
+          "example": "DESIGN"
+        },
+        {
+          "role": "decoration",
+          "group": "rule",
+          "x": 66.375,
+          "y": 51.067,
+          "w": 5,
+          "h": 0.4,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "desc2",
+          "x": 66.375,
+          "y": 53.167,
+          "w": 19.825,
+          "h": 16.133,
+          "size": 13,
+          "example": "Minimalist design and easy to use"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "MARKET OVERVIEW"
+        },
+        {
+          "role": "slide-number",
+          "group": "11",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "funnelband",
+          "x": 8,
+          "y": 34,
+          "w": 84,
+          "h": 14,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "metric",
+          "group": "0",
+          "x": 10.5,
+          "y": 34,
+          "w": 14,
+          "h": 14,
+          "size": 27,
+          "weight": 800,
+          "example": "$3B"
+        },
+        {
+          "role": "body",
+          "group": "type0",
+          "x": 24,
+          "y": 36.6,
+          "w": 66,
+          "h": 5,
+          "size": 14,
+          "weight": 700,
+          "example": "Total addressable market"
+        },
+        {
+          "role": "body",
+          "group": "tag0",
+          "x": 24,
+          "y": 41.8,
+          "w": 66,
+          "h": 5,
+          "size": 11.5,
+          "example": "Opportunity to build · fully inclusive market"
+        },
+        {
+          "role": "decoration",
+          "group": "funnelband",
+          "x": 8,
+          "y": 51,
+          "w": 63,
+          "h": 14,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "metric",
+          "group": "1",
+          "x": 10.5,
+          "y": 51,
+          "w": 14,
+          "h": 14,
+          "size": 27,
+          "weight": 800,
+          "example": "$2B"
+        },
+        {
+          "role": "body",
+          "group": "type1",
+          "x": 24,
+          "y": 53.6,
+          "w": 45,
+          "h": 5,
+          "size": 14,
+          "weight": 700,
+          "example": "Serviceable available market"
+        },
+        {
+          "role": "body",
+          "group": "tag1",
+          "x": 24,
+          "y": 58.8,
+          "w": 45,
+          "h": 5,
+          "size": 11.5,
+          "example": "Freedom to invent · selectively inclusive"
+        },
+        {
+          "role": "decoration",
+          "group": "funnelband",
+          "x": 8,
+          "y": 68,
+          "w": 42,
+          "h": 14,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "metric",
+          "group": "2",
+          "x": 10.5,
+          "y": 68,
+          "w": 14,
+          "h": 14,
+          "size": 27,
+          "weight": 800,
+          "example": "$1B"
+        },
+        {
+          "role": "body",
+          "group": "type2",
+          "x": 24,
+          "y": 70.6,
+          "w": 24,
+          "h": 5,
+          "size": 14,
+          "weight": 700,
+          "example": "Serviceable obtainable market"
+        },
+        {
+          "role": "body",
+          "group": "tag2",
+          "x": 24,
+          "y": 75.8,
+          "w": 24,
+          "h": 5,
+          "size": 11.5,
+          "example": "Few competitors · specifically targeted"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "MARKET COMPARISON"
+        },
+        {
+          "role": "slide-number",
+          "group": "11",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "sub",
+          "x": 6.9,
+          "y": 22.5,
+          "w": 80,
+          "h": 5,
+          "size": 15,
+          "example": "Where we sit versus the competition"
+        },
+        {
+          "role": "decoration",
+          "group": "quadrant",
+          "x": 52,
+          "y": 33,
+          "w": 24,
+          "h": 24,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "axisv",
+          "x": 51.9,
+          "y": 33,
+          "w": 0.2,
+          "h": 48,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "axish",
+          "x": 28,
+          "y": 56.9,
+          "w": 48,
+          "h": 0.2,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "axt",
+          "x": 38,
+          "y": 28.4,
+          "w": 28,
+          "h": 4,
+          "size": 11.5,
+          "align": "center",
+          "weight": 700,
+          "example": "Easier to use"
+        },
+        {
+          "role": "body",
+          "group": "axb",
+          "x": 38,
+          "y": 81.8,
+          "w": 28,
+          "h": 4,
+          "size": 11.5,
+          "align": "center",
+          "weight": 700,
+          "example": "Harder to use"
+        },
+        {
+          "role": "body",
+          "group": "axl",
+          "x": 9,
+          "y": 55,
+          "w": 17,
+          "h": 4,
+          "size": 11.5,
+          "align": "right",
+          "weight": 700,
+          "example": "Higher cost"
+        },
+        {
+          "role": "body",
+          "group": "axr",
+          "x": 77.5,
+          "y": 55,
+          "w": 18,
+          "h": 4,
+          "size": 11.5,
+          "align": "left",
+          "weight": 700,
+          "example": "More affordable"
+        },
+        {
+          "role": "decoration",
+          "group": "dotring",
+          "x": 61.9,
+          "y": 39.27,
+          "w": 4.2,
+          "h": 7.47,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "dot",
+          "x": 62.8,
+          "y": 40.865,
+          "w": 2.4,
+          "h": 4.27,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "pt0",
+          "x": 51,
+          "y": 36.265,
+          "w": 26,
+          "h": 4,
+          "size": 14,
+          "align": "center",
+          "weight": 800,
+          "example": "Contoso"
+        },
+        {
+          "role": "decoration",
+          "group": "dot",
+          "x": 36.15,
+          "y": 45.49,
+          "w": 1.7,
+          "h": 3.02,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "pt1",
+          "x": 24,
+          "y": 40.89,
+          "w": 26,
+          "h": 4,
+          "size": 12.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Company A"
+        },
+        {
+          "role": "decoration",
+          "group": "dot",
+          "x": 35.15,
+          "y": 68.49,
+          "w": 1.7,
+          "h": 3.02,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "pt2",
+          "x": 23,
+          "y": 72.51,
+          "w": 26,
+          "h": 4,
+          "size": 12.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Companies B & C"
+        },
+        {
+          "role": "decoration",
+          "group": "dot",
+          "x": 65.15,
+          "y": 69.49,
+          "w": 1.7,
+          "h": 3.02,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "pt3",
+          "x": 53,
+          "y": 73.51,
+          "w": 26,
+          "h": 4,
+          "size": 12.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Companies D & E"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "OUR COMPETITION"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "subtitle",
+          "group": "takeaway",
+          "x": 6.9,
+          "y": 20,
+          "w": 80,
+          "h": 6,
+          "size": 16,
+          "weight": 600,
+          "example": "Contoso checks every box the competition leaves open."
+        },
+        {
+          "role": "table",
+          "group": "10",
+          "x": 6.9,
+          "y": 34,
+          "w": 78,
+          "h": 32,
+          "table": true,
+          "tableRows": [
+            [
+              "",
+              "Contoso",
+              "Competitors"
+            ],
+            [
+              "Affordable, below-market pricing",
+              "✓",
+              "✗"
+            ],
+            [
+              "Simple app & website",
+              "✓",
+              "✗"
+            ],
+            [
+              "Built for business investing",
+              "✓",
+              "✗"
+            ]
+          ],
+          "headerRow": true
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "GROWTH STRATEGY"
+        },
+        {
+          "role": "slide-number",
+          "group": "11",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "sub",
+          "x": 6.9,
+          "y": 22.5,
+          "w": 80,
+          "h": 5,
+          "size": 15,
+          "example": "How we’ll scale in the future"
+        },
+        {
+          "role": "decoration",
+          "group": "tlline",
+          "x": 14,
+          "y": 51.8,
+          "w": 72,
+          "h": 0.4,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tltick",
+          "x": 25.92,
+          "y": 47,
+          "w": 0.16,
+          "h": 10,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tlring",
+          "x": 24,
+          "y": 48.44,
+          "w": 4,
+          "h": 7.11,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tldot",
+          "x": 24.8,
+          "y": 49.87,
+          "w": 2.4,
+          "h": 4.27,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "date0",
+          "x": 13,
+          "y": 41,
+          "w": 26,
+          "h": 4,
+          "size": 16,
+          "align": "center",
+          "weight": 800,
+          "example": "FEB 20XX"
+        },
+        {
+          "role": "body",
+          "group": "desc0",
+          "x": 13.5,
+          "y": 59.5,
+          "w": 25,
+          "h": 16,
+          "size": 12.5,
+          "align": "center",
+          "example": "Roll out product to local businesses to help establish the product"
+        },
+        {
+          "role": "decoration",
+          "group": "tltick",
+          "x": 49.92,
+          "y": 47,
+          "w": 0.16,
+          "h": 10,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tlring",
+          "x": 48,
+          "y": 48.44,
+          "w": 4,
+          "h": 7.11,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tldot",
+          "x": 48.8,
+          "y": 49.87,
+          "w": 2.4,
+          "h": 4.27,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "date1",
+          "x": 37,
+          "y": 41,
+          "w": 26,
+          "h": 4,
+          "size": 16,
+          "align": "center",
+          "weight": 800,
+          "example": "MAY 20XX"
+        },
+        {
+          "role": "body",
+          "group": "desc1",
+          "x": 37.5,
+          "y": 59.5,
+          "w": 25,
+          "h": 16,
+          "size": 12.5,
+          "align": "center",
+          "example": "Release the product to the general public and monitor stock market trends"
+        },
+        {
+          "role": "decoration",
+          "group": "tltick",
+          "x": 73.92,
+          "y": 47,
+          "w": 0.16,
+          "h": 10,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tlring",
+          "x": 72,
+          "y": 48.44,
+          "w": 4,
+          "h": 7.11,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "tldot",
+          "x": 72.8,
+          "y": 49.87,
+          "w": 2.4,
+          "h": 4.27,
+          "shape": "circle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "date2",
+          "x": 61,
+          "y": 41,
+          "w": 26,
+          "h": 4,
+          "size": 16,
+          "align": "center",
+          "weight": 800,
+          "example": "OCT 20XX"
+        },
+        {
+          "role": "body",
+          "group": "desc2",
+          "x": 61.5,
+          "y": 59.5,
+          "w": 25,
+          "h": 16,
+          "size": 12.5,
+          "align": "center",
+          "example": "Gather feedback from the financial community to expand availability of the product"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.888,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "TRACTION"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "table",
+          "group": "13",
+          "x": 6.888,
+          "y": 22.102,
+          "w": 86.224,
+          "h": 30,
+          "table": true,
+          "tableRows": [
+            [
+              "",
+              "Clients",
+              "Orders",
+              "Gross revenue",
+              "Net revenue"
+            ],
+            [
+              "20XX",
+              "10",
+              "1100",
+              "$10,000",
+              "$7,000"
+            ],
+            [
+              "20XX",
+              "20",
+              "200",
+              "$20,000",
+              "$16,000"
+            ],
+            [
+              "20XX",
+              "30",
+              "300",
+              "$30,000",
+              "$25,000"
+            ],
+            [
+              "20XX",
+              "40",
+              "400",
+              "$40,000",
+              "$30,000"
+            ]
+          ],
+          "headerRow": true
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.288,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "TWO-YEAR ACTION PLAN"
+        },
+        {
+          "role": "slide-number",
+          "group": "11",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 36.19,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 44.44,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 52.69,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 60.94,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 69.19,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 77.44,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "decoration",
+          "group": "grid",
+          "x": 85.69,
+          "y": 39,
+          "w": 0.12,
+          "h": 41,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "y1",
+          "x": 28,
+          "y": 30.5,
+          "w": 33,
+          "h": 4,
+          "size": 13,
+          "align": "center",
+          "weight": 800,
+          "example": "YEAR 1 · 20XX"
+        },
+        {
+          "role": "body",
+          "group": "y2",
+          "x": 61,
+          "y": 30.5,
+          "w": 33,
+          "h": 4,
+          "size": 13,
+          "align": "center",
+          "weight": 800,
+          "example": "YEAR 2 · 20XX"
+        },
+        {
+          "role": "body",
+          "group": "q0",
+          "x": 28,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q1"
+        },
+        {
+          "role": "body",
+          "group": "q1",
+          "x": 36.25,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q2"
+        },
+        {
+          "role": "body",
+          "group": "q2",
+          "x": 44.5,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q3"
+        },
+        {
+          "role": "body",
+          "group": "q3",
+          "x": 52.75,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q4"
+        },
+        {
+          "role": "body",
+          "group": "q4",
+          "x": 61,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q1"
+        },
+        {
+          "role": "body",
+          "group": "q5",
+          "x": 69.25,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q2"
+        },
+        {
+          "role": "body",
+          "group": "q6",
+          "x": 77.5,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q3"
+        },
+        {
+          "role": "body",
+          "group": "q7",
+          "x": 85.75,
+          "y": 35.2,
+          "w": 8.25,
+          "h": 3.4,
+          "size": 10.5,
+          "align": "center",
+          "weight": 600,
+          "example": "Q4"
+        },
+        {
+          "role": "body",
+          "group": "act0",
+          "x": 6,
+          "y": 42,
+          "w": 20,
+          "h": 7,
+          "size": 12,
+          "align": "right",
+          "weight": 600,
+          "example": "Local rollout"
+        },
+        {
+          "role": "decoration",
+          "group": "bar",
+          "x": 28,
+          "y": 42,
+          "w": 16.5,
+          "h": 7,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "act1",
+          "x": 6,
+          "y": 51.4,
+          "w": 20,
+          "h": 7,
+          "size": 12,
+          "align": "right",
+          "weight": 600,
+          "example": "Public launch & monitoring"
+        },
+        {
+          "role": "decoration",
+          "group": "bar",
+          "x": 36.25,
+          "y": 51.4,
+          "w": 33,
+          "h": 7,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "act2",
+          "x": 6,
+          "y": 60.8,
+          "w": 20,
+          "h": 7,
+          "size": 12,
+          "align": "right",
+          "weight": 600,
+          "example": "Supply volunteers"
+        },
+        {
+          "role": "decoration",
+          "group": "bar",
+          "x": 61,
+          "y": 60.8,
+          "w": 16.5,
+          "h": 7,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "act3",
+          "x": 6,
+          "y": 70.2,
+          "w": 20,
+          "h": 7,
+          "size": 12,
+          "align": "right",
+          "weight": 600,
+          "example": "Expand availability"
+        },
+        {
+          "role": "decoration",
+          "group": "bar",
+          "x": 69.25,
+          "y": 70.2,
+          "w": 24.75,
+          "h": 7,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.9,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "FINANCIALS"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.3,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "capc",
+          "x": 6.9,
+          "y": 28,
+          "w": 57,
+          "h": 3.6,
+          "size": 11,
+          "weight": 700,
+          "example": "REVENUE GROWTH"
+        },
+        {
+          "role": "chart",
+          "group": "15",
+          "x": 6.9,
+          "y": 31.5,
+          "w": 57,
+          "h": 56,
+          "chart": true,
+          "chartType": "column",
+          "chartCategories": [
+            "Year 1",
+            "Year 2",
+            "Year 3"
+          ],
+          "chartSeries": [
+            {
+              "name": "Revenue",
+              "values": [
+                5625000,
+                48000000,
+                216000000
+              ]
+            }
+          ],
+          "numberFormat": "compact"
+        },
+        {
+          "role": "body",
+          "group": "capt",
+          "x": 66,
+          "y": 28,
+          "w": 27.1,
+          "h": 3.6,
+          "size": 11,
+          "weight": 700,
+          "example": "KEY METRICS"
+        },
+        {
+          "role": "table",
+          "group": "15",
+          "x": 66,
+          "y": 34.5,
+          "w": 27.1,
+          "h": 44,
+          "table": true,
+          "tableRows": [
+            [
+              "",
+              "Year 1",
+              "Year 2",
+              "Year 3"
+            ],
+            [
+              "Users",
+              "50K",
+              "400K",
+              "1.6M"
+            ],
+            [
+              "Sales",
+              "500K",
+              "4M",
+              "16M"
+            ],
+            [
+              "Revenue",
+              "$5.6M",
+              "$48M",
+              "$216M"
+            ],
+            [
+              "Total expenses",
+              "$7.6M",
+              "$53M",
+              "$188M"
+            ]
+          ],
+          "headerRow": true
+        },
+        {
+          "role": "subtitle",
+          "group": "takeaway",
+          "x": 6.9,
+          "y": 18,
+          "w": 86,
+          "h": 5.5,
+          "size": 16,
+          "weight": 600,
+          "example": "Revenue scales ~38× to $216M by Year 3, turning profitable as growth outpaces costs."
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "MEET THE TEAM"
+        },
+        {
+          "role": "body",
+          "group": "14",
+          "x": 7.475,
+          "y": 76.667,
+          "w": 17.25,
+          "h": 4,
+          "size": 10,
+          "align": "left",
+          "example": "Takuma Hayashi"
+        },
+        {
+          "role": "body",
+          "group": "15",
+          "x": 7.475,
+          "y": 80.944,
+          "w": 17.25,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "President"
+        },
+        {
+          "role": "body",
+          "group": "17",
+          "x": 30.075,
+          "y": 76.667,
+          "w": 17.25,
+          "h": 4,
+          "size": 10,
+          "align": "left",
+          "example": "Mirjam Nilsson"
+        },
+        {
+          "role": "body",
+          "group": "18",
+          "x": 30.075,
+          "y": 80.944,
+          "w": 17.25,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "Chief Executive Officer"
+        },
+        {
+          "role": "body",
+          "group": "20",
+          "x": 52.65,
+          "y": 76.667,
+          "w": 17.25,
+          "h": 4,
+          "size": 10,
+          "align": "left",
+          "example": "Flora Berggren"
+        },
+        {
+          "role": "body",
+          "group": "21",
+          "x": 52.65,
+          "y": 80.944,
+          "w": 17.25,
+          "h": 5.333,
+          "size": 12,
+          "align": "left",
+          "example": "Chief Operations Operator"
+        },
+        {
+          "role": "body",
+          "group": "23",
+          "x": 75.225,
+          "y": 76.667,
+          "w": 17.25,
+          "h": 4,
+          "size": 10,
+          "align": "left",
+          "example": "Rajesh Santoshi"
+        },
+        {
+          "role": "body",
+          "group": "24",
+          "x": 75.225,
+          "y": 80.944,
+          "w": 17.25,
+          "h": 5.333,
+          "size": 13.5,
+          "align": "left",
+          "example": "VP Marketing"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "image",
+          "group": "13",
+          "x": 7.5,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 42.477,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "16",
+          "x": 30.078,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 44.005,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "19",
+          "x": 52.669,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 44.005,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "22",
+          "x": 75.247,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 44.005,
+          "image": true
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.875,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "MEET THE FULL TEAM"
+        },
+        {
+          "role": "body",
+          "group": "14",
+          "x": 7.475,
+          "y": 51.395,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Takuma Hayashi"
+        },
+        {
+          "role": "body",
+          "group": "15",
+          "x": 7.475,
+          "y": 55.034,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "President"
+        },
+        {
+          "role": "body",
+          "group": "17",
+          "x": 30.075,
+          "y": 51.395,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Mirjam Nilsson"
+        },
+        {
+          "role": "body",
+          "group": "18",
+          "x": 30.075,
+          "y": 55.034,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Chief Executive Officer"
+        },
+        {
+          "role": "body",
+          "group": "20",
+          "x": 52.65,
+          "y": 51.395,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Flora Berggren"
+        },
+        {
+          "role": "body",
+          "group": "21",
+          "x": 52.65,
+          "y": 55.034,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Chief Operations Officer"
+        },
+        {
+          "role": "body",
+          "group": "23",
+          "x": 75.225,
+          "y": 51.395,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Rajesh Santoshi"
+        },
+        {
+          "role": "body",
+          "group": "24",
+          "x": 75.225,
+          "y": 55.034,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "VP Marketing"
+        },
+        {
+          "role": "body",
+          "group": "26",
+          "x": 7.5,
+          "y": 83.67,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Graham Barnes"
+        },
+        {
+          "role": "body",
+          "group": "27",
+          "x": 7.5,
+          "y": 87.509,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "VP Product"
+        },
+        {
+          "role": "body",
+          "group": "29",
+          "x": 30.1,
+          "y": 83.67,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Rowan Murphy"
+        },
+        {
+          "role": "body",
+          "group": "30",
+          "x": 30.1,
+          "y": 87.509,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "SEO Strategist"
+        },
+        {
+          "role": "body",
+          "group": "32",
+          "x": 52.675,
+          "y": 83.67,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Elizabeth Moore"
+        },
+        {
+          "role": "body",
+          "group": "33",
+          "x": 52.675,
+          "y": 87.509,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Product Designer"
+        },
+        {
+          "role": "body",
+          "group": "35",
+          "x": 75.25,
+          "y": 83.67,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Robin Kline"
+        },
+        {
+          "role": "body",
+          "group": "36",
+          "x": 75.25,
+          "y": 87.509,
+          "w": 17.25,
+          "h": 3.333,
+          "size": 10,
+          "align": "left",
+          "example": "Content Developer"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "image",
+          "group": "13",
+          "x": 7.5,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "16",
+          "x": 30.078,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "19",
+          "x": 52.669,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "22",
+          "x": 75.247,
+          "y": 29.861,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "25",
+          "x": 7.526,
+          "y": 62.13,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "28",
+          "x": 30.104,
+          "y": 62.13,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "31",
+          "x": 52.695,
+          "y": 62.13,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "image",
+          "group": "34",
+          "x": 75.273,
+          "y": 62.13,
+          "w": 17.253,
+          "h": 20,
+          "image": true
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.275,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.9,
+          "y": 8,
+          "w": 86.25,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "FUNDING"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.3,
+          "y": 9.557,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "body",
+          "group": "total",
+          "x": 8,
+          "y": 38,
+          "w": 40,
+          "h": 12,
+          "size": 46,
+          "weight": 800,
+          "example": "$140,000"
+        },
+        {
+          "role": "body",
+          "group": "totlbl",
+          "x": 8,
+          "y": 52,
+          "w": 38,
+          "h": 8,
+          "size": 14,
+          "example": "Total funding raised across four sources"
+        },
+        {
+          "role": "chart",
+          "group": "18",
+          "x": 52,
+          "y": 30,
+          "w": 44,
+          "h": 52,
+          "chart": true,
+          "chartType": "donut",
+          "chartCategories": [
+            "Mutual funds",
+            "Angel investments",
+            "Cash",
+            "Shares"
+          ],
+          "chartSeries": [
+            {
+              "name": "Funding",
+              "values": [
+                12000,
+                14000,
+                32000,
+                82000
+              ]
+            }
+          ],
+          "numberFormat": "currency"
+        },
+        {
+          "role": "subtitle",
+          "group": "takeaway",
+          "x": 6.9,
+          "y": 18,
+          "w": 86,
+          "h": 5.5,
+          "size": 16,
+          "weight": 600,
+          "example": "Capital secured across four sources to fund the next 18 months of operations."
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 6.9,
+          "y": 52.382,
+          "w": 37.5,
+          "h": 19.329,
+          "size": 36,
+          "align": "left",
+          "example": "SUMMARY"
+        },
+        {
+          "role": "body",
+          "group": "17",
+          "x": 53.227,
+          "y": 51.711,
+          "w": 43.05,
+          "h": 28,
+          "size": 15,
+          "align": "left",
+          "example": "At Contoso, we believe in giving 110%. By closing the loop on investment management and using the latest technology, we help businesses grow and expand their portfolio funds. We thrive because of our market knowledge and a great team behind our product. As our CEO says, \"Efficiencies will come from proactively transforming how we do business.\""
+        },
+        {
+          "role": "image",
+          "group": "13",
+          "x": 3.762,
+          "y": 7.019,
+          "w": 92.475,
+          "h": 40,
+          "image": true
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 5.3,
+          "y": 53.939,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "slots": [
+        {
+          "role": "title",
+          "group": "title",
+          "x": 61.236,
+          "y": 57.467,
+          "w": 31.5,
+          "h": 9.333,
+          "size": 36,
+          "align": "left",
+          "example": "Thank You"
+        },
+        {
+          "role": "body",
+          "group": "14",
+          "x": 61.25,
+          "y": 68.267,
+          "w": 31.486,
+          "h": 24,
+          "size": 22,
+          "align": "left",
+          "example": "Mirjam Nilsson\n206-555-0146\nMirjam@contoso.com\nwww.contoso.com"
+        },
+        {
+          "role": "slide-number",
+          "group": "12",
+          "x": 70.625,
+          "y": 92.685,
+          "w": 22.5,
+          "h": 5.324,
+          "size": 18,
+          "align": "left"
+        },
+        {
+          "role": "decoration",
+          "group": "keyline",
+          "x": 59.636,
+          "y": 59.024,
+          "w": 0.5,
+          "h": 7.1,
+          "shape": "rectangle",
+          "fillToken": "accent"
+        },
+        {
+          "role": "image-side",
+          "group": "left",
+          "x": 0,
+          "y": 0,
+          "w": 56.636,
+          "h": 100,
+          "image": true
+        }
+      ]
+    }
+  ]
+}

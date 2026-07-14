@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foxit Slides — Generating screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --grad-logo:linear-gradient(135deg,#4776E6,#A855F7); }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;color:#fff;-webkit-font-smoothing:antialiased;
+    overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;
+    background:#1a0f40}
+  /* living saturated brand backdrop — the earned color moment */
+  .bg{position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(820px 560px at 18% 14%,rgba(71,118,230,.85),transparent 60%),
+      radial-gradient(880px 640px at 86% 86%,rgba(168,85,247,.80),transparent 60%),
+      radial-gradient(640px 520px at 72% 18%,rgba(240,128,200,.55),transparent 62%),
+      linear-gradient(155deg,#241a5e 0%,#1a1146 55%,#2a1452 100%);
+    animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-1.5%,-1%)}}
+  .bg::after{content:'';position:absolute;inset:0;background:radial-gradient(1200px 800px at 50% 40%,transparent 40%,rgba(12,5,30,.45))}
+
+  .stage{position:relative;z-index:2;width:min(720px,90vw);text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:0}
+
+  /* logo with breathing glow */
+  .logo{width:64px;height:64px;border-radius:18px;background:var(--grad-logo);
+    display:flex;align-items:center;justify-content:center;position:relative;
+    box-shadow:0 10px 30px rgba(168,85,247,.5),inset 0 1px 0 rgba(255,255,255,.35);
+    animation:bob 3.2s ease-in-out infinite}
+  .logo::before{content:'';position:absolute;inset:-14px;border-radius:30px;
+    background:radial-gradient(circle,rgba(168,85,247,.45),transparent 70%);
+    animation:halo 3.2s ease-in-out infinite;z-index:-1}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes halo{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.12)}}
+
+  h1{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:26px}
+  .deckchip{margin-top:10px;font-size:13px;font-weight:500;color:rgba(255,255,255,.78);
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);
+    padding:5px 13px;border-radius:999px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+  /* live human line */
+  .line{margin-top:22px;height:22px;display:flex;align-items:center;gap:9px;
+    font-size:15px;color:rgba(255,255,255,.92)}
+  .line .dot{width:7px;height:7px;border-radius:50%;background:#fff;flex-shrink:0;
+    box-shadow:0 0 0 0 rgba(255,255,255,.6);animation:pulse 1.3s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}100%{box-shadow:0 0 0 8px rgba(255,255,255,0)}}
+  .line span{opacity:0;animation:fadein .4s ease forwards}
+  @keyframes fadein{to{opacity:1}}
+
+  /* materializing deck — thumbnails fill one by one */
+  .deck{margin-top:34px;display:grid;grid-template-columns:repeat(8,1fr);gap:11px;width:100%}
+  .thumb{aspect-ratio:16/10;border-radius:9px;position:relative;overflow:hidden;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);
+    transition:background .5s ease,border-color .5s ease,transform .4s cubic-bezier(.2,.7,.3,1)}
+  .thumb .fill{position:absolute;inset:0;opacity:0;transition:opacity .55s ease;
+    display:flex;flex-direction:column;gap:3px;padding:8px 7px}
+  .thumb .fill .ln{height:3px;border-radius:2px;background:rgba(255,255,255,.55)}
+  .thumb .fill .ln.t{width:62%;height:4px;background:#fff}
+  .thumb .fill .ln.a{width:90%}.thumb .fill .ln.b{width:70%}
+  .thumb .fill .pic{margin-top:auto;height:14px;border-radius:4px;
+    background:linear-gradient(135deg,#9CC4FE,#C8B6F4)}
+  /* filled (done) */
+  .thumb.filled{background:rgba(255,255,255,.96);border-color:rgba(255,255,255,.7)}
+  .thumb.filled .fill{opacity:1}
+  .thumb.filled .ln{background:rgba(80,55,195,.30)}
+  .thumb.filled .ln.t{background:rgba(80,55,195,.7)}
+  /* the one being designed right now — shimmer */
+  .thumb.active{transform:translateY(-3px);
+    box-shadow:0 10px 24px rgba(0,0,0,.28),0 0 0 2px rgba(255,255,255,.55)}
+  .thumb.active::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+    transform:translateX(-100%);animation:shimmer 1.1s ease-in-out infinite}
+  @keyframes shimmer{to{transform:translateX(100%)}}
+
+  /* progress count */
+  .count{margin-top:22px;font-size:12.5px;color:rgba(255,255,255,.66);letter-spacing:.01em}
+
+  /* tip card — ambient education, calmer + slower than the status line */
+  .tipwrap{margin-top:26px;display:flex;justify-content:center;width:100%}
+  .tip-card{display:flex;align-items:center;gap:12px;max-width:470px;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-radius:14px;padding:12px 16px;text-align:left}
+  .tip-card .ic{width:30px;height:30px;border-radius:9px;flex-shrink:0;
+    background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
+  .tip-card .ic svg{width:16px;height:16px;stroke:#fff;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .tip-card .body{min-width:0}
+  .tip-card .lbl{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.58)}
+  .tip-card .txt{font-size:13.5px;color:rgba(255,255,255,.92);margin-top:2px;line-height:1.4;transition:opacity .35s ease}
+
+  .note{position:absolute;bottom:20px;left:0;right:0;text-align:center;z-index:2;
+    font-size:11.5px;color:rgba(255,255,255,.5)}
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="stage">
+    <div class="logo">
+      <svg width="34" height="34" viewBox="0 0 1024 1024" fill="none"><path d="M550.92 757.41C541.61 760.4 532.75 763.28 524.24 766.08C523.99 766.17 523.89 766.47 524.03 766.69L576.88 846.16C576.95 846.27 577.08 846.33 577.21 846.33L810.96 846.34C811.27 846.34 811.46 846 811.3 845.73L708.23 673.58C708.12 673.38 707.86 673.32 707.67 673.45C667.43 700.83 625.34 728.47 553.87 756.35L550.92 757.41Z" fill="white"/><path d="M193.26 819.15C193.26 819.15 201.93 654.66 270.55 535.82C339.17 416.98 470.33 323.67 653.06 275.7C653.06 275.7 798.18 240.63 843.13 213.39C843.13 213.39 892.02 180.38 869.94 257.13C869.94 257.13 840.65 331.44 750.35 379.68C729.06 390.83 713.24 393.32 716.58 414.53C722.62 436.09 757.15 419.7 761.89 417.23C770.1 410.15 850.14 387.29 796.81 466.97C743.18 549.5 710.63 624.37 502.42 698.64C363.61 738.25 308.4 760.54 227.96 836.47C187.73 866.24 193.26 819.15 193.26 819.15Z" fill="white"/><path d="M322.48 117.38C329.53 236.44 348.73 261.33 462.1 298.36C343.04 305.41 318.16 324.61 281.12 437.98C274.07 318.92 254.88 294.03 141.5 257C260.56 249.95 285.45 230.75 322.48 117.38Z" fill="white"/></svg>
+    </div>
+    <h1>Building your presentation</h1>
+    <div class="deckchip">Q3 Board Review · 8 slides</div>
+
+    <div class="line"><span class="dot"></span><span id="line">Reading your topic…</span></div>
+
+    <div class="deck" id="deck">
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+      <div class="thumb"><div class="fill"><div class="ln t"></div><div class="ln a"></div><div class="ln b"></div><div class="pic"></div></div></div>
+    </div>
+
+    <div class="count" id="count">Designing slide 1 of 8</div>
+
+    <div class="tipwrap">
+      <div class="tip-card">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.6.9.6 1.6h5.8c0-.7.1-1.2.6-1.6A6 6 0 0 0 12 3Z"/></svg></span>
+        <div class="body">
+          <div class="lbl">Tip</div>
+          <div class="txt" id="tip">Drag any image straight onto a slide to place it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note">Prototype — loops continuously so you can see the full sequence. In the app this flows straight into the editor.</div>
+
+<script>
+  const lines = [
+    "Reading your topic…",
+    "Sketching the outline…",
+    "Choosing a layout for the agenda…",
+    "Writing the opening…",
+    "Designing the metrics slide…",
+    "Writing slide 5 — the results…",
+    "Finding images that fit…",
+    "Polishing the details…"
+  ];
+  const thumbs = [...document.querySelectorAll('.thumb')];
+  const lineEl = document.getElementById('line');
+  const countEl = document.getElementById('count');
+  let i = 0;
+  function tick(){
+    if (i > thumbs.length){            // brief "ready" then loop
+      lineEl.innerHTML = '<span>Ready — opening your deck</span>';
+      countEl.textContent = 'All 8 slides designed';
+      thumbs.forEach(t=>t.classList.remove('active'));
+      i = -2;                          // pause a beat before restarting
+      return;
+    }
+    if (i < 0){ i++; return; }
+    thumbs.forEach((t,idx)=>{
+      t.classList.toggle('filled', idx < i);
+      t.classList.toggle('active', idx === i);
+    });
+    if (i < thumbs.length){
+      lineEl.innerHTML = '<span>'+lines[i]+'</span>';
+      countEl.textContent = 'Designing slide '+(i+1)+' of '+thumbs.length;
+    }
+    i++;
+  }
+  tick();
+  setInterval(tick, 900);
+
+  // tips — slower, independent crossfade so they never race the status line
+  const tips = [
+    "Drag any image straight onto a slide to place it.",
+    "Right-click a slide to try a different layout in one click.",
+    "Add your real numbers and we'll build the charts for you.",
+    "Press Present to rehearse full-screen with your notes.",
+    "Upload a reference deck and we'll match its style.",
+    "Not loving a slide? Regenerate just that one.",
+    "Pick a theme any time — your content restyles instantly."
+  ];
+  const tipEl = document.getElementById('tip');
+  let ti = 1;
+  setInterval(() => {
+    tipEl.style.opacity = 0;
+    setTimeout(() => { tipEl.textContent = tips[ti % tips.length]; tipEl.style.opacity = 1; ti++; }, 350);
+  }, 4800);
+</script>
+</body>
+</html>

@@ -1,0 +1,6346 @@
+{
+  "ds-content": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content)",
+    "label": "Content (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 86,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 121,
+        "w": 787,
+        "h": 39,
+        "size": 29,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 198,
+        "w": 768,
+        "h": 256,
+        "size": 16,
+        "budget": {
+          "concise": 253,
+          "detailed": 368,
+          "extensive": 460
+        }
+      }
+    ]
+  },
+  "ds-content-card-bottom": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-card-bottom)",
+    "label": "Content Card Bottom (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 864,
+        "h": 39,
+        "size": 31,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 61
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 179,
+        "w": 864,
+        "h": 130,
+        "size": 16,
+        "budget": {
+          "concise": 121,
+          "detailed": 176,
+          "extensive": 220
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "note",
+        "x": 86,
+        "y": 364,
+        "w": 257,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 17,
+          "detailed": 24,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "group": "note",
+        "x": 369,
+        "y": 394,
+        "w": 543,
+        "h": 45,
+        "size": 16,
+        "budget": {
+          "concise": 94,
+          "detailed": 136,
+          "extensive": 170
+        }
+      }
+    ]
+  },
+  "ds-content-card-left": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-card-left)",
+    "label": "Content Card Left (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 864,
+        "h": 39,
+        "size": 33,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "note",
+        "x": 86,
+        "y": 212,
+        "w": 202,
+        "h": 54,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 21
+        }
+      },
+      {
+        "role": "body",
+        "group": "note",
+        "x": 86,
+        "y": 282,
+        "w": 202,
+        "h": 126,
+        "size": 16,
+        "budget": {
+          "concise": 83,
+          "detailed": 120,
+          "extensive": 150
+        }
+      },
+      {
+        "role": "body",
+        "x": 355,
+        "y": 183,
+        "w": 557,
+        "h": 108,
+        "size": 16,
+        "budget": {
+          "concise": 165,
+          "detailed": 240,
+          "extensive": 300
+        }
+      }
+    ]
+  },
+  "ds-content-card-right": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-card-right)",
+    "label": "Content Card Right (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 864,
+        "h": 39,
+        "size": 33,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 183,
+        "w": 547,
+        "h": 108,
+        "size": 16,
+        "budget": {
+          "concise": 165,
+          "detailed": 240,
+          "extensive": 300
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "note",
+        "x": 672,
+        "y": 212,
+        "w": 240,
+        "h": 54,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 21
+        }
+      },
+      {
+        "role": "body",
+        "group": "note",
+        "x": 672,
+        "y": 282,
+        "w": 240,
+        "h": 126,
+        "size": 16,
+        "budget": {
+          "concise": 83,
+          "detailed": 120,
+          "extensive": 150
+        }
+      }
+    ]
+  },
+  "ds-content-image-bottom": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-image-bottom)",
+    "label": "Content Image Bottom (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 864,
+        "h": 39,
+        "size": 31,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 61
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 179,
+        "w": 864,
+        "h": 141,
+        "size": 16,
+        "budget": {
+          "concise": 143,
+          "detailed": 208,
+          "extensive": 260
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 48,
+        "y": 348,
+        "w": 864,
+        "h": 115
+      }
+    ]
+  },
+  "ds-content-image-left": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-image-left)",
+    "label": "Content Image Left (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 864,
+        "h": 39,
+        "size": 33,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 48,
+        "y": 183,
+        "w": 365,
+        "h": 280
+      },
+      {
+        "role": "body",
+        "x": 461,
+        "y": 183,
+        "w": 451,
+        "h": 280,
+        "size": 16,
+        "budget": {
+          "concise": 176,
+          "detailed": 256,
+          "extensive": 320
+        }
+      }
+    ]
+  },
+  "ds-content-image-right": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-image-right)",
+    "label": "Content Image Right (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 864,
+        "h": 39,
+        "size": 33,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 183,
+        "w": 442,
+        "h": 280,
+        "size": 16,
+        "budget": {
+          "concise": 176,
+          "detailed": 256,
+          "extensive": 320
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 538,
+        "y": 183,
+        "w": 374,
+        "h": 280
+      }
+    ]
+  },
+  "ds-content-lead": {
+    "purpose": "General explanatory content → eyebrow → title → lead paragraph. (imported: studio-content-lead)",
+    "label": "Content Lead (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 86,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 121,
+        "w": 787,
+        "h": 39,
+        "size": 29,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "body",
+        "group": "subhead",
+        "x": 48,
+        "y": 188,
+        "w": 768,
+        "h": 57,
+        "size": 16,
+        "budget": {
+          "concise": 72,
+          "detailed": 104,
+          "extensive": 130
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 269,
+        "w": 768,
+        "h": 184,
+        "size": 16,
+        "budget": {
+          "concise": 231,
+          "detailed": 336,
+          "extensive": 420
+        }
+      }
+    ]
+  },
+  "ds-points": {
+    "purpose": "General explanatory content → eyebrow → title. (imported: studio-points)",
+    "label": "Points (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 144,
+        "w": 787,
+        "h": 39,
+        "size": 29,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cards",
+        "count": 4,
+        "x": [
+          48,
+          269,
+          490,
+          710
+        ],
+        "y": 241,
+        "w": 166,
+        "h": 54,
+        "size": 16,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "group": "cards",
+        "count": 4,
+        "x": [
+          48,
+          269,
+          490,
+          710
+        ],
+        "y": 305,
+        "w": 166,
+        "h": 94,
+        "size": 15,
+        "budget": {
+          "concise": 96,
+          "detailed": 96,
+          "extensive": 96
+        }
+      }
+    ]
+  },
+  "ds-split": {
+    "purpose": "General explanatory content → eyebrow → title → 2 parallel labelled points. (imported: studio-split)",
+    "label": "Split (content)",
+    "importedKind": "content",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 86,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 121,
+        "w": 787,
+        "h": 39,
+        "size": 29,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "a",
+        "x": 48,
+        "y": 249,
+        "w": 398,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "body",
+        "group": "a",
+        "x": 48,
+        "y": 289,
+        "w": 398,
+        "h": 76,
+        "size": 16,
+        "budget": {
+          "concise": 88,
+          "detailed": 128,
+          "extensive": 160
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b",
+        "x": 504,
+        "y": 249,
+        "w": 408,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "body",
+        "group": "b",
+        "x": 504,
+        "y": 289,
+        "w": 408,
+        "h": 76,
+        "size": 16,
+        "budget": {
+          "concise": 88,
+          "detailed": 128,
+          "extensive": 160
+        }
+      }
+    ]
+  },
+  "ds-method-abstract": {
+    "purpose": "Process → eyebrow → title → 2 side-by-side blocks. (imported: studio-method-abstract)",
+    "label": "Method Abstract (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 107,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "body",
+        "group": "take",
+        "x": 572,
+        "y": 241,
+        "w": 340,
+        "h": 185,
+        "size": 16,
+        "budget": {
+          "concise": 132,
+          "detailed": 192,
+          "extensive": 240
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 3,
+        "x": 48,
+        "y": [
+          164,
+          275,
+          386
+        ],
+        "w": 440,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 20,
+          "detailed": 20,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 3,
+        "x": 48,
+        "y": [
+          192,
+          303,
+          414
+        ],
+        "w": 440,
+        "h": 89,
+        "size": 16,
+        "budget": {
+          "concise": 150,
+          "detailed": 150,
+          "extensive": 150
+        }
+      }
+    ]
+  },
+  "ds-method-beats": {
+    "purpose": "Process → eyebrow → title. (imported: studio-method-beats)",
+    "label": "Method Beats (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 107,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 4,
+        "x": 48,
+        "y": [
+          152,
+          249,
+          346,
+          443
+        ],
+        "w": 134,
+        "h": 44,
+        "size": 16,
+        "budget": {
+          "concise": 14,
+          "detailed": 14,
+          "extensive": 14
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 4,
+        "x": 206,
+        "y": [
+          147,
+          244,
+          341,
+          438
+        ],
+        "w": 706,
+        "h": 59,
+        "size": 16,
+        "budget": {
+          "concise": 140,
+          "detailed": 140,
+          "extensive": 140
+        }
+      }
+    ]
+  },
+  "ds-method-numerals": {
+    "purpose": "Process → eyebrow → title. (imported: studio-method-numerals)",
+    "label": "Method Numerals (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 83,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": 162,
+        "y": [
+          165,
+          233,
+          301,
+          369,
+          438
+        ],
+        "w": 750,
+        "h": 26,
+        "size": 16,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 5,
+        "x": 162,
+        "y": [
+          194,
+          262,
+          331,
+          399,
+          467
+        ],
+        "w": 750,
+        "h": 23,
+        "size": 16,
+        "budget": {
+          "concise": 90,
+          "detailed": 90,
+          "extensive": 90
+        }
+      }
+    ]
+  },
+  "ds-method-snap": {
+    "purpose": "Process → eyebrow → title → lead paragraph. (imported: studio-method-snap)",
+    "label": "Method Snap (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 85,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 153,
+        "w": 768,
+        "h": 49,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 6,
+        "x": [
+          48,
+          194,
+          341,
+          487,
+          633,
+          780
+        ],
+        "y": 335,
+        "w": 100,
+        "h": 43,
+        "size": 14,
+        "budget": {
+          "concise": 26,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 6,
+        "x": [
+          48,
+          194,
+          341,
+          487,
+          633,
+          780
+        ],
+        "y": 394,
+        "w": 100,
+        "h": 59,
+        "size": 13,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-method-timeline": {
+    "purpose": "Process → eyebrow → title → 2 side-by-side blocks. (imported: studio-method-timeline)",
+    "label": "Method Timeline (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 85,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "eyebrow-label",
+        "group": "g2",
+        "count": 6,
+        "x": 48,
+        "y": [
+          226,
+          273,
+          320,
+          366,
+          413,
+          460
+        ],
+        "w": 144,
+        "h": 22,
+        "size": 12,
+        "budget": {
+          "concise": 12,
+          "detailed": 12,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 6,
+        "x": 256,
+        "y": [
+          211,
+          258,
+          305,
+          352,
+          398,
+          445
+        ],
+        "w": 656,
+        "h": 26,
+        "size": 16,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 6,
+        "x": 256,
+        "y": [
+          239,
+          286,
+          333,
+          380,
+          427,
+          473
+        ],
+        "w": 656,
+        "h": 23,
+        "size": 16,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-method-verbs": {
+    "purpose": "Process → eyebrow → title. (imported: studio-method-verbs)",
+    "label": "Method Verbs (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 85,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": 104,
+        "y": [
+          257,
+          337,
+          417,
+          498,
+          578
+        ],
+        "w": 211,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 14,
+          "detailed": 14,
+          "extensive": 14
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 5,
+        "x": 334,
+        "y": [
+          240,
+          321,
+          401,
+          482,
+          562
+        ],
+        "w": 578,
+        "h": 59,
+        "size": 16,
+        "budget": {
+          "concise": 90,
+          "detailed": 90,
+          "extensive": 90
+        }
+      }
+    ]
+  },
+  "ds-method-verbstrip": {
+    "purpose": "Process → eyebrow → title → 2 side-by-side blocks. (imported: studio-method-verbstrip)",
+    "label": "Method Verbstrip (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 107,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "eyebrow-label",
+        "group": "g2",
+        "count": 6,
+        "x": [
+          48,
+          195,
+          341,
+          488,
+          635,
+          781
+        ],
+        "y": 209,
+        "w": 97,
+        "h": 44,
+        "size": 12,
+        "budget": {
+          "concise": 12,
+          "detailed": 12,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 6,
+        "x": [
+          48,
+          195,
+          341,
+          488,
+          635,
+          781
+        ],
+        "y": 256,
+        "w": 97,
+        "h": 54,
+        "size": 16,
+        "budget": {
+          "concise": 14,
+          "detailed": 14,
+          "extensive": 14
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 6,
+        "x": [
+          48,
+          195,
+          341,
+          488,
+          635,
+          781
+        ],
+        "y": 313,
+        "w": 97,
+        "h": 117,
+        "size": 15,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-method-why": {
+    "purpose": "Process → eyebrow → title → 2 side-by-side blocks. (imported: studio-method-why)",
+    "label": "Method Why (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 86,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 145,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "eyebrow-label",
+        "group": "g2",
+        "count": 4,
+        "x": [
+          48,
+          284,
+          520,
+          756
+        ],
+        "y": 270,
+        "w": 124,
+        "h": 22,
+        "size": 12,
+        "budget": {
+          "concise": 12,
+          "detailed": 12,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 4,
+        "x": [
+          48,
+          284,
+          520,
+          756
+        ],
+        "y": 302,
+        "w": 124,
+        "h": 79,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 4,
+        "x": [
+          48,
+          284,
+          520,
+          756
+        ],
+        "y": 391,
+        "w": 124,
+        "h": 121,
+        "size": 16,
+        "budget": {
+          "concise": 80,
+          "detailed": 80,
+          "extensive": 80
+        }
+      }
+    ]
+  },
+  "ds-process-cards": {
+    "purpose": "Process → eyebrow → title. (imported: studio-process-cards)",
+    "label": "Process Cards (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 40,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "steps",
+        "count": 4,
+        "x": [
+          92,
+          312,
+          531,
+          751
+        ],
+        "y": 313,
+        "w": 140,
+        "h": 51,
+        "size": 16,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "group": "steps",
+        "count": 4,
+        "x": [
+          48,
+          268,
+          488,
+          708
+        ],
+        "y": 373,
+        "w": 162,
+        "h": 97,
+        "size": 15,
+        "budget": {
+          "concise": 82,
+          "detailed": 82,
+          "extensive": 82
+        }
+      }
+    ]
+  },
+  "ds-process-numbered": {
+    "purpose": "Process → eyebrow → title. (imported: studio-process-numbered)",
+    "label": "Process Numbered (process)",
+    "importedKind": "process",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 787,
+        "h": 40,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "steps",
+        "count": 5,
+        "x": 154,
+        "y": [
+          179,
+          245,
+          311,
+          377,
+          442
+        ],
+        "w": 758,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "steps",
+        "count": 5,
+        "x": 154,
+        "y": [
+          212,
+          278,
+          344,
+          409,
+          475
+        ],
+        "w": 758,
+        "h": 23,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-comparison": {
+    "purpose": "Comparison → eyebrow → title. (imported: studio-comparison)",
+    "label": "Comparison (comparison)",
+    "importedKind": "comparison",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 787,
+        "h": 39,
+        "size": 29,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 57
+        }
+      }
+    ]
+  },
+  "ds-comparison-cards": {
+    "purpose": "Comparison → eyebrow → title. (imported: studio-comparison-cards)",
+    "label": "Comparison Cards (comparison)",
+    "importedKind": "comparison",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 20,
+          "detailed": 29,
+          "extensive": 36
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cards",
+        "count": 6,
+        "x": [
+          48,
+          343,
+          637,
+          48,
+          343,
+          637
+        ],
+        "y": [
+          217,
+          217,
+          217,
+          377,
+          377,
+          377
+        ],
+        "w": 233,
+        "h": 14,
+        "size": 16,
+        "budget": {
+          "concise": 22,
+          "detailed": 22,
+          "extensive": 22
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "cards",
+        "count": 6,
+        "x": [
+          48,
+          343,
+          637,
+          48,
+          343,
+          637
+        ],
+        "y": [
+          238,
+          238,
+          238,
+          398,
+          398,
+          398
+        ],
+        "w": 233,
+        "h": 22,
+        "size": 36,
+        "budget": {
+          "concise": 12,
+          "detailed": 12,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "body",
+        "group": "cards",
+        "count": 6,
+        "x": [
+          48,
+          343,
+          637,
+          48,
+          343,
+          637
+        ],
+        "y": [
+          269,
+          269,
+          269,
+          428,
+          428,
+          428
+        ],
+        "w": 233,
+        "h": 59,
+        "size": 14,
+        "budget": {
+          "concise": 90,
+          "detailed": 90,
+          "extensive": 90
+        }
+      }
+    ]
+  },
+  "ds-comparison-ranked": {
+    "purpose": "Comparison → eyebrow → title. (imported: studio-comparison-ranked)",
+    "label": "Comparison Ranked (comparison)",
+    "importedKind": "comparison",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "opts",
+        "count": 4,
+        "x": 167,
+        "y": [
+          252,
+          343,
+          435,
+          526
+        ],
+        "w": 229,
+        "h": 27,
+        "size": 11,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "opts",
+        "count": 4,
+        "x": 167,
+        "y": [
+          281,
+          373,
+          465,
+          556
+        ],
+        "w": 229,
+        "h": 23,
+        "size": 11,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-comparison-split": {
+    "purpose": "Comparison → eyebrow → title → 10 parallel labelled points. (imported: studio-comparison-split)",
+    "label": "Comparison Split (comparison)",
+    "importedKind": "comparison",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "a",
+        "x": 48,
+        "y": 275,
+        "w": 413,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "a1",
+        "x": 103,
+        "y": 321,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "a2",
+        "x": 103,
+        "y": 361,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "a3",
+        "x": 103,
+        "y": 402,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "a4",
+        "x": 103,
+        "y": 443,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b",
+        "x": 472,
+        "y": 275,
+        "w": 440,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b1",
+        "x": 500,
+        "y": 321,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b2",
+        "x": 500,
+        "y": 361,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b3",
+        "x": 500,
+        "y": 402,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b4",
+        "x": 500,
+        "y": 443,
+        "w": 198,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 19,
+          "detailed": 26,
+          "extensive": 26
+        }
+      }
+    ]
+  },
+  "ds-stat-band": {
+    "purpose": "Stat → eyebrow → title → 3 parallel labelled points. (imported: stat-band)",
+    "label": "Stat Band (stat)",
+    "importedKind": "stat",
+    "selectable": true,
+    "minNumbers": 3,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 144,
+        "w": 806,
+        "h": 39,
+        "size": 33,
+        "budget": {
+          "concise": 35,
+          "detailed": 46,
+          "extensive": 46
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "m1",
+        "x": 48,
+        "y": 366,
+        "w": 262,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "m1",
+        "x": 48,
+        "y": 412,
+        "w": 262,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "delta",
+        "group": "m1",
+        "x": 48,
+        "y": 436,
+        "w": 262,
+        "h": 18,
+        "size": 12,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "m2",
+        "x": 349,
+        "y": 366,
+        "w": 262,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "m2",
+        "x": 349,
+        "y": 412,
+        "w": 262,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "delta",
+        "group": "m2",
+        "x": 349,
+        "y": 436,
+        "w": 262,
+        "h": 18,
+        "size": 12,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "m3",
+        "x": 650,
+        "y": 366,
+        "w": 262,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "m3",
+        "x": 650,
+        "y": 412,
+        "w": 262,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "delta",
+        "group": "m3",
+        "x": 650,
+        "y": 436,
+        "w": 262,
+        "h": 18,
+        "size": 12,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      }
+    ]
+  },
+  "ds-stat-cards": {
+    "purpose": "Stat → eyebrow → title. (imported: stat-cards)",
+    "label": "Stat Cards (stat)",
+    "importedKind": "stat",
+    "selectable": true,
+    "minNumbers": 3,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 32,
+        "budget": {
+          "concise": 35,
+          "detailed": 46,
+          "extensive": 46
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "metrics",
+        "count": 4,
+        "x": [
+          48,
+          270,
+          492,
+          713
+        ],
+        "y": 234,
+        "w": 85,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "metrics",
+        "count": 4,
+        "x": [
+          48,
+          270,
+          492,
+          713
+        ],
+        "y": 284,
+        "w": 85,
+        "h": 72,
+        "size": 14,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "metrics",
+        "count": 4,
+        "x": [
+          48,
+          270,
+          492,
+          713
+        ],
+        "y": 369,
+        "w": 153,
+        "h": 49,
+        "size": 14,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-stat-hero": {
+    "purpose": "Stat → eyebrow → title → 3 parallel labelled points. (imported: stat-hero)",
+    "label": "Stat Hero (stat)",
+    "importedKind": "stat",
+    "selectable": true,
+    "minNumbers": 3,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 32,
+        "budget": {
+          "concise": 35,
+          "detailed": 46,
+          "extensive": 46
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "hero",
+        "x": 48,
+        "y": 307,
+        "w": 461,
+        "h": 53,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "hero",
+        "x": 48,
+        "y": 374,
+        "w": 461,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "delta",
+        "group": "hero",
+        "x": 48,
+        "y": 404,
+        "w": 461,
+        "h": 18,
+        "size": 12,
+        "budget": {
+          "concise": 7,
+          "detailed": 10,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "s1",
+        "x": 586,
+        "y": 307,
+        "w": 326,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "s1",
+        "x": 586,
+        "y": 349,
+        "w": 326,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "s2",
+        "x": 586,
+        "y": 396,
+        "w": 326,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "s2",
+        "x": 586,
+        "y": 437,
+        "w": 326,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      }
+    ]
+  },
+  "ds-stat-lead": {
+    "purpose": "Stat → eyebrow → title → 3 parallel labelled points. (imported: stat-lead)",
+    "label": "Stat Lead (stat)",
+    "importedKind": "stat",
+    "selectable": true,
+    "minNumbers": 3,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 29,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "hero",
+        "x": 48,
+        "y": 240,
+        "w": 403,
+        "h": 53,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "hero",
+        "x": 48,
+        "y": 307,
+        "w": 403,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "delta",
+        "group": "hero",
+        "x": 48,
+        "y": 336,
+        "w": 403,
+        "h": 18,
+        "size": 12,
+        "budget": {
+          "concise": 8,
+          "detailed": 11,
+          "extensive": 14
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "s1",
+        "x": 536,
+        "y": 221,
+        "w": 376,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "s1",
+        "x": 536,
+        "y": 261,
+        "w": 376,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "body",
+        "group": "s1",
+        "x": 536,
+        "y": 285,
+        "w": 376,
+        "h": 45,
+        "size": 16,
+        "budget": {
+          "concise": 44,
+          "detailed": 64,
+          "extensive": 80
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "s2",
+        "x": 536,
+        "y": 365,
+        "w": 376,
+        "h": 36,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 10
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "s2",
+        "x": 536,
+        "y": 405,
+        "w": 376,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "body",
+        "group": "s2",
+        "x": 536,
+        "y": 429,
+        "w": 376,
+        "h": 45,
+        "size": 16,
+        "budget": {
+          "concise": 44,
+          "detailed": 64,
+          "extensive": 80
+        }
+      }
+    ]
+  },
+  "ds-agenda": {
+    "purpose": "Agenda → eyebrow → title. (imported: studio-agenda)",
+    "label": "Agenda (agenda)",
+    "importedKind": "agenda",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "title",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 44,
+        "size": 34,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": 98,
+        "y": [
+          183,
+          239,
+          294,
+          350,
+          406
+        ],
+        "w": 445,
+        "h": 27,
+        "size": 14,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-agenda-cards": {
+    "purpose": "Agenda → eyebrow → title. (imported: studio-agenda-cards)",
+    "label": "Agenda Cards (agenda)",
+    "importedKind": "agenda",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "title",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 44,
+        "size": 34,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": 100,
+        "y": [
+          157,
+          220,
+          284,
+          347,
+          411
+        ],
+        "w": 812,
+        "h": 48,
+        "size": 16,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-agenda-index": {
+    "purpose": "Agenda → eyebrow → title. (imported: studio-agenda-index)",
+    "label": "Agenda Index (agenda)",
+    "importedKind": "agenda",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "title",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 44,
+        "size": 34,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": 144,
+        "y": [
+          170,
+          232,
+          294,
+          357,
+          419
+        ],
+        "w": 445,
+        "h": 27,
+        "size": 14,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-chart-bar": {
+    "purpose": "Chart → eyebrow → title. (imported: studio-chart-bar)",
+    "label": "Chart Bar (chart)",
+    "importedKind": "chart",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 57
+        }
+      }
+    ]
+  },
+  "ds-chart-callout": {
+    "purpose": "Chart → eyebrow → title. (imported: studio-chart-callout)",
+    "label": "Chart Callout (chart)",
+    "importedKind": "chart",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 518,
+        "h": 78,
+        "size": 31,
+        "budget": {
+          "concise": 31,
+          "detailed": 37,
+          "extensive": 37
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "note",
+        "x": 626,
+        "y": 227,
+        "w": 286,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "note",
+        "x": 626,
+        "y": 270,
+        "w": 286,
+        "h": 101,
+        "size": 16,
+        "budget": {
+          "concise": 83,
+          "detailed": 120,
+          "extensive": 150
+        }
+      }
+    ]
+  },
+  "ds-chart-duo": {
+    "purpose": "Chart → eyebrow → title → 2 parallel labelled points. (imported: studio-chart-duo)",
+    "label": "Chart Duo (chart)",
+    "importedKind": "chart",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 67,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 115,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 31,
+          "detailed": 45,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "m1",
+        "x": 48,
+        "y": 250,
+        "w": 413,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 17,
+          "detailed": 24,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "m2",
+        "x": 499,
+        "y": 250,
+        "w": 413,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 17,
+          "detailed": 24,
+          "extensive": 30
+        }
+      }
+    ]
+  },
+  "ds-chart-takeaway": {
+    "purpose": "Chart → eyebrow → title → lead paragraph. (imported: studio-chart-takeaway)",
+    "label": "Chart Takeaway (chart)",
+    "importedKind": "chart",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 67,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 115,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 31,
+          "detailed": 45,
+          "extensive": 56
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 456,
+        "w": 864,
+        "h": 55,
+        "size": 16,
+        "budget": {
+          "concise": 66,
+          "detailed": 87,
+          "extensive": 87
+        }
+      }
+    ]
+  },
+  "ds-concept-hero": {
+    "purpose": "Concept → eyebrow → title → 2 side-by-side blocks. (imported: studio-concept-hero)",
+    "label": "Concept Hero (concept)",
+    "importedKind": "concept",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 36,
+        "size": 34,
+        "budget": {
+          "concise": 17,
+          "detailed": 24,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "group": "def",
+        "x": 48,
+        "y": 159,
+        "w": 864,
+        "h": 59,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "example",
+        "x": 48,
+        "y": 259,
+        "w": 254,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "example",
+        "x": 48,
+        "y": 294,
+        "w": 811,
+        "h": 43,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      }
+    ]
+  },
+  "ds-concept-numbered": {
+    "purpose": "Concept → eyebrow → title. (imported: studio-concept-numbered)",
+    "label": "Concept Numbered (concept)",
+    "importedKind": "concept",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 3,
+        "x": 115,
+        "y": [
+          171,
+          245,
+          319
+        ],
+        "w": 797,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 20,
+          "detailed": 20,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 3,
+        "x": 115,
+        "y": [
+          202,
+          276,
+          350
+        ],
+        "w": 797,
+        "h": 28,
+        "size": 16,
+        "budget": {
+          "concise": 72,
+          "detailed": 72,
+          "extensive": 72
+        }
+      }
+    ]
+  },
+  "ds-concept-panel": {
+    "purpose": "Concept → eyebrow → title → 2 parallel labelled points. (imported: studio-concept-panel)",
+    "label": "Concept Panel (concept)",
+    "importedKind": "concept",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 228,
+        "w": 365,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 274,
+        "w": 365,
+        "h": 38,
+        "size": 34,
+        "budget": {
+          "concise": 18,
+          "detailed": 18,
+          "extensive": 18
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "plain",
+        "x": 480,
+        "y": 112,
+        "w": 432,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "plain",
+        "x": 480,
+        "y": 141,
+        "w": 432,
+        "h": 114,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "prac",
+        "x": 480,
+        "y": 284,
+        "w": 432,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "prac",
+        "x": 480,
+        "y": 314,
+        "w": 432,
+        "h": 114,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      }
+    ]
+  },
+  "ds-concept-stack": {
+    "purpose": "Concept → eyebrow → title → 2 side-by-side blocks. (imported: studio-concept-stack)",
+    "label": "Concept Stack (concept)",
+    "importedKind": "concept",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 113,
+        "w": 864,
+        "h": 36,
+        "size": 34,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "def",
+        "x": 48,
+        "y": 178,
+        "w": 864,
+        "h": 119,
+        "size": 16,
+        "budget": {
+          "concise": 220,
+          "detailed": 320,
+          "extensive": 400
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "example",
+        "x": 48,
+        "y": 343,
+        "w": 221,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "example",
+        "x": 48,
+        "y": 378,
+        "w": 779,
+        "h": 61,
+        "size": 16,
+        "budget": {
+          "concise": 165,
+          "detailed": 240,
+          "extensive": 300
+        }
+      }
+    ]
+  },
+  "ds-diagram": {
+    "purpose": "Diagram → eyebrow → title → 2 parallel labelled points. (imported: studio-diagram)",
+    "label": "Diagram (diagram)",
+    "importedKind": "diagram",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "top",
+        "x": 336,
+        "y": 240,
+        "w": 288,
+        "h": 77,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "boxes",
+        "count": 4,
+        "x": [
+          48,
+          257,
+          465,
+          674
+        ],
+        "y": 384,
+        "w": 180,
+        "h": 86,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-diagram-matrix": {
+    "purpose": "Diagram → eyebrow → title → 4 parallel labelled points. (imported: studio-diagram-matrix)",
+    "label": "Diagram Matrix (diagram)",
+    "importedKind": "diagram",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 32,
+        "budget": {
+          "concise": 33,
+          "detailed": 46,
+          "extensive": 46
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "top",
+        "x": 115,
+        "y": 240,
+        "w": 355,
+        "h": 115,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b1",
+        "x": 490,
+        "y": 240,
+        "w": 355,
+        "h": 115,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b2",
+        "x": 115,
+        "y": 374,
+        "w": 355,
+        "h": 115,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b3",
+        "x": 490,
+        "y": 374,
+        "w": 355,
+        "h": 115,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 22,
+          "extensive": 28
+        }
+      }
+    ]
+  },
+  "ds-diagram-nested": {
+    "purpose": "Diagram → eyebrow → title → 4 parallel labelled points. (imported: studio-diagram-nested)",
+    "label": "Diagram Nested (diagram)",
+    "importedKind": "diagram",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 32,
+        "budget": {
+          "concise": 33,
+          "detailed": 46,
+          "extensive": 46
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "top",
+        "x": 106,
+        "y": 254,
+        "w": 195,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 20,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b1",
+        "x": 106,
+        "y": 317,
+        "w": 230,
+        "h": 134,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 21,
+          "extensive": 21
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b2",
+        "x": 365,
+        "y": 317,
+        "w": 230,
+        "h": 134,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 21,
+          "extensive": 21
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "b3",
+        "x": 624,
+        "y": 317,
+        "w": 230,
+        "h": 134,
+        "size": 16,
+        "budget": {
+          "concise": 15,
+          "detailed": 21,
+          "extensive": 21
+        }
+      }
+    ]
+  },
+  "ds-media": {
+    "purpose": "Media → eyebrow → title → lead paragraph. (imported: studio-media)",
+    "label": "Media (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 480,
+        "y": 126,
+        "w": 432,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 480,
+        "y": 164,
+        "w": 432,
+        "h": 119,
+        "size": 34,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "x": 480,
+        "y": 310,
+        "w": 432,
+        "h": 104,
+        "size": 16,
+        "budget": {
+          "concise": 132,
+          "detailed": 192,
+          "extensive": 240
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 422,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-banner": {
+    "purpose": "Media → eyebrow → title → lead paragraph. (imported: studio-media-banner)",
+    "label": "Media Banner (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 346,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 380,
+        "w": 864,
+        "h": 40,
+        "size": 31,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 61
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 439,
+        "w": 768,
+        "h": 50,
+        "size": 16,
+        "budget": {
+          "concise": 99,
+          "detailed": 144,
+          "extensive": 180
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 912,
+        "h": 307
+      }
+    ]
+  },
+  "ds-media-cover": {
+    "purpose": "Media → eyebrow → title → 2 side-by-side blocks. (imported: studio-media-cover)",
+    "label": "Media Cover (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 125,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 169,
+        "w": 480,
+        "h": 244,
+        "size": 34,
+        "budget": {
+          "concise": 19,
+          "detailed": 19,
+          "extensive": 19
+        }
+      },
+      {
+        "role": "body",
+        "group": "subhead",
+        "x": 48,
+        "y": 473,
+        "w": 451,
+        "h": 47,
+        "size": 16,
+        "budget": {
+          "concise": 59,
+          "detailed": 59,
+          "extensive": 59
+        }
+      },
+      {
+        "role": "author",
+        "x": 48,
+        "y": 539,
+        "w": 240,
+        "h": 18,
+        "size": 13,
+        "budget": {
+          "concise": 26,
+          "detailed": 38,
+          "extensive": 38
+        }
+      },
+      {
+        "role": "date",
+        "x": 317,
+        "y": 539,
+        "w": 52,
+        "h": 18,
+        "size": 13,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 557,
+        "y": 0,
+        "w": 355,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-banner": {
+    "purpose": "Media → eyebrow → title → lead paragraph. (imported: studio-media-dark-banner)",
+    "label": "Media Dark Banner (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 326,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 374,
+        "w": 864,
+        "h": 40,
+        "size": 31,
+        "budget": {
+          "concise": 35,
+          "detailed": 51,
+          "extensive": 61
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 461,
+        "w": 768,
+        "h": 50,
+        "size": 16,
+        "budget": {
+          "concise": 99,
+          "detailed": 101,
+          "extensive": 101
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 912,
+        "h": 288
+      }
+    ]
+  },
+  "ds-media-dark-cover": {
+    "purpose": "Media → eyebrow → title → 2 side-by-side blocks. (imported: studio-media-dark-cover)",
+    "label": "Media Dark Cover (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 125,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 169,
+        "w": 480,
+        "h": 151,
+        "size": 34,
+        "budget": {
+          "concise": 19,
+          "detailed": 19,
+          "extensive": 19
+        }
+      },
+      {
+        "role": "body",
+        "group": "subhead",
+        "x": 48,
+        "y": 380,
+        "w": 451,
+        "h": 47,
+        "size": 16,
+        "budget": {
+          "concise": 59,
+          "detailed": 59,
+          "extensive": 59
+        }
+      },
+      {
+        "role": "author",
+        "x": 48,
+        "y": 464,
+        "w": 240,
+        "h": 18,
+        "size": 13,
+        "budget": {
+          "concise": 26,
+          "detailed": 38,
+          "extensive": 38
+        }
+      },
+      {
+        "role": "date",
+        "x": 317,
+        "y": 464,
+        "w": 52,
+        "h": 18,
+        "size": 13,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 557,
+        "y": 0,
+        "w": 355,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-diagonal": {
+    "purpose": "Media → eyebrow → title. (imported: studio-media-dark-diagonal)",
+    "label": "Media Dark Diagonal (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 605,
+        "y": 182,
+        "w": 307,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        },
+        "align": "center"
+      },
+      {
+        "role": "title",
+        "x": 605,
+        "y": 240,
+        "w": 307,
+        "h": 119,
+        "size": 34,
+        "budget": {
+          "concise": 26,
+          "detailed": 26,
+          "extensive": 26
+        },
+        "align": "center"
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 557,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-fullbleed": {
+    "purpose": "Media → eyebrow → title. (imported: studio-media-dark-fullbleed)",
+    "label": "Media Dark Fullbleed (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "overlay": true,
+    "overlayZone": "lower-third",
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 371,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 403,
+        "w": 691,
+        "h": 79,
+        "size": 31,
+        "budget": {
+          "concise": 35,
+          "detailed": 50,
+          "extensive": 50
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 912,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-grid": {
+    "purpose": "Media → eyebrow → title → 3 parallel labelled points. (imported: studio-media-dark-grid)",
+    "label": "Media Dark Grid (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 67,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 120,
+        "w": 864,
+        "h": 40,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 48,
+        "y": 250,
+        "w": 273,
+        "h": 201
+      },
+      {
+        "role": "metric-label",
+        "group": "i1",
+        "x": 48,
+        "y": 464,
+        "w": 273,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img2",
+        "x": 344,
+        "y": 250,
+        "w": 273,
+        "h": 201
+      },
+      {
+        "role": "metric-label",
+        "group": "i2",
+        "x": 344,
+        "y": 464,
+        "w": 273,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img3",
+        "x": 639,
+        "y": 250,
+        "w": 273,
+        "h": 201
+      },
+      {
+        "role": "metric-label",
+        "group": "i3",
+        "x": 639,
+        "y": 464,
+        "w": 273,
+        "h": 18,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      }
+    ]
+  },
+  "ds-media-dark-points": {
+    "purpose": "Media → eyebrow → title → 3 parallel labelled points. (imported: studio-media-dark-points)",
+    "label": "Media Dark Points (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 442,
+        "y": 139,
+        "w": 470,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 442,
+        "y": 173,
+        "w": 470,
+        "h": 79,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 34,
+          "extensive": 34
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "p1",
+        "x": 474,
+        "y": 285,
+        "w": 378,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 35,
+          "detailed": 50,
+          "extensive": 50
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "p2",
+        "x": 474,
+        "y": 331,
+        "w": 378,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 35,
+          "detailed": 50,
+          "extensive": 50
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "p3",
+        "x": 474,
+        "y": 378,
+        "w": 378,
+        "h": 23,
+        "size": 14,
+        "budget": {
+          "concise": 35,
+          "detailed": 50,
+          "extensive": 50
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-quote": {
+    "purpose": "Media → eyebrow → title → 3 side-by-side blocks. (imported: studio-media-dark-quote)",
+    "label": "Media Dark Quote (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "body",
+        "group": "q",
+        "x": 461,
+        "y": 192,
+        "w": 451,
+        "h": 89,
+        "size": 16,
+        "budget": {
+          "concise": 88,
+          "detailed": 128,
+          "extensive": 160
+        }
+      },
+      {
+        "role": "author",
+        "group": "a",
+        "x": 461,
+        "y": 422,
+        "w": 451,
+        "h": 20,
+        "size": 13,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 403,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-split": {
+    "purpose": "Media → eyebrow → title → lead paragraph. (imported: studio-media-dark-split)",
+    "label": "Media Dark Split (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 499,
+        "y": 154,
+        "w": 413,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 499,
+        "y": 211,
+        "w": 413,
+        "h": 119,
+        "size": 34,
+        "budget": {
+          "concise": 29,
+          "detailed": 29,
+          "extensive": 29
+        }
+      },
+      {
+        "role": "body",
+        "x": 499,
+        "y": 365,
+        "w": 413,
+        "h": 101,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 0,
+        "y": 0,
+        "w": 442,
+        "h": 540
+      }
+    ]
+  },
+  "ds-media-dark-stat": {
+    "purpose": "Media → eyebrow → title → lead paragraph → 2 side-by-side blocks. (imported: studio-media-dark-stat)",
+    "label": "Media Dark Stat (media)",
+    "importedKind": "media",
+    "selectable": true,
+    "hasImage": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 144,
+        "w": 442,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "metric-value",
+        "group": "m",
+        "x": 48,
+        "y": 178,
+        "w": 442,
+        "h": 106,
+        "size": 36,
+        "budget": {
+          "concise": 6,
+          "detailed": 8,
+          "extensive": 9
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "m",
+        "x": 48,
+        "y": 293,
+        "w": 442,
+        "h": 24,
+        "size": 16,
+        "budget": {
+          "concise": 17,
+          "detailed": 24,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "body",
+        "x": 48,
+        "y": 346,
+        "w": 442,
+        "h": 50,
+        "size": 16,
+        "budget": {
+          "concise": 66,
+          "detailed": 96,
+          "extensive": 120
+        }
+      },
+      {
+        "role": "image",
+        "type": "image",
+        "group": "img",
+        "x": 557,
+        "y": 0,
+        "w": 355,
+        "h": 540
+      }
+    ]
+  },
+  "ds-objective-check": {
+    "purpose": "Objective → eyebrow → title. (imported: studio-objective-check)",
+    "label": "Objective Check (objective)",
+    "importedKind": "objective",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 438,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 115,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 35,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 4,
+        "x": 80,
+        "y": [
+          233,
+          283,
+          332,
+          381
+        ],
+        "w": 223,
+        "h": 27,
+        "size": 10,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-objective-ladder": {
+    "purpose": "Objective → eyebrow → title → 2 side-by-side blocks. (imported: studio-objective-ladder)",
+    "label": "Objective Ladder (objective)",
+    "importedKind": "objective",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "body",
+        "group": "hero",
+        "x": 48,
+        "y": 162,
+        "w": 864,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 55,
+          "detailed": 80,
+          "extensive": 100
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 4,
+        "x": 48,
+        "y": [
+          218,
+          256,
+          295,
+          333
+        ],
+        "w": 164,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 16,
+          "detailed": 16,
+          "extensive": 16
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 4,
+        "x": 227,
+        "y": [
+          218,
+          256,
+          295,
+          333
+        ],
+        "w": 515,
+        "h": 27,
+        "size": 13,
+        "budget": {
+          "concise": 72,
+          "detailed": 72,
+          "extensive": 72
+        }
+      }
+    ]
+  },
+  "ds-objective-panel": {
+    "purpose": "Objective → eyebrow → title. (imported: studio-objective-panel)",
+    "label": "Objective Panel (objective)",
+    "importedKind": "objective",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 144,
+        "w": 240,
+        "h": 81,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 25,
+          "extensive": 25
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 245,
+        "w": 240,
+        "h": 151,
+        "size": 34,
+        "budget": {
+          "concise": 11,
+          "detailed": 11,
+          "extensive": 11
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 4,
+        "x": 396,
+        "y": [
+          133,
+          206,
+          280,
+          353
+        ],
+        "w": 516,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 4,
+        "x": 396,
+        "y": [
+          164,
+          237,
+          310,
+          384
+        ],
+        "w": 516,
+        "h": 23,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-objective-verbs": {
+    "purpose": "Objective → eyebrow → title. (imported: studio-objective-verbs)",
+    "label": "Objective Verbs (objective)",
+    "importedKind": "objective",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 438,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 115,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 35,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 4,
+        "x": [
+          48,
+          271,
+          494,
+          718
+        ],
+        "y": 317,
+        "w": 185,
+        "h": 27,
+        "size": 16,
+        "budget": {
+          "concise": 16,
+          "detailed": 16,
+          "extensive": 16
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 4,
+        "x": [
+          48,
+          271,
+          494,
+          718
+        ],
+        "y": 350,
+        "w": 185,
+        "h": 94,
+        "size": 15,
+        "budget": {
+          "concise": 90,
+          "detailed": 90,
+          "extensive": 90
+        }
+      }
+    ]
+  },
+  "ds-practice-callout": {
+    "purpose": "Practice → eyebrow → title → 2 side-by-side blocks. (imported: studio-practice-callout)",
+    "label": "Practice Callout (practice)",
+    "importedKind": "practice",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 78,
+        "size": 34,
+        "budget": {
+          "concise": 42,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": 80,
+        "y": [
+          235,
+          273,
+          312,
+          350,
+          388
+        ],
+        "w": 223,
+        "h": 28,
+        "size": 11,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "out",
+        "x": 552,
+        "y": 246,
+        "w": 360,
+        "h": 143,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      }
+    ]
+  },
+  "ds-practice-chips": {
+    "purpose": "Practice → eyebrow → title → 2 side-by-side blocks. (imported: studio-practice-chips)",
+    "label": "Practice Chips (practice)",
+    "importedKind": "practice",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 114,
+        "w": 499,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 160,
+        "w": 499,
+        "h": 119,
+        "size": 34,
+        "budget": {
+          "concise": 24,
+          "detailed": 24,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 5,
+        "x": [
+          271,
+          48,
+          271,
+          48,
+          271
+        ],
+        "y": [
+          315,
+          358,
+          358,
+          401,
+          401
+        ],
+        "w": 187,
+        "h": 18,
+        "size": 10,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "out",
+        "x": 614,
+        "y": 204,
+        "w": 298,
+        "h": 172,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      }
+    ]
+  },
+  "ds-practice-split": {
+    "purpose": "Practice → eyebrow → title → 2 side-by-side blocks. (imported: studio-practice-split)",
+    "label": "Practice Split (practice)",
+    "importedKind": "practice",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 123,
+        "w": 803,
+        "h": 88,
+        "size": 34,
+        "budget": {
+          "concise": 81,
+          "detailed": 81,
+          "extensive": 81
+        }
+      },
+      {
+        "role": "body",
+        "group": "mats",
+        "count": 6,
+        "x": [
+          86,
+          86,
+          86,
+          526,
+          526,
+          526
+        ],
+        "y": [
+          296,
+          357,
+          418,
+          296,
+          357,
+          418
+        ],
+        "w": 371,
+        "h": 23,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "out",
+        "count": 6,
+        "x": [
+          86,
+          86,
+          86,
+          526,
+          526,
+          526
+        ],
+        "y": [
+          323,
+          384,
+          445,
+          323,
+          384,
+          445
+        ],
+        "w": 371,
+        "h": 23,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-practice-triple": {
+    "purpose": "Practice → eyebrow → title → 3 parallel labelled points. (imported: studio-practice-triple)",
+    "label": "Practice Triple (practice)",
+    "importedKind": "practice",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "task",
+        "x": 48,
+        "y": 177,
+        "w": 247,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "task",
+        "x": 48,
+        "y": 207,
+        "w": 247,
+        "h": 193,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 191
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "mats",
+        "x": 356,
+        "y": 177,
+        "w": 247,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "mats",
+        "x": 356,
+        "y": 207,
+        "w": 247,
+        "h": 193,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 191
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "out",
+        "x": 650,
+        "y": 177,
+        "w": 262,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "out",
+        "x": 650,
+        "y": 207,
+        "w": 262,
+        "h": 193,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 191
+        }
+      }
+    ]
+  },
+  "ds-question-band": {
+    "purpose": "Question → eyebrow → title. (imported: studio-question-band)",
+    "label": "Question Band (question)",
+    "importedKind": "question",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 438,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 211,
+        "w": 864,
+        "h": 326,
+        "size": 34,
+        "budget": {
+          "concise": 39,
+          "detailed": 39,
+          "extensive": 39
+        }
+      }
+    ]
+  },
+  "ds-question-card": {
+    "purpose": "Question → eyebrow → title. (imported: studio-question-card)",
+    "label": "Question Card (question)",
+    "importedKind": "question",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "label",
+        "x": 96,
+        "y": 212,
+        "w": 768,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "title",
+        "x": 96,
+        "y": 248,
+        "w": 768,
+        "h": 124,
+        "size": 34,
+        "budget": {
+          "concise": 49,
+          "detailed": 49,
+          "extensive": 49
+        }
+      }
+    ]
+  },
+  "ds-question-context": {
+    "purpose": "Question → eyebrow → title. (imported: studio-question-context)",
+    "label": "Question Context (question)",
+    "importedKind": "question",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "ctx",
+        "x": 48,
+        "y": 89,
+        "w": 768,
+        "h": 62,
+        "size": 16,
+        "budget": {
+          "concise": 99,
+          "detailed": 144,
+          "extensive": 180
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 246,
+        "w": 864,
+        "h": 78,
+        "size": 34,
+        "budget": {
+          "concise": 42,
+          "detailed": 42,
+          "extensive": 42
+        }
+      }
+    ]
+  },
+  "ds-question-hypothesis": {
+    "purpose": "Question → eyebrow → title. (imported: studio-question-hypothesis)",
+    "label": "Question Hypothesis (question)",
+    "importedKind": "question",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 93,
+        "w": 864,
+        "h": 78,
+        "size": 34,
+        "budget": {
+          "concise": 42,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "hyp",
+        "x": 48,
+        "y": 205,
+        "w": 864,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "hyp",
+        "x": 48,
+        "y": 230,
+        "w": 864,
+        "h": 57,
+        "size": 16,
+        "budget": {
+          "concise": 77,
+          "detailed": 112,
+          "extensive": 140
+        }
+      }
+    ]
+  },
+  "ds-question-mark": {
+    "purpose": "Question → eyebrow → title. (imported: studio-question-mark)",
+    "label": "Question Mark (question)",
+    "importedKind": "question",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 238,
+        "y": 170,
+        "w": 674,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 238,
+        "y": 213,
+        "w": 674,
+        "h": 119,
+        "size": 34,
+        "budget": {
+          "concise": 32,
+          "detailed": 32,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "body",
+        "group": "cite",
+        "x": 238,
+        "y": 348,
+        "w": 674,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 44,
+          "detailed": 64,
+          "extensive": 80
+        }
+      }
+    ]
+  },
+  "ds-question-sub": {
+    "purpose": "Question → eyebrow → title → 2 side-by-side blocks. (imported: studio-question-sub)",
+    "label": "Question Sub (question)",
+    "importedKind": "question",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 48,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 83,
+        "w": 864,
+        "h": 79,
+        "size": 34,
+        "budget": {
+          "concise": 42,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "subs",
+        "x": 48,
+        "y": 190,
+        "w": 864,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 5,
+        "x": 48,
+        "y": [
+          228,
+          262,
+          297,
+          331,
+          365
+        ],
+        "w": 648,
+        "h": 29,
+        "size": 13,
+        "budget": {
+          "concise": 90,
+          "detailed": 90,
+          "extensive": 90
+        }
+      }
+    ]
+  },
+  "ds-question-why": {
+    "purpose": "Question → eyebrow → title. (imported: studio-question-why)",
+    "label": "Question Why (question)",
+    "importedKind": "question",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 169,
+        "w": 462,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 212,
+        "w": 462,
+        "h": 158,
+        "size": 34,
+        "budget": {
+          "concise": 30,
+          "detailed": 30,
+          "extensive": 30
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "why",
+        "x": 576,
+        "y": 178,
+        "w": 336,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "why",
+        "x": 576,
+        "y": 214,
+        "w": 336,
+        "h": 148,
+        "size": 16,
+        "budget": {
+          "concise": 110,
+          "detailed": 160,
+          "extensive": 200
+        }
+      }
+    ]
+  },
+  "ds-quote": {
+    "purpose": "Quote → eyebrow → title. (imported: studio-quote)",
+    "label": "Quote (quote)",
+    "importedKind": "quote",
+    "selectable": true,
+    "needsQuote": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 95,
+        "y": 146,
+        "w": 817,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "group": "quote",
+        "x": 95,
+        "y": 189,
+        "w": 817,
+        "h": 145,
+        "size": 34,
+        "verbatim": true
+      },
+      {
+        "role": "body",
+        "group": "subhead",
+        "x": 95,
+        "y": 372,
+        "w": 817,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-quote-card": {
+    "purpose": "Quote → eyebrow → title. (imported: studio-quote-card)",
+    "label": "Quote Card (quote)",
+    "importedKind": "quote",
+    "selectable": true,
+    "needsQuote": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 115,
+        "y": 144,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "group": "quote",
+        "x": 115,
+        "y": 202,
+        "w": 730,
+        "h": 149,
+        "size": 34,
+        "verbatim": true
+      },
+      {
+        "role": "body",
+        "group": "subhead",
+        "x": 157,
+        "y": 405,
+        "w": 364,
+        "h": 22,
+        "size": 14,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-quote-mark": {
+    "purpose": "Quote → eyebrow → title. (imported: studio-quote-mark)",
+    "label": "Quote Mark (quote)",
+    "importedKind": "quote",
+    "selectable": true,
+    "needsQuote": true,
+    "shared": [
+      {
+        "role": "title",
+        "group": "quote",
+        "x": 86,
+        "y": 240,
+        "w": 768,
+        "h": 130,
+        "size": 34,
+        "verbatim": true
+      },
+      {
+        "role": "body",
+        "group": "subhead",
+        "x": 86,
+        "y": 422,
+        "w": 364,
+        "h": 22,
+        "size": 14,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-repeating-chips": {
+    "purpose": "Repeating → eyebrow → title. (imported: studio-repeating-chips)",
+    "label": "Repeating Chips (repeating)",
+    "importedKind": "repeating",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 6,
+        "x": 48,
+        "y": [
+          185,
+          245,
+          305,
+          364,
+          424,
+          484
+        ],
+        "w": 115,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 12,
+          "detailed": 12,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 6,
+        "x": 198,
+        "y": [
+          183,
+          243,
+          302,
+          362,
+          421,
+          481
+        ],
+        "w": 332,
+        "h": 27,
+        "size": 14,
+        "budget": {
+          "concise": 44,
+          "detailed": 44,
+          "extensive": 44
+        }
+      },
+      {
+        "role": "eyebrow-label",
+        "group": "items",
+        "count": 6,
+        "x": 762,
+        "y": [
+          185,
+          245,
+          305,
+          364,
+          424,
+          484
+        ],
+        "w": 150,
+        "h": 22,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 22,
+          "extensive": 22
+        }
+      }
+    ]
+  },
+  "ds-repeating-grid": {
+    "purpose": "Repeating → eyebrow → title. (imported: studio-repeating-grid)",
+    "label": "Repeating Grid (repeating)",
+    "importedKind": "repeating",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 8,
+        "x": [
+          48,
+          268,
+          487,
+          707,
+          48,
+          268,
+          487,
+          707
+        ],
+        "y": [
+          185,
+          185,
+          185,
+          185,
+          351,
+          351,
+          351,
+          351
+        ],
+        "w": 179,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 14,
+          "detailed": 14,
+          "extensive": 14
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 8,
+        "x": [
+          48,
+          268,
+          487,
+          707,
+          48,
+          268,
+          487,
+          707
+        ],
+        "y": [
+          220,
+          220,
+          220,
+          220,
+          386,
+          386,
+          386,
+          386
+        ],
+        "w": 179,
+        "h": 90,
+        "size": 14,
+        "budget": {
+          "concise": 96,
+          "detailed": 96,
+          "extensive": 96
+        }
+      }
+    ]
+  },
+  "ds-repeating-rail": {
+    "purpose": "Repeating → eyebrow → title. (imported: studio-repeating-rail)",
+    "label": "Repeating Rail (repeating)",
+    "importedKind": "repeating",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "items",
+        "count": 8,
+        "x": [
+          48,
+          158,
+          267,
+          376,
+          485,
+          594,
+          704,
+          813
+        ],
+        "y": 210,
+        "w": 73,
+        "h": 44,
+        "size": 16,
+        "budget": {
+          "concise": 16,
+          "detailed": 16,
+          "extensive": 16
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 8,
+        "x": [
+          48,
+          158,
+          267,
+          376,
+          485,
+          594,
+          704,
+          813
+        ],
+        "y": 263,
+        "w": 73,
+        "h": 108,
+        "size": 14,
+        "budget": {
+          "concise": 48,
+          "detailed": 48,
+          "extensive": 48
+        }
+      }
+    ]
+  },
+  "ds-repeating-table": {
+    "purpose": "Repeating → eyebrow → title. (imported: studio-repeating-table)",
+    "label": "Repeating Table (repeating)",
+    "importedKind": "repeating",
+    "selectable": false,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      }
+    ]
+  },
+  "ds-sources-cats": {
+    "purpose": "Sources → eyebrow → title → 3 parallel labelled points. (imported: studio-sources-cats)",
+    "label": "Sources Cats (sources)",
+    "importedKind": "sources",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 33,
+          "detailed": 42,
+          "extensive": 42
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cat-a",
+        "x": 48,
+        "y": 185,
+        "w": 251,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "cat-a",
+        "count": 4,
+        "x": 48,
+        "y": [
+          215,
+          263,
+          312,
+          361
+        ],
+        "w": 251,
+        "h": 45,
+        "size": 16,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cat-b",
+        "x": 355,
+        "y": 185,
+        "w": 251,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "cat-b",
+        "count": 4,
+        "x": 355,
+        "y": [
+          215,
+          263,
+          312,
+          361
+        ],
+        "w": 251,
+        "h": 45,
+        "size": 16,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cat-c",
+        "x": 648,
+        "y": 185,
+        "w": 264,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 11,
+          "detailed": 16,
+          "extensive": 20
+        }
+      },
+      {
+        "role": "body",
+        "group": "cat-c",
+        "count": 4,
+        "x": 648,
+        "y": [
+          215,
+          263,
+          312,
+          361
+        ],
+        "w": 264,
+        "h": 45,
+        "size": 16,
+        "budget": {
+          "concise": 60,
+          "detailed": 60,
+          "extensive": 60
+        }
+      }
+    ]
+  },
+  "ds-sources-columns": {
+    "purpose": "Sources → eyebrow → title → 2 parallel labelled points. (imported: studio-sources-columns)",
+    "label": "Sources Columns (sources)",
+    "importedKind": "sources",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cat-a",
+        "x": 48,
+        "y": 171,
+        "w": 420,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "cat-a",
+        "count": 5,
+        "x": 48,
+        "y": [
+          203,
+          257,
+          310,
+          364,
+          417
+        ],
+        "w": 420,
+        "h": 47,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "cat-b",
+        "x": 492,
+        "y": 171,
+        "w": 420,
+        "h": 22,
+        "size": 16,
+        "budget": {
+          "concise": 13,
+          "detailed": 19,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "cat-b",
+        "count": 5,
+        "x": 492,
+        "y": [
+          203,
+          257,
+          310,
+          364,
+          417
+        ],
+        "w": 420,
+        "h": 47,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-sources-list": {
+    "purpose": "Sources → eyebrow → title. (imported: studio-sources-list)",
+    "label": "Sources List (sources)",
+    "importedKind": "sources",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 104,
+        "w": 864,
+        "h": 39,
+        "size": 34,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "items",
+        "count": 8,
+        "x": 90,
+        "y": [
+          171,
+          228,
+          284,
+          341,
+          397,
+          453,
+          510,
+          566
+        ],
+        "w": 822,
+        "h": 47,
+        "size": 16,
+        "budget": {
+          "concise": 180,
+          "detailed": 180,
+          "extensive": 180
+        }
+      }
+    ]
+  },
+  "ds-timeline": {
+    "purpose": "Timeline → eyebrow → title. (imported: studio-timeline)",
+    "label": "Timeline (timeline)",
+    "importedKind": "timeline",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 864,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 111,
+        "w": 787,
+        "h": 39,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "eyebrow-label",
+        "group": "milestones",
+        "count": 5,
+        "x": [
+          48,
+          227,
+          405,
+          584,
+          762
+        ],
+        "y": 250,
+        "w": 150,
+        "h": 22,
+        "size": 12,
+        "budget": {
+          "concise": 14,
+          "detailed": 14,
+          "extensive": 14
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "milestones",
+        "count": 5,
+        "x": [
+          48,
+          227,
+          405,
+          584,
+          762
+        ],
+        "y": 276,
+        "w": 150,
+        "h": 51,
+        "size": 16,
+        "budget": {
+          "concise": 26,
+          "detailed": 26,
+          "extensive": 26
+        }
+      },
+      {
+        "role": "body",
+        "group": "milestones",
+        "count": 5,
+        "x": [
+          48,
+          227,
+          405,
+          584,
+          762
+        ],
+        "y": 332,
+        "w": 150,
+        "h": 70,
+        "size": 15,
+        "budget": {
+          "concise": 56,
+          "detailed": 56,
+          "extensive": 56
+        }
+      }
+    ]
+  },
+  "ds-timeline-cards": {
+    "purpose": "Timeline → eyebrow → title. (imported: studio-timeline-cards)",
+    "label": "Timeline Cards (timeline)",
+    "importedKind": "timeline",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 77,
+        "w": 290,
+        "h": 15,
+        "size": 12,
+        "budget": {
+          "concise": 22,
+          "detailed": 32,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 134,
+        "w": 787,
+        "h": 39,
+        "size": 31,
+        "budget": {
+          "concise": 33,
+          "detailed": 48,
+          "extensive": 57
+        }
+      },
+      {
+        "role": "eyebrow-label",
+        "group": "milestones",
+        "count": 4,
+        "x": [
+          48,
+          270,
+          492,
+          714
+        ],
+        "y": 353,
+        "w": 167,
+        "h": 22,
+        "size": 12,
+        "budget": {
+          "concise": 12,
+          "detailed": 12,
+          "extensive": 12
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "milestones",
+        "count": 4,
+        "x": [
+          48,
+          270,
+          492,
+          714
+        ],
+        "y": 379,
+        "w": 167,
+        "h": 51,
+        "size": 16,
+        "budget": {
+          "concise": 24,
+          "detailed": 24,
+          "extensive": 24
+        }
+      },
+      {
+        "role": "body",
+        "group": "milestones",
+        "count": 4,
+        "x": [
+          48,
+          270,
+          492,
+          714
+        ],
+        "y": 435,
+        "w": 167,
+        "h": 47,
+        "size": 12,
+        "budget": {
+          "concise": 50,
+          "detailed": 50,
+          "extensive": 50
+        }
+      }
+    ]
+  },
+  "ds-worked-arrow": {
+    "purpose": "Worked → eyebrow → title. (imported: studio-worked-arrow)",
+    "label": "Worked Arrow (worked)",
+    "importedKind": "worked",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 153,
+        "w": 273,
+        "h": 315,
+        "size": 34,
+        "budget": {
+          "concise": 29,
+          "detailed": 29,
+          "extensive": 29
+        }
+      },
+      {
+        "role": "body",
+        "group": "steps",
+        "count": 5,
+        "x": 440,
+        "y": [
+          204,
+          243,
+          282,
+          321,
+          360
+        ],
+        "w": 223,
+        "h": 28,
+        "size": 11,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-worked-code": {
+    "purpose": "Worked → eyebrow → title → 2 side-by-side blocks. (imported: studio-worked-code)",
+    "label": "Worked Code (worked)",
+    "importedKind": "worked",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 137,
+        "w": 346,
+        "h": 124,
+        "size": 34,
+        "budget": {
+          "concise": 22,
+          "detailed": 22,
+          "extensive": 22
+        }
+      },
+      {
+        "role": "body",
+        "group": "code",
+        "x": 48,
+        "y": 275,
+        "w": 346,
+        "h": 252,
+        "size": 16,
+        "budget": {
+          "concise": 220,
+          "detailed": 250,
+          "extensive": 250
+        }
+      },
+      {
+        "role": "body",
+        "group": "steps",
+        "count": 5,
+        "x": 465,
+        "y": [
+          137,
+          176,
+          215,
+          254,
+          293
+        ],
+        "w": 223,
+        "h": 28,
+        "size": 11,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-worked-panel": {
+    "purpose": "Worked → eyebrow → title. (imported: studio-worked-panel)",
+    "label": "Worked Panel (worked)",
+    "importedKind": "worked",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "title",
+        "x": 48,
+        "y": 192,
+        "w": 346,
+        "h": 198,
+        "size": 34,
+        "budget": {
+          "concise": 16,
+          "detailed": 16,
+          "extensive": 16
+        }
+      },
+      {
+        "role": "body",
+        "group": "steps",
+        "count": 5,
+        "x": 503,
+        "y": [
+          197,
+          237,
+          277,
+          317,
+          357
+        ],
+        "w": 223,
+        "h": 29,
+        "size": 11,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  },
+  "ds-worked-strip": {
+    "purpose": "Worked → eyebrow → title. (imported: studio-worked-strip)",
+    "label": "Worked Strip (worked)",
+    "importedKind": "worked",
+    "selectable": true,
+    "shared": [
+      {
+        "role": "eyebrow-label",
+        "x": 48,
+        "y": 58,
+        "w": 864,
+        "h": 27,
+        "size": 12,
+        "budget": {
+          "concise": 18,
+          "detailed": 26,
+          "extensive": 32
+        }
+      },
+      {
+        "role": "title",
+        "x": 48,
+        "y": 119,
+        "w": 864,
+        "h": 194,
+        "size": 34,
+        "budget": {
+          "concise": 87,
+          "detailed": 87,
+          "extensive": 87
+        }
+      },
+      {
+        "role": "metric-label",
+        "group": "steps",
+        "count": 5,
+        "x": [
+          48,
+          225,
+          402,
+          578,
+          755
+        ],
+        "y": 363,
+        "w": 127,
+        "h": 66,
+        "size": 16,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      },
+      {
+        "role": "body",
+        "group": "steps",
+        "count": 5,
+        "x": [
+          48,
+          225,
+          402,
+          578,
+          755
+        ],
+        "y": 437,
+        "w": 127,
+        "h": 47,
+        "size": 12,
+        "budget": {
+          "concise": 40,
+          "detailed": 40,
+          "extensive": 40
+        }
+      }
+    ]
+  }
+}

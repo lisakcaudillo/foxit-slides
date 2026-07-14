@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Slides Outline Approval — Designer 3 (Spec-Precise)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ──────────────────────────────────────────────────────────────────────────
+     TOKENS  (Compose kit — Designer 3, spec-precise)
+     ──────────────────────────────────────────────────────────────────────── */
+  :root {
+    /* text */
+    --text:        #0f172a;  /* slate-900 */
+    --muted:       #64748b;  /* slate-500 */
+    --subtle:      #94a3b8;  /* slate-400 */
+    /* lines + surfaces */
+    --border:      #e2e8f0;  /* slate-200 */
+    --border-strong:#cbd5e1; /* slate-300 */
+    --surface:     #ffffff;
+    --elevated:    #fafbfc;
+    --rail:        #f8fafc;  /* slate-50 */
+    /* AI accent */
+    --violet:      #7c3aed;  /* violet-600 */
+    --violet-700:  #6d28d9;
+    --violet-wash: #f5f3ff;  /* violet-50 */
+    /* image accent */
+    --teal:        #0d9488;  /* teal-600 (semantic: image present) */
+    --teal-wash:   #f0fdfa;  /* teal-50 */
+    /* CTA gradient (kit BOLD) */
+    --cta-grad: linear-gradient(135deg, #E267E4 0%, #9FC7FE 50%, #4198FF 100%);
+    --cta-text: #2e1065;     /* violet-950 */
+    /* shape */
+    --r-sm: 8px;
+    --r-md: 10px;
+    --r-lg: 12px;
+    --r-xl: 16px;
+    /* spacing scale (8px grid) */
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
+    /* shadow */
+    --shadow-card: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
+    --shadow-pop:  0 10px 30px rgba(15,23,42,.12);
+    --shadow-drag: 0 12px 28px rgba(124,58,237,.18);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #f5f3ff 0%, transparent 60%),
+      linear-gradient(180deg, #f9f6ff 0%, #f4f0ff 45%, #eef3ff 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  .stage {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 24px;
+  }
+
+  /* surface label */
+  .surface-eyebrow {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--violet);
+    margin-bottom: 12px;
+  }
+  .surface-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--violet); }
+
+  /* ── CARD ─────────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  /* progress bar (generating) */
+  .progress-track { height: 3px; background: #eef2f7; }
+  .progress-fill {
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, #E267E4, #7c3aed);
+    border-radius: 0 3px 3px 0;
+    transition: width .5s ease-out;
+  }
+
+  .card-pad { padding: 24px; }
+
+  /* ── HEADER ───────────────────────────────────────────────────────────── */
+  .head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+  }
+  .head h2 { font-size: 18px; font-weight: 600; margin: 0; color: var(--text); }
+  .head .sub {
+    margin: 4px 0 0; font-size: 13px; color: var(--muted);
+  }
+  .head .sub b { color: var(--text); font-weight: 600; }
+
+  /* deck meta chips row */
+  .deck-meta {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+  }
+  .meta-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    height: 34px; padding: 0 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    font-size: 13px; font-weight: 500; color: var(--text);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .meta-chip svg { color: var(--muted); }
+  .meta-chip .k { color: var(--muted); font-weight: 500; }
+  .meta-chip:hover { border-color: var(--border-strong); background: var(--elevated); }
+  .meta-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,.28); border-color: var(--violet); }
+  /* stepper variant */
+  .stepper { gap: 2px; padding: 0 4px 0 12px; }
+  .stepper .step-btn {
+    width: 28px; height: 28px; border: none; background: transparent;
+    border-radius: 6px; color: var(--muted); cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .stepper .step-btn:hover { background: var(--rail); color: var(--text); }
+  .stepper .count { min-width: 18px; text-align: center; font-weight: 600; }
+
+  /* ── DIVIDER + LIST HEADER ────────────────────────────────────────────── */
+  .list-head {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px 8px;
+    margin-top: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .list-head .lbl {
+    font-size: 11px; font-weight: 600; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--subtle);
+  }
+  .list-head .lbl.right { text-align: right; }
+
+  /* ── SLIDE ROW ────────────────────────────────────────────────────────── */
+  .rows { padding-top: 6px; }
+  .row {
+    display: grid;
+    grid-template-columns: 28px 28px 1fr auto;
+    align-items: start;
+    gap: 10px;
+    padding: 12px 8px;
+    border-radius: var(--r-lg);
+    transition: background .15s ease, box-shadow .15s ease, transform .12s ease;
+    position: relative;
+  }
+  .row + .row { margin-top: 2px; }
+  .row:hover { background: var(--rail); }
+
+  /* drag handle */
+  .handle {
+    grid-column: 1;
+    width: 28px; min-height: 44px;
+    display: grid; place-items: center;
+    color: var(--subtle); cursor: grab; border-radius: 6px;
+    border: none; background: transparent;
+    opacity: 0; transition: opacity .15s ease, color .15s ease;
+  }
+  .row:hover .handle, .row:focus-within .handle { opacity: 1; }
+  .handle:hover { color: var(--muted); }
+  .handle:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,.28); opacity: 1; }
+  .handle:active { cursor: grabbing; }
+
+  /* slide number badge / status icon */
+  .num {
+    grid-column: 2;
+    width: 28px; height: 28px; margin-top: 2px;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    background: var(--violet-wash);
+    color: var(--violet);
+    font-size: 13px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  /* body */
+  .body { grid-column: 3; min-width: 0; }
+  .title-line { display: flex; align-items: center; gap: 8px; }
+  .title-input {
+    font-size: 14.5px; font-weight: 600; color: var(--text);
+    background: transparent; border: none; padding: 2px 4px; margin: -2px -4px;
+    border-radius: 6px; width: 100%; min-width: 0;
+    font-family: inherit;
+  }
+  .title-input:hover { background: #fff; box-shadow: inset 0 0 0 1px var(--border); }
+  .title-input:focus-visible { outline: none; background: #fff; box-shadow: 0 0 0 2px rgba(124,58,237,.45); }
+  .brief {
+    font-size: 12.5px; color: var(--muted); margin: 3px 0 0 4px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* meta strip under brief: layout chip + image badge */
+  .row-tags { display: flex; align-items: center; gap: 7px; margin: 8px 0 0 4px; flex-wrap: wrap; }
+
+  .layout-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 26px; padding: 0 8px 0 7px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 12px; font-weight: 500; color: var(--text);
+    cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .layout-chip .glyph { color: var(--muted); display: grid; place-items: center; }
+  .layout-chip .caret { color: var(--subtle); margin-left: 1px; }
+  .layout-chip:hover { border-color: var(--violet); background: var(--violet-wash); }
+  .layout-chip:hover .glyph { color: var(--violet); }
+  .layout-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,.28); border-color: var(--violet); }
+
+  .img-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 26px; padding: 0 9px;
+    border-radius: var(--r-sm);
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+    border: 1px solid;
+  }
+  /* image ON */
+  .img-badge.on {
+    background: var(--teal-wash); border-color: #99f6e4; color: var(--teal);
+  }
+  .img-badge.on:hover { background: #ccfbf1; }
+  /* image OFF (ghost add) */
+  .img-badge.off {
+    background: transparent; border-color: var(--border); color: var(--subtle);
+  }
+  .img-badge.off:hover { border-color: var(--border-strong); color: var(--muted); background: var(--elevated); }
+  .img-badge:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(13,148,136,.25); }
+
+  /* trailing actions */
+  .actions { grid-column: 4; display: flex; align-items: center; gap: 2px; margin-top: 2px; }
+  .icon-btn {
+    width: 32px; height: 32px; border: none; background: transparent;
+    border-radius: 8px; color: var(--subtle); cursor: pointer;
+    display: grid; place-items: center; transition: background .15s, color .15s, opacity .15s;
+    opacity: 0;
+  }
+  .row:hover .icon-btn, .row:focus-within .icon-btn { opacity: 1; }
+  .icon-btn:hover { background: #fff; color: var(--muted); box-shadow: inset 0 0 0 1px var(--border); }
+  .icon-btn.danger:hover { color: #dc2626; box-shadow: inset 0 0 0 1px #fecaca; }
+  .icon-btn:focus-visible { outline: none; opacity: 1; box-shadow: 0 0 0 3px rgba(124,58,237,.28); }
+
+  /* ── ADD SLIDE ────────────────────────────────────────────────────────── */
+  .add-slide {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 44px; padding: 0 12px; margin: 8px 0 0 36px;
+    background: transparent; border: none;
+    color: var(--violet); font-size: 13.5px; font-weight: 600;
+    border-radius: var(--r-md); cursor: pointer; font-family: inherit;
+  }
+  .add-slide:hover { background: var(--violet-wash); }
+  .add-slide:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,.28); }
+
+  /* ── FOOTER ───────────────────────────────────────────────────────────── */
+  .footer { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .summary {
+    text-align: center; font-size: 13px; color: var(--muted); margin: 0 0 14px;
+  }
+  .summary b { color: var(--text); font-weight: 600; }
+  .cta-row { display: flex; gap: 10px; }
+  .btn-back {
+    height: 48px; padding: 0 22px;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg); color: var(--text);
+    font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .15s, border-color .15s, box-shadow .15s;
+  }
+  .btn-back:hover { background: var(--elevated); border-color: var(--muted); }
+  .btn-back:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,.28); }
+
+  .btn-generate {
+    flex: 1; height: 48px;
+    background: var(--cta-grad); color: var(--cta-text);
+    border: none; border-radius: var(--r-lg);
+    font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    box-shadow: 0 6px 18px rgba(124,58,237,.18);
+    transition: transform .12s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .btn-generate:hover { filter: brightness(1.03); box-shadow: 0 10px 26px rgba(124,58,237,.26); }
+  .btn-generate:active { transform: translateY(1px); }
+  .btn-generate:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,.45), 0 6px 18px rgba(124,58,237,.18); }
+  .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
+
+  .spin { animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── STATE VARIANTS (static demos) ────────────────────────────────────── */
+  /* dragging row */
+  .row.is-dragging {
+    background: #fff; box-shadow: var(--shadow-drag);
+    transform: scale(1.005); z-index: 2;
+    outline: 1px dashed var(--violet);
+  }
+  .row.is-dragging .handle { opacity: 1; color: var(--violet); cursor: grabbing; }
+  /* drop target gap */
+  .drop-line {
+    height: 0; border-top: 2px solid var(--violet); margin: 2px 8px;
+    border-radius: 2px;
+  }
+  /* generating: active row */
+  .gen .row { background: transparent; }
+  .gen .row.active { background: var(--violet-wash); }
+  .gen .num.done { background: var(--violet); color: #fff; }
+  .gen .num.active { background: var(--violet-wash); color: var(--violet); }
+  .gen .num.idle { background: #f1f5f9; color: var(--subtle); }
+  .gen .handle, .gen .icon-btn, .gen .layout-chip, .gen .img-badge.off { display: none; }
+  .gen .img-badge.on { cursor: default; }
+  .gen .title-input { pointer-events: none; }
+  .gen .add-slide { display: none; }
+
+  /* ── ANNOTATION STRIP ─────────────────────────────────────────────────── */
+  .anno {
+    max-width: 720px; margin: 40px auto 0; padding: 0 24px 56px;
+  }
+  .anno h3 { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+  .anno-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .anno-grid { grid-template-columns: 1fr; } }
+  .anno-card {
+    background: rgba(255,255,255,.7); backdrop-filter: blur(6px);
+    border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px;
+  }
+  .anno-card h4 { margin: 0 0 10px; font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .swatch-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sw { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--muted); }
+  .sw i { width: 16px; height: 16px; border-radius: 5px; border: 1px solid rgba(15,23,42,.08); display: inline-block; }
+  .anno ul { margin: 0; padding-left: 18px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .anno ul b { color: var(--text); }
+  .anno code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px;
+    background: #f1f5f9; color: #334155; padding: 1px 5px; border-radius: 4px;
+  }
+
+  /* section caption between the two demo cards */
+  .demo-cap {
+    text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .03em;
+    text-transform: uppercase; color: var(--subtle); margin: 36px 0 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     STATE A — DEFAULT (review / edit / reorder before generate)
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="stage">
+  <div class="surface-eyebrow"><span class="dot"></span> Slides · Review your outline</div>
+
+  <div class="card">
+    <div class="card-pad">
+
+      <!-- header -->
+      <div class="head">
+        <div>
+          <h2>Here's your deck outline</h2>
+          <p class="sub">Review and tweak before we build it — reorder, rename, swap layouts, or toggle images. <b>Nothing's generated yet.</b></p>
+        </div>
+      </div>
+
+      <!-- deck-level controls -->
+      <div class="deck-meta">
+        <!-- slide count stepper -->
+        <div class="meta-chip stepper" role="group" aria-label="Number of slides">
+          <span class="k">Slides</span>
+          <button class="step-btn" aria-label="One fewer slide" tabindex="-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+          </button>
+          <span class="count">5</span>
+          <button class="step-btn" aria-label="One more slide" tabindex="-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <!-- theme -->
+        <button class="meta-chip" aria-label="Change theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.012 17.51 2 12 2z"/></svg>
+          <span class="k">Theme</span> Aurora
+        </button>
+        <!-- audience / tone -->
+        <button class="meta-chip" aria-label="Customize audience and tone">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          <span class="k">For</span> Existing customers · Confident
+        </button>
+      </div>
+
+      <!-- list header (grid labels) -->
+      <div class="list-head">
+        <span></span>
+        <span class="lbl" style="grid-column:2 / span 1;">Slide</span>
+        <span class="lbl right">Layout &amp; media</span>
+      </div>
+
+      <!-- rows -->
+      <div class="rows">
+
+        <!-- 1 — Cover (image yes) -->
+        <div class="row">
+          <button class="handle" aria-label="Drag to reorder Aurora Solar Battery Launch" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+          </button>
+          <div class="num">1</div>
+          <div class="body">
+            <div class="title-line">
+              <input class="title-input" value="Aurora Solar Battery Launch" aria-label="Slide 1 title" />
+            </div>
+            <div class="brief">Set the stage — home energy independence for existing customers</div>
+            <div class="row-tags">
+              <button class="layout-chip" aria-label="Layout: Cover. Click to change.">
+                <span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="14" x2="21" y2="14"/></svg></span>
+                Cover
+                <span class="caret"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+              <button class="img-badge on" aria-label="Image on for this slide. Click to remove." aria-pressed="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                Image
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" aria-label="Duplicate slide 1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="icon-btn danger" aria-label="Remove slide 1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+
+        <!-- 2 — Stat trio (no image) -->
+        <div class="row">
+          <button class="handle" aria-label="Drag to reorder Q1 Performance" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+          </button>
+          <div class="num">2</div>
+          <div class="body">
+            <div class="title-line">
+              <input class="title-input" value="Q1 Performance" aria-label="Slide 2 title" />
+            </div>
+            <div class="brief">Lead with the numbers: 1,200 units, +40% growth, 2-hour installs</div>
+            <div class="row-tags">
+              <button class="layout-chip" aria-label="Layout: Stat trio. Click to change.">
+                <span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="4.5" height="14" rx="1"/><rect x="9.75" y="5" width="4.5" height="14" rx="1"/><rect x="16.5" y="5" width="4.5" height="14" rx="1"/></svg></span>
+                Stat trio
+                <span class="caret"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+              <button class="img-badge off" aria-label="No image. Click to add an image." aria-pressed="false">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add image
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" aria-label="Duplicate slide 2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="icon-btn danger" aria-label="Remove slide 2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+
+        <!-- 3 — Split image (image yes) — shown in HOVER state -->
+        <div class="row" style="background:var(--rail);">
+          <button class="handle" style="opacity:1;color:var(--muted);" aria-label="Drag to reorder Why Now" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+          </button>
+          <div class="num">3</div>
+          <div class="body">
+            <div class="title-line">
+              <input class="title-input" value="Why Now" aria-label="Slide 3 title" />
+            </div>
+            <div class="brief">The market shift that makes this the moment</div>
+            <div class="row-tags">
+              <button class="layout-chip" style="border-color:var(--violet);background:var(--violet-wash);" aria-label="Layout: Split image. Click to change.">
+                <span class="glyph" style="color:var(--violet);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/><circle cx="7.5" cy="9" r="1.3"/><path d="M4 18l3.5-3.5L9 16"/></svg></span>
+                Split image
+                <span class="caret"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+              <button class="img-badge on" aria-label="Image on for this slide. Click to remove." aria-pressed="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                Image
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" style="opacity:1;" aria-label="Duplicate slide 3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="icon-btn danger" style="opacity:1;" aria-label="Remove slide 3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+
+        <!-- 4 — Process row (no image) -->
+        <div class="row">
+          <button class="handle" aria-label="Drag to reorder How It Works" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+          </button>
+          <div class="num">4</div>
+          <div class="body">
+            <div class="title-line">
+              <input class="title-input" value="How It Works" aria-label="Slide 4 title" />
+            </div>
+            <div class="brief">Three steps from order to installed</div>
+            <div class="row-tags">
+              <button class="layout-chip" aria-label="Layout: Process row. Click to change.">
+                <span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><line x1="7" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="17" y2="12"/></svg></span>
+                Process row
+                <span class="caret"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+              <button class="img-badge off" aria-label="No image. Click to add an image." aria-pressed="false">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add image
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" aria-label="Duplicate slide 4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="icon-btn danger" aria-label="Remove slide 4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+
+        <!-- 5 — Closing (no image) -->
+        <div class="row">
+          <button class="handle" aria-label="Drag to reorder The Ask" tabindex="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+          </button>
+          <div class="num">5</div>
+          <div class="body">
+            <div class="title-line">
+              <input class="title-input" value="The Ask" aria-label="Slide 5 title" />
+            </div>
+            <div class="brief">What we want the customer to do next</div>
+            <div class="row-tags">
+              <button class="layout-chip" aria-label="Layout: Closing. Click to change.">
+                <span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="16" x2="14" y2="16"/></svg></span>
+                Closing
+                <span class="caret"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+              <button class="img-badge off" aria-label="No image. Click to add an image." aria-pressed="false">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add image
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" aria-label="Duplicate slide 5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <button class="icon-btn danger" aria-label="Remove slide 5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- add slide -->
+      <button class="add-slide">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Add slide
+      </button>
+
+      <!-- footer -->
+      <div class="footer">
+        <p class="summary"><b>5 slides</b> · 2 with images · Aurora theme</p>
+        <div class="cta-row">
+          <button class="btn-back" aria-label="Go back to edit prompt">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Back
+          </button>
+          <button class="btn-generate">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 13.9 8.6 19.5 10.5 13.9 12.4 12 18 10.1 12.4 4.5 10.5 10.1 8.6Z"/><path d="M19 3v4M21 5h-4M5 17v2M6 18H4"/></svg>
+            Generate deck
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     STATE B — GENERATING (per-slide status + top progress bar)
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="demo-cap">State · Generating</div>
+<div class="stage" style="padding-top:0;">
+  <div class="card gen">
+    <div class="progress-track"><div class="progress-fill" style="width:48%;"></div></div>
+    <div class="card-pad">
+
+      <div class="head">
+        <div>
+          <h2>Building your deck…</h2>
+          <p class="sub">Writing slide 3 of 5. You can leave this open — slides drop in as they finish.</p>
+        </div>
+      </div>
+
+      <div class="list-head">
+        <span></span>
+        <span class="lbl" style="grid-column:2 / span 1;">Slide</span>
+        <span class="lbl right">Status</span>
+      </div>
+
+      <div class="rows">
+        <!-- done -->
+        <div class="row">
+          <div class="num done" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div class="body">
+            <div class="title-line"><input class="title-input" value="Aurora Solar Battery Launch" disabled aria-label="Slide 1 — done"/></div>
+            <div class="brief">Set the stage — home energy independence for existing customers</div>
+            <div class="row-tags"><span class="layout-chip" style="cursor:default;border-color:var(--border);background:#fff;"><span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="14" x2="21" y2="14"/></svg></span>Cover</span><span class="img-badge on" style="cursor:default;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>Image</span></div>
+          </div>
+        </div>
+        <!-- done -->
+        <div class="row">
+          <div class="num done" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div class="body">
+            <div class="title-line"><input class="title-input" value="Q1 Performance" disabled aria-label="Slide 2 — done"/></div>
+            <div class="brief">Lead with the numbers: 1,200 units, +40% growth, 2-hour installs</div>
+            <div class="row-tags"><span class="layout-chip" style="cursor:default;border-color:var(--border);background:#fff;"><span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="4.5" height="14" rx="1"/><rect x="9.75" y="5" width="4.5" height="14" rx="1"/><rect x="16.5" y="5" width="4.5" height="14" rx="1"/></svg></span>Stat trio</span></div>
+          </div>
+        </div>
+        <!-- active -->
+        <div class="row active">
+          <div class="num active" aria-hidden="true">
+            <svg class="spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.2-8.5" opacity=".9"/></svg>
+          </div>
+          <div class="body">
+            <div class="title-line"><input class="title-input" value="Why Now" disabled aria-label="Slide 3 — generating"/></div>
+            <div class="brief">The market shift that makes this the moment</div>
+            <div class="row-tags"><span class="layout-chip" style="cursor:default;border-color:var(--violet);background:var(--violet-wash);"><span class="glyph" style="color:var(--violet);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/><circle cx="7.5" cy="9" r="1.3"/><path d="M4 18l3.5-3.5L9 16"/></svg></span>Split image</span><span class="img-badge on" style="cursor:default;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>Image</span></div>
+          </div>
+        </div>
+        <!-- idle -->
+        <div class="row">
+          <div class="num idle" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <div class="body">
+            <div class="title-line"><input class="title-input" value="How It Works" disabled aria-label="Slide 4 — waiting"/></div>
+            <div class="brief">Three steps from order to installed</div>
+            <div class="row-tags"><span class="layout-chip" style="cursor:default;border-color:var(--border);background:#fff;color:var(--muted);"><span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><line x1="7" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="17" y2="12"/></svg></span>Process row</span></div>
+          </div>
+        </div>
+        <!-- idle -->
+        <div class="row">
+          <div class="num idle" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <div class="body">
+            <div class="title-line"><input class="title-input" value="The Ask" disabled aria-label="Slide 5 — waiting"/></div>
+            <div class="brief">What we want the customer to do next</div>
+            <div class="row-tags"><span class="layout-chip" style="cursor:default;border-color:var(--border);background:#fff;color:var(--muted);"><span class="glyph"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="16" x2="14" y2="16"/></svg></span>Closing</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="summary">2 of 5 slides done · Writing <b>“Why Now”</b>…</p>
+        <div class="cta-row">
+          <button class="btn-generate" disabled>
+            <svg class="spin" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.2-8.5"/></svg>
+            Building your deck…
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     STATES & TOKENS  annotation
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="anno">
+  <h3>States &amp; tokens — Slides Outline Approval (Designer 3)</h3>
+  <div class="anno-grid">
+
+    <div class="anno-card">
+      <h4>Color tokens</h4>
+      <div class="swatch-row">
+        <span class="sw"><i style="background:#0f172a"></i> text / slate-900</span>
+        <span class="sw"><i style="background:#64748b"></i> muted / slate-500</span>
+        <span class="sw"><i style="background:#94a3b8"></i> subtle / slate-400</span>
+        <span class="sw"><i style="background:#e2e8f0"></i> border / slate-200</span>
+        <span class="sw"><i style="background:#cbd5e1"></i> strong / slate-300</span>
+        <span class="sw"><i style="background:#7c3aed"></i> violet-600 (AI)</span>
+        <span class="sw"><i style="background:#f5f3ff;border-color:#ddd6fe"></i> violet-50 wash</span>
+        <span class="sw"><i style="background:#0d9488"></i> teal-600 (image)</span>
+        <span class="sw"><i style="background:linear-gradient(135deg,#E267E4,#9FC7FE,#4198FF)"></i> kit CTA gradient</span>
+      </div>
+    </div>
+
+    <div class="anno-card">
+      <h4>Shape · type · spacing</h4>
+      <ul>
+        <li>Radius: chips <code>8px</code>, controls <code>10px</code>, CTA/rows <code>12px</code>, card <code>16px</code>. <b>No pills.</b></li>
+        <li>Type: Inter — title <code>14.5px/600</code>, brief <code>12.5px/500 muted</code>, chips <code>12px</code>, body min <code>13px</code>.</li>
+        <li>Grid: 8px scale; row = <code>28 / 28 / 1fr / auto</code> columns (handle · number · body · actions).</li>
+        <li>CTA "Generate deck": <code>48px</code> tall, kit bold gradient, text <code>#2e1065</code>.</li>
+      </ul>
+    </div>
+
+    <div class="anno-card">
+      <h4>Interactive states</h4>
+      <ul>
+        <li><b>Default</b> — handle &amp; trailing actions hidden until row hover/focus.</li>
+        <li><b>Hover</b> — row <code>slate-50</code> wash; handle + duplicate/remove fade in (slide 3 demo).</li>
+        <li><b>Active/edit</b> — title input gets <code>2px violet</code> focus ring + white bg.</li>
+        <li><b>Layout chip hover</b> — violet border + wash, glyph turns violet (swap affordance).</li>
+        <li><b>Dragging</b> — lifted card shadow + dashed violet outline; violet drop-line marks target.</li>
+        <li><b>Generating</b> — per-slide number swaps to ✓ done / ⟳ active / ○ idle; top progress fill; controls locked.</li>
+      </ul>
+    </div>
+
+    <div class="anno-card">
+      <h4>Accessibility</h4>
+      <ul>
+        <li>All targets ≥ <b>44px</b> (rows, CTA 48px, icon hit-area padded).</li>
+        <li>Visible <b>violet focus ring</b> (<code>3px / .28 alpha</code>) on every control.</li>
+        <li>Image toggle uses <code>aria-pressed</code> + text label — never color alone.</li>
+        <li>Status conveyed by <b>icon + text</b> ("2 of 5 done"), not color alone. WCAG AA contrast throughout.</li>
+        <li>Plain language: "Generate deck", "Add slide", "Add image", "Split image".</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
