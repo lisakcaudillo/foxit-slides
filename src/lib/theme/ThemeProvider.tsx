@@ -63,6 +63,23 @@ const CSS_VAR_MAP: ReadonlyArray<readonly [keyof Theme, string]> = [
   ['secondaryBorder', '--theme-secondary-border'],
 ];
 
+// Fixed scatter of tiny star dots (deterministic, so they don't re-jitter on
+// re-render) for the space themes' workspace backdrop.
+const WORKSPACE_STARS: ReadonlyArray<readonly [number, number, number, number]> = [
+  [8, 14, 1.4, 0.75], [18, 42, 1, 0.5], [26, 8, 1.5, 0.8], [34, 60, 1, 0.4],
+  [44, 22, 1.3, 0.6], [52, 71, 1, 0.5], [61, 12, 1.6, 0.85], [68, 48, 1, 0.45],
+  [76, 30, 1.4, 0.65], [83, 64, 1, 0.5], [90, 18, 1.5, 0.75], [12, 72, 1, 0.4],
+  [40, 86, 1.2, 0.55], [58, 90, 1, 0.45], [72, 80, 1.5, 0.7], [88, 84, 1, 0.4],
+  [22, 26, 0.8, 0.35], [48, 44, 0.8, 0.3], [66, 66, 0.8, 0.35], [94, 50, 1.2, 0.6],
+  [4, 54, 1, 0.45], [30, 38, 1, 0.4], [56, 28, 0.9, 0.4], [80, 10, 1.3, 0.6],
+  [15, 90, 1, 0.4], [98, 32, 1, 0.5], [36, 4, 1, 0.5], [64, 94, 1, 0.45],
+];
+function starLayer(): string {
+  return WORKSPACE_STARS
+    .map(([x, y, r, o]) => `radial-gradient(${r}px ${r}px at ${x}% ${y}%, rgba(255,255,255,${o}) 0%, transparent 100%)`)
+    .join(', ');
+}
+
 /** Editor/viewer workspace backdrop for a theme: soft palette-derived glows over
  *  a base that stays in the theme's color family but is shifted one step of
  *  contrast off the deck ground (dark themes lifted noticeably lighter, light
@@ -97,20 +114,24 @@ function workspaceBackdrop(theme: Theme): string {
   // take those from the deck ground so they stay in the theme's own family.
   const lead = toHsl(c(0));
   let bh = lead[0], bs = lead[1];
-  if (theme.id === 'velvet' || theme.id === 'obsidian' || theme.id === 'nocturne') {
+  if (theme.id === 'velvet' || theme.id === 'obsidian' || theme.id === 'nocturne' || theme.id === 'cosmos') {
     const d = toHsl(deck); bh = d[0]; bs = Math.max(d[1], 0.22);
   }
   const base = dark
     ? toHex(bh, clamp(bs * 0.55, 0.10, 0.36), 0.12)
     : toHex(bh, clamp(bs * 0.35, 0.04, 0.16), 0.945);
   const op = dark ? [0.32, 0.24, 0.18, 0.13] : [0.15, 0.11, 0.09, 0.06];
-  return [
+  const glows = [
     `radial-gradient(82% 122% at 100% 36%, ${rgba(c(0), op[0])} 0%, transparent 54%)`,
     `radial-gradient(94% 92% at 2% 6%, ${rgba(c(1), op[1])} 0%, transparent 55%)`,
     `radial-gradient(112% 82% at 42% 120%, ${rgba(c(2), op[2])} 0%, transparent 55%)`,
     `radial-gradient(68% 74% at 74% 6%, ${rgba(c(3), op[3])} 0%, transparent 52%)`,
-    base,
-  ].join(', ');
+  ];
+  // Space themes get a faint starfield above the nebula glows.
+  if (theme.id === 'cosmos' || theme.id === 'nebulae') {
+    return [starLayer(), ...glows, base].join(', ');
+  }
+  return [...glows, base].join(', ');
 }
 
 /**

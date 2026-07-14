@@ -93,6 +93,50 @@ export default function DeckViewer({
     if (active > cards.length - 1) setActive(Math.max(0, cards.length - 1));
   }, [cards.length, active]);
 
+  // Keyboard nav: ↑/↓ (also ←/→, PageUp/Down) move between slides — unless a
+  // text field (the deck-name input) is focused.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+      if (['ArrowDown', 'ArrowRight', 'PageDown'].includes(e.key)) {
+        e.preventDefault();
+        setActive((a) => Math.min(cards.length - 1, a + 1));
+      } else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+        e.preventDefault();
+        setActive((a) => Math.max(0, a - 1));
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [cards.length]);
+
+  // Wheel / trackpad swipe over the stage moves between slides (the scaled deck
+  // doesn't scroll, so the gesture drives navigation). Throttled so one swipe
+  // advances one slide.
+  useEffect(() => {
+    const node = stageWrapRef.current;
+    if (!node) return;
+    let lock = false;
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) < 12) return;
+      e.preventDefault();
+      if (lock) return;
+      lock = true;
+      const dir = e.deltaY > 0 ? 1 : -1;
+      setActive((a) => Math.max(0, Math.min(cards.length - 1, a + dir)));
+      window.setTimeout(() => { lock = false; }, 380);
+    };
+    node.addEventListener('wheel', onWheel, { passive: false });
+    return () => node.removeEventListener('wheel', onWheel);
+  }, [cards.length]);
+
+  // Keep the active thumbnail visible in the rail as navigation moves.
+  useEffect(() => {
+    const thumb = document.querySelectorAll('.dv-rail .dv-thumb')[active] as HTMLElement | undefined;
+    thumb?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [active]);
+
   // One-shot fade-in for a freshly revealed deck.
   useEffect(() => {
     if (!revealOnMount) return;
