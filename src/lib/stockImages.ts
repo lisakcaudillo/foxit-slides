@@ -46,7 +46,7 @@ export interface StockSearchOptions {
 export function toStockQuery(subject: string): string {
   let q = (subject || '').replace(/\s+/g, ' ').trim();
   if (!q) return '';
-  // Drop anything after the first sentence-ish boundary (— , ; .) so we keep
+  // Drop anything after the first sentence-ish boundary (— , ; .) to keep
   // the core subject, not the lighting/mood tail ("…, warm light, soft focus").
   q = q.split(/[—,;.]/)[0].trim();
   // Cap to ~6 words — stock relevance drops fast with long queries.

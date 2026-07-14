@@ -130,6 +130,6 @@ export const ICON_MAP: Record<string, string> = {
 export function resolveIconId(name: string): string {
   // If already in set:icon format, use directly
   if (name.includes(':')) return name;
-  // Look up in our map
+  // Look up in the map
   return ICON_MAP[name.toLowerCase()] || `material-symbols:${name}`;
 }

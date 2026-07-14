@@ -103,7 +103,7 @@ function themeToTemplate(t: Theme): import('@/types/card-template').TemplateThem
   };
 }
 
-// Pull the human-readable family names out of a font stack so we know which
+// Pull the human-readable family names out of a font stack to know which
 // Google Fonts to load for the active theme.
 // Auto-generated deck name = the deck title, lowercase-hyphenated,
 // e.g. "sustainable-meal-kit-startup". The format signals "this was
@@ -2133,7 +2133,7 @@ export default function CardEditorPage() {
     // Default theme when none is picked: Mono Light. Only the
     // three mapped themes are selectable now, so an unpicked deck generates in
     // the default (Mono Light) rather than a content-derived pick across the old
-    // library. `setActiveTheme` is async so we keep the choice in a local —
+    // library. `setActiveTheme` is async to keep the choice in a local —
     // `themeForGeneration` — for this closure's reads.
     let themeForGeneration = activeTheme;
     if (!userPickedTheme) {

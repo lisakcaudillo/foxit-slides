@@ -1535,7 +1535,7 @@ export function FreeformLayer({
   // pointer-events:none (clicks fall through to structured content), so we
   // listen on the parent card element. Right-clicks landing on a freeform
   // block are owned by that block's own onContextMenu (the native listener
-  // fires first on bubble, so we bail when the target is inside a block).
+  // fires first on bubble, to bail when the target is inside a block).
   useEffect(() => {
     if (!interactive) return;
     const card = layerRef.current?.parentElement;
@@ -1944,7 +1944,7 @@ export function FreeformLayer({
 
       {/* Link editor (Ctrl+K / Link button) + a synthetic highlight over the
           words being linked (the native selection collapses once the editor's
-          input takes focus, so we paint it back). */}
+          input takes focus, to paint it back). */}
       {linkDraft && (
         <>
           <LinkSelectionOverlay
@@ -2333,7 +2333,7 @@ function resolveTextColor(
 
   if (ctx.scrimActive && ctx.scrimSolidHex) {
     // Over the scrim → always resolve against the known scrim tone. Headings
-    // use a gradient by default which can wash out over a photo, so we pin a
+    // use a gradient by default which can wash out over a photo, to pin a
     // solid legible color here too.
     return pickTextColor(ctx.scrimSolidHex, preferred) ?? undefined;
   }
@@ -3774,7 +3774,7 @@ function ColorWheel({ value, onChange }: { value: string; onChange: (hex: string
 }
 
 // Eyedropper API typing (not in the default TS DOM lib). Accessed via an
-// unknown-cast so we stay off `any` (Hard Constraint) and degrade gracefully
+// unknown-cast to stay off `any` (Hard Constraint) and degrade gracefully
 // where unsupported (Firefox/Safari).
 type EyeDropperResult = { sRGBHex: string };
 type EyeDropperCtor = new () => { open: () => Promise<EyeDropperResult> };

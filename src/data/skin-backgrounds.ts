@@ -105,7 +105,7 @@ export const CATEGORY_BACKGROUNDS: Record<string, Partial<Record<LayoutCategory,
     cover: { bg: { image: '/textures/cosmos/cosmos-bg.png', color: '#0A0814' } },
     closing: { bg: { image: '/textures/cosmos/cosmos-bg.png', color: '#0A0814' } },
   },
-  // MUBI (Quartz) — Figma ships ~4 slide designs; we map them across our
+  // MUBI (Quartz) — Figma ships ~4 slide designs; we map them across the
   // categories and get creative for the gaps. Each is a full CSS `background`
   // (layered patterns + positions over the #09060A base):
   //   cover   → right pink→peach strip (the "01" is a title-slide element)

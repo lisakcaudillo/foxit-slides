@@ -803,7 +803,7 @@ export function detectOfficeFormat(filename: string): OfficeFormat | null {
  * SDK. The PDF is written to a temp file; caller is responsible for reading
  * and cleaning up via the returned cleanup() function.
  *
- * Phase 1c — DOCX upload support. Bridges Office uploads into our existing
+ * Phase 1c — DOCX upload support. Bridges Office uploads into the existing
  * PDF extraction pipeline (extractTextFromPDF).
  */
 export async function convertOfficeToPdf(

@@ -623,7 +623,7 @@ function addList(slide: Slide, b: FreeformListBlock, card: Card, theme: Template
     color: hex(b.style?.color) ?? hex(theme.bodyColor) ?? (isDarkCard(card, theme) ? 'F5F5F7' : '333333'),
     fontFace: fontFace(b.style?.fontFamily) ?? fontFace(theme.bodyFont),
     lineSpacingMultiple: b.style?.lineHeight,
-    // `gap` is px on the 960×540 canvas; px→pt is 1:1 at our scale.
+    // `gap` is px on the 960×540 canvas; px→pt is 1:1 at the scale.
     gapPt: b.gap != null ? b.gap : undefined,
   });
 }

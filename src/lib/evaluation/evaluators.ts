@@ -185,7 +185,7 @@ const FABRICATION_PATTERNS: RegExp[] = [
   /\$\d[\d,.]+(?!\])/,
   // "Studies show" / "Research indicates" — unsourced claims
   /\b(?:studies?\s+(?:show|indicate|suggest|reveal|found)|research\s+(?:shows?|indicates?|suggests?|reveals?|found)|according\s+to\s+(?:a\s+)?(?:recent|new|latest)\s+(?:study|report|survey|analysis))\b/i,
-  // "Our research/data/analysis shows"
+  // "The research/data/analysis shows"
   /\b(?:our\s+(?:research|data|analysis)\s+(?:shows?|indicates?|reveals?))\b/i,
   // "X out of Y" claims
   /\b\d+\s+out\s+of\s+\d+\b/,

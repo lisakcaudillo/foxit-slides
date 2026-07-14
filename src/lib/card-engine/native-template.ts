@@ -1938,7 +1938,7 @@ export async function generateNativeDeck(opts: {
     const imageRejectForNative = async (deckPos: number, blockIds: string[], judgeReason: string): Promise<Card | null> => {
       const planEntry = plan[deckPos];
       const slide = captured.slides[planEntry.capturedIndex];
-      // Map each block id back to its slotIndex so we can clear the cache.
+      // Map each block id back to its slotIndex to clear the cache.
       const clearedSlots: number[] = [];
       for (const blockId of blockIds) {
         // Block ids emitted by applyCapturedImage:

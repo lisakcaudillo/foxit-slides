@@ -480,7 +480,7 @@ export class Slide {
    *  to the box via <a:srcRect> (needs the image's intrinsic size, decoded from the
    *  PNG/JPEG header); `contain` shrinks the placed extent to fit inside the box,
    *  centered. If dimensions can't be read (e.g. SVG), it falls back to a plain
-   *  stretch — SVG scales cleanly and our SVG uses are full-bleed. `opacity` maps to
+   *  stretch — SVG scales cleanly and the SVG uses are full-bleed. `opacity` maps to
    *  <a:alphaModFix>. */
   addImage(o: ImageOpts): void {
     const parsed = parseDataUrl(o.data);
@@ -887,7 +887,7 @@ export class Deck {
     zip.file('[Content_Types].xml', XML_DECL +
       `<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">${defaultEls}${overrides.join('')}</Types>`);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- jszip's type union is looser than our overloads
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- jszip's type union is looser than the overloads
     return zip.generateAsync({
       type: (opts.outputType || 'blob') as any,
       compression: opts.compression === false ? 'STORE' : 'DEFLATE',

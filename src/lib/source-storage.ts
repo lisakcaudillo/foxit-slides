@@ -3,7 +3,7 @@
  *
  * Phase E E-9. The Inspector's source drawer (D2 design) needs to render
  * arbitrary pages of the original source on demand. The pipeline only
- * has the PDF bytes during /api/source-grounded/build, so we persist them
+ * has the PDF bytes during /api/source-grounded/build, to persist them
  * keyed by the same contentHash used for cache lookups.
  *
  * Storage dir defaults to `<COMPOSE_CACHE_DIR or tmpdir>/compose-sources/`.

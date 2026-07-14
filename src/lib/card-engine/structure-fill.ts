@@ -1480,7 +1480,7 @@ export async function generateStructuredDeck(
   // visual problems on the re-fill).
   const buildOneSlide = async (slide: (typeof plan.slides)[number], i: number, feedback?: string[]): Promise<Card> => {
       const layoutPurpose = layoutCatalogue().find((l) => l.key === slide.layoutKey)?.purpose ?? '';
-      // Figma path: no chart/table slots exist in the manifest, so we always
+      // Figma path: no chart/table slots exist in the manifest, to always
       // pass empty data-slot specs. Writer never populates charts/tables.
       const { text: fill } = await fillStructureSlots(
         {

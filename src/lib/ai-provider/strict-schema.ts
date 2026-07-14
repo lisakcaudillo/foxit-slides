@@ -184,7 +184,7 @@ export function toStrictSchema(schema: JSONSchema, path = '$'): JSONSchema {
 /**
  * Recursively delete `null`-valued keys from a parsed tool result. OpenAI strict
  * mode emits optional-but-absent fields as explicit `null` (rule 2); Zod's
- * `.optional()` accepts `undefined`, not `null`, so we convert null → absent to
+ * `.optional()` accepts `undefined`, not `null`, to convert null → absent to
  * preserve the Anthropic-path semantics the callers were written against.
  */
 export function stripNulls<T>(value: T): T {

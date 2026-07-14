@@ -110,7 +110,7 @@ export default function SlashCommandMenu({ position, filter, onSelect, onClose }
   );
 
   useEffect(() => {
-    // Use capture phase so we intercept before the contentEditable handler
+    // Use capture phase to intercept before the contentEditable handler
     document.addEventListener('keydown', handleKeyDown, true);
     return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [handleKeyDown]);

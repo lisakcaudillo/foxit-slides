@@ -124,7 +124,7 @@ const TYPE_MAP: Record<string, string> = {
  * Convert a JSON-Schema-ish object (an Anthropic tool `input_schema`) into a
  * Gemini responseSchema. Gemini accepts a SUBSET of OpenAPI schema — it takes
  * uppercase types and does NOT allow additionalProperties / minimum / maximum,
- * so we keep only the supported keys and recurse.
+ * to keep only the supported keys and recurse.
  */
 function toGeminiSchema(schema: unknown): Record<string, unknown> {
   if (!schema || typeof schema !== 'object') return { type: 'STRING' };

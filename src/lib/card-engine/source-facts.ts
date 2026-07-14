@@ -20,7 +20,7 @@ export interface SourceFact {
   unit: string;
   /** the measure — "gross margin", "revenue growth". */
   metric: string;
-  /** WHO/WHAT — "our company", "Acme", "Product A", "Europe". Optional: many
+  /** WHO/WHAT — "the company", "Acme", "Product A", "Europe". Optional: many
    *  sources are single-subject and state no subject per number. */
   subject?: string | null;
   /** WHEN — "Q3 2025", "last year". Not yet used by matchFact (finer, later). */

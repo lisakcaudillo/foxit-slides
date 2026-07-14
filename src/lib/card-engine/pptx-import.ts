@@ -21,7 +21,7 @@ import { XMLParser } from 'fast-xml-parser';
 import type { Card, FreeformBlock, FreeformTextBlock, FreeformImageBlock, FreeformShapeBlock, FreeformTableBlock, FreeformListBlock, FreeformTextVariant } from '@/types/card-template';
 import { measureWidth } from './text-fit';
 
-/** PowerPoint placeholder `type` → our role vocabulary (1:1). */
+/** PowerPoint placeholder `type` → the role vocabulary (1:1). */
 const PLACEHOLDER_ROLE: Record<string, string> = {
   title: 'title', ctrTitle: 'title', subTitle: 'subtitle', body: 'body',
   pic: 'image', tbl: 'table', ftr: 'footer', dt: 'date', sldNum: 'slide-number',
@@ -229,7 +229,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
   //    pilot — accent/editorial/*, bound to ink + accent tokens, recolors across
   //    modes). Geometry from the Figma tiles (480×270 = half of 960×540). We apply
   //    the accent roles relative to the imported content slots; the source's own
-  //    decorations are NOT reproduced. Accent-colored bits use our `accent`. ──
+  //    decorations are NOT reproduced. Accent-colored bits use the `accent`. ──
   const ourDecorations = (blocks: FreeformBlock[], zBase: number): FreeformShapeBlock[] => {
     const decos: FreeformShapeBlock[] = [];
     const find = (re: RegExp) => blocks.find((b): b is FreeformTextBlock => b.type === 'text' && re.test(b.id));
@@ -276,7 +276,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
 
   const masterStyleCache: Record<string, ReturnType<typeof loadMasterStyles>> = {};
   const cards: Card[] = [];
-  let deckDate = '';   // captured from the source footer so we can show it on the title slide
+  let deckDate = '';   // captured from the source footer to show it on the title slide
   let coverIdx = -1;   // which card is the title slide
 
   for (const sp of slidePaths) {

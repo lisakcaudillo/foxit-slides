@@ -44,7 +44,7 @@ export default function SourceDrawer({ source, citedPages, initialPage, highligh
   }, [onClose]);
 
   // When parent updates initialPage (e.g., user clicked a different chip),
-  // mirror it in our state.
+  // mirror it in the state.
   useEffect(() => {
     setActivePage(initialPage);
   }, [initialPage]);

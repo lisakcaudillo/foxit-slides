@@ -112,7 +112,7 @@ ROLE DETECTION (REQUIRED — produces speakerRole + audienceRole):
 - speakerRole = the entity authoring this deck. Often "the founder", "the customer success team", "the seller", "the new hire's manager", "the product team". The owner of the talking points.
 - audienceRole = who reads this deck. Often "internal team alignment", "external customer / prospect", "investor", "new hire", "executive leadership". Different from describing the audience demographically.
 - These can be subtle. Worked examples:
-  * "Customer success kickoff for $250K enterprise account" → speakerRole = "the customer success team at our company", audienceRole = "internal CS team aligning on this account engagement". NOT "the customer."
+  * "Customer success kickoff for $250K enterprise account" → speakerRole = "the customer success team at the company", audienceRole = "internal CS team aligning on this account engagement". NOT "the customer."
   * "Series A pitch for an AI legal tech startup" → speakerRole = "the founder", audienceRole = "Series A investor".
   * "Onboarding deck for new sales hires" → speakerRole = "sales leadership / hiring manager", audienceRole = "new sales hire (internal)".
   * "Q4 earnings deck for institutional investors" → speakerRole = "CFO / company leadership", audienceRole = "institutional investor (external)".

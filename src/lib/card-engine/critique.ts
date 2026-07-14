@@ -581,7 +581,7 @@ export function critiqueCard(input: Card): Card {
  * Run the deck-level rhythm check across already-Tier-A'd cards. Two ADJACENT
  * slides sharing a recipe OR image role slipped past the planner's adjacency
  * rule. FLAG-only (low) on the second of the pair — swapping a recipe here
- * would desync the rendered content shape, so we surface it for the user's
+ * would desync the rendered content shape, to surface it for the user's
  * "Vary layouts" re-roll rather than silently mutate. Appends to the existing
  * per-slide report (creating one if needed).
  *

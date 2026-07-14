@@ -127,7 +127,7 @@ export function pickTextColor(bgHex: string, preferredHex?: string): string | nu
 /**
  * Composite an opaque base color with a translucent black/white overlay and
  * return the resulting solid [r,g,b]. Used to compute the EFFECTIVE color of a
- * scrim (a black or white veil at some alpha) so we can pick text color
+ * scrim (a black or white veil at some alpha) to pick text color
  * against the real perceived tone, not the veil's nominal color.
  *
  * `overlay` is 0 (black) or 255 (white) per channel at `alpha` (0..1) over

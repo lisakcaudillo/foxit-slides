@@ -23,7 +23,7 @@ import { recordUsage } from '@/lib/card-engine/usage-meter';
  *
  * Mirrors the Anthropic getApiKey() pattern: the system env may carry an empty
  * OPENAI_API_KEY (e.g. from the Claude Code harness) which Next.js loadEnvConfig
- * will not override, so we fall back to reading .env.local / .env directly.
+ * will not override, to fall back to reading .env.local / .env directly.
  */
 export function getOpenAIApiKey(): string {
   const key = process.env.OPENAI_API_KEY;

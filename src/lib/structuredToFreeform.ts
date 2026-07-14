@@ -214,7 +214,7 @@ const BLOCK_HEIGHT_DEFAULTS: Record<string, number> = {
 // DESIGN_STANDARD.canvas at the top of this file (px ↔ % math).
 
 // Per-type rendering metrics, in px. Used to predict wrap line count + line
-// height so we can give each block enough vertical room to fit its actual
+// height to give each block enough vertical room to fit its actual
 // rendered text. Keeping these tied to the TextContent variant styles in
 // FreeformLayer.tsx: heading = 2.4rem/1.15, subheading = 1.4rem/1.3,
 // paragraph = 1rem/1.6. Char-width estimates are conservative (Inter is
@@ -957,7 +957,7 @@ function layoutCover(blocks: CardBlock[], bounds: ContentBounds): FreeformBlock[
     const subtitleH = subtitle
       ? contentAwareHeight(BLOCK_HEIGHT_DEFAULTS.paragraph, getContent(subtitle).length, contentWidth, 'paragraph')
       : 0;
-    // Build the title FIRST so we use its REAL autofit-resolved height — textBlock
+    // Build the title FIRST to use its REAL autofit-resolved height — textBlock
     // grows the box past the `h` estimate for a long wrapped title, and placing
     // the subtitle at `startY + h` (the estimate) drops it INTO the grown title
     // (the cover overlap flagged). Position everything off the real height.

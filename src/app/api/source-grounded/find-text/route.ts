@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
   }
   return NextResponse.json(result, {
     headers: {
-      // Cache by URL (POST so we still use route-level caching at fetch boundary)
+      // Cache by URL (POST to still use route-level caching at fetch boundary)
       'Cache-Control': 'private, max-age=3600',
     },
   });

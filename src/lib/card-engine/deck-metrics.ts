@@ -1,5 +1,5 @@
 /**
- * deck-metrics.ts — append one row per generated deck to docs/metrics so we can
+ * deck-metrics.ts — append one row per generated deck to docs/metrics to can
  * watch generation health over time: how long it took (fill vs judge vs revise),
  * how the visual critic scored it, and whether it stayed under the request cap.
  *

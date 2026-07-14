@@ -51,7 +51,7 @@ import { useToast } from '@/components/Toast';
 import MobileNavDrawer from '@/components/MobileNavDrawer';
 import { openNewDeckModal } from '@/lib/newDeckModal';
 
-// Icon type accepts both stock LucideIcon components and our custom
+// Icon type accepts both stock LucideIcon components and the custom
 // CompareIcon (same prop surface). Avoids a strict-type cast at the
 // call site.
 type NavIconComponent = LucideIcon | typeof CompareIcon;
@@ -86,7 +86,7 @@ const NAV: NavLink[] = [
     activeWhen: (p) => p.startsWith('/editor/slides'),
   },
   // Compare is hidden from the sidebar, routes,
-  // and the /compare page stay intact so we can bring it back without
+  // and the /compare page stay intact to bring it back without
   // rewiring anything. Just commented out of the nav list.
   // { href: '/compare', label: 'Compare', Icon: CompareIcon, activeWhen: (p) => p.startsWith('/compare') },
 ];
@@ -100,7 +100,7 @@ const NAV: NavLink[] = [
 
 const ds = {
   // `display` + `flexDirection` are intentionally NOT inline here — they
-  // live on the aside's className so we can hide the sidebar on mobile
+  // live on the aside's className to hide the sidebar on mobile
   // (max-md:hidden) without the inline `display: flex` overriding the
   // CSS class. The kit's inline-style discipline is preserved everywhere
   // else; this is the one carve-out for responsive behavior.

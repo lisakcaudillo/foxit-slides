@@ -42,7 +42,7 @@ function deriveCardSubject(card: Card): string {
   const callout = blocks.find((b): b is Extract<CardBlock, { type: 'callout' }> => b.type === 'callout');
 
   // For unified-format cards the columns are wiped — pull from freeform text
-  // blocks instead so we still get a meaningful subject after the rewrite.
+  // blocks instead to still get a meaningful subject after the rewrite.
   if (!heading && !para && card.freeform) {
     const textBlocks = card.freeform.filter((b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text');
     const ffHeading = textBlocks.find((b) => b.variant === 'heading' || b.variant === 'subheading');

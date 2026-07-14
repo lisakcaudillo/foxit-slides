@@ -61,7 +61,7 @@ function EditorIconRail() {
   // while editing. Active state rule (below) treats both /compose and
   // /editor/* as "in Foxit Slides" so the highlight doesn't disappear the
   // moment you click into a deck.
-  // Icon union accepts stock Lucide icons + our custom CompareIcon
+  // Icon union accepts stock Lucide icons + the custom CompareIcon
   // (same prop surface). Mirrors the type pattern in Sidebar.tsx.
   type RailIcon = LucideIcon | typeof CompareIcon;
   const railLinks: { href: string; label: string; Icon: RailIcon; activeWhen?: (p: string) => boolean }[] = [
