@@ -872,7 +872,7 @@ export async function convertOfficeToPdf(
  * Convert HTML content to a PDF buffer using the Foxit Node SDK.
  * Used by /api/export/pdf and /api/foxit/export.
  *
- * Phase 1a port: replaces the Python atlas/ingestion/docgen.py:generate_from_html
+ * Renders HTML to PDF in-process via the Foxit SDK.
  * which called the Foxit Cloud API. This in-process version uses the Node
  * SDK's HTML2PDF module — no Python sidecar, no Cloud roundtrip.
  */

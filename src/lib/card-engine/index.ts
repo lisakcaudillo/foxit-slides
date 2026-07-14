@@ -1,8 +1,8 @@
 /**
  * Card Engine — intelligence layer for card-based content generation.
  *
- * Similar to Atlas Engine (compare feature), this engine understands
- * the user's intent before generating. Instead of throwing a raw prompt
+ * This engine understands the user's intent before generating.
+ * Instead of throwing a raw prompt
  * at the AI, it classifies, structures, and generates in stages.
  *
  * Pipeline: Classify → Structure → Generate → Assemble

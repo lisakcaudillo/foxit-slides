@@ -22,7 +22,7 @@ import type {
   TemplateTheme,
 } from '@/types/card-template';
 import type { SourceGroundedBlueprint, SourceGroundedSlide } from '@/types/generation';
-import type { AnnotatedElement } from '@/lib/atlas-engine/layer4-semantic';
+import type { AnnotatedElement } from '@/lib/source-engine/layer4-semantic';
 import { GeneratedBlockSchema, type GeneratedCard } from './types';
 import { BLOCK_BRANCHES } from './generation-tools';
 

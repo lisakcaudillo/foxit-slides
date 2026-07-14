@@ -22,12 +22,12 @@ import {
   ocrPDFBuffer,
   type PDFLayoutElement,
 } from '@/lib/foxit-sdk-server';
-import { extractPageViaVLM } from '@/lib/atlas-engine/layer3-vlm';
+import { extractPageViaVLM } from '@/lib/source-engine/layer3-vlm';
 import {
   annotateElementsWithRoles,
   SEMANTIC_ROLES,
   type AnnotatedElement,
-} from '@/lib/atlas-engine/layer4-semantic';
+} from '@/lib/source-engine/layer4-semantic';
 import { extractOfficeStructure, isNativeOfficeFormat } from './office-extract';
 import type { SourceDocument } from '@/types/card-template';
 import {

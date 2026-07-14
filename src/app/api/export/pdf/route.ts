@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { htmlToPdf } from '@/lib/foxit-sdk-server';
 
-// Phase 1a — Atlas merge: this route used to proxy to Python at
+// This route renders HTML to PDF in-process via the Foxit SDK.
 // localhost:8001/export/pdf. Now uses the in-process Node Foxit SDK
 // HTML→PDF helper, same path as /api/foxit/export.
 
