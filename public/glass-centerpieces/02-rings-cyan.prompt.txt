@@ -1,0 +1,4 @@
+Cinematic 3D render of three nested translucent glass rings stacked at slight offset angles, cool gradient palette of midnight blue, electric cyan, periwinkle, and silver, subsurface scattering with soft specular highlights, water droplets on glossy surfaces catching light, refraction visible through ring walls, shallow depth of field with bokeh, soft rim lighting, polished glass material with internal caustics, premium minimalist aesthetic, clean negative space at top-right of frame, Octane render quality, 4K
+
+---
+Generator output note: Microsoft Designer interpreted "clean negative space at top-right of frame" as a full dark studio backdrop with the subject centered (rather than a colored gradient with a corner safe zone like the peach prompt produced). The dark-studio interpretation is actually more adaptable for presentation use — text can sit anywhere in the dark space. Keep this rendering style; do not regenerate to force the colored-backdrop look.
