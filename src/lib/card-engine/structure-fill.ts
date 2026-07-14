@@ -23,7 +23,6 @@
  */
 
 import { getProvider, getModel, type ToolUseBlock, type Tool } from '@/lib/ai-provider';
-import { cosmosContentVariant } from '@/data/skin-backgrounds';
 import { matchFact, parseMeasure, factsWithNumber, type SourceFact } from './source-facts';
 import { extractSourceFactsCached } from './source-facts-extract';
 import { z } from 'zod';
@@ -1631,21 +1630,6 @@ export async function generateStructuredDeck(
 
   // Initial build — all slides in parallel.
   const cards: Card[] = await Promise.all(plan.slides.map((slide, i) => buildOneSlide(slide, i)));
-
-  // Cosmos: the content/data/quote/divider categories otherwise fall back to the
-  // flat deep-space ground (#0A0814) — "all black" on every content slide. Give
-  // them a galaxy backdrop, cycling a few variants across the content slides so
-  // they don't all look identical. Cover + closing keep the authored nebula
-  // image. (A full-bleed cover image, if placed, sets its own background and is
-  // untouched here since those layouts are skipped.)
-  if (skinId === 'cosmos') {
-    let ci = 0;
-    cards.forEach((card, i) => {
-      const lk = plan.slides[i]?.layoutKey ?? '';
-      if (lk === '01-cover' || lk === '09-closing') return;
-      card.background = cosmosContentVariant(ci++);
-    });
-  }
 
   // Theme comes from the first built structure (skin colors/fonts) — every card
   // shares the skin, so card[0]'s theme represents the deck.

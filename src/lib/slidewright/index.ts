@@ -1,11 +1,8 @@
-// Foxit Slidewright — public API + package assembly.
+// Foxit Slidewright — PPTX writer: public API + package assembly.
 //
-// Foxit's own in-house OpenXML PowerPoint writer (Foxit Slides's exporter runs on it).
-// No pptxgenjs, no third-party PPTX code: it emits the OOXML parts directly
-// (informed by the format structure + real PowerPoint output) and zip them with
-// jszip (a general compression lib). The API mirrors the shape of a slide builder —
-// createDeck() → slide.addText/addShape/addImage/addTable/addChart → deck.write() —
-// so the exporter mapping stays simple.
+// Emits the OOXML parts of a .pptx directly and zips them with jszip. The API is
+// shaped like a slide builder — createDeck() → slide.addText/addShape/addImage/
+// addTable/addChart → deck.write() — so the exporter mapping stays simple.
 //
 // Geometry is in INCHES at the API boundary (converted to EMU internally); font
 // sizes in POINTS; angles in DEGREES. A 16:9 widescreen slide is 13.333in × 7.5in.
