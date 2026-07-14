@@ -48,7 +48,9 @@ const SLIDE_WRAP = (theme: Theme, withPattern: boolean, subtleBorder: string, ba
   border: bare ? 'none' : `0.5px solid ${subtleBorder}`,
   borderRadius: bare ? 0 : 8,
   padding: '20px 22px',
-  aspectRatio: '16 / 10',
+  // Match the real slide canvas (960×540). Was 16/10, which made the theme-picker
+  // preview slides a different, cropped rectangle than the decks they represent.
+  aspectRatio: '16 / 9',
   overflow: 'hidden',
   position: 'relative',
   display: 'flex',

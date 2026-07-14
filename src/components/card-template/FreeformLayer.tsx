@@ -77,6 +77,13 @@ import {
 // selection chrome).
 const VIOLET = '#6B3FA0';
 
+// Session-scoped record of text-block ids whose typewriter reveal has already
+// played. The `__animateOnMount` flag lives on the in-memory template and is
+// only stripped on SAVE, so without this guard a remount or a later setTemplate
+// (auto-image landing, delay recompute) would replay the type-out on a slide
+// that is already displayed. Once a block finishes, it never animates again.
+const revealedBlockIds = new Set<string>();
+
 /** An open link-editor session — the snapshot of the selection being linked. */
 interface LinkDraft {
   blockId: string;
@@ -3174,8 +3181,8 @@ function TextContent({
                 ? <span key={i} data-m={JSON.stringify(r.marks)} style={runMarkStyle(r.marks) as CSSProperties}>{r.text}</span>
                 : <span key={i}>{r.text}</span>
             ))
-          : block.__animateOnMount
-          ? <Typewriter key="ty" text={block.content} speed={55} delay={block.__animateDelay ?? 0} />
+          : block.__animateOnMount && !revealedBlockIds.has(block.id)
+          ? <Typewriter key="ty" text={block.content} speed={55} delay={block.__animateDelay ?? 0} onDone={() => revealedBlockIds.add(block.id)} />
           : block.content)}
     </div>
   );

@@ -62,6 +62,62 @@ const VOLT_PANEL: SkinPanel = {
 
 export const SKIN_PANEL: Record<string, SkinPanel> = { glacier: GLACIER_PANEL, volt: VOLT_PANEL };
 
+// ── Cosmos content backdrops ────────────────────────────────────────────────
+// The cosmos skin only authored a nebula image for cover + closing; every other
+// category fell back to the flat deep-space ground (#0A0814), which reads as
+// "all black" on the many content slides. These variants give content/data/
+// quote/divider a real galaxy feel — soft nebula glows plus a sparse starfield —
+// while staying on the skin's deep base so light text stays legible. A few
+// variants are cycled across the content slides (see cosmosContentVariant) so
+// they don't all look identical.
+const COSMOS_BASE = '#0A0814';
+
+// Deterministic sparse starfield built from layered radial-gradients. Seeded
+// (no runtime Math.random) so the same slide renders identically on screen and
+// in export.
+function starfield(seed: number, count = 28): string {
+  let s = seed >>> 0;
+  const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const stars: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const x = (rnd() * 100).toFixed(2);
+    const y = (rnd() * 100).toFixed(2);
+    const r = rnd() < 0.14 ? 1.6 : rnd() < 0.5 ? 1.1 : 0.7; // a few brighter stars
+    const a = (0.32 + rnd() * 0.5).toFixed(2);
+    stars.push(`radial-gradient(${r}px ${r}px at ${x}% ${y}%, rgba(255,255,255,${a}) 0, transparent 60%)`);
+  }
+  return stars.join(', ');
+}
+
+const cosmosVariant = (nebula: string, seed: number): NonNullable<Card['background']> => ({
+  gradient: `${starfield(seed)}, ${nebula}, ${COSMOS_BASE}`,
+  color: COSMOS_BASE,
+});
+
+export const COSMOS_CONTENT_VARIANTS: NonNullable<Card['background']>[] = [
+  // violet nebula, upper-right
+  cosmosVariant(
+    'radial-gradient(70% 90% at 82% 12%, rgba(124,74,214,0.30) 0%, transparent 55%), radial-gradient(60% 80% at 8% 90%, rgba(58,102,204,0.20) 0%, transparent 55%)',
+    1011,
+  ),
+  // teal / blue nebula, left
+  cosmosVariant(
+    'radial-gradient(65% 85% at 12% 20%, rgba(46,150,180,0.26) 0%, transparent 55%), radial-gradient(55% 78% at 92% 84%, rgba(120,60,200,0.18) 0%, transparent 55%)',
+    2027,
+  ),
+  // magenta / rose nebula, lower-right
+  cosmosVariant(
+    'radial-gradient(72% 92% at 86% 84%, rgba(196,70,150,0.26) 0%, transparent 55%), radial-gradient(55% 80% at 16% 8%, rgba(92,70,210,0.20) 0%, transparent 55%)',
+    3041,
+  ),
+];
+
+/** Cycle a galaxy content backdrop by (content-)slide index. Cosmos only. */
+export function cosmosContentVariant(index: number): NonNullable<Card['background']> {
+  const n = COSMOS_CONTENT_VARIANTS.length;
+  return COSMOS_CONTENT_VARIANTS[((index % n) + n) % n];
+}
+
 // Fixed skins with hand-authored per-category maps.
 export const CATEGORY_BACKGROUNDS: Record<string, Partial<Record<LayoutCategory, CategoryBg>>> = {
   'mono-light': {
@@ -104,6 +160,13 @@ export const CATEGORY_BACKGROUNDS: Record<string, Partial<Record<LayoutCategory,
   cosmos: {
     cover: { bg: { image: '/textures/cosmos/cosmos-bg.png', color: '#0A0814' } },
     closing: { bg: { image: '/textures/cosmos/cosmos-bg.png', color: '#0A0814' } },
+    // Galaxy backdrops (nebula + starfield) instead of the flat #0A0814 ground.
+    // The deck-assembly step cycles the variants across content slides; these
+    // single values keep the theme-picker preview and any non-cycled caller rich.
+    content: { bg: COSMOS_CONTENT_VARIANTS[0] },
+    data: { bg: COSMOS_CONTENT_VARIANTS[1] },
+    quote: { bg: COSMOS_CONTENT_VARIANTS[2] },
+    divider: { bg: COSMOS_CONTENT_VARIANTS[0], invert: true },
   },
   // MUBI (Quartz) — Figma ships ~4 slide designs; it maps them across the
   // categories and get creative for the gaps. Each is a full CSS `background`

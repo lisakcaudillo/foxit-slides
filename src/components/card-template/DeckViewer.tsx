@@ -259,26 +259,33 @@ export default function DeckViewer({
         .dv-btn-pdf:hover:not(:disabled) { background: #f4f5f8; }
         .dv-body { flex: 1; display: flex; min-height: 0; }
         .dv-rail {
-          width: 168px; flex-shrink: 0; overflow-y: auto;
-          padding: 14px 10px; display: flex; flex-direction: column; gap: 10px;
+          width: 176px; flex-shrink: 0; overflow-y: auto;
+          padding: 14px 10px; display: flex; flex-direction: column; gap: 8px;
           border-right: 1px solid rgba(0,0,0,0.08); background: #fbfbfd;
         }
+        /* Row = [page number] [slide]. The number sits to the LEFT of the slide
+           image so the thumbnail is the slide only — no badge over it, no caption
+           box beneath it. */
+        .dv-thumb-row {
+          display: flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+        .dv-thumb-n {
+          flex-shrink: 0; width: 16px; text-align: right;
+          font-size: 11px; font-weight: 600; color: #94a3b8;
+          font-variant-numeric: tabular-nums;
+        }
+        .dv-thumb-row.is-active .dv-thumb-n { color: #8A56B8; }
         .dv-thumb {
           position: relative; border-radius: 6px; overflow: hidden;
-          border: 2px solid transparent; cursor: pointer; background: #fff;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+          border: 2px solid transparent; background: transparent;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex-shrink: 0;
         }
         .dv-thumb.is-active {
           border-color: transparent;
-          background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #C79BE8 0%, #8A56B8 100%);
+          background-image: linear-gradient(135deg, #C79BE8 0%, #8A56B8 100%);
           background-origin: border-box;
-          background-clip: padding-box, border-box;
+          background-clip: border-box;
           box-shadow: 0 2px 12px rgba(122,77,160,0.30);
-        }
-        .dv-thumb-n {
-          position: absolute; left: 4px; top: 4px; z-index: 2;
-          font-size: 10px; font-weight: 600; color: #64748b;
-          background: rgba(255,255,255,0.85); border-radius: 4px; padding: 0 5px;
         }
         .dv-stagewrap {
           flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center;
@@ -340,15 +347,19 @@ export default function DeckViewer({
           {cards.map((card, i) => (
             <div
               key={card.id || i}
-              className={`dv-thumb${i === active ? ' is-active' : ''}`}
-              style={{ width: W * thumbScale, height: H * thumbScale }}
+              className={`dv-thumb-row${i === active ? ' is-active' : ''}`}
               onClick={() => jump(i)}
               role="button"
               aria-label={`Go to slide ${i + 1}`}
             >
               <span className="dv-thumb-n">{i + 1}</span>
-              <div style={{ width: W, height: H, transform: `scale(${thumbScale})`, transformOrigin: 'top left' }}>
-                <SlideStage card={card} theme={theme} width={W} height={H} />
+              <div
+                className={`dv-thumb${i === active ? ' is-active' : ''}`}
+                style={{ width: W * thumbScale, height: H * thumbScale }}
+              >
+                <div style={{ width: W, height: H, transform: `scale(${thumbScale})`, transformOrigin: 'top left' }}>
+                  <SlideStage card={card} theme={theme} width={W} height={H} />
+                </div>
               </div>
             </div>
           ))}
