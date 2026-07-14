@@ -1,0 +1,482 @@
+<title>Template flow: Figma to PowerPoint</title>
+<style>
+  :root{--bg:#FBFAFC;--surface:#FFFFFF;--surface-2:#F5F3FA;--border:#E7E3EF;--ink:#1E1B2E;--sub:#6B6580;--faint:#948CA8;--accent:#6D46C6;--shadow:0 1px 2px rgba(30,27,46,.05),0 10px 28px -14px rgba(30,27,46,.14);
+    --stage:#EFE7FB;--slide:#FFFFFF;
+    --c-eyebrow:#C08A2A;--c-title:#7C5CE6;--c-body:#5B8BD0;--c-metric:#C0568F;--c-table:#C4763F;--c-image:#3F9D6B;--c-deco:#B4ADC6;--c-chart:#6D6ACb;}
+  @media (prefers-color-scheme:dark){:root{--bg:#131120;--surface:#1B1826;--surface-2:#232030;--border:#2E2A3D;--ink:#ECEAF2;--sub:#9B93AD;--faint:#6E667F;--accent:#A78BFA;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px -16px rgba(0,0,0,.65);--stage:#251E38;--slide:#F4F1FA;}}
+  :root[data-theme="light"]{--bg:#FBFAFC;--surface:#FFFFFF;--surface-2:#F5F3FA;--border:#E7E3EF;--ink:#1E1B2E;--sub:#6B6580;--faint:#948CA8;--accent:#6D46C6;--shadow:0 1px 2px rgba(30,27,46,.05),0 10px 28px -14px rgba(30,27,46,.14);--stage:#EFE7FB;--slide:#FFFFFF;}
+  :root[data-theme="dark"]{--bg:#131120;--surface:#1B1826;--surface-2:#232030;--border:#2E2A3D;--ink:#ECEAF2;--sub:#9B93AD;--faint:#6E667F;--accent:#A78BFA;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px -16px rgba(0,0,0,.65);--stage:#251E38;--slide:#F4F1FA;}
+  *{box-sizing:border-box}body{margin:0}
+  .wrap{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding:40px clamp(16px,4vw,56px) 60px;min-height:100vh;-webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
+  .col{max-width:1180px;margin:0 auto}
+  header{margin-bottom:20px}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:650}
+  h1{font-size:clamp(26px,3.4vw,36px);line-height:1.08;margin:.28em 0 .3em;letter-spacing:-.02em;font-weight:680;text-wrap:balance}
+  .lede{font-size:15px;line-height:1.5;color:var(--sub);max-width:70ch;margin:0}
+  .lede b{color:var(--ink);font-weight:620}
+  .phase-label{display:flex;align-items:center;gap:12px;margin:28px 0 12px}
+  .phase-label .pl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .phase-label .sub{font-size:12.5px;color:var(--faint)}
+  .phase-label hr{flex:1;border:none;border-top:1px solid var(--border);margin:0}
+  .flow{display:grid;gap:14px;align-items:stretch}
+  .stage .how{margin-top:auto}
+  .flow.four{grid-template-columns:repeat(4,1fr)}
+  .flow.three{grid-template-columns:repeat(3,1fr)}
+  .flow.five{grid-template-columns:0.82fr repeat(4,1fr)}
+  @media(max-width:1000px){.flow.four,.flow.three,.flow.five{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.flow.four,.flow.three,.flow.five{grid-template-columns:1fr}}
+  /* input mock (generation kickoff) */
+  .inp{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px;display:flex;flex-direction:column;gap:8px}
+  .inp .q{font-size:11px;color:var(--ink);line-height:1.42;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:7px 8px}
+  .inp .q b{color:var(--accent);font-weight:620}
+  .inp .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{font-size:10px;font-weight:600;color:var(--sub);background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:3px 8px;display:inline-flex;align-items:center;gap:4px}
+  .chip i{width:7px;height:7px;border-radius:2px;flex:none}
+  .stage{position:relative;background:var(--stage);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:15px;display:flex;flex-direction:column;gap:10px}
+  .stage::after{content:"→";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:20px;font-weight:700;z-index:2}
+  .flow.four .stage:nth-child(4)::after,.flow.three .stage:nth-child(3)::after,.flow.five .stage:nth-child(5)::after{display:none}
+  @media(max-width:1000px){.stage:nth-child(2n)::after{display:none}.stage::after{content:"↓";right:auto;left:50%;top:auto;bottom:-15px;transform:translateX(-50%)}}
+  @media(max-width:600px){.stage::after{content:"↓";left:50%;display:block!important}.stage:last-child::after{display:none!important}}
+  .snum{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:.03em}
+  .snum b{display:grid;place-items:center;width:19px;height:19px;border-radius:6px;background:color-mix(in srgb,var(--accent) 16%,transparent);font-size:11px}
+  .sname{font-size:15px;font-weight:670;letter-spacing:-.01em;margin:-2px 0 0}
+  .mini{aspect-ratio:16/9;background:var(--slide);border-radius:7px;box-shadow:inset 0 0 0 1px #E1DBEE,0 3px 10px -3px rgba(70,40,130,.22);position:relative;overflow:hidden;container-type:inline-size}
+  .b{position:absolute;border-radius:3px}
+  /* real filled-slide example (steps 6 & 7), absolutely positioned so every step shares one layout */
+  .el{position:absolute;text-align:left}
+  .eb{font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--c-eyebrow);font-size:1.6cqw;line-height:1}
+  .tt{font-weight:720;letter-spacing:-.02em;color:#26223A;font-size:3.9cqw;line-height:1.06}
+  .bd{color:#857F98;font-size:1.9cqw;line-height:1.25}
+  .card{background:#F5F3FB;border:1px solid #E6E1F0;border-radius:2cqw;padding:2.2cqw;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden}
+  .card .ic{width:5cqw;height:5cqw;border-radius:1.4cqw;background:rgba(109,70,198,.12);color:#6D46C6;display:grid;place-items:center;margin-bottom:1.6cqw;flex:none}
+  .card .ic svg{width:2.9cqw;height:2.9cqw;display:block}
+  .card .ct{font-size:2.1cqw;font-weight:730;color:#26223A;line-height:1.1;margin-bottom:.5cqw}
+  .card .cb{font-size:1.55cqw;color:#544F68;line-height:1.3}
+  .pptx-out{outline:1px dashed #B0A8C6;outline-offset:2px;border-radius:3px}
+  .sdesc{font-size:12px;line-height:1.4;color:var(--sub);margin:0}
+  .sdesc b{color:var(--ink);font-weight:620}
+  /* collapsible "how?" per card */
+  .how{margin-top:2px}
+  .how summary{font-size:10.5px;font-weight:680;letter-spacing:.02em;color:var(--accent);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:color-mix(in srgb,var(--accent) 9%,transparent);border:1px solid color-mix(in srgb,var(--accent) 28%,var(--border));border-radius:20px;transition:background .12s,border-color .12s}
+  .how summary:hover{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:color-mix(in srgb,var(--accent) 45%,var(--border))}
+  .how summary::-webkit-details-marker{display:none}
+  .how summary::before{content:"▸";font-size:9px;transition:transform .15s}
+  .how[open] summary::before{transform:rotate(90deg)}
+  .how[open] summary{margin-bottom:2px}
+  .how .d{font-size:11.5px;line-height:1.5;color:var(--sub);margin-top:7px;border-left:2px solid color-mix(in srgb,var(--accent) 30%,var(--border));padding-left:10px}
+  .how .d b{color:var(--ink);font-weight:620}
+  .how .d code{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;background:var(--surface-2);border:1px solid var(--border);padding:0 4px;border-radius:4px;white-space:nowrap}
+  .badge{position:absolute;right:7px;bottom:7px;z-index:3;font-size:9px;font-weight:700;color:#2E8B57;background:#EAF7EF;border:1px solid #BFE6CE;border-radius:20px;padding:2px 7px;display:inline-flex;align-items:center;gap:3px}
+  .chipline{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--sub);background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 9px;line-height:1.65}
+  .feature{display:grid;grid-template-columns:320px 1fr;gap:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-top:14px;align-items:center}
+  @media(max-width:760px){.feature{grid-template-columns:1fr}}
+  .fig{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;overflow:hidden}
+  .fig .fbar{font-size:11px;font-weight:600;color:var(--sub);padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+  .fig .fbar i{width:8px;height:8px;border-radius:2px;background:var(--c-title)}
+  .layer{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:5px 12px;border-bottom:1px solid color-mix(in srgb,var(--border) 55%,transparent);font-family:ui-monospace,Menlo,monospace}
+  .layer:last-child{border-bottom:none}
+  .layer .ic{width:15px;text-align:center;color:var(--faint);font-size:11px}
+  .layer.ind{padding-left:30px}
+  .layer.grp{color:var(--sub);font-weight:600;font-family:system-ui,sans-serif;font-size:11.5px;letter-spacing:.02em}
+  .rl{font-weight:700}
+  .gr{color:var(--faint)}
+  .feature h2{margin:0 0 6px;font-size:15px;font-weight:670}
+  .feature p{margin:0;font-size:13px;line-height:1.5;color:var(--sub)}
+  .feature p b{color:var(--ink);font-weight:620}
+  .conv{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:2px 8px}
+  .conv .rl{color:var(--c-title)}
+  .conv .gr{color:var(--c-metric)}
+  .reqs{margin-top:13px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:11px 13px}
+  .reqs .rt{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .reqs ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+  .reqs li{font-size:12.5px;line-height:1.42;color:var(--sub);padding-left:15px;position:relative}
+  .reqs li::before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:2px;background:var(--accent)}
+  .reqs li b{color:var(--ink);font-weight:620}
+  .up-table td{vertical-align:top;padding:7px 0;border-bottom:1px solid var(--border)}
+  .up-table td:first-child{white-space:normal;width:38%;color:var(--ink);font-weight:600;padding-right:18px}
+  .up-table tr:last-child td{border-bottom:none}
+  .band{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:16px 20px;margin-top:20px}
+  .band h2{margin:0 0 12px;font-size:14px;font-weight:670}
+  .maps{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:600px){.maps{grid-template-columns:1fr}}
+  .maps h3{margin:0 0 8px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:650}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  td{padding:5px 0;border-bottom:1px solid var(--border);color:var(--sub);vertical-align:top}
+  td:first-child{color:var(--ink);font-weight:600;white-space:nowrap;padding-right:14px}
+  td .mono{font-size:11.5px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:2px;vertical-align:-1px}
+  .exp-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:660px}
+  .exp-table td{padding:7px 0;border-bottom:1px solid var(--border);vertical-align:top;color:var(--sub);line-height:1.4}
+  .exp-table tr:last-child td{border-bottom:none}
+  .exp-table td:first-child{color:var(--ink);font-weight:600;white-space:nowrap;padding-right:16px;width:1%}
+  .exp-table td:nth-child(2){white-space:nowrap;padding-right:18px;color:var(--ink);font-family:ui-monospace,Menlo,monospace;font-size:11px}
+  .highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+  @media(max-width:760px){.highlights{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.highlights{grid-template-columns:1fr}}
+  .hi{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:12px 13px}
+  .hi h4{margin:0 0 3px;font-size:13px;font-weight:670;color:var(--ink);display:flex;align-items:center;gap:7px}
+  .hi h4 .d{width:8px;height:8px;border-radius:2px;flex:none}
+  .hi p{margin:0;font-size:12px;line-height:1.42;color:var(--sub)}
+</style>
+
+<div class="wrap"><div class="col">
+  <header>
+    <div class="kicker">Slide platform · template lifecycle</div>
+    <h1>Template flow: Figma to PowerPoint</h1>
+    <p class="lede">The goal: turn a prompt and your materials into a beautiful, presentation-ready PowerPoint deck that stays fully editable. This page walks through how it works.</p>
+  </header>
+
+  <!-- key features -->
+  <div class="band" style="margin-top:14px">
+    <h2>What makes it work</h2>
+    <div class="highlights">
+      <div class="hi"><h4><span class="d" style="background:var(--c-title)"></span>Design once</h4><p>A layout is drawn and role-tagged in Figma once; every deck reuses it.</p></div>
+      <div class="hi"><h4><span class="d" style="background:var(--c-body)"></span>Fits the content</h4><p>The generator picks the layout + combo that matches the content, never forced.</p></div>
+      <div class="hi"><h4><span class="d" style="background:var(--c-image)"></span>Grounded to your source</h4><p>You set how closely it sticks to the source. The default uses only what you provide.</p></div>
+      <div class="hi"><h4><span class="d" style="background:var(--c-metric)"></span>Judged before it ships</h4><p>An objective gate plus two AI judges (words and picture), with a capped fix loop.</p></div>
+      <div class="hi"><h4><span class="d" style="background:var(--c-chart)"></span>Native PowerPoint</h4><p>Every element a real, editable object via Foxit Slidewright, matching the preview.</p></div>
+      <div class="hi"><h4><span class="d" style="background:var(--c-table)"></span>On-brand</h4><p>The chosen theme's fonts and colors are applied consistently across the deck.</p></div>
+    </div>
+  </div>
+
+  <!-- AUTHORING -->
+  <div class="phase-label"><span class="pl">Authoring</span><span class="sub">once per template</span><hr></div>
+  <div class="flow four">
+    <div class="stage">
+      <div><div class="snum"><b>1</b> DESIGN</div><p class="sname">Draw the frame</p></div>
+      <div class="mini" id="m1"></div>
+      <p class="sdesc">A 16:9 frame on the grid. Each element is a slot: text, card, table, chart, image.</p>
+      <details class="how"><summary>How?</summary><div class="d">Standard 16:9 at 960×540 px. Every element is a slot with fixed geometry: its position and size in px on the frame.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/data/figma-template-structures.json</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>2</b> LABEL</div><p class="sname">Name each layer</p></div>
+      <div class="mini" id="m2"></div>
+      <p class="sdesc">Each layer is named <b class="mono">role/group</b>: the name <em>is</em> the tag.</p>
+      <details class="how"><summary>How?</summary><div class="d">No separate tagging tool. Role is a fixed vocabulary (title, body, eyebrow, card-title, table, image…); group ties repeating slots together. Rename the layer, and the tag changes with it.<div class="fig" style="margin-top:9px">
+        <div class="fbar"><i></i> Figma · Layers</div>
+        <div class="layer"><span class="ic">▦</span> <span style="color:var(--sub);font-weight:600">Content layout · 960×540</span></div>
+        <div class="layer ind"><span class="ic">T</span> <span class="rl" style="color:var(--c-eyebrow)">eyebrow</span><span class="gr">/label</span></div>
+        <div class="layer ind"><span class="ic">T</span> <span class="rl" style="color:var(--c-title)">title</span><span class="gr">/main</span></div>
+        <div class="layer ind"><span class="ic">T</span> <span class="rl" style="color:var(--c-body)">body</span><span class="gr">/lead</span></div>
+        <div class="layer ind grp"><span class="ic">▸</span> cards <span class="gr" style="font-family:ui-monospace">(group)</span></div>
+        <div class="layer ind" style="padding-left:48px"><span class="ic">◇</span> <span class="rl" style="color:var(--c-metric)">card-icon</span><span class="gr">/item</span></div>
+        <div class="layer ind" style="padding-left:48px"><span class="ic">T</span> <span class="rl" style="color:var(--c-title)">card-title</span><span class="gr">/item</span></div>
+        <div class="layer ind" style="padding-left:48px"><span class="ic">T</span> <span class="rl" style="color:var(--c-body)">card-body</span><span class="gr">/item</span></div>
+      </div></div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/data/figma-template-structures.json</code>, <code>src/data/structureTemplates.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>3</b> EXTRACT</div><p class="sname">Read the frame</p></div>
+      <div class="chipline">name → <span style="color:var(--c-title)">role</span>,<span style="color:var(--c-metric)">group</span><br>+ geometry <span class="mono">x/y/w/h</span><br>+ kind <span class="mono">text·table·image</span></div>
+      <p class="sdesc">The Figma API reads every layer: its name → role + group, geometry, and kind.</p>
+      <details class="how"><summary>How?</summary><div class="d">For each layer the Figma API returns its name → role + group, its bounding box (<code>x/y/w/h</code> in px), and its kind (text · table · image · shape).</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/data/figma-template-structures.json</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>4</b> STORE</div><p class="sname">Combo library</p></div>
+      <div class="chipline"><span style="color:var(--accent)">layout</span> = slots[<span style="color:var(--c-title)">role:group</span>]<br>&nbsp;· geometry + padding<br>&nbsp;· text budgets<br>&nbsp;· saved per count / density</div>
+      <p class="sdesc">The layout lands in the combo library, saved as several combos the generator picks from.</p>
+      <details class="how"><summary>How?</summary><div class="d">Saved as exact geometry: each slot's position and size, its padding (the safe margins content can't cross), and how much text it holds at each density. The layout is stored as several combos (one per content count / density), so the generator can pick the one that fits.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/combo-baseline.ts</code>, <code>src/data/combo-layouts.json</code></div></details>
+    </div>
+  </div>
+
+  <!-- GENERATION -->
+  <div class="phase-label"><span class="pl">Generation</span><span class="sub">per deck</span><hr></div>
+  <div class="flow four">
+    <div class="stage">
+      <div><div class="snum"><b>5</b> INPUT</div><p class="sname">Prompt, files &amp; settings</p></div>
+      <div class="inp">
+        <div class="q">"Summarize our Q3 results for the board: revenue, regions, and outlook."</div>
+        <div class="chips"><span class="chip"><i style="background:var(--c-table)"></i>Q3-report.pdf</span><span class="chip"><i style="background:var(--c-body)"></i>+ instructions</span></div>
+        <div style="font-size:9px;color:var(--faint);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:1px">Suggested · all editable</div>
+        <div class="chips"><span class="chip">Board tone</span><span class="chip">Exec audience</span><span class="chip">Update deck</span><span class="chip">Detailed</span><span class="chip">Source-only</span><span class="chip"><i style="background:var(--c-title)"></i>Mono Light</span></div>
+      </div>
+      <p class="sdesc">The user gives a prompt, plus any files and instructions. The system suggests the rest, all editable.</p>
+      <details class="how"><summary>How?</summary><div class="d">Only the prompt is required. Attached files become the source to ground on; instructions add any must-dos. From the prompt the system suggests a starting tone, audience, deck type, length &amp; density, and grounding setting. Accept them or change any before generating.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/components/home/GenerationPrompt.tsx</code>, <code>src/app/api/ai/extract-reference/route.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>6</b> PLAN</div><p class="sname">Outline the deck</p></div>
+      <div class="chipline">prompt → <span style="color:var(--accent)">per-slide outline</span><br>&nbsp;· topic · one point<br>&nbsp;· figures to ground</div>
+      <p class="sdesc">The prompt becomes a slide-by-slide outline: one point per slide, with the real figures to keep honest.</p>
+      <details class="how"><summary>How?</summary><div class="d">A planner turns the prompt into an ordered outline: each slide's topic, its single point, and any source figures that must be grounded, never invented.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/planner.ts</code>, <code>src/lib/card-engine/structure-fill.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>7</b> SELECT</div><p class="sname">Layout by content</p></div>
+      <div class="chipline">content shape → <span style="color:var(--accent)">best-fit combo</span></div>
+      <p class="sdesc">The content is decided first, then a layout is chosen to fit it. The number of items picks the combo, never forced.</p>
+      <details class="how"><summary>How?</summary><div class="d">First the system decides what the slide will say: how many points, whether there is a number to feature, a table, or an image. Then it picks the layout built for that kind of content and that many items. Three supporting points fit a three-card layout; one big number fits a single-stat layout. A chart or table layout is never chosen when there is no real data to fill it.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/structure-fill.ts</code>, <code>src/lib/card-engine/combo-baseline.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>8</b> FILL</div><p class="sname">Write &amp; fit</p></div>
+      <div class="mini" id="m6"></div>
+      <p class="sdesc">Each slot is written to its budget and fit to the box; the theme paints it by role.</p>
+      <details class="how"><summary>How?</summary><div class="d">Each slot gets text sized to fit its space. If it runs long it shrinks a step or tightens the line spacing; if it still doesn't fit, the AI rewrites it shorter as a full sentence, never cut off mid-word. The slot's padding is respected, so text never touches the edges.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/structure-fill.ts</code>, <code>src/lib/card-engine/text-fit.ts</code></div></details>
+    </div>
+  </div>
+
+  <!-- REVISION -->
+  <div class="phase-label"><span class="pl">Revision</span><span class="sub">per slide · every judge, cheapest first</span><hr></div>
+  <div class="flow four">
+    <div class="stage">
+      <div><div class="snum"><b>9</b> GATE</div><p class="sname">Deterministic check</p></div>
+      <div class="mini" id="mR"><span class="badge">✓ gate</span></div>
+      <p class="sdesc">Objective checks measured straight from the finished slide (no AI, just pass or fail), and auto-fixed.</p>
+      <details class="how"><summary>How?</summary><div class="d">The quickest checks, run first, with no AI needed. It looks for problems that are simply right or wrong: text spilling out of its box, elements overlapping, anything off the edge of the slide, and text too low-contrast to read. These are fixed automatically before the AI judges look.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/deterministic-checks.ts</code>, <code>src/lib/card-engine/dom-geometry.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>10</b> CONTENT JUDGE</div><p class="sname">Read the words</p></div>
+      <div class="chipline">reads the words:<br>&nbsp;· one clear point<br>&nbsp;· facts from the source, not made up<br>&nbsp;· reads cleanly</div>
+      <p class="sdesc">An AI reads the words and checks they're right: one point, nothing invented, cleanly written.</p>
+      <details class="how"><summary>How?</summary><div class="d">Checks the slide makes one clear point, that every fact and number comes from the source (nothing made up), and that the writing reads cleanly, with no half-sentences or garbled text.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/judge.ts</code>, <code>src/lib/card-engine/slide-standard/rules.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>11</b> VISUAL JUDGE</div><p class="sname">Read the picture</p></div>
+      <div class="chipline">looks at the slide:<br>&nbsp;· well composed &amp; balanced<br>&nbsp;· the point stands out<br>&nbsp;· your eye lands on it</div>
+      <p class="sdesc">An AI looks at the finished slide the way a person would; the judgment the objective checks can't make.</p>
+      <details class="how"><summary>How?</summary><div class="d">This is a judgment call, not a measurement. An AI looks at the slide as a picture and asks whether it's well composed, whether the most important thing stands out, and whether your eye lands on the point. It judges in context: a clean, formal slide passes and isn't marked down for being plain.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/vlm-judge.ts</code>, <code>src/lib/card-engine/render-card.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>12</b> CORRECT</div><p class="sname">Fix &amp; re-check</p></div>
+      <div class="chipline">any fail → <span style="color:var(--accent)">corrective pass</span><br>&nbsp;· reshorten · reposition<br>&nbsp;· re-fill → re-judge (capped)</div>
+      <p class="sdesc">Any failure loops back for a targeted fix, then re-judges. A slide ships only when all tiers pass.</p>
+      <details class="how"><summary>How?</summary><div class="d">Whatever failed gets the right fix (trim the text, move or resize something, or rewrite a slot), and the slide is checked again. There's a limit on retries, so it always finishes.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/card-engine/slide-gates.ts</code>, <code>src/lib/card-engine/geometry-fixer.ts</code></div></details>
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="phase-label"><span class="pl">Export</span><span class="sub">to native PowerPoint · Foxit Slidewright</span><hr></div>
+  <div class="flow four">
+    <div class="stage">
+      <div><div class="snum"><b>13</b> READ</div><p class="sname">Read the render</p></div>
+      <div class="chipline">the finished slide<br>→ real positions · fonts<br>&nbsp;· colors · gradients · shadows</div>
+      <p class="sdesc">The engine reads the finished slide as approved, so what exports can't drift from what you saw.</p>
+      <details class="how"><summary>How?</summary><div class="d">Foxit Slidewright reads the finished slide exactly as approved (the same positions, fonts, colors, gradients, and shadows on screen), so the export always matches the preview.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/pptxExport.ts</code>, <code>src/components/card-template/SlideStage.tsx</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>14</b> MAP</div><p class="sname">Element → object</p></div>
+      <div class="chipline">text → <span class="mono">text box</span><br>table → <span class="mono">table</span> · chart → <span class="mono">chart</span><br>image → <span class="mono">picture</span> · shape → <span class="mono">shape</span></div>
+      <p class="sdesc">Each element becomes a native, editable object by role, nothing flattened.</p>
+      <details class="how"><summary>How?</summary><div class="d">Role decides the object: text → text box, table → native table, chart → native chart (live editable data), image → picture, decoration → shape.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/pptxExport.ts</code>, <code>src/lib/slidewright/index.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>15</b> CONVERT</div><p class="sname">Place on the slide</p></div>
+      <div class="chipline">same 16:9 shape<br>→ same relative spot<br>&nbsp;· color token → theme color</div>
+      <p class="sdesc">The design and the PowerPoint slide are the same shape, so every element lands in the same spot.</p>
+      <details class="how"><summary>How?</summary><div class="d">The design and a PowerPoint slide are the same 16:9 shape, so every element keeps its exact relative position, so nothing shifts. Each color picks up the theme's actual color.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/slidewright/index.ts</code>, <code>src/lib/slidewright/colors.ts</code></div></details>
+    </div>
+    <div class="stage">
+      <div><div class="snum"><b>16</b> WRITE</div><p class="sname">Assemble the .pptx</p></div>
+      <div class="mini" id="m7"><div style="position:absolute;inset:0 0 auto 0;height:11%;background:#EDE7F6;border-bottom:1px solid #DCD5EA;display:flex;gap:3px;align-items:center;padding:0 5px;z-index:2"><i style="width:4px;height:4px;border-radius:50%;background:#C4BCD6"></i><i style="width:4px;height:4px;border-radius:50%;background:#C4BCD6"></i></div></div>
+      <p class="sdesc">Foxit Slidewright writes the file; it opens clean in PowerPoint, fully editable.</p>
+      <details class="how"><summary>How?</summary><div class="d">Foxit Slidewright, Foxit Slides' own PowerPoint engine, builds the file: slides, native tables and charts (with live data), speaker notes, and sections. It's been checked to open cleanly in real PowerPoint.</div><div class="coderef" style="margin-top:9px;padding-top:8px;border-top:1px dashed rgba(120,90,190,0.28);font-size:11.5px;line-height:1.5"><strong style="letter-spacing:.04em;text-transform:uppercase;font-size:10px;color:#6b3fa0">Code</strong> &nbsp;<code>src/lib/slidewright/index.ts</code>, <code>src/lib/slidewright/boilerplate.ts</code></div></details>
+    </div>
+  </div>
+
+  <!-- what exports to PowerPoint (consolidated) -->
+  <div class="band">
+    <h2>What exports to PowerPoint</h2>
+    <p style="margin:-6px 0 13px;font-size:12px;color:var(--faint)"><b style="color:var(--sub)">Foxit Slidewright</b>, Foxit Slides' own PowerPoint engine, reads the rendered slide, so the deck matches the preview exactly. Every element below becomes a native, editable PowerPoint object, never a flattened image.</p>
+    <div style="overflow-x:auto">
+    <table class="exp-table">
+      <tr><td><span class="dot" style="background:var(--c-title)"></span>Text</td><td>text box</td><td>bold · italic · color · gradient headings · super/subscript · highlight · outline &amp; glow · right-to-left · clickable links</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-deco)"></span>Shapes</td><td>shape</td><td>solid / gradient / pattern / image fills · shadows · dashed lines · arrowheads · custom freeform shapes</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-image)"></span>Images</td><td>picture</td><td>smart crop (fill / fit, no distortion) · transparency · rounded · flip · shadow</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-table)"></span>Tables</td><td>native table</td><td>merged cells · per-cell color, border &amp; alignment · mixed formatting within a cell</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-chart)"></span>Charts</td><td>native chart · live data</td><td>column · bar · line · area · pie · doughnut · scatter · radar · 3-D · combo (dual axis)</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-body)"></span>Lists</td><td>bulleted / numbered</td><td>bulleted &amp; numbered</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-metric)"></span>Media</td><td>video / audio / online</td><td>embedded video &amp; audio · linked online video</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-eyebrow)"></span>Deck</td><td>notes · sections · metadata</td><td>speaker notes · slide numbers · sections · title / author / company info</td></tr>
+      <tr><td><span class="dot" style="background:var(--c-title)"></span>Templates</td><td>slide master + placeholders</td><td>reusable master with title / body / picture / table placeholders <span style="color:var(--faint)">(engine-ready; wiring into the export is next)</span></td></tr>
+    </table>
+    </div>
+    <p style="margin:12px 0 0;font-size:11.5px;color:var(--faint)"><b style="color:var(--sub)">Position &amp; color:</b> every element keeps its relative spot (the design and the slide are the same 16:9 shape), and each color token becomes the theme's actual color.</p>
+  </div>
+
+  <!-- when content does not fit -->
+  <div class="band">
+    <h2>The unhappy path: when content does not fit</h2>
+    <p style="margin:-6px 0 12px;font-size:12px;color:var(--faint)">The main safeguard is order: the content is decided first, then a layout is chosen to fit exactly that much, so slots are rarely too full or too empty. When something still does not fit, whether it overruns its box or leaves the slide sparse, each case has a defined fallback.</p>
+    <table class="up-table">
+      <tr><td>Text is longer than its box</td><td>It is rewritten shorter as a full sentence, and the font shrinks a step or the line spacing tightens, until it fits. It is never clipped.</td></tr>
+      <tr><td>A card still overflows after that</td><td>The objective check catches the overflow and the slide loops back for another fix, up to a set limit.</td></tr>
+      <tr><td>The text is far too long for the chosen layout</td><td>The slide is moved to a roomier layout: a bigger box, or fewer items per row.</td></tr>
+      <tr><td>There are more or fewer items than the layout holds</td><td>A different combo or layout is picked to match the number of items.</td></tr>
+      <tr><td>A slot would be left empty</td><td>The slot is dropped, or the slide moves to a smaller layout. Empty slots are never padded with filler.</td></tr>
+      <tr><td>A number or fact is not in the source</td><td>The slot is left blank rather than inventing one.</td></tr>
+      <tr><td>Two elements overlap or run off the slide</td><td>The check flags it and the element is nudged inward or shrunk to fit.</td></tr>
+    </table>
+  </div>
+
+  <!-- one design, one layout (with the blueprint) -->
+  <div class="band">
+    <h2>One design → one layout, saved with exact rules</h2>
+    <p>The designer names each layer <span class="conv"><span class="rl">role</span>/<span class="gr">group</span></span>. The role says what the slot holds (title, body, metric, table, image); the group ties repeating slots together. Roles are a fixed vocabulary, so the same tag means the same thing everywhere, and maps to a PowerPoint element on export.</p>
+    <p style="margin-top:9px">This specific design is one layout. Its slots' exact geometry is captured and saved to the combo layout library, which generation reads. The same layout is stored as several combos: set combinations of blocks for different amounts of content (a cards layout at 2, 3, or 4 cards; body + image at three densities), and the generator picks the combo that fits each slide.</p>
+    <div class="reqs">
+      <div class="rt">Every slot carries the hard rules generation must respect</div>
+      <ul>
+        <li><b>Role</b>: what it holds, and the PowerPoint element it becomes on export</li>
+        <li><b>Position &amp; size</b>: each slot's x, y and its maximum width and height, on the 960×540 frame</li>
+        <li><b>Padding</b>: the outer safe margin plus card padding; text and content never cross it</li>
+        <li><b>Text budget</b>: how much text fits, set per density (concise · detailed · extensive)</li>
+      </ul>
+    </div>
+    <p style="margin:16px 0 12px;font-size:12px;color:var(--faint)">Here is that layout with the rules drawn on it: the safe margin, each slot's role, position (x, y) and size (width × height), the padding inside a card, the gaps between sections, and the character budget each text slot is written to.</p>
+    <svg viewBox="-72 -54 1104 668" style="width:100%;height:auto;display:block" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+      <defs>
+        <marker id="dm" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,0.7 L8,4 L1,7.3" fill="none" stroke="#6D46C6" stroke-width="1.1"/></marker>
+      </defs>
+      <rect x="0.5" y="0.5" width="959" height="539" rx="8" fill="#FFFFFF" stroke="#E1DDEA"/>
+      <g fill="#6D46C6" fill-opacity="0.06">
+        <rect x="1" y="1" width="958" height="47"/><rect x="1" y="492" width="958" height="47"/>
+        <rect x="1" y="48" width="47" height="444"/><rect x="912" y="48" width="47" height="444"/>
+      </g>
+      <rect x="48" y="48" width="864" height="444" fill="none" stroke="#6D46C6" stroke-opacity="0.45" stroke-width="1.1" stroke-dasharray="6 5"/>
+      <text x="52" y="42" font-size="11" fill="#6D46C6" font-weight="600">safe margin</text>
+      <text x="4" y="-40" font-size="10" fill="#948CA8">0,0</text>
+      <!-- overall + margin dims -->
+      <g stroke="#CBC0EC" stroke-width="1">
+        <line x1="0" y1="-6" x2="0" y2="-32"/><line x1="960" y1="-6" x2="960" y2="-32"/>
+        <line x1="-6" y1="0" x2="-40" y2="0"/><line x1="-6" y1="540" x2="-40" y2="540"/>
+        <line x1="48" y1="398" x2="48" y2="420"/><line x1="912" y1="398" x2="912" y2="420"/>
+        <line x1="48" y1="398" x2="48" y2="442"/><line x1="322" y1="398" x2="322" y2="442"/>
+      </g>
+      <g stroke="#6D46C6" stroke-width="1" fill="none">
+        <line x1="0" y1="-28" x2="960" y2="-28" marker-start="url(#dm)" marker-end="url(#dm)"/>
+        <line x1="-36" y1="0" x2="-36" y2="540" marker-start="url(#dm)" marker-end="url(#dm)"/>
+        <line x1="48" y1="416" x2="912" y2="416" marker-start="url(#dm)" marker-end="url(#dm)"/>
+        <line x1="48" y1="438" x2="322" y2="438" marker-start="url(#dm)" marker-end="url(#dm)"/>
+        <line x1="0" y1="76" x2="48" y2="76" marker-start="url(#dm)" marker-end="url(#dm)"/>
+      </g>
+      <g font-size="14" fill="#6D46C6" font-weight="600" text-anchor="middle">
+        <text x="480" y="-34">960 w</text>
+        <text x="-52" y="270" transform="rotate(-90 -52 270)">540 h</text>
+        <text x="480" y="411">864 max-w</text>
+        <text x="185" y="454">274</text>
+        <text x="24" y="71" font-size="11">48</text>
+      </g>
+      <!-- right dimension chain: section sizes (purple) and gaps (pink) -->
+      <g stroke="#CBC0EC" stroke-width="1">
+        <line x1="966" y1="52" x2="986" y2="52"/><line x1="966" y1="68" x2="986" y2="68"/>
+        <line x1="966" y1="88" x2="986" y2="88"/><line x1="966" y1="138" x2="986" y2="138"/>
+        <line x1="966" y1="150" x2="986" y2="150"/><line x1="966" y1="200" x2="986" y2="200"/>
+        <line x1="966" y1="218" x2="986" y2="218"/><line x1="966" y1="394" x2="986" y2="394"/>
+      </g>
+      <g stroke-width="1.4">
+        <line x1="976" y1="52" x2="976" y2="68" stroke="#6D46C6"/>
+        <line x1="976" y1="68" x2="976" y2="88" stroke="#C0568F"/>
+        <line x1="976" y1="88" x2="976" y2="138" stroke="#6D46C6"/>
+        <line x1="976" y1="138" x2="976" y2="150" stroke="#C0568F"/>
+        <line x1="976" y1="150" x2="976" y2="200" stroke="#6D46C6"/>
+        <line x1="976" y1="200" x2="976" y2="218" stroke="#C0568F"/>
+        <line x1="976" y1="218" x2="976" y2="394" stroke="#6D46C6"/>
+      </g>
+      <g font-size="11" font-weight="600" text-anchor="start">
+        <text x="992" y="63" fill="#6D46C6">16</text>
+        <text x="992" y="82" fill="#C0568F">20 gap</text>
+        <text x="992" y="117" fill="#6D46C6">50</text>
+        <text x="992" y="148" fill="#C0568F">12 gap</text>
+        <text x="992" y="179" fill="#6D46C6">50</text>
+        <text x="992" y="213" fill="#C0568F">18 gap</text>
+        <text x="992" y="309" fill="#6D46C6">176</text>
+      </g>
+      <!-- horizontal card gaps (pink) -->
+      <g stroke="#C0568F" stroke-width="1.2">
+        <line x1="322" y1="300" x2="322" y2="314"/><line x1="342" y1="300" x2="342" y2="314"/>
+        <line x1="616" y1="300" x2="616" y2="314"/><line x1="636" y1="300" x2="636" y2="314"/>
+      </g>
+      <g font-size="11" fill="#C0568F" font-weight="600" text-anchor="middle">
+        <text x="332" y="297">20</text><text x="626" y="297">20</text>
+      </g>
+      <!-- slots -->
+      <rect x="48" y="52" width="290" height="16" rx="2" fill="#C08A2A" fill-opacity="0.18" stroke="#C08A2A" stroke-opacity="0.55"/>
+      <text x="348" y="64" font-size="12" fill="#C08A2A">eyebrow · x48 y52 · 290×16</text>
+      <rect x="48" y="88" width="864" height="50" rx="3" fill="#7C5CE6" fill-opacity="0.12" stroke="#7C5CE6" stroke-opacity="0.5"/>
+      <text x="58" y="107" font-size="13" fill="#7C5CE6" font-weight="600">title</text>
+      <text x="900" y="107" font-size="11" fill="#7C5CE6" text-anchor="end" opacity="0.85">x48 y88 · 864×50 · 36pt</text>
+      <rect x="48" y="150" width="864" height="50" rx="3" fill="#5B8BD0" fill-opacity="0.10" stroke="#5B8BD0" stroke-opacity="0.5"/>
+      <text x="58" y="166" font-size="12" fill="#5B8BD0" font-weight="600">body (lead) · x48 y150 · 864×50</text>
+      <rect x="786" y="153" width="120" height="18" rx="9" fill="#5B8BD0" fill-opacity="0.18"/>
+      <text x="846" y="166" font-size="11" fill="#3F6DA8" text-anchor="middle" font-weight="600">148 char budget</text>
+      <text x="58" y="189" font-size="12.5" fill="#857F98">EMEA led the quarter and every region grew double digits, with new partnerships lifting APAC…</text>
+      <rect x="342" y="218" width="274" height="176" rx="5" fill="#F5F3FB" stroke="#E6E1F0"/>
+      <rect x="636" y="218" width="276" height="176" rx="5" fill="#F5F3FB" stroke="#E6E1F0"/>
+      <text x="479" y="312" font-size="12" fill="#B4ADC6" text-anchor="middle">card 2</text>
+      <text x="774" y="312" font-size="12" fill="#B4ADC6" text-anchor="middle">card 3</text>
+      <rect x="48" y="218" width="274" height="176" rx="5" fill="#F5F3FB" stroke="#E6E1F0"/>
+      <text x="54" y="232" font-size="10" fill="#948CA8">card 1 · x48 y218 · 274×176</text>
+      <rect x="64" y="234" width="242" height="144" rx="2" fill="none" stroke="#6D46C6" stroke-opacity="0.5" stroke-dasharray="4 4"/>
+      <text x="306" y="232" font-size="10.5" fill="#6D46C6" text-anchor="end">padding 16px</text>
+      <rect x="64" y="248" width="242" height="20" rx="2" fill="#C0568F" fill-opacity="0.16"/>
+      <text x="69" y="262" font-size="11" fill="#C0568F" font-weight="600">item-title</text>
+      <rect x="64" y="276" width="242" height="102" rx="2" fill="#5B8BD0" fill-opacity="0.10"/>
+      <text x="69" y="291" font-size="10" fill="#3F6DA8" font-weight="600">item-body · 132 char budget</text>
+      <text x="69" y="309" font-size="10.5" fill="#857F98">+58% YoY, the fastest-</text>
+      <text x="69" y="324" font-size="10.5" fill="#857F98">growing region on new</text>
+      <text x="69" y="339" font-size="10.5" fill="#857F98">partnerships this quarter…</text>
+    </svg>
+    <p style="margin:11px 0 0;font-size:11px;color:var(--faint)">Shaded band = the safe margin, where content is blocked. Dashed inset = card padding. Pills = the character budget for a text slot; text is written up to the budget and no further, then fit to the box. Widths and heights are box maximums; content is written to fit inside them. Purple dimensions are box sizes; pink dimensions are the required gaps between sections.</p>
+  </div>
+
+  <!-- glossary -->
+  <div class="band">
+    <h2>Glossary</h2>
+    <div class="maps">
+      <div>
+        <table>
+          <tr><td>Role</td><td>What a slot holds: title, body, metric, table, image. A fixed vocabulary.</td></tr>
+          <tr><td>Group</td><td>Ties repeating slots together (e.g. the cards in a row).</td></tr>
+          <tr><td>Slot</td><td>One placed element on a layout, with a fixed position and size.</td></tr>
+          <tr><td>Layout</td><td>One design: a fixed arrangement of slots on the 16:9 frame.</td></tr>
+          <tr><td>Template</td><td>The saved layout the generator fills: role-tagged slots with fixed geometry. Its combos are the variants.</td></tr>
+          <tr><td>Combo</td><td>Short for combination: a set arrangement of content blocks (title + 3 cards, or body + image), saved at a given content count and density. Each layout has several; the generator picks the one that fits.</td></tr>
+          <tr><td>Density</td><td>How full a slide is: concise · detailed · extensive. Sets text amount and which combo is used.</td></tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr><td>Text budget</td><td>How much text a slot holds, set per density.</td></tr>
+          <tr><td>Padding</td><td>The safe margins (around the frame and inside cards) that content never crosses.</td></tr>
+          <tr><td>Theme</td><td>The overall look you pick for a deck (Mono Light, Volt, …): its fonts, colors, and decorations.</td></tr>
+          <tr><td>Skin</td><td>How a theme paints a layout: its fonts and colors applied to the slots. Theme = the look you pick; skin = how it's applied.</td></tr>
+          <tr><td>Background</td><td>The backdrop behind the content: a color, gradient, or image, set by the theme.</td></tr>
+          <tr><td>Grounding</td><td>A setting for how closely the deck sticks to your source. The default, source-only, uses nothing beyond what you provide; looser settings let the model add general context.</td></tr>
+          <tr><td>Judges</td><td>The reviewers: a deterministic gate, a content judge (words), and a visual judge (picture).</td></tr>
+          <tr><td>Foxit Slidewright</td><td>Foxit Slides' own PowerPoint engine that writes the native, editable file.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<script>
+// ONE shared layout: every mini renders it, so all steps show the same slide.
+const box=(x,y,w,h)=>'left:'+(x/960*100)+'%;top:'+(y/540*100)+'%;width:'+(w/960*100)+'%;height:'+(h/540*100)+'%';
+const pos=(x,y,w)=>'left:'+(x/960*100)+'%;top:'+(y/540*100)+'%;width:'+(w/960*100)+'%';
+const L={ eb:[80,104,210,15], tt:[80,130,610,42], bd:[80,190,700,26], cards:[[80,250,252,180],[354,250,252,180],[628,250,252,180]] };
+const parts=[L.eb,L.tt,L.bd,...L.cards];
+// 1: plain frame
+document.getElementById('m1').innerHTML=parts.map(b=>'<div class="b" style="'+box(...b)+';background:#E9E7EF;box-shadow:inset 0 0 0 1px #DEDBE8"></div>').join('');
+// 2: tagged by role (color per role)
+const RC=['var(--c-eyebrow)','var(--c-title)','var(--c-body)','var(--c-metric)','var(--c-metric)','var(--c-metric)'];
+document.getElementById('m2').innerHTML=parts.map((b,i)=>'<div class="b" style="'+box(...b)+';background:color-mix(in srgb,'+RC[i]+' 14%,transparent);box-shadow:inset 0 0 0 1px '+RC[i]+'"></div>').join('');
+// 6 & 7: filled slide with real content + real cards, same layout
+const IC={
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>'
+};
+const CARDS=[
+  {rg:'EMEA',     cb:'+58% YoY, fastest-growing region'},
+  {rg:'Americas', cb:'+34% YoY, led by enterprise'},
+  {rg:'APAC',     cb:'+41% YoY on new partnerships'}
+];
+function fill(id,dash){
+  const d=dash?' pptx-out':'';
+  let h='<div class="el eb'+d+'" style="'+pos(L.eb[0],L.eb[1],L.eb[2])+'">Q3 Performance</div>'
+       +'<div class="el tt'+d+'" style="'+pos(L.tt[0],L.tt[1],L.tt[2])+'">Revenue grew 42% in Q3</div>'
+       +'<div class="el bd'+d+'" style="'+pos(L.bd[0],L.bd[1],L.bd[2])+'">EMEA led the quarter; every region grew double digits YoY.</div>';
+  L.cards.forEach((c,i)=>{const cd=CARDS[i];h+='<div class="el card'+d+'" style="'+box(...c)+'"><span class="ic">'+IC.pin+'</span><span class="ct">'+cd.rg+'</span><span class="cb">'+cd.cb+'</span></div>';});
+  const el=document.getElementById(id); el.innerHTML=el.innerHTML+h;
+}
+fill('m6',false);
+fill('mR',false);
+fill('m7',true);
+</script>
