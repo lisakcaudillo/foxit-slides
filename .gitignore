@@ -47,3 +47,4 @@ docs/design-decisions.csv
 .boot.log
 .verify-*
 .dl/
+TIER4-TODO.md
