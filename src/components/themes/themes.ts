@@ -229,7 +229,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
   {
     id: 'obsidian', name: 'Obsidian', category: 'branded', tone: 'dark', archetype: 'cinematic',
-    titleFont: "'Space Grotesk', -apple-system, system-ui, sans-serif",
+    titleFont: "'Fraunces', Georgia, 'Times New Roman', serif",
     bodyFont: "'Inter', -apple-system, system-ui, sans-serif",
     pageBg: 'linear-gradient(135deg, #1A1612 0%, #2D2620 50%, #1F1A17 100%)',
     workspaceBg: '#2A2C39',
@@ -405,7 +405,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
   {
     id: 'voltage', name: 'Voltage', category: 'branded', tone: 'dark', archetype: 'product',
-    titleFont: "'Space Grotesk', -apple-system, system-ui, sans-serif",
+    titleFont: "'Fraunces', Georgia, 'Times New Roman', serif",
     bodyFont: "'Inter', -apple-system, system-ui, sans-serif",
     pageBg: '#0A0A0C',
     pagePattern: 'radial-gradient(900px 540px at 22% 12%, rgba(199,247,42,0.10), transparent 55%), radial-gradient(720px 540px at 88% 92%, rgba(255,86,86,0.08), transparent 55%)',
@@ -654,7 +654,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
   {
     id: 'cosmos', name: 'Cosmos', category: 'creative', tone: 'dark', archetype: 'cinematic',
-    titleFont: "'Space Grotesk', -apple-system, system-ui, sans-serif",
+    titleFont: "'Fraunces', Georgia, 'Times New Roman', serif",
     bodyFont: "'Inter', -apple-system, system-ui, sans-serif",
     pageBg: '#0A0814',
     workspaceBg: '#171528',
