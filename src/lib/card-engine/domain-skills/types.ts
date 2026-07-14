@@ -1,8 +1,6 @@
 /**
  * Design Intelligence Layer — Expertise phase contracts.
  *
- * Implements §4 of `docs/requirements/dil-expertise-phase-spec.md`.
- *
  * The expertise phase is ONE expert pass per template whose output conditions
  * three downstream layers:
  *   - STRUCTURE  → tailored category list (feeds packing.ts)

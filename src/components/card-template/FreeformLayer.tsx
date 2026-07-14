@@ -72,7 +72,7 @@ import {
 } from '@/lib/contrast';
 
 // ── Design tokens (per .apm/design-specs/freeform-blocks-phase1.md) ──────────
-// Selection chrome uses Designer 2's bold-Canva treatment; snap/alignment guides
+// Selection chrome uses a bold treatment; snap/alignment guides
 // use a bold ORANGE so the snap moment is unambiguous (and distinct from the violet
 // selection chrome).
 const VIOLET = '#6B3FA0';
@@ -245,7 +245,7 @@ interface FreeformLayerProps {
    *  contexts that don't track history. */
   onGestureStart?: () => void;
   onGestureEnd?: () => void;
-  /** Canva-model font field: the floating toolbar's font button calls this to
+  /** Font field: the floating toolbar's font button calls this to
    *  open the Text/Font side panel instead of showing an inline dropdown. */
   onOpenFontPanel?: () => void;
   /** True when the Text/Font panel is open — lights the font field active. */
@@ -312,7 +312,7 @@ export function FreeformLayer({
 }: FreeformLayerProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [activeGuides, setActiveGuides] = useState<SnapGuide[]>([]);
-  // Crop mode (Canva model). `cropId` is the image block being cropped: the
+  // Crop mode. `cropId` is the image block being cropped: the
   // block renders object-fit:cover (fills the frame), the 8 handles reshape the
   // frame (cropping), and dragging the image body pans (panX/panY). cropSnapshot
   // holds the block's pre-crop geometry/fit/pan so Esc can revert cleanly.
@@ -1311,7 +1311,7 @@ export function FreeformLayer({
     return () => document.removeEventListener('selectionchange', handler);
   }, [editingId, blocks]);
 
-  // ── Crop mode (Canva model) ────────────────────────────────────────────────
+  // ── Crop mode ────────────────────────────────────────────────
   const enterCrop = useCallback((id: string) => {
     const b = blocks.find((x) => x.id === id);
     if (!b || b.type !== 'image' || !b.src) return;
@@ -1575,7 +1575,7 @@ export function FreeformLayer({
       for (const block of Array.from(blockEls)) {
         if (block.contains(target)) return;
       }
-      // Click-away while cropping = apply the crop (Canva model), then deselect.
+      // Click-away while cropping = apply the crop, then deselect.
       if (cropId) applyCrop();
       setSelectedIds(new Set());
     };
@@ -2597,7 +2597,7 @@ function FreeformBlockView({
   /** Standalone image only — fires once on load with the image's natural
    *  pixel dimensions so the parent can reshape the block to hug the image. */
   onNormalizeImageAspect: (naturalWidth: number, naturalHeight: number) => void;
-  /** Opens the Text/Font side panel (Canva-model font field). */
+  /** Opens the Text/Font side panel (font field). */
   onOpenFontPanel?: () => void;
   /** True when that panel is open — lights the toolbar font field active. */
   fontPanelOpen?: boolean;
@@ -3203,7 +3203,7 @@ function fontLabel(value?: string): string {
   return value.split(',')[0].replace(/['"]/g, '').trim() || 'Theme font';
 }
 /** CSS font-family that renders a label IN its own face (so the toolbar field
- *  previews the font like Canva). Empty → inherit the surrounding UI font. */
+ *  previews the font). Empty → inherit the surrounding UI font. */
 function fontCss(value?: string): string {
   if (!value) return 'inherit';
   return `'${fontLabel(value)}', system-ui, sans-serif`;
@@ -3254,7 +3254,7 @@ function InlineToolbar({
   onHighlightChange?: (color: string) => void;
   onFontFamilyChange: (family: string) => void;
   onFontSizeChange: (size: number) => void;
-  /** Canva model: the font field opens the Text/Font side panel (the single
+  /** The font field opens the Text/Font side panel (the single
    *  visual font browser) instead of an inline dropdown. */
   onOpenFontPanel?: () => void;
   /** True when that Text/Font panel is open — lights the font field active. */
@@ -3405,7 +3405,7 @@ function InlineToolbar({
           </>
         ) : (
         <>
-          {/* Crop leads the image toolbar (Canva model) — the one mode-changing
+          {/* Crop leads the image toolbar — the one mode-changing
               action, isolated by a divider. Lit violet while cropping. */}
           {block.type === 'image' && !!block.src && (
             <>
@@ -3522,7 +3522,7 @@ function InlineToolbar({
   );
 }
 
-/** Canva-model font field: shows the current font in its own face and OPENS
+/** Font field: shows the current font in its own face and OPENS
  *  the Text/Font side panel (the single visual font browser) on click —
  *  no inline dropdown list. */
 function FontFieldButton({ current, active = false, onOpen }: { current?: string; active?: boolean; onOpen?: () => void }) {

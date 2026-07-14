@@ -1876,7 +1876,7 @@ export async function generateNativeDeck(opts: {
     // Owned by the plan agent. When the judge flags a slide as too empty (or
     // wrong shape), it asks the plan agent — the single owner of "which
     // layout fits what content" — to re-pick a layout for THIS one slide
-    // given the ACTUAL text it produceds. Then rebuild the slide against the
+    // given the ACTUAL text it produced. Then rebuild the slide against the
     // new layout via the existing buildOneSlide.
     const swapLayoutForNative = async (deckPos: number, judgeReason: string): Promise<Card | null> => {
       const planEntry = plan[deckPos];

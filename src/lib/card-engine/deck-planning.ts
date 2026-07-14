@@ -1,7 +1,6 @@
 /**
  * Design Intelligence Layer — Planning Orchestrator: deck-category planning.
  *
- * Implements the front of §1 of `docs/requirements/dil-planning-orchestrator-spec.md`:
  *   classify → domain skill → count-aware packing → (draft category plan)
  *
  * This is the deterministic backbone the generation flow and Clarify call to

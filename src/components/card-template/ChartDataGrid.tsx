@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ChartDataGrid — Gamma-style data-table editor for a single FreeformChartBlock.
+ * ChartDataGrid — data-table editor for a single FreeformChartBlock.
  *
  * Ported 1:1 from the approved prototype
  * (app/public/design-table/chart-data-grid/round6/final.html). The user edits

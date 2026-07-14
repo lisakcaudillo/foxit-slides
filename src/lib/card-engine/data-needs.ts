@@ -1,7 +1,7 @@
 // ── deriveDataNeeds — turn the deck plan's figure-hungry slides into questions ──
 //
 // Increment 2 of the Clarify → Orchestrator refactor.
-// See docs/requirements/clarify-orchestrator-refactor-spec.md.
+//
 //
 // The grounding gate (index.ts guards + enforce.ts + the judge `grounded`
 // dimension) keeps emitting fill-in prompts ("Your team's bug-rate data here")

@@ -33,7 +33,7 @@ export interface TemplateTheme {
    *  carried onto the runtime theme so the card-engine deck planner can read
    *  the per-theme recipe whitelist + image-role weighting. Optional + additive:
    *  themes without it fall back to DEFAULT_ARCHETYPE in the planner. See
-   *  docs/requirements/design-intelligence-layer-spec.md §5. */
+   * §5. */
   archetype?: ThemeArchetype;
 }
 
@@ -318,7 +318,7 @@ export interface FreeformTextBlock extends FreeformPositioned {
   };
 }
 
-/** Frame shapes for FreeformImageBlock (Canva-style frames). Geometric
+/** Frame shapes for FreeformImageBlock. Geometric
  *  shapes clip the image with CSS clip-path; device shapes (laptop, ...)
  *  render a decorative SVG and clip the image to the content area inside
  *  the chrome. Default is 'rectangle' (unframed image — matches the
@@ -449,7 +449,7 @@ export interface FreeformIconBlock extends FreeformPositioned {
  *
  *  Reserved for future: 'diagram' (flowchart / mindmap / org chart) will use
  *  `renderHint: 'claude-svg'` and a separate render path. Deliberately not in
- *  MVP — see ROADMAP.md P13.6 and docs/uiux/prototypes/chart-block-MANAGER.md. */
+ * MVP — see ROADMAP.md P13.6 and. */
 export type FreeformChartType =
   | 'bar'
   | 'column'

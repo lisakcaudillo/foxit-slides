@@ -5,7 +5,6 @@
  * behind a thin DOM adapter (ownership call, 2026-07-10). Pure TS, ZERO engine
  * dependencies, so it can be lifted verbatim into either codebase.
  *
- * Full contract + rationale: docs/architecture/per-metric-fact-contract.md
  * Shared test set: source-facts.fixtures.json (the keep/strip table IS the contract).
  *
  * The job: stop grounding from asking "is this number anywhere in the source?"

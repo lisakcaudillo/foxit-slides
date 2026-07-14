@@ -174,7 +174,7 @@ export function groundNumericFill(
     // all, the extractor may be incomplete → fall back to the verbatim check, so an
     // incomplete extractor can't over-strip. subject is null (Foxit Slides doesn't thread
     // a per-slide subject yet) → this closes wrong-METRIC; wrong-SUBJECT activates
-    // once a slide subject is threaded. See docs/architecture/per-metric-fact-contract.md.
+    // once a slide subject is threaded.
     if (spec.role === 'metric-value' && facts.length) {
       const group = spec.group ?? '';
       const lblEntry = fill[`metric-label:${group}`];

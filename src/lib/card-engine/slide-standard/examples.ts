@@ -2,11 +2,10 @@
  * gold-examples.ts — the few-shot taste corpus + design principles.
  *
  * Part of the Standard & Judgment spine
- * (docs/requirements/artistic-content-intelligence-system.md). Where
+ *. Where
  * `design-standard.ts` holds the NUMBERS (hard rules), this holds the
  * JUDGMENT: labeled gold / anti / revise slides + the generalizable principles,
  * authored from votes in the Slide Standard Program
- * (docs/requirements/slide-standard-program.md).
  *
  * Consumers (later, reviewed step): injected as few-shot into the writer prompt
  * (`index.ts`) and the judges (`judge.ts`, `vlm-judge.ts`). Inert today — nothing

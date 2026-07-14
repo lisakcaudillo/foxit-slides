@@ -2,9 +2,9 @@
  * design-standard.ts — the hard-rule + tasteful-value config the slide engine reads.
  *
  * This is the keystone of the Standard & Judgment spine
- * (docs/requirements/artistic-content-intelligence-system.md). Numbers here are
+ *. Numbers here are
  * CALIBRATED FROM TASTE via the Slide Standard Program
- * (docs/requirements/slide-standard-program.md), not guessed.
+ *, not guessed.
  *
  * Provisional values carry a `// TODO calibrate` until a vote confirms them.
  *
@@ -193,7 +193,7 @@ export const DESIGN_STANDARD = {
 
   /**
    * Global composition geometry (design-system spec 2026-06-10 —
-   * docs/requirements/foxit-slides-design-system.html §8 "global rules every
+   * §8 "global rules every
    * type inherits"). Consolidated here as the single source for the numbers;
    * inert like the rest of DESIGN_STANDARD until enforce.ts / the renderer
    * migrate to read it. The CONTENT-side rules are already enforced via

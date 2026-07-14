@@ -1,6 +1,6 @@
 // Generation Pipeline Types — PRD v2 Phase 1
 // These types define the multi-stage generation contract.
-// See docs/prd-generation-engine-v2.md for full spec.
+// for full spec.
 
 import { z } from 'zod';
 

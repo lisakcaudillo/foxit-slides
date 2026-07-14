@@ -45,7 +45,7 @@ export interface Block {
   clauseNumber?: string; // e.g., "1.1", "7.2"
   parentId?: string; // ID of the heading block this belongs to
   sectionPath?: string[]; // e.g., ["TERMS OF EMPLOYMENT", "Salary and Benefits"]
-  // Freeform positioning on the A4 page (Gamma-style floating cards)
+  // Freeform positioning on the A4 page (floating cards)
   position?: {
     x: number;    // pixels from left edge of A4 page
     y: number;    // pixels from top edge of A4 page

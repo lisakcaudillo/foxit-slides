@@ -10,7 +10,7 @@
 // n: 4, ...optional refs/context }, read `{ images }`, drop empty-src
 // variants. Errors surface as a friendly string — never thrown to an alert.
 //
-// See docs/uiux/prototypes/image-prompt-flow-PLAN.md §10–§11.
+//
 
 import { useCallback, useState } from 'react';
 import type { AiResult, GenParams } from './types';

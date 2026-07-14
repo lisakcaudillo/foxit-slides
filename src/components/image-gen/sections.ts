@@ -5,7 +5,7 @@
 // Resolves the parity drift the UX review flagged: wizard and slides panel
 // must read as one product, so the labels live here once.
 //
-// See docs/uiux/prototypes/image-prompt-flow-PLAN.md §10 (UX must-fix #1).
+//
 
 export const SECTIONS = [
   { id: 'describe', label: 'Describe' },

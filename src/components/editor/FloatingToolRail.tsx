@@ -37,7 +37,7 @@ const TOOLS: {
 
 /**
  * Floating right-side tool rail — positioned to the right of the A4 page.
- * Canva-style icon strip with labels. SDK-dependent tools hidden when unavailable.
+ * Icon strip with labels. SDK-dependent tools hidden when unavailable.
  */
 export default function FloatingToolRail({
   onOpenPanel,

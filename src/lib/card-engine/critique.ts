@@ -1,10 +1,9 @@
 /**
  * Design Intelligence Layer — Phase 3: the Critique Loop.
  *
- * Implements §8 of `docs/requirements/design-intelligence-layer-spec.md` and
- * the LOCKED decisions in §13:
+ * Implements the locked design decisions:
  *
- *   1. SILENT auto-fix + a subtle, non-blocking review dot. No "it fixeds N"
+ *   1. SILENT auto-fix + a subtle, non-blocking review dot. No "it fixed N"
  *      summary modal.
  *   2. Tier B (VLM) is OPT-IN — a "Polish deck" action + auto only on
  *      low-confidence slides. NOT always-on.

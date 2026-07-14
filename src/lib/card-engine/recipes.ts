@@ -2,7 +2,7 @@
  * Design Intelligence Layer — recipe catalog + archetype tables.
  *
  * Implements §4 (recipe catalog) and §5 (theme → archetype map) of
- * `docs/requirements/design-intelligence-layer-spec.md`, plus the
+ *, plus the
  * imageRole → existing-placement reconcile table from §3.
  *
  * All data — tunable without code changes (§14 risk mitigation: budgets are

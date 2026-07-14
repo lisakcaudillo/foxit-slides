@@ -1,6 +1,6 @@
 /**
  * VLM slide judge — scores a RENDERED slide image against the AI Output
- * Standard (docs/requirements/ai-output-standard.md).
+ * Standard.
  *
  * This is the real brain behind the visual quality gate. It takes a PNG of a
  * rendered slide (captured client-side via captureSlideToPng) + the slide's
@@ -38,7 +38,7 @@ const passField = z.preprocess((v) => {
 /** Suggested change-type a FAILED criterion can attach to its `element`. The
  *  fixer/editorial layer routes on these (shrink/shorten/remove/rebalance are the
  *  subtractive gate's; fill/swap-layout are flagged here but executed by the
- *  editorial improver — see docs/architecture/critic-vlm-role-manifest-spec.md). */
+ * editorial improver —). */
 export const CHANGE_TYPES = ['shrink', 'shorten', 'remove', 'rebalance', 'fill', 'swap-layout', 'reject-image', 'recolor', 'restyle', 'align', 'restructure-focal', 'move'] as const;
 
 const VerdictSchema = z.object({

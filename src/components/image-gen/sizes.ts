@@ -7,7 +7,7 @@
 //
 // The array shape is kept easily extensible so future social-format presets
 // (story, poster, etc.) can be layered on once the route supports more sizes.
-// See docs/uiux/prototypes/image-prompt-flow-PLAN.md §4 (#54).
+//
 
 import type { AspectId } from './types';
 

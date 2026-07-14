@@ -1,9 +1,7 @@
 /**
  * Design Intelligence Layer — Planning Orchestrator: count-aware packing.
  *
- * Implements §3 of `docs/requirements/dil-planning-orchestrator-spec.md` and
- * locked decision §8.2 ("respect the user's count + notice; never silently
- * truncate a must").
+ * Respects the user's count + notice; never silently truncates a must.
  *
  * The wizard frameworks (`app/src/data/frameworks.ts`) already encode, per
  * template, a priority-ranked category list:

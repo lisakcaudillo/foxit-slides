@@ -8,7 +8,7 @@
  * invented (value must appear in a sourceSpan that is a real substring of the
  * source). Cheap model is fine — but note the span check proves value+unit are
  * real, NOT the metric/subject attribution, which is the surface the eval must
- * watch (docs/architecture/per-metric-fact-contract.md §8.4).
+ * watch.
  */
 import { z } from 'zod';
 import { getProvider, getModel, type ToolUseBlock, type Tool } from '@/lib/ai-provider';

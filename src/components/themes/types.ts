@@ -18,7 +18,7 @@ export interface Theme {
   tone: ThemeTone;
   /** Design Intelligence Layer (Phase 2) — drives the slide designer's recipe
    *  whitelist + image-role weighting per theme. See
-   *  docs/requirements/design-intelligence-layer-spec.md §5. SEPARATE from the
+   * §5. SEPARATE from the
    *  cover-tier dimension in lib/card-engine/cover-tiers.ts. */
   archetype: ThemeArchetype;
   titleFont: string;

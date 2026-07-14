@@ -2,7 +2,7 @@
  * Cover Tier system — theme-distinct title/cover slides.
  *
  * Implements the approved "tiered hybrid" cover direction
- * (docs/uiux/prototypes/title-cover-SPEC.md + the Manager recommendation
+ * ( + the Manager recommendation
  * prototype). Every theme's cover (slide 0) is auto-assigned one of three
  * tiers from the theme's own identity; the user can swap. The old flat
  * gradient cover (pageBg-only, same shape for all 42 themes) is gone.

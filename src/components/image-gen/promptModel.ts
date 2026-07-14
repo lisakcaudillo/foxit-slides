@@ -5,7 +5,7 @@
 // only — icons are referenced by string id (`iconId`) so the visual layer can
 // map them to Lucide components without pulling JSX into this module.
 //
-// See docs/uiux/prototypes/image-prompt-flow-PLAN.md §3 (the structured
+// (the structured
 // MadLibs prompt is the shared "PromptBuilder" data source).
 
 import type {

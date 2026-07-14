@@ -7,7 +7,7 @@
  * For the card template system, it uses these icon sets:
  * - "material-symbols" (Google) — Foxit marketing standard, Apache 2.0
  * - "ph" (Phosphor) — clean alternative
- * - "fluent" (Fluent UI) — Microsoft's set
+ * - "fluent" — a fluent-style set
  *
  * Usage: <PictographicIcon name="ph:map-pin" size={24} color="#6B3FA0" />
  *

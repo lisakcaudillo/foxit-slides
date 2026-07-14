@@ -2,7 +2,7 @@
  * visual-rubric.ts — the SINGLE source for the Design critic's visual rubric.
  *
  * This used to live as an inline copy inside `vlm-judge.ts`, hand-forked from the
- * doc `docs/requirements/ai-output-standard.md`. That meant the VISION judge
+ * doc. That meant the VISION judge
  * graded against a copy while the TEXT judge graded against `rules.ts` RUBRIC and
  * the Designer applied `treatments.ts` — three representations of "the standard"
  * that could drift. Per PRD §2.3 ("bound by the settled"), the visual rubric now

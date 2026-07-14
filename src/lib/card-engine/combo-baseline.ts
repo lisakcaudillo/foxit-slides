@@ -4,7 +4,7 @@
  * A layout is a COMBO, not a hand-authored geometry: a constant base band
  * (eyebrow + title, optionally a subheader / lead) plus one content unit
  * (body · cards(N) · …). All box geometry + per-density char budgets DERIVE from
- * the house grid (docs/architecture/layout-convergence-plan.md Part 0) given the
+ * the house grid given the
  * spec — so the same rule produces cards(2) / cards(3) / cards(4) and every
  * density, and it is source-independent (Foxit Slides + imports share it).
  *

@@ -1,7 +1,7 @@
 // ── Shared image-generation engine — types ─────────────────────────────────
 //
 // Stage 1 of the unified image-gen engine (see
-// docs/uiux/prototypes/image-prompt-flow-PLAN.md §1). Pure type contracts
+// §1). Pure type contracts
 // shared by the future wizard (/editor/graphics) and accordion (slides Media
 // panel) shells. No React, no styling.
 //

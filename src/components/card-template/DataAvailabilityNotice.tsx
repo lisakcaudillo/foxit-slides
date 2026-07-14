@@ -1,28 +1,20 @@
 // ── DataAvailabilityNotice — in-editor data-availability ask (DORMANT) ────────
 //
-// SCAFFOLD — NOT an active feature, NOT mounted anywhere yet.
-// Created 2026-06-10 ("move it to the editor, but not as an active
-// feature"). This is the relocation target for Clarify's one durable job: when
-// a slide's plan wants real figures the prompt didn't supply, ask — in context,
-// on the slide — instead of blocking generation with an upfront modal (now off,
-// see editor/slides/page.tsx CLARIFY_GATE_ENABLED).
+// SCAFFOLD — not an active feature, not mounted anywhere yet.
 //
-// Why this shape (research-validated 2026-06-10): no mainstream deck tool asks
-// "do you HAVE the data?" — they fabricate (Gamma inflates, Copilot ~41%
-// fabricated, Beautiful.ai doubled a market size). The only honest precedent
-// (old Tome's visible placeholders) shut down. So the open lane is: ask about
-// AVAILABILITY and route the user, never interrogate for a raw number. The
-// three routes below compose three confirmed UX principles — defer non-
-// essential input, offer 2–4 scoped options (not a demand), progressive
-// disclosure. See docs/requirements/clarify-orchestrator-refactor-spec.md.
+// When a slide's plan wants real figures the prompt didn't supply, this asks —
+// in context, on the slide — instead of blocking generation with an upfront
+// modal (currently off; see editor/slides/page.tsx CLARIFY_GATE_ENABLED). It
+// asks about data AVAILABILITY and routes the user rather than interrogating
+// for a raw number. The three routes defer non-essential input, offer 2–4
+// scoped options (not a demand), and use progressive disclosure.
 //
-// VISUAL DESIGN IS PENDING A DESIGN-TABLE before this is activated. The markup
-// here is a structural placeholder (neutral, minimal) — it encodes the model,
-// not the final look. Activating means: (1) design-table the surface, (2) mount
-// it in the per-slide inspector / SlideToolPanel for slides whose plan carries
-// unmet figure needs, (3) wire the routes into the two-phase generate flow
-// (paste → grounded data; later → honest labeled placeholder; illustrative →
-// clearly-marked sample). The needs come from deriveDataNeeds(deckPlan, ...).
+// The markup here is a structural placeholder (neutral, minimal) — it encodes
+// the model, not the final look. Activating means mounting it in the per-slide
+// inspector / SlideToolPanel for slides whose plan carries unmet figure needs,
+// and wiring the routes into the two-phase generate flow (paste → grounded
+// data; later → labeled placeholder; illustrative → clearly-marked sample).
+// The needs come from deriveDataNeeds(deckPlan, ...).
 
 'use client';
 

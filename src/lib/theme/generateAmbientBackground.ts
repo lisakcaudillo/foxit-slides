@@ -36,7 +36,7 @@ export interface AmbientBackground {
 
 // Two large soft ellipses sweep across the canvas — instead of 4 small
 // dots — so the workspace reads as one airy wash with subtle directional
-// tone rather than a spotty pattern. Tuned to feel like Gamma's editor bg.
+// tone rather than a spotty pattern. Tuned to feel like a soft editor background.
 const SWEEP_OFFSETS: ReadonlyArray<readonly [string, string]> = [
   ['18%', '12%'],
   ['82%', '88%'],
@@ -157,7 +157,7 @@ export function generateAmbientBackground(theme: Theme): AmbientBackground {
   //   white base; chroma drops to ~0.04 so it's barely a tint; mid-alpha
   //   drops to ~0x40 (25%) so the sweeps fade out fast. The result is a
   //   watercolor wash on cream paper — perceptible only if you look for
-  //   it, like Gamma's editor.
+  //   it, subtly.
   //
   // Dark: sweeps stay STRICTLY below card lightness so the entire workspace
   //   reads as deeper than the card. Earlier tuning let sweeps drift slightly

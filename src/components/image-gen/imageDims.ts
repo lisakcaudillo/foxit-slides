@@ -7,7 +7,7 @@
 // importing the whole CardEditor. CardEditor itself is left untouched in this
 // stage. No React.
 //
-// See docs/uiux/prototypes/image-prompt-flow-PLAN.md §10–§11.
+//
 
 /** Compute card-relative w/h (in %) for an inserted image, preserving its
  *  natural aspect ratio. Caps to leave room for surrounding content: width

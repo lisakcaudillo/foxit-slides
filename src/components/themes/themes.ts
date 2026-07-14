@@ -306,7 +306,7 @@ export const THEMES: ReadonlyArray<Theme> = [
     chartPalette: ['#2B5FE3', '#1A1F2E', '#5B8DEF', '#8AB0F5', '#94A3B8'],
   },
   // ── Round 1 — D1 Editorial ────────────────────────────────────────────────
-  // 5 themes from docs/uiux/prototypes/glass-themes-v2-d1.html.
+  // 5 themes.
   {
     id: 'vellum', name: 'Vellum', category: 'creative', tone: 'light', archetype: 'editorial',
     titleFont: "'Montserrat', -apple-system, system-ui, sans-serif",
@@ -354,7 +354,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
 
   // ── Round 1 — D2 Product / SaaS ───────────────────────────────────────────
-  // 7 themes from docs/uiux/prototypes/glass-themes-v2-d2.html.
+  // 7 themes.
   {
     id: 'strata', name: 'Strata', category: 'business', tone: 'light', archetype: 'editorial',
     titleFont: "'DM Sans', -apple-system, system-ui, sans-serif",
@@ -436,7 +436,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
 
   // ── Round 1 — D3 Brand Studio ─────────────────────────────────────────────
-  // 2 themes from docs/uiux/prototypes/glass-themes-v2-d3.html.
+  // 2 themes.
   {
     id: 'midnight-index', name: 'Midnight Index', category: 'branded', tone: 'dark', archetype: 'cinematic',
     titleFont: "'Inter', -apple-system, system-ui, sans-serif",
@@ -468,7 +468,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
 
   // ── Round 1 — Manager picks ───────────────────────────────────────────────
-  // 5 themes from docs/uiux/prototypes/glass-themes-v2-MANAGER.html.
+  // 5 themes.
   {
     id: 'slate-plane', name: 'Slate Plane', category: 'business', tone: 'light', archetype: 'product',
     titleFont: "'Montserrat', -apple-system, system-ui, sans-serif",
@@ -499,7 +499,7 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
 
   // ── Round 2 — D1 Geometric ────────────────────────────────────────────────
-  // 1 theme from docs/uiux/prototypes/glass-themes-v3-d1.html.
+  // 1 theme.
   {
     id: 'chroma-fold', name: 'Chroma Fold', category: 'creative', tone: 'light', archetype: 'warm',
     titleFont: "'Work Sans', -apple-system, system-ui, sans-serif",
@@ -583,22 +583,22 @@ export const THEMES: ReadonlyArray<Theme> = [
   },
 
   // ── Round 2 — D2 Editorial + Punch ────────────────────────────────────────
-  // 3 themes from docs/uiux/prototypes/glass-themes-v3-d2.html.
+  // 3 themes.
 
   // ── Round 2 — D3 Cinematic ────────────────────────────────────────────────
-  // 5 themes from docs/uiux/prototypes/glass-themes-v3-d3.html.
+  // 5 themes.
 
   // ── Round 2 — Manager picks ───────────────────────────────────────────────
-  // 2 themes from docs/uiux/prototypes/glass-themes-v3-MANAGER.html.
+  // 2 themes.
 
   // ── Round 4 — Cinematic (v4) ──────────────────────────────────────────────
-  // 6 themes from docs/uiux/prototypes/glass-themes-v4-cinematic.html.
+  // 6 themes.
 
   // ── Round 5 — Cinematic (v5) ──────────────────────────────────────────────
-  // 3 themes from docs/uiux/prototypes/glass-themes-v5-cinematic.html.
+  // 3 themes.
 
   // ── Round 6 — Glow (v6) ───────────────────────────────────────────────────
-  // 3 themes from docs/uiux/prototypes/glass-themes-v6-glow.html.
+  // 3 themes.
   // NOTE: phosphor's linkColor was "#80ff a0" in source (stray space inside hex);
   // normalized to "#80ffa0" to match chartPalette[4].
 

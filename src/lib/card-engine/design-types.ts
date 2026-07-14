@@ -1,8 +1,6 @@
 /**
  * Design Intelligence Layer — Phase 1 contracts.
  *
- * Implements §3 of `docs/requirements/design-intelligence-layer-spec.md`.
- *
  * These types are ADDITIVE to the existing card-engine. They reference the
  * existing `BlockTemplate` / `IMAGE_PLACEMENTS` enums — no type-contract fork.
  *

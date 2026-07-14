@@ -312,7 +312,7 @@ export async function importPptx(buffer: Buffer | ArrayBuffer | Uint8Array, opts
       (p) => !p.isPic && !['image', 'table', 'date', 'footer', 'slide-number'].includes(p.role) && (p.text?.length ?? 0) > 0,
     ).length;
     if (isCover && coverIdx < 0) coverIdx = cards.length;
-    let droppedFullBleed = false; // a full-bleed image it skippeds — may belong in a side band
+    let droppedFullBleed = false; // a full-bleed image it skipped — may belong in a side band
     for (const ph of phs) {
       // Capture the deck date even on slides where it drops the footer, so the title
       // slide can show it.

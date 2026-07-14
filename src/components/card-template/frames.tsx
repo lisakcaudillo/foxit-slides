@@ -5,7 +5,7 @@ import type { FrameShape } from '@/types/card-template';
 import { getDeviceFrame } from '@/data/figmaAssets';
 
 // ── Frame definitions ─────────────────────────────────────────────────────
-// Canva-style frames. A frame has a SHAPE outline that
+// Frames. A frame has a SHAPE outline that
 // the user's image clips to. Geometric shapes use CSS clip-path; device
 // shapes (laptop, ...) render decorative SVG chrome with the image clipped
 // to a content area inside.
@@ -17,9 +17,9 @@ import { getDeviceFrame } from '@/data/figmaAssets';
 // Rectangle is null (no clip — original behavior). Rounded uses inset() with
 // a round radius so it scales with the block's actual pixel size. Circle is
 // `ellipse(50%)` which fits the block's box (so non-square blocks become
-// ovals — matches Canva). Heart and hexagon use polygon paths derived to
+// ovals). Heart and hexagon use polygon paths derived to
 // fit inside a 0-100% box (so the block can be any aspect and the shape
-// stretches accordingly — also matches Canva).
+// stretches accordingly).
 export const FRAME_CLIP_PATHS: Record<FrameShape, string | null> = {
   rectangle: null,
   rounded: 'inset(0 round 6%)',

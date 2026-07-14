@@ -171,7 +171,7 @@ export async function runJudgeAndReviseStage(opts: RunGatesOpts): Promise<GatesR
     // fixer can act on (shorten/shrink/remove/recolor/restyle/align/swap-layout/
     // reject-image) — enter the revise set. Taste-only fails are logged as
     // telemetry and SHIP as-built. The deterministic geometry + content gates are
-    // the hard bar (docs/architecture/design-standard.md). Contrast-over-image is
+    // the hard bar. Contrast-over-image is
     // preserved: an L5 fail emits a `recolor` directive, so it stays actionable.
     const vlmFailed = trace.filter((t) => t.ran && !t.passed);
     let failed = vlmFailed.filter((t) => (t.directives ?? []).length > 0);

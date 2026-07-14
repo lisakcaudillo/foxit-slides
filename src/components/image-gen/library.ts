@@ -58,7 +58,7 @@ export function categoryLabel(key: string): string {
  *  Lightweight Jaccard: tokenize lowercase alphanumeric runs, drop short
  *  tokens and stopwords, intersect / union. No embeddings, no infra —
  *  works on the prompt strings already stored in metadata.json. Mirrors
- *  Gamma's "more like this" pattern after a generation. Excludes items
+ *  a "more like this" pattern after a generation. Excludes items
  *  whose prompt is byte-equal to the query (the freshly-generated image
  *  itself, when called right after a successful gen). */
 export function rankLibraryBySimilarity(

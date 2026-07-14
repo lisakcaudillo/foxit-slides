@@ -11,7 +11,7 @@
  *     title always the legible hero.
  *
  * Atmospheric premium forms (glass / aurora / bokeh / darkGlow) are mixed with
- * structural ones grounded in the shared Gamma inspo (arc-split, full-bleed
+ * structural ones grounded in the shared visual set (arc-split, full-bleed
  * photo, geometric pattern panel, diagonal photo wedge, solo-type). Spread
  * across themes by a stable index rotation so adjacent cards differ. Restrained
  * titles, designed-deck foot (author chip + page no). Auto-scaled to the card.
@@ -280,7 +280,7 @@ function renderForm(theme: Theme, form: Form) {
       return (
         <Frame theme={theme}>
           {v.pattern && <div style={v.pattern} />}
-          {/* asymmetric, slightly-tilted arc (Gamma 059/102) — lopsided top vs
+          {/* asymmetric, slightly-tilted arc — lopsided top vs
               bottom radius + a few degrees of tilt reads "designed", not a
               uniform stadium. Oversized + clipped by the Frame. */}
           <div style={{ position: 'absolute', right: -16, top: -24, bottom: -24, width: '52%', background: v.primary, borderTopLeftRadius: 300, borderBottomLeftRadius: 88, overflow: 'hidden', transform: 'rotate(4deg)', transformOrigin: 'center' }}>

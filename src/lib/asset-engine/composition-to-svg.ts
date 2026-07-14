@@ -9,7 +9,7 @@
 //
 // Pure logic ONLY: no React, no DOM, no `window`, no network. Block types are
 // imported type-only so this module is safe to run on the server or in a plain
-// node script. See docs/uiux/asset-editor-mvp-spec.md §1 ("Output is vector-first").
+// node script.
 
 import type {
   FreeformBlock,

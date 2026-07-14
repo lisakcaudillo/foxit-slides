@@ -1,8 +1,6 @@
 /**
  * Design Intelligence Layer — Pass 1: Deck Planner.
  *
- * Implements §6 of `docs/requirements/design-intelligence-layer-spec.md`.
- *
  * Input: the blueprint (card titles + blockTemplates), a theme archetype, and
  * the existing per-card `imageIntent` hints. Output: a `DeckPlan` assigning
  * every slide a recipe + imageRole under deck-wide rhythm rules.

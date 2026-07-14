@@ -136,7 +136,7 @@ function themeColors(theme: TemplateTheme) {
 /**
  * Comparison — two side-by-side columns ("A vs B"). Each column is a light card
  * with an accent header bar (white label) and the side's content below; a round
- * "VS" badge sits in the gutter. Mirrors the Canva two-column comparison form
+ * "VS" badge sits in the gutter. A two-column comparison form
  * (header bar + list per side) and the standard's "two columns / matrix".
  * Falls back to the first two items; extra items are dropped (a comparison is
  * binary by construction). Use composeContentGrid for ≥3 parallel points.
@@ -179,7 +179,7 @@ export function composeComparison(input: TypedLayoutInput): FreeformBlock[] {
 /**
  * Process — a horizontal numbered milestone row. N accent circles sit on a
  * connecting line, numbered 1..N, each with a heading + short caption below.
- * Mirrors the Canva "Project Management" / "Recruitment Process" milestone row
+ * A milestone row
  * and the standard's "horizontal numbered milestone row". Clamps to 5 steps so
  * the row never gets cramped.
  */

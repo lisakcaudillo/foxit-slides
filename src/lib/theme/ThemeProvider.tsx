@@ -22,7 +22,7 @@ import {
  * Outside these routes the theme stays in React state but does NOT mutate
  * the root element — the rest of the app keeps its default light chrome.
  *
- * Mirrors Gamma: each deck has its own theme, but Gamma's app shell stays
+ * Each deck has its own theme, but the app shell stays
  * neutral. Picking a dark theme inside the editor must not bleed into
  * /home, /templates, /workflows, etc.
  */
@@ -205,7 +205,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Theme is session-scoped, NOT user-scoped. Every fresh page load starts
   // at the default theme — picking a dark theme on Deck A must not make
   // Deck B (or a fresh editor session) open dark by default. This mirrors
-  // Gamma: each deck has its own theme; new decks default to light.
+  // Each deck has its own theme; new decks default to light.
   //
   // Per-deck persistence (so reopening a saved deck restores its theme)
   // is a follow-up that lives alongside the deck save/load path; it would
