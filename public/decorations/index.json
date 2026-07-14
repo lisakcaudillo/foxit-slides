@@ -1,0 +1,27 @@
+{
+  "note": "Reusable decoration assets. Pictograms: monoline 48x48, stroke=currentColor (tint to skin accent at render).",
+  "pictograms": [
+    "bank",
+    "briefcase",
+    "calendar",
+    "chart-bar",
+    "chart-line",
+    "checklist",
+    "coin",
+    "compare",
+    "compliance",
+    "document",
+    "gauge",
+    "globe",
+    "idea",
+    "launch",
+    "layers",
+    "network",
+    "person",
+    "presentation",
+    "refresh",
+    "settings",
+    "target",
+    "team"
+  ]
+}

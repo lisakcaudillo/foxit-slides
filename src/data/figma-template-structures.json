@@ -1,0 +1,808 @@
+{
+  "$schema": "./figma-template-structures.md",
+  "meta": {
+    "purpose": "Machine-readable semantic structural description of the 3 Foxit Slides presentation templates built in Figma. Each layout's role-named boxes are the AI-readable 'blanks' the slide generator fills. Solves the R&D bottleneck: mapping layout structure -> element semantics.",
+    "figmaFile": "B7BBO9DDcVq7XMNhYZdJlj",
+    "figmaPage": "Templates — Structures (3)",
+    "frame": { "w": 960, "h": 540, "aspect": "16:9", "safeMarginPx": 72 },
+    "generatedFrom": "Figma absolute slot geometry, read 2026-06-15",
+    "note": "Interior layouts (02-12) share identical geometry across all 3 templates; only the skin (font/color/ground) differs. The Cover (01) differs per template and is listed per-template below."
+  },
+  "templates": {
+    "mono-light": {
+      "order": 1,
+      "mapped": true,
+      "label": "Mono Light",
+      "character": "minimal, editorial",
+      "fonts": { "display": "Fraunces", "body": "Inter" },
+      "ground": "#FFFFFF",
+      "ink": "#0F0F0F",
+      "accent": "#0F0F0F",
+      "surface": "#F2F2F2",
+      "cover": { "treatment": "flat", "fidelity": "faithful" }
+    },
+    "chroma-fold": {
+      "order": 2,
+      "mapped": true,
+      "label": "Chroma Fold",
+      "character": "light violet gradient",
+      "fonts": { "display": "Roboto", "body": "Roboto" },
+      "ground": "linear-gradient(#F8F6FD,#EFEAF9)",
+      "ink": "#1E1733",
+      "accent": "#7C4DD6",
+      "surface": "#FFFFFF",
+      "cover": { "treatment": "glass", "fidelity": "approximation" }
+    },
+    "quill": {
+      "order": 3,
+      "mapped": true,
+      "label": "Quill",
+      "character": "dark photographic glass",
+      "fonts": { "display": "Work Sans", "body": "Inter" },
+      "ground": "dark image + navy gradient panel",
+      "ink": "#F4E8C8",
+      "accent": "#E8B878",
+      "surface": "#2A2620",
+      "cover": { "treatment": "photo", "fidelity": "approximation" }
+    },
+    "blue": {
+      "order": 4,
+      "mapped": false,
+      "label": "Blue",
+      "character": "clean corporate blue",
+      "fonts": { "display": "Inter", "body": "Inter" },
+      "ground": "linear-gradient(#F4F8FF,#E7F0FB)",
+      "ink": "#0E2A4A",
+      "accent": "#2563EB",
+      "surface": "#FFFFFF",
+      "cover": { "treatment": "gradient", "fidelity": "approximation" }
+    },
+    "counsel": {
+      "order": 5,
+      "mapped": true,
+      "_note": "interiors (02-12) + cover (01, node 194:2: big accent index + offset title + rust rule) ported and screenshot-verified.",
+      "label": "Counsel",
+      "character": "legal, warm-paper editorial",
+      "fonts": { "display": "Inter", "body": "Inter" },
+      "ground": "#FAFAF7",
+      "ink": "#14223C",
+      "accent": "#B85C2E",
+      "surface": "#EEEBE3",
+      "cover": { "treatment": "flat", "fidelity": "faithful" }
+    },
+    "mono-dark": {
+      "order": 6,
+      "mapped": true,
+      "_note": "interiors (02-12) + cover (01, node 232:224: eyebrow TL, meta TR, big light title lower-left) ported + screenshot-verified.",
+      "label": "Mono Dark",
+      "character": "minimal dark editorial",
+      "fonts": { "display": "Fraunces", "body": "Inter" },
+      "ground": "#0E0E0E",
+      "ink": "#F7F7F7",
+      "accent": "#F7F7F7",
+      "surface": "#242424",
+      "cover": { "treatment": "flat", "fidelity": "faithful" }
+    },
+    "schoolbook": {
+      "order": 7,
+      "mapped": true,
+      "_note": "interiors (02-12) + cover (01, node 233:224: maroon big index + offset title + double-rule) ported + screenshot-verified.",
+      "label": "Schoolbook",
+      "character": "warm cream editorial",
+      "fonts": { "display": "Fraunces", "body": "Inter" },
+      "ground": "#FBF3E2",
+      "ink": "#3B2818",
+      "accent": "#B8581E",
+      "surface": "#F1E4C8",
+      "cover": { "treatment": "flat", "fidelity": "faithful" }
+    },
+    "ledger": {
+      "order": 8,
+      "mapped": true,
+      "_note": "tokens + cover (01, node 196:446: left Poppins title + gold rule, right meta column w/ vertical rule) extracted from Figma + verified.",
+      "label": "Ledger",
+      "character": "navy + gold ledger, two-column cover",
+      "fonts": { "display": "Poppins", "body": "Open Sans" },
+      "ground": "#F8F7F2",
+      "ink": "#1A2B4A",
+      "accent": "#A8852E",
+      "surface": "#EBE8DD",
+      "cover": { "treatment": "flat", "fidelity": "faithful" }
+    },
+    "vellum": {
+      "order": 9,
+      "mapped": true,
+      "_note": "gradient-ground theme; tokens + cover (01, node 196:668: left Montserrat title + terracotta rule + eyebrow, author/date stacked) from Figma. Cover title is mixed-size in Figma; approximated single-size (noted in THEME-VERIFICATION.md).",
+      "label": "Vellum",
+      "character": "warm parchment gradient, terracotta accent",
+      "fonts": { "display": "Montserrat", "body": "Open Sans" },
+      "ground": "linear-gradient(139deg, #EFEAE0 14%, #E7E1D2 46%, #D8D2C0 86%)",
+      "ink": "#2A2520",
+      "accent": "#8A4A2A",
+      "surface": "#E3DBC9",
+      "cover": { "treatment": "gradient", "fidelity": "approximation" }
+    },
+    "ledgerline": {
+      "order": 10,
+      "mapped": true,
+      "_note": "Cobalt — re-skinned from the former Ledgerline: bold high-contrast blue business skin. Work Sans, white ground, near-black ink, vivid cobalt accent. Flat text cover; interiors share the standard 02-12 geometry. id stays 'ledgerline' so saved decks resolve unchanged.",
+      "label": "Cobalt",
+      "character": "bold high-contrast blue, white ground, geometric sans",
+      "fonts": { "display": "Work Sans", "body": "Work Sans" },
+      "ground": "#FFFFFF",
+      "ink": "#1A1F2E",
+      "accent": "#2B5FE3",
+      "surface": "#EEF3FE",
+      "cover": { "treatment": "flat", "fidelity": "faithful" }
+    },
+    "volt": {
+      "order": 11,
+      "mapped": true,
+      "_note": "Dark cinematic skin with its OWN reworked per-layout geometry (perTemplate.volt on every layout) — left-aligned, no oversized numbers, chart+takeaway diagram, vertical timeline/process, 2x2 agenda. Magenta accent, light lavender ink, gradient titles + glow accents are Phase-2 fidelity (engine renders flat dark for now).",
+      "label": "Volt",
+      "character": "dark cinematic, magenta accent + light lavender ink",
+      "fonts": { "display": "Work Sans", "body": "Inter" },
+      "ground": "#131D2E",
+      "ink": "#ECE2F5",
+      "accent": "#FFB4D4",
+      "surface": "#1E2A40",
+      "cover": { "treatment": "gradient", "fidelity": "faithful" }
+    },
+    "glacier": {
+      "order": 12,
+      "mapped": true,
+      "_note": "Sky-blue/cyan glass skin (Quartz SET 3 / 'Sky'). ONE shared full-bleed gradient backdrop (/textures/glacier/glacier-bg.png) + a frosted glass panel on all categories except content. Uses SHARED combo geometry — layouts unchanged; only the background treatment differs. Ink navy, blue accent, secondary green accent.",
+      "label": "Glacier",
+      "character": "airy sky-blue/cyan glass, frosted panels",
+      "fonts": { "display": "Fraunces", "body": "Inter" },
+      "ground": "#DCE7F2",
+      "ink": "#1E4E8C",
+      "accent": "#2C5FA8",
+      "surface": "#E7EFF7",
+      "editorBg": "#C3D3E2",
+      "cover": { "treatment": "glass", "fidelity": "faithful" }
+    },
+    "cerulean": {
+      "order": 13,
+      "mapped": true,
+      "_note": "Sky-blue/cyan translucent glass-RIBBON skin (Quartz SET 3 / 'Blue'). ONE shared glass-ribbon backdrop (/textures/cerulean/cerulean-bg.png) on cover/quote/closing; solid light base elsewhere. NO frosted panel. Uses SHARED combo geometry. Navy ink, blue accent (WCAG-darkened from Figma #2e7fc2), grey body, Fraunces+Inter.",
+      "label": "Cerulean",
+      "character": "airy sky-blue/cyan translucent glass ribbons on light",
+      "fonts": { "display": "Fraunces", "body": "Inter" },
+      "ground": "#F3F8FD",
+      "ink": "#0B1F3A",
+      "accent": "#256BA6",
+      "surface": "#E1EEF8",
+      "editorBg": "#B4CADE",
+      "cover": { "treatment": "photo", "fidelity": "faithful" }
+    },
+
+      "obsidian": {
+            "order": 14,
+            "mapped": true,
+            "_note": "Obsidian (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Obsidian",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#1A1612",
+            "ink": "#E8D49E",
+            "accent": "#E8D49E",
+            "surface": "#35322E",
+            "editorBg": "#2A2C39",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "cobalt": {
+            "order": 15,
+            "mapped": true,
+            "_note": "Cobalt (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Cobalt",
+            "character": "light gradient rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#E8F0FF",
+            "ink": "#0F2654",
+            "accent": "#1F3D8A",
+            "surface": "#DFE6F5",
+            "editorBg": "#C3CAD6",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "prism": {
+            "order": 16,
+            "mapped": true,
+            "_note": "Prism (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Prism",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#0E1219",
+            "ink": "#FFFFFF",
+            "accent": "#9FB8FF",
+            "surface": "#2B2E35",
+            "editorBg": "#242A3D",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "velvet": {
+            "order": 17,
+            "mapped": true,
+            "_note": "Velvet (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Velvet",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#2D1B3D",
+            "ink": "#F5C0B0",
+            "accent": "#F5C0B0",
+            "surface": "#463654",
+            "editorBg": "#342F4F",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "solstice": {
+            "order": 18,
+            "mapped": true,
+            "_note": "Solstice (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Solstice",
+            "character": "light gradient rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#FFE0CC",
+            "ink": "#B32953",
+            "accent": "#B32953",
+            "surface": "#F5D7C4",
+            "editorBg": "#D6BCAB",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "nocturne": {
+            "order": 19,
+            "mapped": true,
+            "_note": "Nocturne (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Nocturne",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Fraunces",
+                  "body": "Inter"
+            },
+            "ground": "#1E1640",
+            "ink": "#EAD9FF",
+            "accent": "#C18BF0",
+            "surface": "#393257",
+            "editorBg": "#2C2C50",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "tide": {
+            "order": 20,
+            "mapped": true,
+            "_note": "Tide (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Tide",
+            "character": "light gradient rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#F0F5F1",
+            "ink": "#0E4E44",
+            "accent": "#9E5722",
+            "surface": "#E6EBE7",
+            "editorBg": "#CACECA",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "mist": {
+            "order": 21,
+            "mapped": true,
+            "_note": "Mist (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Mist",
+            "character": "light gradient rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#E8E5F5",
+            "ink": "#1F2A4E",
+            "accent": "#4A4F8A",
+            "surface": "#DFDCEB",
+            "editorBg": "#C3C0CE",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "strata": {
+            "order": 22,
+            "mapped": true,
+            "_note": "Strata (Quartz). solid backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Strata",
+            "character": "light solid rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#F6F5F1",
+            "ink": "#0B1F3A",
+            "accent": "#8B601C",
+            "surface": "#ECEBE7",
+            "editorBg": "#CFCECA",
+            "cover": {
+                  "treatment": "flat",
+                  "fidelity": "faithful"
+            }
+      },
+      "riot": {
+            "order": 23,
+            "mapped": true,
+            "_note": "Riot (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Riot",
+            "character": "light gradient rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#FFE9D6",
+            "ink": "#6B3FA0",
+            "accent": "#6B3FA0",
+            "surface": "#F5E0CD",
+            "editorBg": "#D6C4B4",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "verdant": {
+            "order": 24,
+            "mapped": true,
+            "_note": "Verdant (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Verdant",
+            "character": "light gradient rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#EDF2E4",
+            "ink": "#1F3A1F",
+            "accent": "#3B6D2E",
+            "surface": "#E4E8DB",
+            "editorBg": "#C7CBC0",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "midnight-index": {
+            "order": 25,
+            "mapped": true,
+            "_note": "Midnight Index (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Midnight Index",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Work Sans",
+                  "body": "Inter"
+            },
+            "ground": "#0A0E1F",
+            "ink": "#FFFFFF",
+            "accent": "#6EB8FF",
+            "surface": "#272B3A",
+            "editorBg": "#222840",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "aurora": {
+            "order": 26,
+            "mapped": true,
+            "_note": "Aurora (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Aurora",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Fraunces",
+                  "body": "Inter"
+            },
+            "ground": "#220E44",
+            "ink": "#FDF3F6",
+            "accent": "#FBBCE0",
+            "surface": "#3D2B5A",
+            "editorBg": "#2E2852",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "nebulae": {
+            "order": 27,
+            "mapped": true,
+            "_note": "Nebulae (Quartz). gradient backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Nebulae",
+            "character": "dark gradient rich skin",
+            "fonts": {
+                  "display": "Fraunces",
+                  "body": "Inter"
+            },
+            "ground": "#1C1648",
+            "ink": "#6FB0F2",
+            "accent": "#8B7FE8",
+            "surface": "#37325E",
+            "editorBg": "#2B2C54",
+            "cover": {
+                  "treatment": "gradient",
+                  "fidelity": "faithful"
+            }
+      },
+      "northern-lights": {
+            "order": 28,
+            "mapped": true,
+            "_note": "Northern Lights (Quartz). image backdrop + glass panel; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Northern Lights",
+            "character": "dark image rich skin",
+            "fonts": {
+                  "display": "Fraunces",
+                  "body": "Inter"
+            },
+            "ground": "#0B1430",
+            "ink": "#9CF2D0",
+            "accent": "#57D6B2",
+            "surface": "#283049",
+            "editorBg": "#232B48",
+            "cover": {
+                  "treatment": "photo",
+                  "fidelity": "faithful"
+            }
+      },
+      "glasshouse": {
+            "order": 29,
+            "mapped": true,
+            "_note": "Glasshouse (Quartz). solid backdrop; shared combo geometry. Rich skin batch 2026-07-13.",
+            "label": "Glasshouse",
+            "character": "light solid rich skin",
+            "fonts": {
+                  "display": "Fraunces",
+                  "body": "Inter"
+            },
+            "ground": "#EAEDF0",
+            "ink": "#16191E",
+            "accent": "#3D6488",
+            "surface": "#E1E4E6",
+            "editorBg": "#C5C7CA",
+            "cover": {
+                  "treatment": "flat",
+                  "fidelity": "faithful"
+            }
+      },
+      "aperture": {
+            "order": 30,
+            "mapped": true,
+            "_note": "Aperture (Quartz import 2026-07-13). Graphite gradient backdrop; shared combo geometry.",
+            "label": "Aperture",
+            "character": "dark editorial gradient",
+            "fonts": { "display": "Fraunces", "body": "Inter" },
+            "ground": "#181B22",
+            "ink": "#F5F5F7",
+            "accent": "#6FA8DC",
+            "surface": "#272B34",
+            "editorBg": "#2A2E38",
+            "cover": { "treatment": "flat", "fidelity": "faithful" }
+      },
+      "mubi": {
+            "order": 31,
+            "mapped": true,
+            "_note": "MUBI (Quartz import 2026-07-13). Near-black solid; pink accent; shared combo geometry.",
+            "label": "MUBI",
+            "character": "dark solid, pink accent",
+            "fonts": { "display": "Fraunces", "body": "Inter" },
+            "ground": "#09060A",
+            "ink": "#FFFFFF",
+            "accent": "#E85AA0",
+            "surface": "#1A1016",
+            "editorBg": "#241A22",
+            "cover": { "treatment": "flat", "fidelity": "faithful" }
+      },
+      "cosmos": {
+            "order": 32,
+            "mapped": true,
+            "_note": "Cosmos (Quartz import 2026-07-13). Nebula image cover; solid dark content; cyan accent.",
+            "label": "Cosmos",
+            "character": "dark nebula, cyan accent",
+            "fonts": { "display": "Space Grotesk", "body": "Inter" },
+            "ground": "#0A0814",
+            "ink": "#FFFFFF",
+            "accent": "#7ADBF5",
+            "surface": "#171528",
+            "editorBg": "#171528",
+            "cover": { "treatment": "photo", "fidelity": "faithful" }
+      }
+  },
+  "roleVocabulary": {
+    "text": ["eyebrow-label", "title", "author", "date", "body", "metric-value", "metric-label", "delta", "decoration", "icon", "RECOMMENDED"],
+    "image": ["image"],
+    "structuralNonFill": ["card", "accent-bar", "divider", "node", "panel", "plot", "gridline", "bar", "tag", "icon-badge", "title-accent"]
+  },
+  "budgetFormula": {
+    "charsPerLine": "floor(w / (fontSize * 0.52))",
+    "maxLines": "max(1, floor(h / (fontSize * 1.25)))",
+    "charCap": "charsPerLine * maxLines",
+    "note": "Lock-the-box: generate to charCap, autofit font down to a floor, then shorten content — never grow the box. Fixed-by-role slots (title, eyebrow-label, metric-value, metric-label, delta, footer) are identical at every density tier; only body-type slots scale."
+  },
+  "layouts": {
+    "01-cover": {
+      "purpose": "Title slide — set tone for deck/section",
+      "perTemplate": {
+        "mono-light": [
+          { "role": "eyebrow-label", "x": 85, "y": 92, "w": 187, "h": 15, "size": 12 },
+          { "role": "title", "x": 72, "y": 196, "w": 816, "h": 82, "size": 40 },
+          { "role": "author", "x": 72, "y": 450, "w": 400, "h": 17, "size": 14 },
+          { "role": "date", "x": 488, "y": 450, "w": 400, "h": 17, "size": 14 }
+        ],
+        "chroma-fold": [
+          { "role": "eyebrow-label", "x": 85, "y": 94, "w": 179, "h": 14, "size": 12 },
+          { "role": "title", "x": 100, "y": 190, "w": 700, "h": 90, "size": 44 },
+          { "role": "author", "x": 72, "y": 448, "w": 164, "h": 16, "size": 14 },
+          { "role": "date", "x": 72, "y": 476, "w": 66, "h": 16, "size": 14 }
+        ],
+        "quill": [
+          { "role": "eyebrow-label", "x": 72, "y": 97, "w": 187, "h": 15, "size": 12 },
+          { "role": "title", "x": 72, "y": 176, "w": 816, "h": 114, "size": 56 },
+          { "role": "author", "x": 72, "y": 448, "w": 816, "h": 17, "size": 14 },
+          { "role": "date", "x": 72, "y": 476, "w": 816, "h": 17, "size": 14 }
+        ],
+        "blue": [
+          { "role": "eyebrow-label", "x": 85, "y": 94, "w": 179, "h": 14, "size": 12 },
+          { "role": "title", "x": 85, "y": 190, "w": 760, "h": 90, "size": 44 },
+          { "role": "author", "x": 85, "y": 448, "w": 400, "h": 16, "size": 14 },
+          { "role": "date", "x": 85, "y": 476, "w": 200, "h": 16, "size": 14 }
+        ],
+        "counsel": [
+          { "role": "metric-value", "group": "cover-index", "x": 72, "y": 150, "w": 200, "h": 160, "size": 132 },
+          { "role": "title", "group": "cover-title", "x": 276, "y": 182, "w": 560, "h": 135, "size": 44 },
+          { "role": "author", "x": 72, "y": 476, "w": 400, "h": 17, "size": 14 },
+          { "role": "date", "x": 588, "y": 476, "w": 300, "h": 17, "size": 14 }
+        ],
+        "mono-dark": [
+          { "role": "eyebrow-label", "x": 72, "y": 72, "w": 220, "h": 15, "size": 12 },
+          { "role": "author", "x": 588, "y": 72, "w": 300, "h": 17, "size": 14 },
+          { "role": "date", "x": 588, "y": 96, "w": 300, "h": 17, "size": 14 },
+          { "role": "title", "group": "section-title", "x": 72, "y": 312, "w": 760, "h": 130, "size": 60 }
+        ],
+        "schoolbook": [
+          { "role": "metric-value", "group": "cover-index", "x": 72, "y": 150, "w": 200, "h": 160, "size": 132 },
+          { "role": "title", "x": 276, "y": 182, "w": 560, "h": 135, "size": 44 },
+          { "role": "author", "x": 72, "y": 476, "w": 400, "h": 17, "size": 14 },
+          { "role": "date", "x": 588, "y": 476, "w": 300, "h": 17, "size": 14 }
+        ],
+        "ledger": [
+          { "role": "title", "group": "cover-title", "x": 72, "y": 176, "w": 500, "h": 150, "size": 50 },
+          { "role": "eyebrow-label", "x": 652, "y": 92, "w": 220, "h": 15, "size": 12 },
+          { "role": "author", "x": 652, "y": 404, "w": 236, "h": 17, "size": 14 },
+          { "role": "date", "x": 652, "y": 430, "w": 236, "h": 17, "size": 14 }
+        ],
+        "vellum": [
+          { "role": "eyebrow-label", "x": 72, "y": 91, "w": 220, "h": 15, "size": 12 },
+          { "role": "title", "group": "cover-title", "x": 72, "y": 158, "w": 820, "h": 150, "size": 56 },
+          { "role": "author", "x": 72, "y": 448, "w": 400, "h": 17, "size": 14 },
+          { "role": "date", "x": 72, "y": 476, "w": 400, "h": 17, "size": 14 }
+        ],
+        "ledgerline": [
+          { "role": "eyebrow-label", "x": 72, "y": 92, "w": 220, "h": 15, "size": 12 },
+          { "role": "title", "group": "cover-title", "x": 72, "y": 196, "w": 760, "h": 110, "size": 44 },
+          { "role": "author", "x": 72, "y": 450, "w": 360, "h": 17, "size": 14 },
+          { "role": "date", "x": 488, "y": 450, "w": 360, "h": 17, "size": 14 }
+        ],
+        "volt": [
+          { "role": "title", "group": "cover-title", "x": 72, "y": 150, "w": 816, "h": 110, "size": 72 },
+          { "role": "title", "group": "cover-subtitle", "x": 72, "y": 266, "w": 400, "h": 34, "size": 28 },
+          { "role": "author", "x": 72, "y": 439, "w": 400, "h": 17, "size": 14 },
+          { "role": "date", "x": 72, "y": 463, "w": 400, "h": 17, "size": 14 }
+        ]
+      }
+    },
+    "02-stat": {
+      "purpose": "One hero metric + 3 supporting metrics",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 271, "h": 15, "size": 12 },
+        { "role": "metric-value", "group": "hero", "x": 72, "y": 150, "w": 400, "h": 78, "size": 68 },
+        { "role": "metric-label", "group": "hero", "x": 72, "y": 240, "w": 400, "h": 22, "size": 16 },
+        { "role": "metric-value", "group": "sub", "count": 3, "x": [508, 72, 508], "y": [150, 330, 330], "w": 380, "h": 64, "size": 54 },
+        { "role": "metric-label", "group": "sub", "count": 3, "x": [508, 72, 508], "y": [240, 420, 420], "w": 380, "h": 18, "size": 14 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 78, "w": 297, "h": 15, "size": 12 },
+        { "role": "metric-value", "group": "hero", "x": 72, "y": 176, "w": 220, "h": 52, "size": 48 },
+        { "role": "metric-label", "group": "hero", "x": 72, "y": 238, "w": 280, "h": 22, "size": 18 },
+        { "role": "metric-value", "group": "sub", "count": 3, "x": [500, 72, 500], "y": [176, 330, 330], "w": 220, "h": 52, "size": 44 },
+        { "role": "metric-label", "group": "sub", "count": 3, "x": [500, 72, 500], "y": [238, 392, 392], "w": 280, "h": 13, "size": 11 },
+        { "role": "delta", "group": "sub", "count": 3, "x": [500, 72, 500], "y": [262, 416, 416], "w": 60, "h": 16, "size": 13 }
+      ] }
+    },
+    "03-comparison": {
+      "purpose": "Two options on shared criteria; right column recommended",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 59, "w": 18, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 84, "w": 816, "h": 42, "size": 34 },
+        { "role": "RECOMMENDED", "x": 770, "y": 128, "w": 80, "h": 11, "size": 9 },
+        { "role": "metric-label", "group": "column-header", "count": 2, "x": [72, 548], "y": 160, "w": 340, "h": 27, "size": 22 },
+        { "role": "metric-label", "group": "criterion", "count": 4, "x": 400, "y": [239, 305, 371, 437], "w": 160, "h": 12, "size": 10 },
+        { "role": "body", "group": "left-values", "count": 4, "x": 92, "y": [236, 302, 368, 434], "w": 300, "h": 19, "size": 16 },
+        { "role": "body", "group": "right-values", "count": 4, "x": 568, "y": [236, 302, 368, 434], "w": 300, "h": 19, "size": 16 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 53, "w": 44, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 106, "w": 816, "h": 40, "size": 34 },
+        { "role": "metric-label", "group": "column-header", "count": 2, "x": [320, 612], "y": 166, "w": 250, "h": 27, "size": 22 },
+        { "role": "metric-label", "group": "criterion", "count": 4, "x": 84, "y": [231, 295, 359, 423], "w": 180, "h": 12, "size": 10 },
+        { "role": "body", "group": "left-values", "count": 4, "x": 320, "y": [228, 292, 356, 420], "w": 250, "h": 19, "size": 16 },
+        { "role": "body", "group": "right-values", "count": 4, "x": 612, "y": [228, 292, 356, 420], "w": 250, "h": 19, "size": 16 }
+      ] }
+    },
+    "04-process": {
+      "purpose": "4 ordered, directional steps on a rail",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 190, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 86, "w": 540, "h": 39, "size": 32 },
+        { "role": "metric-value", "group": "step-number", "count": 4, "x": [168, 360, 552, 744], "y": 276, "w": 48, "h": 23, "size": 19 },
+        { "role": "icon", "group": "arrow", "count": 3, "x": [268, 460, 652], "y": 276, "w": 40, "h": 22, "size": 18 },
+        { "role": "body", "group": "step-title", "count": 4, "x": [100, 292, 484, 676], "y": 330, "w": 184, "h": 18, "size": 15 },
+        { "role": "body", "group": "step-desc", "count": 4, "x": [104, 296, 488, 680], "y": 356, "w": 176, "h": 34, "size": 12 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 216, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 106, "w": 578, "h": 39, "size": 32 },
+        { "role": "metric-value", "group": "step-number", "count": 4, "x": [85, 289, 493, 697], "y": 238, "w": 48, "h": 22, "size": 19 },
+        { "role": "icon", "group": "arrow", "count": 3, "x": [191, 395, 599], "y": 240, "w": 40, "h": 22, "size": 18 },
+        { "role": "body", "group": "step-title", "count": 4, "x": [85, 289, 493, 697], "y": 300, "w": 190, "h": 18, "size": 15 },
+        { "role": "body", "group": "step-desc", "count": 4, "x": [85, 289, 493, 697], "y": 326, "w": 190, "h": 34, "size": 12 }
+      ] }
+    },
+    "05-content": {
+      "purpose": "Workhorse: eyebrow -> heading -> lead -> 3 accent-bar items",
+      "shared": [
+        { "role": "eyebrow-label", "x": 48, "y": 57, "w": 74, "h": 15, "size": 12 },
+        { "role": "title", "x": 48, "y": 90, "w": 864, "h": 52, "size": 38 },
+        { "role": "body", "group": "lead", "x": 48, "y": 170, "w": 864, "h": 48, "size": 15 },
+        { "role": "metric-label", "group": "item-title", "count": 3, "x": 80, "y": [262, 362, 462], "w": 800, "h": 17, "size": 14 },
+        { "role": "body", "group": "item-body", "count": 3, "x": 80, "y": [286, 386, 486], "w": 800, "h": 30, "size": 12 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 64, "w": 89, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 150, "w": 372, "h": 172, "size": 38 },
+        { "role": "body", "group": "lead", "x": 72, "y": 360, "w": 372, "h": 96, "size": 15 },
+        { "role": "metric-label", "group": "item-title", "count": 3, "x": 536, "y": [165, 249, 333], "w": 320, "h": 17, "size": 14 },
+        { "role": "body", "group": "item-body", "count": 3, "x": 536, "y": [187, 271, 355], "w": 328, "h": 15, "size": 12 }
+      ] }
+    },
+    "06-quote": {
+      "purpose": "Pull-quote + attribution",
+      "shared": [
+        { "role": "decoration", "note": "quote mark glyph", "x": 88, "y": 40, "w": 56, "h": 240, "size": 240 },
+        { "role": "title", "group": "quote", "x": 168, "y": 176, "w": 624, "h": 188, "size": 34, "verbatim": true },
+        { "role": "metric-label", "group": "attribution", "x": 168, "y": 436, "w": 67, "h": 18, "size": 15 },
+        { "role": "body", "group": "attribution-role", "x": 168, "y": 460, "w": 141, "h": 16, "size": 13 }
+      ]
+    },
+    "07-timeline": {
+      "purpose": "4 dated milestones on an axis",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 127, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 86, "w": 700, "h": 39, "size": 32 },
+        { "role": "metric-label", "group": "milestone-label", "count": 4, "x": [117, 309, 501, 693], "y": 224, "w": 150, "h": 12, "size": 10 },
+        { "role": "metric-value", "group": "milestone-date", "count": 4, "x": [117, 309, 501, 693], "y": 242, "w": 150, "h": 32, "size": 26 },
+        { "role": "body", "group": "milestone-desc", "count": 4, "x": [107, 299, 491, 683], "y": 322, "w": 170, "h": 18, "size": 13 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 153, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 106, "w": 760, "h": 44, "size": 32 },
+        { "role": "metric-value", "group": "milestone-date", "count": 4, "x": 152, "y": [172, 250, 328, 406], "w": 160, "h": 30, "size": 26 },
+        { "role": "metric-label", "group": "milestone-label", "count": 4, "x": 152, "y": [206, 284, 362, 440], "w": 220, "h": 14, "size": 10 },
+        { "role": "body", "group": "milestone-desc", "count": 4, "x": 152, "y": [222, 300, 378, 456], "w": 680, "h": 18, "size": 13 }
+      ] }
+    },
+    "08-divider": {
+      "purpose": "Section break: big number + section title",
+      "shared": [
+        { "role": "metric-value", "group": "section-number", "x": 688, "y": 18, "w": 230, "h": 240, "size": 200 },
+        { "role": "eyebrow-label", "x": 74, "y": 211, "w": 122, "h": 15, "size": 12 },
+        { "role": "title", "group": "section-title", "x": 72, "y": 256, "w": 580, "h": 160, "size": 80 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 72, "w": 148, "h": 15, "size": 12 },
+        { "role": "title", "group": "section-title", "x": 72, "y": 158, "w": 816, "h": 80, "size": 48 },
+        { "role": "metric-value", "group": "section-number", "x": 72, "y": 245, "w": 90, "h": 66, "size": 56 }
+      ] }
+    },
+    "09-closing": {
+      "purpose": "Thank-you / CTA / contact",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 95, "w": 106, "h": 15, "size": 12 },
+        { "role": "title", "group": "closing-title", "x": 72, "y": 180, "w": 600, "h": 122, "size": 58 },
+        { "role": "body", "group": "lead", "x": 72, "y": 356, "w": 308, "h": 21, "size": 17 },
+        { "role": "body", "group": "cta-label", "x": 94, "y": 418, "w": 141, "h": 18, "size": 15 },
+        { "role": "icon", "group": "cta-arrow", "x": 245, "y": 418, "w": 15, "h": 18, "size": 15 },
+        { "role": "body", "group": "footer", "x": 72, "y": 480, "w": 113, "h": 17, "size": 14 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 80, "w": 132, "h": 15, "size": 12 },
+        { "role": "title", "group": "closing-title", "x": 72, "y": 150, "w": 640, "h": 122, "size": 58 },
+        { "role": "body", "group": "lead", "x": 72, "y": 296, "w": 308, "h": 21, "size": 17 },
+        { "role": "body", "group": "footer", "x": 72, "y": 452, "w": 300, "h": 17, "size": 14 }
+      ] }
+    },
+    "10-agenda": {
+      "purpose": "Numbered list of sections",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 48, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 86, "w": 680, "h": 44, "size": 36 },
+        { "role": "metric-value", "group": "item-number", "count": 4, "x": 100, "y": [180, 264, 348, 432], "w": 54, "h": 57, "size": 46 },
+        { "role": "metric-label", "group": "item-title", "count": 4, "x": 164, "y": [186, 270, 354, 438], "w": 680, "h": 23, "size": 19 },
+        { "role": "body", "group": "item-desc", "count": 4, "x": 164, "y": [222, 306, 390, 474], "w": 680, "h": 16, "size": 13 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 74, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 100, "w": 680, "h": 44, "size": 36 },
+        { "role": "metric-value", "group": "item-number", "count": 4, "x": [96, 514, 96, 514], "y": [170, 170, 328, 328], "w": 54, "h": 54, "size": 46 },
+        { "role": "metric-label", "group": "item-title", "count": 4, "x": [96, 514, 96, 514], "y": [228, 228, 386, 386], "w": 340, "h": 23, "size": 19 },
+        { "role": "body", "group": "item-desc", "count": 4, "x": [96, 514, 96, 514], "y": [254, 254, 412, 412], "w": 346, "h": 16, "size": 13 }
+      ] }
+    },
+    "11-infographic": {
+      "purpose": "3 icon-badge cards",
+      "shared": [
+        { "role": "eyebrow-label", "x": 85, "y": 71, "w": 135, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 96, "w": 816, "h": 39, "size": 32 },
+        { "role": "metric-label", "group": "card-title", "count": 3, "x": [90, 370, 650], "y": 304, "w": 220, "h": 21, "size": 17 },
+        { "role": "body", "group": "card-body", "count": 3, "x": [95, 375, 655], "y": 334, "w": 210, "h": 38, "size": 13 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 64, "w": 161, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 106, "w": 816, "h": 39, "size": 32 },
+        { "role": "metric-label", "group": "card-title", "count": 3, "x": [100, 634, 634], "y": [326, 199, 367], "w": 232, "h": 21, "size": 17 },
+        { "role": "body", "group": "card-body", "count": 3, "x": [100, 634, 634], "y": [350, 223, 391], "w": 232, "h": 38, "size": 13 }
+      ] }
+    },
+    "12-diagram": {
+      "purpose": "Bar chart + axis labels",
+      "shared": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 58, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 86, "w": 700, "h": 39, "size": 32 },
+        { "role": "metric-value", "group": "bar-value", "count": 5, "x": [120, 270, 420, 570, 720], "y": [351, 318, 297, 243, 184], "w": 92, "h": 18, "size": 15 },
+        { "role": "metric-label", "group": "bar-label", "count": 5, "x": [120, 270, 420, 570, 720], "y": 464, "w": 92, "h": 13, "size": 11 }
+      ],
+      "perTemplate": { "volt": [
+        { "role": "eyebrow-label", "x": 72, "y": 57, "w": 84, "h": 15, "size": 12 },
+        { "role": "title", "x": 72, "y": 96, "w": 430, "h": 38, "size": 32 },
+        { "role": "metric-value", "group": "bar-value", "count": 5, "x": [276, 315, 339, 401, 468], "y": [183, 235, 287, 339, 391], "w": 60, "h": 18, "size": 15 },
+        { "role": "metric-label", "group": "bar-label", "count": 5, "x": 84, "y": [183, 235, 287, 339, 391], "w": 92, "h": 13, "size": 11 },
+        { "role": "metric-label", "group": "takeaway-label", "x": 600, "y": 170, "w": 280, "h": 13, "size": 11 },
+        { "role": "metric-value", "group": "takeaway-stat", "x": 600, "y": 196, "w": 280, "h": 63, "size": 54 },
+        { "role": "body", "group": "takeaway-caption", "x": 600, "y": 282, "w": 280, "h": 50, "size": 14 },
+        { "role": "body", "group": "takeaway-point", "count": 2, "x": 600, "y": [368, 392], "w": 280, "h": 15, "size": 12 }
+      ] }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+.seg {
+  position: relative;
+  display: flex;
+  padding: 2px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  user-select: none;
+}
+
+.segThumb {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  transition: left 0.15s cubic-bezier(0.3, 0.7, 0.4, 1), width 0.15s;
+}
+
+.dragging .segThumb {
+  transition: none;
+}
+
+.seg button {
+  appearance: none;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  height: 22px;
+  border-radius: 6px;
+  cursor: default;
+  padding: 0;
+}

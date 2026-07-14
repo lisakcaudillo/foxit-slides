@@ -1,0 +1,43 @@
+.num {
+  display: flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 0 0 8px;
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.numLabel {
+  font-weight: 500;
+  color: rgba(41, 38, 27, 0.6);
+  cursor: ew-resize;
+  user-select: none;
+  padding-right: 8px;
+}
+
+.num input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0 8px 0 0;
+  outline: none;
+  color: inherit;
+  -moz-appearance: textfield;
+}
+
+.num input::-webkit-inner-spin-button,
+.num input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.numUnit {
+  padding-right: 8px;
+  color: rgba(41, 38, 27, 0.45);
+}
